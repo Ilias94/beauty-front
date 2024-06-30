@@ -1,4 +1,6 @@
 <form [formGroup]="form">
     <formly-form [form]="form" [fields]="fields"></formly-form>
-    <button mat-raised-button color="primary" (click)="login()">Login</button>
+    <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="login()">Login</button>
   </form>
+  
+  

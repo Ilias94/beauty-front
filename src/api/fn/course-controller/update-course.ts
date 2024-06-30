@@ -1,0 +1,33 @@
+/* tslint:disable */
+/* eslint-disable */
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { StrictHttpResponse } from '../../strict-http-response';
+import { RequestBuilder } from '../../request-builder';
+
+import { CourseDto } from '../../models/course-dto';
+
+export interface UpdateCourse$Params {
+  id: number;
+      body: CourseDto
+}
+
+export function updateCourse(http: HttpClient, rootUrl: string, params: UpdateCourse$Params, context?: HttpContext): Observable<StrictHttpResponse<CourseDto>> {
+  const rb = new RequestBuilder(rootUrl, updateCourse.PATH, 'put');
+  if (params) {
+    rb.path('id', params.id, {});
+    rb.body(params.body, 'application/json');
+  }
+
+  return http.request(
+    rb.build({ responseType: 'json', accept: 'application/json', context })
+  ).pipe(
+    filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+    map((r: HttpResponse<any>) => {
+      return r as StrictHttpResponse<CourseDto>;
+    })
+  );
+}
+
+updateCourse.PATH = '/api/v1/courses/{id}';

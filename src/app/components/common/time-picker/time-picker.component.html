@@ -1,0 +1,13 @@
+<mat-form-field class="24hr-example">
+    <input
+      aria-label="24hr format"
+      placeholder="24hr format"
+      readonly
+      [format]="24"
+      [ngxTimepicker]="fullTime"
+      matInput
+      [formControl]="formControl"
+      [formlyAttributes]="field"
+    />
+    <ngx-material-timepicker #fullTime></ngx-material-timepicker>
+</mat-form-field>

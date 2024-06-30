@@ -13,4 +13,6 @@ export interface UserDto {
   password: string;
   revisionNumber?: number;
   revisionType?: 'UNKNOWN' | 'INSERT' | 'UPDATE' | 'DELETE';
+  roles?: Array<string>;
+  teacher?: boolean;
 }

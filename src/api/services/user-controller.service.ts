@@ -13,6 +13,8 @@ import { deleteUserById } from '../fn/user-controller/delete-user-by-id';
 import { DeleteUserById$Params } from '../fn/user-controller/delete-user-by-id';
 import { findUserById } from '../fn/user-controller/find-user-by-id';
 import { FindUserById$Params } from '../fn/user-controller/find-user-by-id';
+import { getCurrentLoginUser } from '../fn/user-controller/get-current-login-user';
+import { GetCurrentLoginUser$Params } from '../fn/user-controller/get-current-login-user';
 import { getUsers } from '../fn/user-controller/get-users';
 import { GetUsers$Params } from '../fn/user-controller/get-users';
 import { PageUserDto } from '../models/page-user-dto';
@@ -149,6 +151,31 @@ export class UserControllerService extends BaseService {
    */
   saveUser(params: SaveUser$Params, context?: HttpContext): Observable<UserDto> {
     return this.saveUser$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getCurrentLoginUser()` */
+  static readonly GetCurrentLoginUserPath = '/api/v1/users/current';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getCurrentLoginUser()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getCurrentLoginUser$Response(params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+    return getCurrentLoginUser(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getCurrentLoginUser$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getCurrentLoginUser(params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<UserDto> {
+    return this.getCurrentLoginUser$Response(params, context).pipe(
       map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
     );
   }

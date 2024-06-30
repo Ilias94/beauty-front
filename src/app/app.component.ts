@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './components/public/menu/menu.component';
+import { NgxsModule } from '@ngxs/store';
 
 @Component({
   selector: 'app-root',

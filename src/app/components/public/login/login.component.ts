@@ -3,8 +3,9 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormlyFieldConfig, FormlyForm, FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import {MatButtonModule} from '@angular/material/button';
-import { Store } from '@ngxs/store';
+import { NgxsModule, Store } from '@ngxs/store';
 import { LoginAction } from '../../state/security.actions';
+
 
 
 @Component({
@@ -39,8 +40,6 @@ export class LoginComponent {
   ]
   constructor(private store: Store){}
   login(){
-    this.store.dispatch(new LoginAction(this.form.value.email,this.form.value.password))
+    this.store.dispatch(new LoginAction(this.form.get('email')?.value, this.form.get('password')?.value));
   }
-
-
 }

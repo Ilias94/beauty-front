@@ -1,0 +1,11 @@
+<h2>Change user data</h2>
+<form [formGroup]="userForm">
+    <formly-form [form]="userForm" [fields]="userFields"></formly-form>
+    <button mat-raised-button color="primary" [disabled]="!userForm.valid" (click)="changeUserData()">Change user data</button>
+  </form>
+<hr/>
+<h2>Change password</h2>
+<form [formGroup]="passwordForm">
+    <formly-form [form]="passwordForm" [fields]="passwordFields"></formly-form>
+    <button mat-raised-button color="primary" [disabled]="!passwordForm.valid" (click)="changePassword()">Change password</button>
+  </form>
