@@ -13,7 +13,7 @@ export class LoginFromLocalStorageAction {
 
 export class RegisterAction {
   static readonly type = '[Security] RegisterAction';
-  constructor(public user: UserDto) {
+  constructor(public user: UserDto, public file: Blob) {
   }
 }
 

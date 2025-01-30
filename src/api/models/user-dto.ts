@@ -5,6 +5,7 @@ export interface UserDto {
   createdBy?: string;
   createdDate?: string;
   email: string;
+  fileName?: string;
   firstName: string;
   id?: number;
   lastModifiedBy?: string;

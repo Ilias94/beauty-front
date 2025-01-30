@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormlyFieldConfig, FormlyForm, FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { NgxsModule, Store } from '@ngxs/store';
 import { LoginAction, RegisterAction } from '../../state/security.actions';
 import { UserDto } from '../../../../api/models/user-dto';
+import { passwordRegex } from '../../../app.const';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -14,6 +15,8 @@ import { UserDto } from '../../../../api/models/user-dto';
   styleUrl: './register.component.sass'
 })
 export class RegisterComponent {
+
+  file: File
 
   form = new FormGroup({})
   fields: FormlyFieldConfig[] = [
@@ -25,7 +28,7 @@ export class RegisterComponent {
         placeholder: "enter your first name",
         required: true
       }
-    }, 
+    },
     {
       key: "lastName",
       type: "input",
@@ -57,7 +60,14 @@ export class RegisterComponent {
             label: "password",
             placeholder: "enter your password",
             type: "password",
-            required: true
+            required: true,
+            minLength: 6,
+            pattern: passwordRegex
+          },
+          validation: {
+            messages: {
+              pattern: (error: any, field: FormlyFieldConfig) => "Needed one small letter, one capital letter and number and special character",
+            }
           }
         },
         {
@@ -67,7 +77,14 @@ export class RegisterComponent {
             label: "confirmPassword",
             placeholder: "confirm your password",
             type: "password",
-            required: true
+            required: true,
+            minLength: 6,
+            pattern: passwordRegex
+          },
+          validation: {
+            messages: {
+              pattern: (error: any, field: FormlyFieldConfig) => "Needed one small letter, one capital letter and number and special character",
+            }
           }
         },
         {
@@ -84,8 +101,8 @@ export class RegisterComponent {
   // login(){
   //   this.store.dispatch(new LoginAction(this.form.get('email')?.value, this.form.get('password')?.value));
   // }
-  constructor(private store: Store){}
-  register(){
+  constructor(private store: Store) { }
+  register() {
     const userDto: UserDto = {
       email: this.form.get('email').value,
       firstName: this.form.get('firstName').value,
@@ -95,6 +112,13 @@ export class RegisterComponent {
       teacher: this.form.get('teacher').value
     };
 
-    this.store.dispatch(new RegisterAction(userDto))
+    this.store.dispatch(new RegisterAction(userDto, this.file))
+  }
+
+  onFileChange(event: Event) {
+    const inputFile = event.target as HTMLInputElement;
+    if (inputFile.files.length > 0) {
+      this.file = inputFile.files[0]
+    }
   }
 }

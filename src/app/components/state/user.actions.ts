@@ -1,4 +1,4 @@
-import { UserDto } from "../../../api/models";
+import { ChangePasswordRequestDto, UserDto } from "../../../api/models";
 
 export class ChangeUserDataAction {
   static readonly type = '[User] ChangeUserDataAction';
@@ -8,6 +8,6 @@ export class ChangeUserDataAction {
 
 export class ChangePasswordAction {
   static readonly type = '[User] ChangePasswordAction';
-  public constructor(public changePassword: {}) {
+  public constructor(public changePassword: ChangePasswordRequestDto) {
   }
 }

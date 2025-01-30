@@ -7,6 +7,7 @@ import { UserDto } from '../../../api/models';
 import moment from 'moment';
 
 import { Navigate } from '@ngxs/router-plugin';
+import { HttpClient } from '@angular/common/http';
 export class SecurityStateModel {
   public token: string;
   public currentUser: UserDto;
@@ -24,7 +25,8 @@ const defaults = {
 @Injectable()
 export class SecurityState {
   constructor(private loginControllerService: LoginControllerService,
-    private userControllerService: UserControllerService) { }
+    private userControllerService: UserControllerService,
+    private httpClient: HttpClient) { }
   @Action(LoginAction)
   login({ patchState, dispatch }: StateContext<SecurityStateModel>, { email, password }: LoginAction) {
     return this.loginControllerService.login({ body: { email, password } }).pipe(tap(response => {
@@ -32,6 +34,7 @@ export class SecurityState {
       localStorage.setItem("token", response.token)
       localStorage.setItem("currentDate", moment().toISOString())
       dispatch(new GetCurrentUserAction())
+      dispatch(new Navigate(['/my-account']))
     }))
   }
 
@@ -47,8 +50,12 @@ export class SecurityState {
   }
 
   @Action(RegisterAction)
-  register({ }: StateContext<SecurityStateModel>, { user }: RegisterAction) {
-    return this.userControllerService.saveUser({ body: user })
+  register({ }: StateContext<SecurityStateModel>, { user, file }: RegisterAction) {
+    // return this.userControllerService.saveUser({ body: {user, file: null} })
+    const formdata = new FormData()
+    formdata.append("user", JSON.stringify(user))
+    formdata.append("file", file)
+    return this.httpClient.post("http://localhost:8080/api/v1/users", formdata)
   }
 
   @Action(LogoutAction)

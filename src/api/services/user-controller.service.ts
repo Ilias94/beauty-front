@@ -9,6 +9,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { changePassword } from '../fn/user-controller/change-password';
+import { ChangePassword$Params } from '../fn/user-controller/change-password';
 import { deleteUserById } from '../fn/user-controller/delete-user-by-id';
 import { DeleteUserById$Params } from '../fn/user-controller/delete-user-by-id';
 import { findUserById } from '../fn/user-controller/find-user-by-id';
@@ -105,6 +107,31 @@ export class UserControllerService extends BaseService {
     );
   }
 
+  /** Path part for operation `changePassword()` */
+  static readonly ChangePasswordPath = '/api/v1/users/{id}/change-password';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `changePassword()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  changePassword$Response(params: ChangePassword$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return changePassword(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `changePassword$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  changePassword(params: ChangePassword$Params, context?: HttpContext): Observable<void> {
+    return this.changePassword$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
   /** Path part for operation `getUsers()` */
   static readonly GetUsersPath = '/api/v1/users';
 
@@ -139,7 +166,7 @@ export class UserControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveUser$Response(params: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+  saveUser$Response(params?: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
     return saveUser(this.http, this.rootUrl, params, context);
   }
 
@@ -149,7 +176,7 @@ export class UserControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveUser(params: SaveUser$Params, context?: HttpContext): Observable<UserDto> {
+  saveUser(params?: SaveUser$Params, context?: HttpContext): Observable<UserDto> {
     return this.saveUser$Response(params, context).pipe(
       map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
     );

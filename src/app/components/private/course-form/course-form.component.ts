@@ -13,7 +13,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
   selector: 'app-course-form',
   standalone: true,
   imports: [MatNativeDateModule, FormlyMatDatepickerModule, ReactiveFormsModule,
-     FormlyModule, MatButtonModule, FormlyMaterialModule,NgxMaterialTimepickerModule],
+    FormlyModule, MatButtonModule, FormlyMaterialModule, NgxMaterialTimepickerModule],
   templateUrl: './course-form.component.html',
   styleUrl: './course-form.component.sass'
 })
@@ -29,6 +29,8 @@ export class CourseFormComponent {
           props: {
             label: "title",
             placeholder: "enter your title",
+            required: true,
+            minLength: 5
           }
         },
         {
@@ -37,7 +39,19 @@ export class CourseFormComponent {
           props: {
             label: "description",
             placeholder: "enter your description",
-            rows: 5
+            rows: 5,
+            required: true
+          }
+        },
+        {
+          key: "price",
+          type: "input",
+          props: {
+            label: "price",
+            placeholder: "input course price",
+            type: "number",
+            min: 10,
+            required: true
           }
         },
         {
@@ -46,6 +60,7 @@ export class CourseFormComponent {
           props: {
             label: "maxParticipants",
             placeholder: "enter your maxParticipants",
+            required: true
           }
         },
         {
@@ -54,6 +69,7 @@ export class CourseFormComponent {
           props: {
             label: "startDate",
             placeholder: "enter your startDate",
+            required: true
           }
         },
         {
@@ -62,6 +78,7 @@ export class CourseFormComponent {
           props: {
             label: "endDate",
             placeholder: "enter your endDate",
+            required: true
           }
         },
         {
@@ -70,6 +87,7 @@ export class CourseFormComponent {
           props: {
             label: "start-time",
             placeholder: "enter your startTime",
+            required: true
           }
         }
       ]
@@ -85,6 +103,7 @@ export class CourseFormComponent {
           props: {
             label: "district",
             placeholder: "enter your district",
+            required: true
           }
         },
         {
@@ -93,6 +112,7 @@ export class CourseFormComponent {
           props: {
             label: "street",
             placeholder: "enter your street",
+            required: true
           }
         },
         {
@@ -101,6 +121,7 @@ export class CourseFormComponent {
           props: {
             label: "streetNumber",
             placeholder: "enter your street number",
+            required: true
           }
         },
         {
@@ -109,6 +130,7 @@ export class CourseFormComponent {
           props: {
             label: "apartment number",
             placeholder: "enter your apartment number",
+            required: true
           }
         },
         {
@@ -117,6 +139,7 @@ export class CourseFormComponent {
           props: {
             label: "city",
             placeholder: "enter your city",
+            required: true
           }
         },
         {
@@ -125,6 +148,7 @@ export class CourseFormComponent {
           props: {
             label: "postal code",
             placeholder: "enter your postal code",
+            required: true
           }
         }
       ]
@@ -142,85 +166,75 @@ export class CourseFormComponent {
             placeholder: "enter your category",
             options: [
               {
-                "value": "BARBER",
+                "value": "Barber",
                 "label": "barber"
-            },
-            {
-                "value": "HAIRDRESSER",
+              },
+              {
+                "value": "Hairdresser",
                 "label": "hairdresser"
-            },
-            {
-                "value": "MAKEUP_ARTIS",
+              },
+              {
+                "value": "Makeup Artist",
                 "label": "makeup artist"
-            },
-            {
-                "value": "NAIL_TECHNICIAN",
+              },
+              {
+                "value": "Nail Technician",
                 "label": "nail technician"
-            },
-            {
-                "value": "ESTHETICIAN",
+              },
+              {
+                "value": "Esthetician",
                 "label": "esthetician"
-            },
-            {
-                "value": "MASSAGE_THERAPIST",
+              },
+              {
+                "value": "Massage Therapist",
                 "label": "massage therapist"
-            },
-            {
-                "value": "SKIN_CARE_SPECIALIST",
+              },
+              {
+                "value": "Skin Care Specialist",
                 "label": "skin care specialist"
-            },
-            {
-                "value": "LASH_TECHNICIAN",
+              },
+              {
+                "value": "Lash Technician",
                 "label": "lash technician"
-            },
-            {
-                "value": "BROW_ARTIST",
-                "label": "brow artist"
-            },
-            {
-                "value": "SPA_THERAPIST",
-                "label": "spa therapist"
-            },
-            {
-                "value": "COSMETOLOGIST",
-                "label": "cosmetologist"
-            },
-            {
-                "value": "PERMANENT_MAKEUP_ARTIST",
+              },
+              {
+                "value": "Permanent Makeup Artist",
                 "label": "permanent makeup artist"
-            },
-            {
-                "value": "HAIR_COLORIST",
+              },
+              {
+                "value": "Hair Colorist",
                 "label": "hair colorist"
-            },
-            {
-                "value": "WAX_SPECIALIST",
+              },
+              {
+                "value": "Wax Specialist",
                 "label": "wax specialist"
-            }
-            ]
+              }
+            ],
+            required: true
           }
         }
-    ]
-  }
+      ]
+    }
 
   ]
   constructor(private store: Store) { }
   submit() {
-   this.store.dispatch(new SaveCourseAction({
-    title: this.form.get('title')?.value,
-    description: this.form.get('description')?.value,
-    maxParticipants: this.form.get('maxParticipants')?.value,
-    startDate: this.form.get('startDate')?.value,
-    endDate: this.form.get('endDate')?.value,
-    address: {
-      district: this.form.get('district')?.value,
-      street: this.form.get('street')?.value,
-      streetNumber: this.form.get('streetNumber')?.value,
-      apartmentNumber: this.form.get('apartmentNumber')?.value,
-      city: this.form.get('city')?.value,
-      postalCode: this.form.get('postalCode')?.value
-    },
-    category: this.form.get('category')?.value,
-   }))
+    this.store.dispatch(new SaveCourseAction({
+      title: this.form.get('title')?.value,
+      description: this.form.get('description')?.value,
+      price: this.form.get('price').value,
+      maxParticipants: this.form.get('maxParticipants')?.value,
+      startDate: this.form.get('startDate')?.value,
+      endDate: this.form.get('endDate')?.value,
+      address: {
+        district: this.form.get('district')?.value,
+        street: this.form.get('street')?.value,
+        streetNumber: this.form.get('streetNumber')?.value,
+        apartmentNumber: this.form.get('apartmentNumber')?.value,
+        city: this.form.get('city')?.value,
+        postalCode: this.form.get('postalCode')?.value
+      },
+      category: { label: this.form.get('category')?.value }
+    }))
   }
 }

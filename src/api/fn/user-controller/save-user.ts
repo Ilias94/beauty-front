@@ -9,10 +9,13 @@ import { RequestBuilder } from '../../request-builder';
 import { UserDto } from '../../models/user-dto';
 
 export interface SaveUser$Params {
-      body: UserDto
+      body?: {
+'user': UserDto;
+'file'?: Blob;
+}
 }
 
-export function saveUser(http: HttpClient, rootUrl: string, params: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+export function saveUser(http: HttpClient, rootUrl: string, params?: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
   const rb = new RequestBuilder(rootUrl, saveUser.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');

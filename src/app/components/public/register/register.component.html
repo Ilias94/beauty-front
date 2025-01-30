@@ -1,5 +1,6 @@
 <form [formGroup]="form">
     <formly-form [form]="form" [fields]="fields"></formly-form>
+    <input type="file" (change)="onFileChange($event)">
     <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="register()">Register</button>
   </form>
 

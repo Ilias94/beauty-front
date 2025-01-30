@@ -9,15 +9,27 @@ import { RequestBuilder } from '../../request-builder';
 import { PageCourseDto } from '../../models/page-course-dto';
 
 export interface GetCourses$Params {
-  page: number;
-  size: number;
+  page?: number;
+  size?: number;
+  categoryId?: number;
+  title?: string;
+  sortBy?: string;
+  sortDirection?: 'ASC' | 'DESC';
+  isCurrentCreator?: boolean;
+  isCurrentStudent?: boolean;
 }
 
-export function getCourses(http: HttpClient, rootUrl: string, params: GetCourses$Params, context?: HttpContext): Observable<StrictHttpResponse<PageCourseDto>> {
+export function getCourses(http: HttpClient, rootUrl: string, params?: GetCourses$Params, context?: HttpContext): Observable<StrictHttpResponse<PageCourseDto>> {
   const rb = new RequestBuilder(rootUrl, getCourses.PATH, 'get');
   if (params) {
     rb.query('page', params.page, {});
     rb.query('size', params.size, {});
+    rb.query('categoryId', params.categoryId, {});
+    rb.query('title', params.title, {});
+    rb.query('sortBy', params.sortBy, {});
+    rb.query('sortDirection', params.sortDirection, {});
+    rb.query('isCurrentCreator', params.isCurrentCreator, {});
+    rb.query('isCurrentStudent', params.isCurrentStudent, {});
   }
 
   return http.request(

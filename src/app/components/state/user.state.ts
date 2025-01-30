@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
 import { ChangePasswordAction, ChangeUserDataAction} from './user.actions';
+import { UserControllerService } from '../../../api/services';
+import { HttpClient } from '@angular/common/http';
 
 export class UserStateModel {
   public items: string[];
+
 }
 
 const defaults = {
@@ -14,8 +17,11 @@ const defaults = {
   name: 'user',
   defaults
 })
+
 @Injectable()
 export class UserState {
+constructor(private userControllerService: UserControllerService){}
+
   @Action(ChangeUserDataAction)
   changeUserData({ }: StateContext<UserStateModel>, { user }: ChangeUserDataAction) {
 
@@ -23,6 +29,6 @@ export class UserState {
 
   @Action(ChangePasswordAction)
   changePassword({ }: StateContext<UserStateModel>, { changePassword }: ChangePasswordAction) {
-
+    return this.userControllerService.changePassword({body: changePassword})
   }
 }

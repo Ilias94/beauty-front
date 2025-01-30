@@ -8,6 +8,9 @@ import { CoursesComponent } from './components/courses/courses.component';
 import { CourseDetailsComponent } from './course-details/course-details.component';
 import { MyAccountComponent } from './components/my-account/my-account.component';
 import { AccountFormComponent } from './components/account-form/account-form.component';
+import { CreatorCoursesComponent } from './components/creator-courses/creator-courses.component';
+import { StudentCoursesComponent } from './components/student-courses/student-courses.component';
+import { MyCommentsComponent } from './components/my-comments/my-comments.component';
 
 
 export const routes: Routes = [
@@ -46,5 +49,17 @@ export const routes: Routes = [
         path:"account",
         component: AccountFormComponent,
         canActivate: [authGuard]
+    },
+    {
+        path:"creator-courses",
+        component: CreatorCoursesComponent
+    },
+    {
+        path:"student-courses",
+        component: StudentCoursesComponent
+    },
+    {
+        path:"my-comments",
+        component: MyCommentsComponent
     }
 ];

@@ -6,7 +6,11 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { UserControllerService } from './services/user-controller.service';
 import { CourseControllerService } from './services/course-controller.service';
+import { CategoryControllerService } from './services/category-controller.service';
+import { TemplateControllerService } from './services/template-controller.service';
+import { RatingControllerService } from './services/rating-controller.service';
 import { LoginControllerService } from './services/login-controller.service';
+import { CommentControllerService } from './services/comment-controller.service';
 
 /**
  * Module that provides all services and configuration.
@@ -18,7 +22,11 @@ import { LoginControllerService } from './services/login-controller.service';
   providers: [
     UserControllerService,
     CourseControllerService,
+    CategoryControllerService,
+    TemplateControllerService,
+    RatingControllerService,
     LoginControllerService,
+    CommentControllerService,
     ApiConfiguration
   ],
 })

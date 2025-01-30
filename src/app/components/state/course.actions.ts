@@ -2,20 +2,28 @@ import { CourseDto } from "../../../api/models";
 
 export class GetPageCoursesAction {
   static readonly type = '[Course] GetPageCoursesAction';
-  constructor(public page: number, public size: number) { }
+  constructor(public page: number, public size: number, public categoryId?: number,
+    public title?: string, public sortBy?: string,
+    public sortDirection?: 'ASC' | 'DESC', public isCurrentCreator?: boolean,
+  public isCurrentStudent?: boolean) { }
 }
 
 export class SaveCourseAction {
   static readonly type = '[Course] SaveCourseAction';
-  constructor(public course: CourseDto) {}
+  constructor(public course: CourseDto) { }
 }
 
 export class SignUpCourseAction {
   static readonly type = '[Course] SignUpCourseAction';
-  constructor(public courseId: number) {}
+  constructor(public courseId: number) { }
 }
 
 export class GetCourseByIdAction {
-  static readonly type = '[CourseDetails] GetCourseByIdAction';
-  constructor(public courseId: number) {}
+  static readonly type = '[Course] GetCourseByIdAction';
+  constructor(public courseId: number) { }
+}
+
+export class GetAutocompleteTitleAction {
+  static readonly type = '[Course] GetAutocompleteTitleAction';
+  constructor(public title: string) { }
 }

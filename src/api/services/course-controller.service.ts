@@ -14,6 +14,8 @@ import { createCourse } from '../fn/course-controller/create-course';
 import { CreateCourse$Params } from '../fn/course-controller/create-course';
 import { deleteCourse } from '../fn/course-controller/delete-course';
 import { DeleteCourse$Params } from '../fn/course-controller/delete-course';
+import { getAutocompleteTitle } from '../fn/course-controller/get-autocomplete-title';
+import { GetAutocompleteTitle$Params } from '../fn/course-controller/get-autocomplete-title';
 import { getCourseById } from '../fn/course-controller/get-course-by-id';
 import { GetCourseById$Params } from '../fn/course-controller/get-course-by-id';
 import { getCourses } from '../fn/course-controller/get-courses';
@@ -112,7 +114,7 @@ export class CourseControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCourses$Response(params: GetCourses$Params, context?: HttpContext): Observable<StrictHttpResponse<PageCourseDto>> {
+  getCourses$Response(params?: GetCourses$Params, context?: HttpContext): Observable<StrictHttpResponse<PageCourseDto>> {
     return getCourses(this.http, this.rootUrl, params, context);
   }
 
@@ -122,7 +124,7 @@ export class CourseControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCourses(params: GetCourses$Params, context?: HttpContext): Observable<PageCourseDto> {
+  getCourses(params?: GetCourses$Params, context?: HttpContext): Observable<PageCourseDto> {
     return this.getCourses$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageCourseDto>): PageCourseDto => r.body)
     );
@@ -150,6 +152,31 @@ export class CourseControllerService extends BaseService {
   createCourse(params: CreateCourse$Params, context?: HttpContext): Observable<CourseDto> {
     return this.createCourse$Response(params, context).pipe(
       map((r: StrictHttpResponse<CourseDto>): CourseDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getAutocompleteTitle()` */
+  static readonly GetAutocompleteTitlePath = '/api/v1/courses/autocomplete';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAutocompleteTitle()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAutocompleteTitle$Response(params: GetAutocompleteTitle$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
+    return getAutocompleteTitle(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAutocompleteTitle$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAutocompleteTitle(params: GetAutocompleteTitle$Params, context?: HttpContext): Observable<Array<string>> {
+    return this.getAutocompleteTitle$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<string>>): Array<string> => r.body)
     );
   }
 

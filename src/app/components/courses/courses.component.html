@@ -1,36 +1,49 @@
 <div class="mat-elevation-z8">
   <mat-form-field>
-    <mat-label>Select your car (required)</mat-label>
+    <mat-label>Select your category</mat-label>
     <mat-select matNativeControl>
-      <mat-option label="--select something --"></mat-option>
-      <mat-option value="saab">Saab</mat-option>
-      <mat-option value="mercedes">Mercedes</mat-option>
-      <mat-option value="audi">Audi</mat-option>
+      @for (category of categories(); track category) {
+        <mat-option [value]="category.id" (click)="selectCategory(category)">{{category.label}}</mat-option>
+      }
     </mat-select>
-    <mat-hint>You can pick up your favorite car here</mat-hint>
+    <mat-hint>Choose category</mat-hint>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <mat-label>Search title</mat-label>
+    <input (keyup)="autocompleteSubject.next(inputTitle.value)" #inputTitle type="text"
+           placeholder="type title"
+           matInput
+           [matAutocomplete]="auto">
+           @if (inputTitle.value) {
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="inputTitle.value=''; clearFilter()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      @for (title of titleAutocomplete(); track title) {
+        <mat-option (click)="selectAutocomplete(title)" [value]="title">{{title}} </mat-option>
+      }
+    </mat-autocomplete>
   </mat-form-field>
 
-    <table matSort mat-table [dataSource]="pageCourses().content">
+
+    <table matSort mat-table [dataSource]="pageCourses().content" (matSortChange)="sortData($event)">
   
-      <!-- Position Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> Id </th>
         <td mat-cell *matCellDef="let element"> {{element.id}} </td>
       </ng-container>
-  
-      <!-- Name Column -->
+
       <ng-container matColumnDef="title">
         <th mat-header-cell *matHeaderCellDef> title </th>
         <td mat-cell *matCellDef="let element"> {{element.title}} </td>
       </ng-container>
   
-      <!-- Weight Column -->
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef> description </th>
         <td mat-cell *matCellDef="let element"> {{element.description}} </td>
       </ng-container>
-  
-      <!-- Symbol Column -->
+
       <ng-container matColumnDef="startDate">
         <th mat-sort-header mat-header-cell *matHeaderCellDef> startDate </th>
         <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
@@ -63,9 +76,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
- 
-  
-   
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                    showFirstLastButtons
@@ -73,20 +83,6 @@
                    [pageSize]="pageCourses().size"
                    (page)="changePage($event)"
                    aria-label="Select page of periodic elements">
-                   
-
     </mat-paginator>
-
-    <!-- <mat-paginator #paginator
-               class="demo-paginator"
-               (page)="handlePageEvent($event)"
-               [length]="length"
-               [pageSize]="pageSize"
-               [disabled]="disabled"
-               [showFirstLastButtons]="showFirstLastButtons"
-               [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-               [hidePageSize]="hidePageSize"
-               [pageIndex]="pageIndex"
-               aria-label="Select page">
-</mat-paginator> -->
+    <img src="https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/user10.jpg">
   </div>
