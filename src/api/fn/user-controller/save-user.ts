@@ -6,16 +6,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserDto } from '../../models/user-dto';
+import { UserDtoRequest } from '../../models/user-dto-request';
+import { UserDtoResponse } from '../../models/user-dto-response';
 
 export interface SaveUser$Params {
       body?: {
-'user': UserDto;
+'user': UserDtoRequest;
 'file'?: Blob;
 }
 }
 
-export function saveUser(http: HttpClient, rootUrl: string, params?: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+export function saveUser(http: HttpClient, rootUrl: string, params?: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, saveUser.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -26,7 +27,7 @@ export function saveUser(http: HttpClient, rootUrl: string, params?: SaveUser$Pa
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UserDto>;
+      return r as StrictHttpResponse<UserDtoResponse>;
     })
   );
 }

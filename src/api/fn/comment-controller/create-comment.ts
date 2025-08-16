@@ -6,13 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CommentDto } from '../../models/comment-dto';
+import { CommentDtoRequest } from '../../models/comment-dto-request';
+import { CommentDtoResponse } from '../../models/comment-dto-response';
 
 export interface CreateComment$Params {
-      body: CommentDto
+      body: CommentDtoRequest
 }
 
-export function createComment(http: HttpClient, rootUrl: string, params: CreateComment$Params, context?: HttpContext): Observable<StrictHttpResponse<CommentDto>> {
+export function createComment(http: HttpClient, rootUrl: string, params: CreateComment$Params, context?: HttpContext): Observable<StrictHttpResponse<CommentDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, createComment.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -23,7 +24,7 @@ export function createComment(http: HttpClient, rootUrl: string, params: CreateC
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<CommentDto>;
+      return r as StrictHttpResponse<CommentDtoResponse>;
     })
   );
 }

@@ -1,8 +1,9 @@
-import { CommentDto } from "../../../api/models";
+import { CommentDtoRequest } from "../../../api/models";
+
 
 export class SaveCommentAction {
   static readonly type = '[Comment] SaveCommentAction';
-  constructor(public comment: CommentDto) { }
+  constructor(public comment: CommentDtoRequest) { }
 
 }
 

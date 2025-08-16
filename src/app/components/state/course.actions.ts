@@ -1,4 +1,5 @@
-import { CourseDto } from "../../../api/models";
+import { CourseDtoRequest } from "../../../api/models";
+
 
 export class GetPageCoursesAction {
   static readonly type = '[Course] GetPageCoursesAction';
@@ -10,7 +11,7 @@ export class GetPageCoursesAction {
 
 export class SaveCourseAction {
   static readonly type = '[Course] SaveCourseAction';
-  constructor(public course: CourseDto) { }
+  constructor(public course: CourseDtoRequest) { }
 }
 
 export class SignUpCourseAction {

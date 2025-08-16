@@ -3,10 +3,10 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormlyFieldConfig, FormlyForm, FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { MatButtonModule } from '@angular/material/button';
-import { NgxsModule, Store } from '@ngxs/store';
-import { LoginAction, RegisterAction } from '../../state/security.actions';
-import { UserDto } from '../../../../api/models/user-dto';
+import { Store } from '@ngxs/store';
+import { RegisterAction } from '../../state/security.actions';
 import { passwordRegex } from '../../../app.const';
+import { UserDtoRequest } from '../../../../api/models';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -103,13 +103,13 @@ export class RegisterComponent {
   // }
   constructor(private store: Store) { }
   register() {
-    const userDto: UserDto = {
+    const userDto: UserDtoRequest = {
       email: this.form.get('email').value,
       firstName: this.form.get('firstName').value,
       lastName: this.form.get('lastName').value,
       password: this.form.get('password').value,
       confirmPassword: this.form.get('confirmPassword').value,
-      teacher: this.form.get('teacher').value
+      isTeacher: this.form.get('teacher').value
     };
 
     this.store.dispatch(new RegisterAction(userDto, this.file))

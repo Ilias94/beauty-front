@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { State, Action, StateContext } from '@ngxs/store';
+import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { GetCurrentUserAction, LoginAction, LoginFromLocalStorageAction, LogoutAction, RegisterAction } from './security.actions';
 import { LoginControllerService, UserControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
-import { UserDto } from '../../../api/models';
 import moment from 'moment';
 
 import { Navigate } from '@ngxs/router-plugin';
 import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { UserDtoResponse } from '../../../api/models';
 export class SecurityStateModel {
   public token: string;
-  public currentUser: UserDto;
+  public currentUser: UserDtoResponse;
 }
 
 const defaults = {
@@ -26,7 +27,8 @@ const defaults = {
 export class SecurityState {
   constructor(private loginControllerService: LoginControllerService,
     private userControllerService: UserControllerService,
-    private httpClient: HttpClient) { }
+    private httpClient: HttpClient,
+    private coockieService: CookieService) { }
   @Action(LoginAction)
   login({ patchState, dispatch }: StateContext<SecurityStateModel>, { email, password }: LoginAction) {
     return this.loginControllerService.login({ body: { email, password } }).pipe(tap(response => {
@@ -39,13 +41,26 @@ export class SecurityState {
   }
 
   @Action(LoginFromLocalStorageAction)
-  loginFromLocalStorage({patchState, dispatch}: StateContext<SecurityStateModel>, {}: LoginFromLocalStorageAction) {
-   const currentDate = localStorage.getItem("currentDate")
-   if(moment().subtract(1, "days").isAfter(moment(currentDate)) || !currentDate) {
-    dispatch(new LogoutAction())
-    return
-   }
-    patchState({token: localStorage.getItem("token")}) 
+  loginFromLocalStorage({ patchState, dispatch }: StateContext<SecurityStateModel>, { }: LoginFromLocalStorageAction) {
+    console.log("in login")
+    const currentDate = localStorage.getItem("currentDate")
+    if (!currentDate && moment().subtract(1, "days").isAfter(moment(currentDate))) {
+      dispatch(new LogoutAction())
+      return
+    }
+    const cookieToken = this.coockieService.get("token")
+    if(cookieToken) {
+      patchState({ token: cookieToken})
+    } else {
+      const storageToken = localStorage.getItem("token")
+      if(storageToken != null) {
+        patchState({ token: storageToken })
+      } else {
+        return;
+      }
+      
+    }
+    console.log("before localstorage dispatch")
     dispatch(new GetCurrentUserAction())
   }
 
@@ -67,11 +82,16 @@ export class SecurityState {
   }
 
   @Action(GetCurrentUserAction)
-  getCurrentUser({patchState }: StateContext<SecurityStateModel>) {
+  getCurrentUser({ patchState }: StateContext<SecurityStateModel>) {
     return this.userControllerService.getCurrentLoginUser().pipe(
       tap(response => {
-        patchState({currentUser: response})
+        patchState({ currentUser: response })
       })
     )
   }
-} 
+
+  @Selector()
+  static getCurrentUser(securityStateModel: SecurityStateModel) {
+    return securityStateModel.currentUser
+  }
+}

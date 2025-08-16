@@ -9,8 +9,14 @@ import { CourseControllerService } from './services/course-controller.service';
 import { CategoryControllerService } from './services/category-controller.service';
 import { TemplateControllerService } from './services/template-controller.service';
 import { RatingControllerService } from './services/rating-controller.service';
+import { PaymentControllerService } from './services/payment-controller.service';
 import { LoginControllerService } from './services/login-controller.service';
+import { GeoLocationControllerService } from './services/geo-location-controller.service';
 import { CommentControllerService } from './services/comment-controller.service';
+import { AiControllerService } from './services/ai-controller.service';
+import { ReportControllerService } from './services/report-controller.service';
+import { ParticipantsControllerService } from './services/participants-controller.service';
+import { Oauth2ControllerService } from './services/oauth-2-controller.service';
 
 /**
  * Module that provides all services and configuration.
@@ -25,8 +31,14 @@ import { CommentControllerService } from './services/comment-controller.service'
     CategoryControllerService,
     TemplateControllerService,
     RatingControllerService,
+    PaymentControllerService,
     LoginControllerService,
+    GeoLocationControllerService,
     CommentControllerService,
+    AiControllerService,
+    ReportControllerService,
+    ParticipantsControllerService,
+    Oauth2ControllerService,
     ApiConfiguration
   ],
 })

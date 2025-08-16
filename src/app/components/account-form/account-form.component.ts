@@ -4,8 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormlyFieldConfig, FormlyForm, FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { Store } from '@ngxs/store';
-import { SaveCourseAction } from '../state/course.actions';
-import { ChangePasswordRequestDto } from '../../../api/models';
 import { ChangePasswordAction } from '../state/user.actions';
 import { passwordRegex } from '../../app.const';
 

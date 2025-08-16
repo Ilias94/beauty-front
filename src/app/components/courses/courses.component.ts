@@ -2,7 +2,6 @@ import { Component, OnInit, Signal, inject, input } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { GetAutocompleteTitleAction, GetPageCoursesAction, SignUpCourseAction } from '../state/course.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CategoryDto, PageCourseDto } from '../../../api/models';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -19,13 +18,28 @@ import { MatInputModule } from '@angular/material/input';
 import { debounceTime, Subject } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { NgxStarsModule } from 'ngx-stars';
+import { CategoryDtoResponse, PageCourseDtoResponse } from '../../../api/models';
+import { MatCardModule } from '@angular/material/card';
+import { CreatePaymentAction } from '../state/payment.actions';
 
 @Component({
   selector: 'app-courses',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatButtonModule,
-    RouterModule, MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule,
-    MatSortModule, MatAutocompleteModule, MatInputModule, MatIconModule, CoursesComponent, NgxStarsModule],
+  imports: [CommonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    RouterModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSortModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatIconModule,
+    NgxStarsModule,
+    MatCardModule],
   templateUrl: './courses.component.html',
   styleUrl: './courses.component.sass'
 })
@@ -35,11 +49,11 @@ export class CoursesComponent implements OnInit {
   store = inject(Store)
   isCurrentCreator = input(false)
   isCurrentStudent = input(false)
-  pageCourses: Signal<PageCourseDto> = toSignal(this.store.select(state => state.course.pageCourses));
-  displayedColumns: string[] = ['id', 'title', 'description', 'startDate', 'endDate', 'maxParticipants',
+  pageCourses: Signal<PageCourseDtoResponse> = toSignal(this.store.select(state => state.course.pageCourses));
+  displayedColumns: string[] = ['id', 'title', 'category', 'description', 'startDate', 'endDate', 'maxParticipants',
     'signUP', 'details'];
 
-  categories: Signal<CategoryDto[]> = toSignal(this.store.select(state => state.category.categories));
+  categories: Signal<CategoryDtoResponse[]> = toSignal(this.store.select(state => state.category.categories));
   page: number;
   size: number;
   sortBy: string;
@@ -63,13 +77,18 @@ export class CoursesComponent implements OnInit {
     this.store.dispatch(new SignUpCourseAction(courseId))
 
   }
+
+  buyCourse(courseId: number) {
+    console.log('buyCourse clicked, courseId:', courseId);
+    this.store.dispatch(new CreatePaymentAction({courseId:courseId}))
+  }
   sortData(sort: Sort) {
     this.sortBy = sort.active
     this.direction = sort.direction == 'asc' ? 'ASC' : 'DESC'
     this.store.dispatch(new GetPageCoursesAction(this.page, this.size, this.cateogryId, null, this.sortBy, this.direction, this.isCurrentCreator(), this.isCurrentStudent()))
   }
 
-  selectCategory(category: CategoryDto) {
+  selectCategory(category: CategoryDtoResponse) {
     this.cateogryId = category.id
     this.store.dispatch(new GetPageCoursesAction(this.page, this.size, this.cateogryId, null, this.sortBy, this.direction, this.isCurrentCreator(), this.isCurrentStudent()))
   }

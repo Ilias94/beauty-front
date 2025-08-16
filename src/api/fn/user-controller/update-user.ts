@@ -6,14 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserDto } from '../../models/user-dto';
+import { UserDtoRequest } from '../../models/user-dto-request';
+import { UserDtoResponse } from '../../models/user-dto-response';
 
 export interface UpdateUser$Params {
   id: number;
-      body: UserDto
+      body: UserDtoRequest
 }
 
-export function updateUser(http: HttpClient, rootUrl: string, params: UpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+export function updateUser(http: HttpClient, rootUrl: string, params: UpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, updateUser.PATH, 'put');
   if (params) {
     rb.path('id', params.id, {});
@@ -25,7 +26,7 @@ export function updateUser(http: HttpClient, rootUrl: string, params: UpdateUser
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UserDto>;
+      return r as StrictHttpResponse<UserDtoResponse>;
     })
   );
 }

@@ -1,9 +1,9 @@
 import { Component, inject, input, OnDestroy } from '@angular/core';
-import { CommentDto } from '../../../api/models';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { Store } from '@ngxs/store';
 import { ClearCommentsAction } from '../state/comment.actions';
+import { CommentDtoResponse } from '../../../api/models';
 
 @Component({
   selector: 'app-comments',
@@ -15,7 +15,7 @@ import { ClearCommentsAction } from '../state/comment.actions';
 export class CommentsComponent implements OnDestroy{
   store = inject(Store)
   
-  comments = input.required<CommentDto[]>()
+  comments = input.required<CommentDtoResponse[]>()
 
   ngOnDestroy(): void {
     this.store.dispatch(new ClearCommentsAction())

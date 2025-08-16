@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CategoryDto } from '../../models/category-dto';
+import { CategoryDtoResponse } from '../../models/category-dto-response';
 
 export interface GetCategoryById$Params {
   id: number;
 }
 
-export function getCategoryById(http: HttpClient, rootUrl: string, params: GetCategoryById$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDto>> {
+export function getCategoryById(http: HttpClient, rootUrl: string, params: GetCategoryById$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, getCategoryById.PATH, 'get');
   if (params) {
     rb.path('id', params.id, {});
@@ -23,7 +23,7 @@ export function getCategoryById(http: HttpClient, rootUrl: string, params: GetCa
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<CategoryDto>;
+      return r as StrictHttpResponse<CategoryDtoResponse>;
     })
   );
 }

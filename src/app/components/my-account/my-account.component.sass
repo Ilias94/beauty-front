@@ -1,8 +1,85 @@
-.example-card 
-  // max-width: 400px
-  margin-bottom: 8px
-.container
-    // display: grid
-    grid-template-columns: 1fr 1fr 1fr
-    gap: 15%
+.user-dashboard
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding: 32px
+
+.profile-photo
+  width: 120px
+  height: 120px
+  border-radius: 50%
+  object-fit: cover
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2)
+  margin-bottom: 32px
+  transition: transform 0.3s ease
+
+  &:hover
+    transform: scale(1.05)
+
+.cards-grid
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))
+  gap: 24px
+  width: 100%
+  max-width: 1000px
+
+@keyframes fadeInUp
+  from
+    opacity: 0
+    transform: translateY(10px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+.dashboard-card
+  padding: 16px
+  animation: fadeInUp 0.4s ease
+  transition: transform 0.3s ease, box-shadow 0.3s ease
+  border-radius: 12px
+
+  &:hover
+    transform: translateY(-4px)
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15)
+
+  mat-card-title
+    font-size: 1.2rem
+    font-weight: 600
+    margin-bottom: 8px
+
+  mat-card-content
+    font-size: 0.95rem
+    color: #555
+
+  mat-card-actions
+    margin-top: 12px
+
+    button
+      transition: background-color 0.3s ease, transform 0.2s ease
+
+      &:hover
+        transform: scale(1.05)
+.profile-avatar
+  margin-bottom: 32px
+
+.profile-photo,
+.avatar-fallback
+  width: 120px
+  height: 120px
+  border-radius: 50%
+  object-fit: cover
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2)
+  transition: transform 0.3s ease
+  display: flex
+  align-items: center
+  justify-content: center
+
+  &:hover
+    transform: scale(1.05)
+
+.avatar-fallback
+  background-color: #3f51b5
+  color: white
+  font-size: 2rem
+  font-weight: 600
+  text-transform: uppercase
 

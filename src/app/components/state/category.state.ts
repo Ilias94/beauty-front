@@ -3,10 +3,10 @@ import { State, Action, StateContext } from '@ngxs/store';
 import { GetCategoriesAction } from './category.actions';
 import { CategoryControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
-import { CategoryDto } from '../../../api/models';
+import { CategoryDtoResponse } from '../../../api/models';
 
 export class CategoryStateModel {
-  public categories: CategoryDto[]
+  public categories: CategoryDtoResponse[]
 }
 
 const defaults = {

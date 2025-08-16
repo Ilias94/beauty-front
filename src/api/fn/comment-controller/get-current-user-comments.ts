@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CommentDto } from '../../models/comment-dto';
+import { CommentDtoResponse } from '../../models/comment-dto-response';
 
 export interface GetCurrentUserComments$Params {
 }
 
-export function getCurrentUserComments(http: HttpClient, rootUrl: string, params?: GetCurrentUserComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDto>>> {
+export function getCurrentUserComments(http: HttpClient, rootUrl: string, params?: GetCurrentUserComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDtoResponse>>> {
   const rb = new RequestBuilder(rootUrl, getCurrentUserComments.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function getCurrentUserComments(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<CommentDto>>;
+      return r as StrictHttpResponse<Array<CommentDtoResponse>>;
     })
   );
 }

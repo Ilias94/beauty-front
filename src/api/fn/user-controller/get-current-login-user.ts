@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserDto } from '../../models/user-dto';
+import { UserDtoResponse } from '../../models/user-dto-response';
 
 export interface GetCurrentLoginUser$Params {
 }
 
-export function getCurrentLoginUser(http: HttpClient, rootUrl: string, params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+export function getCurrentLoginUser(http: HttpClient, rootUrl: string, params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, getCurrentLoginUser.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function getCurrentLoginUser(http: HttpClient, rootUrl: string, params?: 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UserDto>;
+      return r as StrictHttpResponse<UserDtoResponse>;
     })
   );
 }

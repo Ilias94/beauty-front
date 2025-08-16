@@ -6,7 +6,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NgxsModule } from '@ngxs/store';
 import { SecurityState } from './components/state/security.state';
-import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AbstractControl } from '@angular/forms';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { tokenInterceptor } from './token.interceptor';
@@ -19,10 +19,15 @@ import { CategoryState } from './components/state/category.state';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { CommentState } from './components/state/comment.state';
 import { RatingState } from './components/state/rating.state';
+import { CookieService } from 'ngx-cookie-service';
+import { AiState } from './components/state/ai.state';
+import { PaymentState } from './components/state/payment.state';
+
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    CookieService,
     provideRouter(routes),
     provideClientHydration(),
     provideAnimationsAsync(),
@@ -34,7 +39,9 @@ export const appConfig: ApplicationConfig = {
         UserState,
         CategoryState,
         CommentState,
-        RatingState
+        RatingState,
+        AiState,
+        PaymentState
       ]),
       MatSnackBarModule,
       FormlyModule.forRoot({

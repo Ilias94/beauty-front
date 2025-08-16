@@ -6,13 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CourseDto } from '../../models/course-dto';
+import { CourseDtoRequest } from '../../models/course-dto-request';
+import { CourseDtoResponse } from '../../models/course-dto-response';
 
 export interface CreateCourse$Params {
-      body: CourseDto
+      body: CourseDtoRequest
 }
 
-export function createCourse(http: HttpClient, rootUrl: string, params: CreateCourse$Params, context?: HttpContext): Observable<StrictHttpResponse<CourseDto>> {
+export function createCourse(http: HttpClient, rootUrl: string, params: CreateCourse$Params, context?: HttpContext): Observable<StrictHttpResponse<CourseDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, createCourse.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -23,7 +24,7 @@ export function createCourse(http: HttpClient, rootUrl: string, params: CreateCo
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<CourseDto>;
+      return r as StrictHttpResponse<CourseDtoResponse>;
     })
   );
 }

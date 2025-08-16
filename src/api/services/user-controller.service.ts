@@ -19,12 +19,12 @@ import { getCurrentLoginUser } from '../fn/user-controller/get-current-login-use
 import { GetCurrentLoginUser$Params } from '../fn/user-controller/get-current-login-user';
 import { getUsers } from '../fn/user-controller/get-users';
 import { GetUsers$Params } from '../fn/user-controller/get-users';
-import { PageUserDto } from '../models/page-user-dto';
+import { PageUserDtoResponse } from '../models/page-user-dto-response';
 import { saveUser } from '../fn/user-controller/save-user';
 import { SaveUser$Params } from '../fn/user-controller/save-user';
 import { updateUser } from '../fn/user-controller/update-user';
 import { UpdateUser$Params } from '../fn/user-controller/update-user';
-import { UserDto } from '../models/user-dto';
+import { UserDtoResponse } from '../models/user-dto-response';
 
 @Injectable({ providedIn: 'root' })
 export class UserControllerService extends BaseService {
@@ -41,7 +41,7 @@ export class UserControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findUserById$Response(params: FindUserById$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+  findUserById$Response(params: FindUserById$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDtoResponse>> {
     return findUserById(this.http, this.rootUrl, params, context);
   }
 
@@ -51,9 +51,9 @@ export class UserControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findUserById(params: FindUserById$Params, context?: HttpContext): Observable<UserDto> {
+  findUserById(params: FindUserById$Params, context?: HttpContext): Observable<UserDtoResponse> {
     return this.findUserById$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
+      map((r: StrictHttpResponse<UserDtoResponse>): UserDtoResponse => r.body)
     );
   }
 
@@ -66,7 +66,7 @@ export class UserControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateUser$Response(params: UpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+  updateUser$Response(params: UpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDtoResponse>> {
     return updateUser(this.http, this.rootUrl, params, context);
   }
 
@@ -76,9 +76,9 @@ export class UserControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateUser(params: UpdateUser$Params, context?: HttpContext): Observable<UserDto> {
+  updateUser(params: UpdateUser$Params, context?: HttpContext): Observable<UserDtoResponse> {
     return this.updateUser$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
+      map((r: StrictHttpResponse<UserDtoResponse>): UserDtoResponse => r.body)
     );
   }
 
@@ -141,7 +141,7 @@ export class UserControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getUsers$Response(params: GetUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<PageUserDto>> {
+  getUsers$Response(params: GetUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<PageUserDtoResponse>> {
     return getUsers(this.http, this.rootUrl, params, context);
   }
 
@@ -151,9 +151,9 @@ export class UserControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getUsers(params: GetUsers$Params, context?: HttpContext): Observable<PageUserDto> {
+  getUsers(params: GetUsers$Params, context?: HttpContext): Observable<PageUserDtoResponse> {
     return this.getUsers$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PageUserDto>): PageUserDto => r.body)
+      map((r: StrictHttpResponse<PageUserDtoResponse>): PageUserDtoResponse => r.body)
     );
   }
 
@@ -166,7 +166,7 @@ export class UserControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveUser$Response(params?: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+  saveUser$Response(params?: SaveUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDtoResponse>> {
     return saveUser(this.http, this.rootUrl, params, context);
   }
 
@@ -176,9 +176,9 @@ export class UserControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveUser(params?: SaveUser$Params, context?: HttpContext): Observable<UserDto> {
+  saveUser(params?: SaveUser$Params, context?: HttpContext): Observable<UserDtoResponse> {
     return this.saveUser$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
+      map((r: StrictHttpResponse<UserDtoResponse>): UserDtoResponse => r.body)
     );
   }
 
@@ -191,7 +191,7 @@ export class UserControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCurrentLoginUser$Response(params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
+  getCurrentLoginUser$Response(params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDtoResponse>> {
     return getCurrentLoginUser(this.http, this.rootUrl, params, context);
   }
 
@@ -201,9 +201,9 @@ export class UserControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCurrentLoginUser(params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<UserDto> {
+  getCurrentLoginUser(params?: GetCurrentLoginUser$Params, context?: HttpContext): Observable<UserDtoResponse> {
     return this.getCurrentLoginUser$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
+      map((r: StrictHttpResponse<UserDtoResponse>): UserDtoResponse => r.body)
     );
   }
 

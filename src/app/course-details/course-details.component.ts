@@ -2,7 +2,6 @@ import { Component, OnInit, Signal, ViewChild, effect, inject } from '@angular/c
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { GetCourseByIdAction } from '../components/state/course.actions';
-import { CommentDto, CourseDto, RatingDto } from '../../api/models';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +12,9 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { CommentsComponent } from "../components/comments/comments.component";
 import { NgxStarsComponent, NgxStarsModule } from 'ngx-stars';
 import { GetCurrentUserRatingByCourseIdAction, SaveRatingAction } from '../components/state/rating.actions';
+import { CommentDtoResponse, CourseDtoResponse, RatingDto } from '../../api/models';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -24,22 +26,30 @@ import { GetCurrentUserRatingByCourseIdAction, SaveRatingAction } from '../compo
     FormlyMaterialModule,
     ReactiveFormsModule,
     CommentsComponent,
-    NgxStarsModule
+    NgxStarsModule,
+    GoogleMapsModule,
+    CommonModule
   ],
   templateUrl: './course-details.component.html',
   styleUrl: './course-details.component.sass'
 })
 export class CourseDetailsComponent implements OnInit {
+
+
+
   store = inject(Store)
   activatedRoute = inject(ActivatedRoute)
-  course: Signal<CourseDto> = toSignal(this.store.select(state => state.course.course));
+  course: Signal<CourseDtoResponse> = toSignal(this.store.select(state => state.course.course));
   courseId: number
-  comments: Signal<CommentDto[]> = toSignal(this.store.select(state => state.comment.comments))
+  comments: Signal<CommentDtoResponse[]> = toSignal(this.store.select(state => state.comment.comments))
   currentUserRating: Signal<RatingDto> = toSignal(this.store.select(state => state.rating.currentUserRating))
   @ViewChild("currentRating")
   currentRatingComponent: NgxStarsComponent;
   @ViewChild("courseRating")
   courseRatingComponent: NgxStarsComponent;
+  zoom = 12;
+  // center: google.maps.LatLngLiteral = { lat: 52.2297, lng: 21.0122 };
+
 
 
 
@@ -56,11 +66,17 @@ export class CourseDetailsComponent implements OnInit {
       }
     }
   ]
+  position: google.maps.LatLngLiteral  = { lng: 0, lat: 0 }
+  mapOptions: google.maps.MapOptions = { center: { lng: 0, lat: 0 }, mapId: "1" }
 
   constructor() {
     effect(() => {
       this.currentRatingComponent.setRating(this.currentUserRating().value)
       this.courseRatingComponent.setRating(this.course().rating)
+      if (this.course().address) {
+         this.mapOptions = { center: { lat: this.course().address.lat, lng: this.course().address.lng }, mapId: "1" }
+        this.position = { lat: this.course().address.lat, lng: this.course().address.lng }
+      }
     })
   }
 
@@ -74,7 +90,7 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   saveComment() {
-    const commentDto: CommentDto = {
+    const commentDto: CommentDtoResponse = {
       content: this.form.get('comment').value,
       courseId: this.courseId
     }
@@ -85,4 +101,18 @@ export class CourseDetailsComponent implements OnInit {
     this.store.dispatch(new SaveRatingAction({ courseId: this.courseId, value: rating }))
   }
 
+  createMapOptions(course: CourseDtoResponse): google.maps.MapOptions {
+    console.log("in createMapPtions")
+    if (course.address) {
+      return { center: { lat: course.address.lat, lng: course.address.lng }, mapId: "1" }
+    }
+    return {}
+  }
+
+  getPosition(course: CourseDtoResponse): google.maps.LatLngLiteral | google.maps.LatLng | google.maps.LatLngAltitude | google.maps.LatLngAltitudeLiteral {
+    console.log(course + " in getPosition", course)
+
+    return { lat: course.address.lat, lng: course.address.lng }
+
+  }
 }

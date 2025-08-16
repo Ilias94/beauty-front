@@ -9,7 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { CommentDto } from '../models/comment-dto';
+import { CommentDtoResponse } from '../models/comment-dto-response';
 import { createComment } from '../fn/comment-controller/create-comment';
 import { CreateComment$Params } from '../fn/comment-controller/create-comment';
 import { getComments } from '../fn/comment-controller/get-comments';
@@ -32,7 +32,7 @@ export class CommentControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createComment$Response(params: CreateComment$Params, context?: HttpContext): Observable<StrictHttpResponse<CommentDto>> {
+  createComment$Response(params: CreateComment$Params, context?: HttpContext): Observable<StrictHttpResponse<CommentDtoResponse>> {
     return createComment(this.http, this.rootUrl, params, context);
   }
 
@@ -42,9 +42,9 @@ export class CommentControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createComment(params: CreateComment$Params, context?: HttpContext): Observable<CommentDto> {
+  createComment(params: CreateComment$Params, context?: HttpContext): Observable<CommentDtoResponse> {
     return this.createComment$Response(params, context).pipe(
-      map((r: StrictHttpResponse<CommentDto>): CommentDto => r.body)
+      map((r: StrictHttpResponse<CommentDtoResponse>): CommentDtoResponse => r.body)
     );
   }
 
@@ -57,7 +57,7 @@ export class CommentControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getComments$Response(params: GetComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDto>>> {
+  getComments$Response(params: GetComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDtoResponse>>> {
     return getComments(this.http, this.rootUrl, params, context);
   }
 
@@ -67,9 +67,9 @@ export class CommentControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getComments(params: GetComments$Params, context?: HttpContext): Observable<Array<CommentDto>> {
+  getComments(params: GetComments$Params, context?: HttpContext): Observable<Array<CommentDtoResponse>> {
     return this.getComments$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<CommentDto>>): Array<CommentDto> => r.body)
+      map((r: StrictHttpResponse<Array<CommentDtoResponse>>): Array<CommentDtoResponse> => r.body)
     );
   }
 
@@ -82,7 +82,7 @@ export class CommentControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCurrentUserComments$Response(params?: GetCurrentUserComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDto>>> {
+  getCurrentUserComments$Response(params?: GetCurrentUserComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDtoResponse>>> {
     return getCurrentUserComments(this.http, this.rootUrl, params, context);
   }
 
@@ -92,9 +92,9 @@ export class CommentControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCurrentUserComments(params?: GetCurrentUserComments$Params, context?: HttpContext): Observable<Array<CommentDto>> {
+  getCurrentUserComments(params?: GetCurrentUserComments$Params, context?: HttpContext): Observable<Array<CommentDtoResponse>> {
     return this.getCurrentUserComments$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<CommentDto>>): Array<CommentDto> => r.body)
+      map((r: StrictHttpResponse<Array<CommentDtoResponse>>): Array<CommentDtoResponse> => r.body)
     );
   }
 

@@ -6,13 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CategoryDto } from '../../models/category-dto';
+import { CategoryDtoRequest } from '../../models/category-dto-request';
+import { CategoryDtoResponse } from '../../models/category-dto-response';
 
 export interface CreateCategory$Params {
-      body: CategoryDto
+      body: CategoryDtoRequest
 }
 
-export function createCategory(http: HttpClient, rootUrl: string, params: CreateCategory$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDto>> {
+export function createCategory(http: HttpClient, rootUrl: string, params: CreateCategory$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, createCategory.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -23,7 +24,7 @@ export function createCategory(http: HttpClient, rootUrl: string, params: Create
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<CategoryDto>;
+      return r as StrictHttpResponse<CategoryDtoResponse>;
     })
   );
 }

@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CommentDto } from '../../models/comment-dto';
+import { CommentDtoResponse } from '../../models/comment-dto-response';
 
 export interface GetComments$Params {
   courseId: number;
 }
 
-export function getComments(http: HttpClient, rootUrl: string, params: GetComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDto>>> {
+export function getComments(http: HttpClient, rootUrl: string, params: GetComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CommentDtoResponse>>> {
   const rb = new RequestBuilder(rootUrl, getComments.PATH, 'get');
   if (params) {
     rb.path('courseId', params.courseId, {});
@@ -23,7 +23,7 @@ export function getComments(http: HttpClient, rootUrl: string, params: GetCommen
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<CommentDto>>;
+      return r as StrictHttpResponse<Array<CommentDtoResponse>>;
     })
   );
 }

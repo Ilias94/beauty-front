@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface CategoryDto {
-  id?: number;
+export interface CategoryDtoRequest {
   label?: string;
 }

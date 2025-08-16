@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect, Signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
@@ -8,6 +8,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { SaveCourseAction } from '../../state/course.actions';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { GetAiPromptAction } from '../../state/ai.actions';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { state } from '@angular/animations';
+
+function toLocalIsoString(date: Date): string {
+  const pad = (n: number) => n.toString().padStart(2, '0');
+
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+         `T${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
+}
+
+function toLocalIsoDateOnly(date: Date): string {
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T00:00:00`;
+}
 
 @Component({
   selector: 'app-course-form',
@@ -17,7 +33,11 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
   templateUrl: './course-form.component.html',
   styleUrl: './course-form.component.sass'
 })
+
 export class CourseFormComponent {
+  searchInput$ = new Subject<string>();
+  prompt: Signal<string> = toSignal(this.store.select(state => state.ai.prompt));
+  
 
   form = new FormGroup({})
   fields: FormlyFieldConfig[] = [
@@ -30,7 +50,10 @@ export class CourseFormComponent {
             label: "title",
             placeholder: "enter your title",
             required: true,
-            minLength: 5
+            minLength: 5,
+            keyup: (field, event: any) => {
+              this.searchInput$.next(event.target.value);
+            }
           }
         },
         {
@@ -217,15 +240,60 @@ export class CourseFormComponent {
     }
 
   ]
-  constructor(private store: Store) { }
+  constructor(private store: Store) {
+    effect(() => {
+      if (this.prompt()) {
+        this.form.patchValue({ "description": this.prompt() })
+      }
+    })
+  }
+  ngOnInit() {
+    this.searchInput$
+      .pipe(
+        debounceTime(1000), // poczekaj 1000ms od ostatniego wpisania
+        distinctUntilChanged() // tylko jeśli wartość się zmieniła
+      )
+      .subscribe(value => {
+        console.log('Wysyłam request z:', value);
+        // TODO: wykonaj zapytanie do backendu tutaj
+        this.store.dispatch(new GetAiPromptAction({
+          prompt: value
+        }))
+      });
+  }
+
+  
   submit() {
+    const date: Date = this.form.get('startDate')?.value;
+    const time: string = this.form.get('timePicker')?.value; // np. "14:30"
+
+    let startDateTimeIso: string | null = null;
+    if (date && time) {
+      const [hours, minutes] = time.split(':').map(Number);
+
+      // Stwórz nową datę z połączonym czasem
+      const combinedDate = new Date(date);
+      combinedDate.setHours(hours);
+      combinedDate.setMinutes(minutes);
+      combinedDate.setSeconds(0);
+      combinedDate.setMilliseconds(0);
+
+      // Konwertuj na ISO string (dla backendu)
+      startDateTimeIso = toLocalIsoString(combinedDate);
+
+    }
+
+    // Analogicznie można dodać obróbkę endDate jeśli potrzeba
+   const endDateControl = this.form.get('endDate');
+const endDate = endDateControl?.value as Date;
+const endDateIso = endDate ? toLocalIsoDateOnly(endDate) : null;
     this.store.dispatch(new SaveCourseAction({
       title: this.form.get('title')?.value,
       description: this.form.get('description')?.value,
       price: this.form.get('price').value,
       maxParticipants: this.form.get('maxParticipants')?.value,
-      startDate: this.form.get('startDate')?.value,
-      endDate: this.form.get('endDate')?.value,
+      startDate: startDateTimeIso,
+      endDate: endDateIso,
       address: {
         district: this.form.get('district')?.value,
         street: this.form.get('street')?.value,
@@ -237,4 +305,7 @@ export class CourseFormComponent {
       category: { label: this.form.get('category')?.value }
     }))
   }
+  
 }
+
+

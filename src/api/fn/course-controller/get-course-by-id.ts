@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CourseDto } from '../../models/course-dto';
+import { CourseDtoResponse } from '../../models/course-dto-response';
 
 export interface GetCourseById$Params {
   id: number;
 }
 
-export function getCourseById(http: HttpClient, rootUrl: string, params: GetCourseById$Params, context?: HttpContext): Observable<StrictHttpResponse<CourseDto>> {
+export function getCourseById(http: HttpClient, rootUrl: string, params: GetCourseById$Params, context?: HttpContext): Observable<StrictHttpResponse<CourseDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, getCourseById.PATH, 'get');
   if (params) {
     rb.path('id', params.id, {});
@@ -23,7 +23,7 @@ export function getCourseById(http: HttpClient, rootUrl: string, params: GetCour
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<CourseDto>;
+      return r as StrictHttpResponse<CourseDtoResponse>;
     })
   );
 }

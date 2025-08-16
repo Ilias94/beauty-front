@@ -2,9 +2,9 @@
 /* eslint-disable */
 import { PageableObject } from '../models/pageable-object';
 import { SortObject } from '../models/sort-object';
-import { UserDto } from '../models/user-dto';
-export interface PageUserDto {
-  content?: Array<UserDto>;
+import { UserDtoResponse } from '../models/user-dto-response';
+export interface PageUserDtoResponse {
+  content?: Array<UserDtoResponse>;
   empty?: boolean;
   first?: boolean;
   last?: boolean;

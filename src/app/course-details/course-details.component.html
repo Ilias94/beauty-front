@@ -1,9 +1,16 @@
 <mat-card class="example-card">
   <mat-card-header>
     <mat-card-title>{{course().title}}</mat-card-title>
-    <mat-card-subtitle>Price: {{course().price}} zł</mat-card-subtitle>
+    <mat-card-subtitle class="price-highlight">
+      💰 {{ course().price }} zł
+    </mat-card-subtitle>
+
   </mat-card-header>
-  <img mat-card-image src="https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/{{course().creator.fileName}}">
+
+  @if (course()?.creator?.fileName) {
+  <img mat-card-image
+    src="https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/{{course().creator.fileName}}">
+  }
   <mat-card-content>
     <p>{{course().description}}</p>
     <p>{{course().category?.label}}</p>
@@ -13,28 +20,36 @@
     <p>{{course().address?.district}}</p>
     <p>{{course().address?.street}}</p>
     <p>{{course().address?.streetNumber}}</p>
-    
+
   </mat-card-content>
   <mat-card-actions>
     <button mat-button>SignUp</button>
   </mat-card-actions>
 </mat-card>
-<label>Average rating</label>
-<ngx-stars #currentRating
-[wholeStars]="false" 
-[maxStars]="5"
-[readonly]="false"
-(ratingOutput)="handleRating($event)" >
-</ngx-stars>
-<label>User Rating</label>
-<ngx-stars #courseRating
-[wholeStars]="false" 
-[maxStars]="5"
-[readonly]="false"
-(ratingOutput)="handleRating($event)" >
-</ngx-stars>
+<div class="rating-section">
+  <div class="rating-block">
+    <label>Average Rating</label>
+    <ngx-stars #currentRating [wholeStars]="false" [maxStars]="5" [readonly]="true"
+      (ratingOutput)="handleRating($event)">
+    </ngx-stars>
+  </div>
+
+  <div class="rating-block">
+    <label>Your Rating</label>
+    <ngx-stars #courseRating [wholeStars]="false" [maxStars]="5" [readonly]="false"
+      (ratingOutput)="handleRating($event)">
+    </ngx-stars>
+  </div>
+</div>
+
 <form [formGroup]="form">
   <formly-form [form]="form" [fields]="fields"></formly-form>
   <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="saveComment()">Save comment</button>
 </form>
 <app-comments [comments]="comments()"></app-comments>
+@if (course().address) {
+<google-map height="400px" width="100%" [zoom]="zoom" [options]="mapOptions">
+  <map-advanced-marker [position]="position" #markerElem="mapAdvancedMarker">
+  </map-advanced-marker>
+</google-map>
+}

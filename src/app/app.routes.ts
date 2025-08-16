@@ -11,6 +11,7 @@ import { AccountFormComponent } from './components/account-form/account-form.com
 import { CreatorCoursesComponent } from './components/creator-courses/creator-courses.component';
 import { StudentCoursesComponent } from './components/student-courses/student-courses.component';
 import { MyCommentsComponent } from './components/my-comments/my-comments.component';
+import { PaymentStatusComponent } from './components/payment-status/payment-status.component';
 
 
 export const routes: Routes = [
@@ -61,5 +62,9 @@ export const routes: Routes = [
     {
         path:"my-comments",
         component: MyCommentsComponent
+    },
+    {
+        path:"payment-status",
+        component: PaymentStatusComponent
     }
 ];

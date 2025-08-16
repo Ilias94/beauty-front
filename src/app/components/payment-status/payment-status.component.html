@@ -1,0 +1,9 @@
+<mat-card>
+  <h2>Payment Status</h2>
+  <div *ngIf="status; else loading">
+    <mat-chip [color]="statusColor()" selected>{{ status }}</mat-chip>
+  </div>
+  <ng-template #loading>
+    <p>Loading payment status...</p>
+  </ng-template>
+</mat-card>

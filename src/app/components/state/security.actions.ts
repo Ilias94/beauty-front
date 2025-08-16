@@ -1,4 +1,5 @@
-import { UserDto } from "../../../api/models";
+import { UserDtoResponse } from "../../../api/models";
+
 
 export class LoginAction {
   static readonly type = '[Security] LoginAction';
@@ -13,7 +14,7 @@ export class LoginFromLocalStorageAction {
 
 export class RegisterAction {
   static readonly type = '[Security] RegisterAction';
-  constructor(public user: UserDto, public file: Blob) {
+  constructor(public user: UserDtoResponse, public file: Blob) {
   }
 }
 

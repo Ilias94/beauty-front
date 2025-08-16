@@ -9,7 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { CategoryDto } from '../models/category-dto';
+import { CategoryDtoResponse } from '../models/category-dto-response';
 import { createCategory } from '../fn/category-controller/create-category';
 import { CreateCategory$Params } from '../fn/category-controller/create-category';
 import { deleteCategory } from '../fn/category-controller/delete-category';
@@ -36,7 +36,7 @@ export class CategoryControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCategoryById$Response(params: GetCategoryById$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDto>> {
+  getCategoryById$Response(params: GetCategoryById$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDtoResponse>> {
     return getCategoryById(this.http, this.rootUrl, params, context);
   }
 
@@ -46,9 +46,9 @@ export class CategoryControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCategoryById(params: GetCategoryById$Params, context?: HttpContext): Observable<CategoryDto> {
+  getCategoryById(params: GetCategoryById$Params, context?: HttpContext): Observable<CategoryDtoResponse> {
     return this.getCategoryById$Response(params, context).pipe(
-      map((r: StrictHttpResponse<CategoryDto>): CategoryDto => r.body)
+      map((r: StrictHttpResponse<CategoryDtoResponse>): CategoryDtoResponse => r.body)
     );
   }
 
@@ -61,7 +61,7 @@ export class CategoryControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateCategory$Response(params: UpdateCategory$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDto>> {
+  updateCategory$Response(params: UpdateCategory$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDtoResponse>> {
     return updateCategory(this.http, this.rootUrl, params, context);
   }
 
@@ -71,9 +71,9 @@ export class CategoryControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateCategory(params: UpdateCategory$Params, context?: HttpContext): Observable<CategoryDto> {
+  updateCategory(params: UpdateCategory$Params, context?: HttpContext): Observable<CategoryDtoResponse> {
     return this.updateCategory$Response(params, context).pipe(
-      map((r: StrictHttpResponse<CategoryDto>): CategoryDto => r.body)
+      map((r: StrictHttpResponse<CategoryDtoResponse>): CategoryDtoResponse => r.body)
     );
   }
 
@@ -111,7 +111,7 @@ export class CategoryControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAllCategories$Response(params?: GetAllCategories$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CategoryDto>>> {
+  getAllCategories$Response(params?: GetAllCategories$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CategoryDtoResponse>>> {
     return getAllCategories(this.http, this.rootUrl, params, context);
   }
 
@@ -121,9 +121,9 @@ export class CategoryControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAllCategories(params?: GetAllCategories$Params, context?: HttpContext): Observable<Array<CategoryDto>> {
+  getAllCategories(params?: GetAllCategories$Params, context?: HttpContext): Observable<Array<CategoryDtoResponse>> {
     return this.getAllCategories$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<CategoryDto>>): Array<CategoryDto> => r.body)
+      map((r: StrictHttpResponse<Array<CategoryDtoResponse>>): Array<CategoryDtoResponse> => r.body)
     );
   }
 
@@ -136,7 +136,7 @@ export class CategoryControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createCategory$Response(params: CreateCategory$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDto>> {
+  createCategory$Response(params: CreateCategory$Params, context?: HttpContext): Observable<StrictHttpResponse<CategoryDtoResponse>> {
     return createCategory(this.http, this.rootUrl, params, context);
   }
 
@@ -146,9 +146,9 @@ export class CategoryControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  createCategory(params: CreateCategory$Params, context?: HttpContext): Observable<CategoryDto> {
+  createCategory(params: CreateCategory$Params, context?: HttpContext): Observable<CategoryDtoResponse> {
     return this.createCategory$Response(params, context).pipe(
-      map((r: StrictHttpResponse<CategoryDto>): CategoryDto => r.body)
+      map((r: StrictHttpResponse<CategoryDtoResponse>): CategoryDtoResponse => r.body)
     );
   }
 

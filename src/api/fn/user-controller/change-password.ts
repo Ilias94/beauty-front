@@ -6,10 +6,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ChangePasswordRequestDto } from '../../models/change-password-request-dto';
+import { ChangePasswordDtoRequest } from '../../models/change-password-dto-request';
 
 export interface ChangePassword$Params {
-      body: ChangePasswordRequestDto
+      body: ChangePasswordDtoRequest
 }
 
 export function changePassword(http: HttpClient, rootUrl: string, params: ChangePassword$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

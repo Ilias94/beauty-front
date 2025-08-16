@@ -6,7 +6,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PageCourseDto } from '../../models/page-course-dto';
+import { PageCourseDtoResponse } from '../../models/page-course-dto-response';
 
 export interface GetCourses$Params {
   page?: number;
@@ -19,7 +19,7 @@ export interface GetCourses$Params {
   isCurrentStudent?: boolean;
 }
 
-export function getCourses(http: HttpClient, rootUrl: string, params?: GetCourses$Params, context?: HttpContext): Observable<StrictHttpResponse<PageCourseDto>> {
+export function getCourses(http: HttpClient, rootUrl: string, params?: GetCourses$Params, context?: HttpContext): Observable<StrictHttpResponse<PageCourseDtoResponse>> {
   const rb = new RequestBuilder(rootUrl, getCourses.PATH, 'get');
   if (params) {
     rb.query('page', params.page, {});
@@ -37,7 +37,7 @@ export function getCourses(http: HttpClient, rootUrl: string, params?: GetCourse
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<PageCourseDto>;
+      return r as StrictHttpResponse<PageCourseDtoResponse>;
     })
   );
 }

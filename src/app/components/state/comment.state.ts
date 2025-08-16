@@ -3,11 +3,12 @@ import { State, Action, StateContext } from '@ngxs/store';
 import { ClearCommentsAction, GetCommentsAction, GetCurrentUserCommentsAction, SaveCommentAction } from './comment.actions';
 import { CommentControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
-import { CommentDto } from '../../../api/models';
-import { response } from 'express';
+import { CommentDtoResponse } from '../../../api/models';
+
+
 
 export class CommentStateModel {
-  public comments: CommentDto[];
+  public comments: CommentDtoResponse[];
 }
 
 const defaults = {

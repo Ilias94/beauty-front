@@ -1,10 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
-import { CourseDto } from '../models/course-dto';
+import { CourseDtoResponse } from '../models/course-dto-response';
 import { PageableObject } from '../models/pageable-object';
 import { SortObject } from '../models/sort-object';
-export interface PageCourseDto {
-  content?: Array<CourseDto>;
+export interface PageCourseDtoResponse {
+  content?: Array<CourseDtoResponse>;
   empty?: boolean;
   first?: boolean;
   last?: boolean;

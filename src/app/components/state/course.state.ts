@@ -3,14 +3,13 @@ import { State, Action, StateContext } from '@ngxs/store';
 import { GetAutocompleteTitleAction, GetCourseByIdAction, GetPageCoursesAction, SaveCourseAction, SignUpCourseAction } from './course.actions';
 import { CourseControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
-import { CourseDto, PageCourseDto } from '../../../api/models';
 import { Navigate } from '@ngxs/router-plugin';
-import { response } from 'express';
+import { CourseDtoResponse, PageCourseDtoResponse } from '../../../api/models';
 
 
 export class CourseStateModel {
-  public pageCourses: PageCourseDto;
-  public course: CourseDto;
+  public pageCourses: PageCourseDtoResponse;
+  public course: CourseDtoResponse;
   public titleAutocomplete: string[]
 }
 

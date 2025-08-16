@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface ChangePasswordRequestDto {
+export interface ChangePasswordDtoRequest {
   confirmNewPassword: string;
   newPassword: string;
   oldPassword: string;

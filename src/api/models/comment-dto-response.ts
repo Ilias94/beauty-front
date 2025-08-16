@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-export interface CommentDto {
+export interface CommentDtoResponse {
   authorName?: string;
   content?: string;
   courseId?: number;
