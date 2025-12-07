@@ -22,3 +22,5 @@ export { TemplateDto } from './models/template-dto';
 export { TokenDto } from './models/token-dto';
 export { UserDtoRequest } from './models/user-dto-request';
 export { UserDtoResponse } from './models/user-dto-response';
+export { VideoDescriptionEditRequest } from './models/video-description-edit-request';
+export { VideoDtoResponse } from './models/video-dto-response';

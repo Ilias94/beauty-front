@@ -29,7 +29,7 @@ export class ReportControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  generateReportExcel$Response(params: GenerateReportExcel$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  generateReportExcel$Response(params: GenerateReportExcel$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
     return generateReportExcel(this.http, this.rootUrl, params, context);
   }
 
@@ -39,9 +39,9 @@ export class ReportControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  generateReportExcel(params: GenerateReportExcel$Params, context?: HttpContext): Observable<string> {
+  generateReportExcel(params: GenerateReportExcel$Params, context?: HttpContext): Observable<Blob> {
     return this.generateReportExcel$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }
 
@@ -54,7 +54,7 @@ export class ReportControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  generateReportCsv$Response(params: GenerateReportCsv$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  generateReportCsv$Response(params: GenerateReportCsv$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
     return generateReportCsv(this.http, this.rootUrl, params, context);
   }
 
@@ -64,9 +64,9 @@ export class ReportControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  generateReportCsv(params: GenerateReportCsv$Params, context?: HttpContext): Observable<string> {
+  generateReportCsv(params: GenerateReportCsv$Params, context?: HttpContext): Observable<Blob> {
     return this.generateReportCsv$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }
 

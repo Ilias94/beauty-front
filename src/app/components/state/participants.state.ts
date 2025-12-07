@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
-import { ParticipantsAction } from '../participants.actions';
+
 import { ParticipantsControllerService } from '../../../api/services';
+import { GetParticipantsAction } from './participants.actions';
+import { tap } from 'rxjs';
+import { UserDtoResponse } from '../../../api/models';
 
 export class ParticipantsStateModel {
-  public items: string[];
+  public participants: UserDtoResponse[];
 }
 
 const defaults = {
-  items: []
+  participants: []
 };
 
 @State<ParticipantsStateModel>({
@@ -19,9 +22,12 @@ const defaults = {
 export class ParticipantsState {
   constructor(private participantsControllerService: ParticipantsControllerService) {}
 
-  @Action(GetParticipantsAction)
-  add({ getState, setState }: StateContext<ParticipantsStateModel>, { payload }: ParticipantsAction) {
-    const state = getState();
-    setState({ items: [ ...state.items, payload ] });
+   @Action(GetParticipantsAction)
+  getParticipants({ patchState }: StateContext<ParticipantsStateModel>, { courseId }: GetParticipantsAction) {
+    return this.participantsControllerService.getParticipants({courseId}).pipe(
+      tap((response) => {
+        patchState({ participants: response });
+      })
+    );
   }
 }

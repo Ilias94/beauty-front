@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
-import { GetAutocompleteTitleAction, GetCourseByIdAction, GetPageCoursesAction, SaveCourseAction, SignUpCourseAction } from './course.actions';
+import { FilterCoursesByDateAction, GetAutocompleteTitleAction, GetCourseByIdAction, GetPageCoursesAction, SaveCourseAction, SignUpCourseAction } from './course.actions';
 import { CourseControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
 import { Navigate } from '@ngxs/router-plugin';
@@ -11,12 +11,14 @@ export class CourseStateModel {
   public pageCourses: PageCourseDtoResponse;
   public course: CourseDtoResponse;
   public titleAutocomplete: string[]
+  public coursesByDate: CourseDtoResponse[]
 }
 
 const defaults = {
   pageCourses: {},
   course: {},
-  titleAutocomplete: []
+  titleAutocomplete: [],
+  coursesByDate: []
 };
 
 @State<CourseStateModel>({
@@ -29,7 +31,7 @@ export class CourseState {
 
   @Action(GetPageCoursesAction)
   getCourses({ patchState }: StateContext<CourseStateModel>, { page, size, categoryId, title, sortBy, sortDirection, isCurrentCreator, isCurrentStudent }: GetPageCoursesAction) {
-    return this.courseControllerService.getCourses({ page, size, categoryId, title, sortBy, sortDirection, isCurrentCreator, isCurrentStudent}).pipe(tap(response => {
+    return this.courseControllerService.getCourses({ page, size, categoryId, title, sortBy, sortDirection, isCurrentCreator, isCurrentStudent }).pipe(tap(response => {
       patchState({ pageCourses: response })
     }))
   }
@@ -59,4 +61,12 @@ export class CourseState {
       patchState({ titleAutocomplete: response })
     }))
   }
+
+  @Action(FilterCoursesByDateAction)
+  filterCourseByDate({ patchState }: StateContext<CourseStateModel>, { from, to }: FilterCoursesByDateAction) {
+    return this.courseControllerService.filterCoursesByDate({ from, to }).pipe(tap(response => {
+      patchState({ coursesByDate: response })
+    }))
+  }
+
 }

@@ -2,6 +2,7 @@ export { UserControllerService } from './services/user-controller.service';
 export { CourseControllerService } from './services/course-controller.service';
 export { CategoryControllerService } from './services/category-controller.service';
 export { TemplateControllerService } from './services/template-controller.service';
+export { VideoControllerService } from './services/video-controller.service';
 export { RatingControllerService } from './services/rating-controller.service';
 export { PaymentControllerService } from './services/payment-controller.service';
 export { LoginControllerService } from './services/login-controller.service';

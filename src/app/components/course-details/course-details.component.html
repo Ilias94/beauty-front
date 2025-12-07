@@ -23,7 +23,10 @@
 
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button>SignUp</button>
+    
+    <input hidden #fileInput (change)="onFileSelected($event)" multiple type="file">
+    <button mat-button (click)="onUpload()">Add videos</button>
+    <button matButton="elevated" (click)="openDialog()">Videos</button>
   </mat-card-actions>
 </mat-card>
 <div class="rating-section">

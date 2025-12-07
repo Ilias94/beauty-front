@@ -22,6 +22,8 @@ import { RatingState } from './components/state/rating.state';
 import { CookieService } from 'ngx-cookie-service';
 import { AiState } from './components/state/ai.state';
 import { PaymentState } from './components/state/payment.state';
+import { FileState } from './components/state/file.state';
+import { VideoState } from './components/state/video.state';
 
 
 
@@ -41,7 +43,9 @@ export const appConfig: ApplicationConfig = {
         CommentState,
         RatingState,
         AiState,
-        PaymentState
+        PaymentState,
+        FileState,
+        VideoState
       ]),
       MatSnackBarModule,
       FormlyModule.forRoot({

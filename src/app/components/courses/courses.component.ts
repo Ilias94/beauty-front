@@ -15,12 +15,17 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { GetCategoriesAction } from '../state/category.actions';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, Subject, tap } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { NgxStarsModule } from 'ngx-stars';
-import { CategoryDtoResponse, PageCourseDtoResponse } from '../../../api/models';
+import { CategoryDtoResponse, PageCourseDtoResponse, UserDtoResponse } from '../../../api/models';
 import { MatCardModule } from '@angular/material/card';
 import { CreatePaymentAction } from '../state/payment.actions';
+import { ReportControllerService } from '../../../api/services';
+import { HttpClient } from '@angular/common/http';
+import { DownloadFileCsvAction, DownloadFileExcelAction } from '../state/file.actions';
+import { state } from '@angular/animations';
+import { SecurityState } from '../state/security.state';
 
 @Component({
   selector: 'app-courses',
@@ -45,7 +50,6 @@ import { CreatePaymentAction } from '../state/payment.actions';
 })
 export class CoursesComponent implements OnInit {
 
-
   store = inject(Store)
   isCurrentCreator = input(false)
   isCurrentStudent = input(false)
@@ -60,11 +64,17 @@ export class CoursesComponent implements OnInit {
   direction: 'ASC' | 'DESC';
   cateogryId: number
   titleAutocomplete: Signal<string[]> = toSignal(this.store.select(state => state.course.titleAutocomplete));
+  currentUser = toSignal(this.store.select(SecurityState.getCurrentUser));
   autocompleteSubject: Subject<string> = new Subject<string>()
 
   ngOnInit(): void {
     this.store.dispatch([new GetPageCoursesAction(0, 10, null, null, null, null, this.isCurrentCreator(), this.isCurrentStudent()), new GetCategoriesAction()])
     this.autocompleteSubject.pipe(debounceTime(500)).subscribe(text => this.store.dispatch([new GetAutocompleteTitleAction(text)]))
+  }
+
+  isOwner(courseId: number): boolean {
+    const user: UserDtoResponse = this.currentUser();
+    return !!user?.ownedCourseIds?.includes(courseId);
   }
 
   changePage(e: PageEvent) {
@@ -80,7 +90,7 @@ export class CoursesComponent implements OnInit {
 
   buyCourse(courseId: number) {
     console.log('buyCourse clicked, courseId:', courseId);
-    this.store.dispatch(new CreatePaymentAction({courseId:courseId}))
+    this.store.dispatch(new CreatePaymentAction({ courseId: courseId }))
   }
   sortData(sort: Sort) {
     this.sortBy = sort.active
@@ -99,5 +109,13 @@ export class CoursesComponent implements OnInit {
 
   clearFilter() {
     this.store.dispatch(new GetPageCoursesAction(this.page, this.size, this.cateogryId, null, this.sortBy, this.direction, this.isCurrentCreator(), this.isCurrentStudent()))
+  }
+
+  downloadExcelFile(courseId: number) {
+    this.store.dispatch(new DownloadFileExcelAction(courseId))
+  }
+
+  downloadCsvFile(courseId: number) {
+    this.store.dispatch(new DownloadFileCsvAction(courseId))
   }
 }

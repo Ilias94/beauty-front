@@ -6,7 +6,7 @@ export class GetPageCoursesAction {
   constructor(public page: number, public size: number, public categoryId?: number,
     public title?: string, public sortBy?: string,
     public sortDirection?: 'ASC' | 'DESC', public isCurrentCreator?: boolean,
-  public isCurrentStudent?: boolean) { }
+    public isCurrentStudent?: boolean) { }
 }
 
 export class SaveCourseAction {
@@ -27,4 +27,9 @@ export class GetCourseByIdAction {
 export class GetAutocompleteTitleAction {
   static readonly type = '[Course] GetAutocompleteTitleAction';
   constructor(public title: string) { }
+}
+
+export class FilterCoursesByDateAction {
+  static readonly type = '[Course] FilterCoursesByDate';
+  constructor(public from: string, public to: string) { }
 }

@@ -5,13 +5,14 @@ import { CourseFormComponent } from './components/private/course-form/course-for
 import { authGuard } from './auth.guard';
 import { ForbiddenComponent } from './components/public/forbidden/forbidden.component';
 import { CoursesComponent } from './components/courses/courses.component';
-import { CourseDetailsComponent } from './course-details/course-details.component';
+import { CourseDetailsComponent } from './components/course-details/course-details.component';
 import { MyAccountComponent } from './components/my-account/my-account.component';
 import { AccountFormComponent } from './components/account-form/account-form.component';
 import { CreatorCoursesComponent } from './components/creator-courses/creator-courses.component';
 import { StudentCoursesComponent } from './components/student-courses/student-courses.component';
 import { MyCommentsComponent } from './components/my-comments/my-comments.component';
 import { PaymentStatusComponent } from './components/payment-status/payment-status.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 
 export const routes: Routes = [
@@ -66,5 +67,9 @@ export const routes: Routes = [
     {
         path:"payment-status",
         component: PaymentStatusComponent
+    },
+    {
+        path:"calendar",
+        component: CalendarComponent
     }
 ];

@@ -8,6 +8,7 @@ import { UserControllerService } from './services/user-controller.service';
 import { CourseControllerService } from './services/course-controller.service';
 import { CategoryControllerService } from './services/category-controller.service';
 import { TemplateControllerService } from './services/template-controller.service';
+import { VideoControllerService } from './services/video-controller.service';
 import { RatingControllerService } from './services/rating-controller.service';
 import { PaymentControllerService } from './services/payment-controller.service';
 import { LoginControllerService } from './services/login-controller.service';
@@ -30,6 +31,7 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
     CourseControllerService,
     CategoryControllerService,
     TemplateControllerService,
+    VideoControllerService,
     RatingControllerService,
     PaymentControllerService,
     LoginControllerService,

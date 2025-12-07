@@ -11,18 +11,18 @@ export interface GenerateReportExcel$Params {
   courseId: number;
 }
 
-export function generateReportExcel(http: HttpClient, rootUrl: string, params: GenerateReportExcel$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+export function generateReportExcel(http: HttpClient, rootUrl: string, params: GenerateReportExcel$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
   const rb = new RequestBuilder(rootUrl, generateReportExcel.PATH, 'get');
   if (params) {
     rb.query('courseId', params.courseId, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'blob', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<Blob>;
     })
   );
 }

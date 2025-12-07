@@ -1,20 +1,23 @@
-import { Component, OnInit, Signal, ViewChild, effect, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, Signal, ViewChild, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { GetCourseByIdAction } from '../components/state/course.actions';
+import { GetCourseByIdAction } from '../state/course.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { GetCommentsAction, SaveCommentAction } from '../components/state/comment.actions';
+import { GetCommentsAction, SaveCommentAction } from '../state/comment.actions';
 import { FormlyMaterialModule } from '@ngx-formly/material';
-import { CommentsComponent } from "../components/comments/comments.component";
+import { CommentsComponent } from "../comments/comments.component";
 import { NgxStarsComponent, NgxStarsModule } from 'ngx-stars';
-import { GetCurrentUserRatingByCourseIdAction, SaveRatingAction } from '../components/state/rating.actions';
-import { CommentDtoResponse, CourseDtoResponse, RatingDto } from '../../api/models';
+import { GetCurrentUserRatingByCourseIdAction, SaveRatingAction } from '../state/rating.actions';
+import { CommentDtoResponse, CourseDtoResponse, RatingDto } from '../../../api/models';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CourseOnlineComponent } from '../course-online/course-online.component';
+import { AddVideoAction } from '../state/video.actions';
 
 
 @Component({
@@ -22,6 +25,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [MatCardModule,
     MatButtonModule,
+    MatDialogModule,
     FormlyModule,
     FormlyMaterialModule,
     ReactiveFormsModule,
@@ -36,7 +40,6 @@ import { CommonModule } from '@angular/common';
 export class CourseDetailsComponent implements OnInit {
 
 
-
   store = inject(Store)
   activatedRoute = inject(ActivatedRoute)
   course: Signal<CourseDtoResponse> = toSignal(this.store.select(state => state.course.course));
@@ -48,6 +51,7 @@ export class CourseDetailsComponent implements OnInit {
   @ViewChild("courseRating")
   courseRatingComponent: NgxStarsComponent;
   zoom = 12;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   // center: google.maps.LatLngLiteral = { lat: 52.2297, lng: 21.0122 };
 
 
@@ -66,15 +70,20 @@ export class CourseDetailsComponent implements OnInit {
       }
     }
   ]
-  position: google.maps.LatLngLiteral  = { lng: 0, lat: 0 }
+
+
+
+
+
+  position: google.maps.LatLngLiteral = { lng: 0, lat: 0 }
   mapOptions: google.maps.MapOptions = { center: { lng: 0, lat: 0 }, mapId: "1" }
 
-  constructor() {
+  constructor(private dialog: MatDialog) {
     effect(() => {
       this.currentRatingComponent.setRating(this.currentUserRating().value)
       this.courseRatingComponent.setRating(this.course().rating)
       if (this.course().address) {
-         this.mapOptions = { center: { lat: this.course().address.lat, lng: this.course().address.lng }, mapId: "1" }
+        this.mapOptions = { center: { lat: this.course().address.lat, lng: this.course().address.lng }, mapId: "1" }
         this.position = { lat: this.course().address.lat, lng: this.course().address.lng }
       }
     })
@@ -115,4 +124,27 @@ export class CourseDetailsComponent implements OnInit {
     return { lat: course.address.lat, lng: course.address.lng }
 
   }
+
+  openDialog() {
+    this.dialog.open(CourseOnlineComponent, {
+      width: '900px',
+      data: { courseId: this.courseId }  // przekazujemy ID kursu do dialogu
+    });
+  }
+
+  onFileSelected(event) {
+    console.log(event.target.files)
+    this.store.dispatch(new AddVideoAction(this.courseId, event.target.files))
+
+  }
+
+  // onFileSelected(files: File[]) {
+  //   this.store.dispatch(new AddVideoAction(this.courseId, files))
+  // }
+
+  onUpload() {
+    this.fileInput.nativeElement.click()
+  }
+
+
 }
