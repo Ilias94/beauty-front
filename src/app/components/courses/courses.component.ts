@@ -1,6 +1,6 @@
 import { Component, OnInit, Signal, inject, input } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { GetAutocompleteTitleAction, GetPageCoursesAction, SignUpCourseAction } from '../state/course.actions';
+import { GetAutocompleteTitleAction, GetPageCoursesAction} from '../state/course.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
@@ -21,10 +21,8 @@ import { NgxStarsModule } from 'ngx-stars';
 import { CategoryDtoResponse, PageCourseDtoResponse, UserDtoResponse } from '../../../api/models';
 import { MatCardModule } from '@angular/material/card';
 import { CreatePaymentAction } from '../state/payment.actions';
-import { ReportControllerService } from '../../../api/services';
-import { HttpClient } from '@angular/common/http';
 import { DownloadFileCsvAction, DownloadFileExcelAction } from '../state/file.actions';
-import { state } from '@angular/animations';
+
 import { SecurityState } from '../state/security.state';
 
 @Component({
@@ -81,11 +79,6 @@ export class CoursesComponent implements OnInit {
     this.page = e.pageIndex
     this.size = e.pageSize
     this.store.dispatch(new GetPageCoursesAction(this.page, this.size, this.cateogryId, null, this.sortBy, this.direction, this.isCurrentCreator(), this.isCurrentStudent()))
-  }
-
-  signUpCourse(courseId: number) {
-    this.store.dispatch(new SignUpCourseAction(courseId))
-
   }
 
   buyCourse(courseId: number) {

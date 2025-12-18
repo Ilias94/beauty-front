@@ -9,6 +9,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { UserDtoResponse } from '../../../api/models';
+import { WebSocketService } from '../../core/websocket/websocket.service';
 export class SecurityStateModel {
   public token: string;
   public currentUser: UserDtoResponse;
@@ -28,13 +29,17 @@ export class SecurityState {
   constructor(private loginControllerService: LoginControllerService,
     private userControllerService: UserControllerService,
     private httpClient: HttpClient,
-    private coockieService: CookieService) { }
+    private coockieService: CookieService,
+    private webSocketService: WebSocketService) { }
   @Action(LoginAction)
   login({ patchState, dispatch }: StateContext<SecurityStateModel>, { email, password }: LoginAction) {
     return this.loginControllerService.login({ body: { email, password } }).pipe(tap(response => {
       patchState({ token: response.token })
       localStorage.setItem("token", response.token)
       localStorage.setItem("currentDate", moment().toISOString())
+
+      this.webSocketService.connect();
+
       dispatch(new GetCurrentUserAction())
       dispatch(new Navigate(['/my-account']))
     }))
@@ -49,18 +54,19 @@ export class SecurityState {
       return
     }
     const cookieToken = this.coockieService.get("token")
-    if(cookieToken) {
-      patchState({ token: cookieToken})
+    if (cookieToken) {
+      patchState({ token: cookieToken })
     } else {
       const storageToken = localStorage.getItem("token")
-      if(storageToken != null) {
+      if (storageToken != null) {
         patchState({ token: storageToken })
       } else {
         return;
       }
-      
+
     }
-    console.log("before localstorage dispatch")
+
+    this.webSocketService.connect();
     dispatch(new GetCurrentUserAction())
   }
 
@@ -75,6 +81,7 @@ export class SecurityState {
 
   @Action(LogoutAction)
   logout({ patchState, dispatch }: StateContext<SecurityStateModel>) {
+    this.webSocketService.disconnect();
     patchState({ token: null })
     localStorage.removeItem("token")
     localStorage.removeItem("currentDate")

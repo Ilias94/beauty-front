@@ -76,14 +76,14 @@ export class CourseDetailsComponent implements OnInit {
 
 
   position: google.maps.LatLngLiteral = { lng: 0, lat: 0 }
-  mapOptions: google.maps.MapOptions = { center: { lng: 0, lat: 0 }, mapId: "1" }
+  mapOptions: google.maps.MapOptions = { center: { lng: 0, lat: 0 }, mapId: "3f141cd4fa2bff29fb6f46f8" }
 
   constructor(private dialog: MatDialog) {
     effect(() => {
       this.currentRatingComponent.setRating(this.currentUserRating().value)
       this.courseRatingComponent.setRating(this.course().rating)
       if (this.course().address) {
-        this.mapOptions = { center: { lat: this.course().address.lat, lng: this.course().address.lng }, mapId: "1" }
+        this.mapOptions = { center: { lat: this.course().address.lat, lng: this.course().address.lng }, mapId: "3f141cd4fa2bff29fb6f46f8" }
         this.position = { lat: this.course().address.lat, lng: this.course().address.lng }
       }
     })
@@ -111,7 +111,6 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   createMapOptions(course: CourseDtoResponse): google.maps.MapOptions {
-    console.log("in createMapPtions")
     if (course.address) {
       return { center: { lat: course.address.lat, lng: course.address.lng }, mapId: "1" }
     }
@@ -119,10 +118,7 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   getPosition(course: CourseDtoResponse): google.maps.LatLngLiteral | google.maps.LatLng | google.maps.LatLngAltitude | google.maps.LatLngAltitudeLiteral {
-    console.log(course + " in getPosition", course)
-
     return { lat: course.address.lat, lng: course.address.lng }
-
   }
 
   openDialog() {
@@ -133,14 +129,9 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   onFileSelected(event) {
-    console.log(event.target.files)
     this.store.dispatch(new AddVideoAction(this.courseId, event.target.files))
 
   }
-
-  // onFileSelected(files: File[]) {
-  //   this.store.dispatch(new AddVideoAction(this.courseId, files))
-  // }
 
   onUpload() {
     this.fileInput.nativeElement.click()

@@ -14,11 +14,6 @@ export class SaveCourseAction {
   constructor(public course: CourseDtoRequest) { }
 }
 
-export class SignUpCourseAction {
-  static readonly type = '[Course] SignUpCourseAction';
-  constructor(public courseId: number) { }
-}
-
 export class GetCourseByIdAction {
   static readonly type = '[Course] GetCourseByIdAction';
   constructor(public courseId: number) { }

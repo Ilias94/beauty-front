@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
-import { FilterCoursesByDateAction, GetAutocompleteTitleAction, GetCourseByIdAction, GetPageCoursesAction, SaveCourseAction, SignUpCourseAction } from './course.actions';
+import { FilterCoursesByDateAction, GetAutocompleteTitleAction, GetCourseByIdAction, GetPageCoursesAction, SaveCourseAction} from './course.actions';
 import { CourseControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
 import { Navigate } from '@ngxs/router-plugin';
@@ -39,14 +39,6 @@ export class CourseState {
   @Action(SaveCourseAction)
   saveCourse({ }: StateContext<CourseStateModel>, { course }: SaveCourseAction) {
     return this.courseControllerService.createCourse({ body: course })
-  }
-
-  @Action(SignUpCourseAction)
-  signUpCourse({ dispatch }: StateContext<CourseStateModel>, { courseId }: SignUpCourseAction) {
-    const token = localStorage.getItem("token")
-    if (!token) {
-      dispatch(new Navigate(['/login']))
-    }
   }
 
   @Action(GetCourseByIdAction)
