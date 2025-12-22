@@ -27,6 +27,7 @@ import { VideoState } from './components/state/video.state';
 
 
 
+
 export const appConfig: ApplicationConfig = {
   providers: [
     CookieService,
@@ -60,7 +61,7 @@ export const appConfig: ApplicationConfig = {
       }),
       NgxsReduxDevtoolsPluginModule.forRoot()
     )
-
+   
   ]
 };
 
@@ -78,3 +79,4 @@ export function fieldMatchValidator(control: AbstractControl) {
 
   return { fieldMatch: { message: 'Password Not Matching' } };
 }
+
