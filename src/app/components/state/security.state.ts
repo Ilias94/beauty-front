@@ -10,6 +10,9 @@ import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { UserDtoResponse } from '../../../api/models';
 import { WebSocketService } from '../../core/websocket/websocket.service';
+import { Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+
 export class SecurityStateModel {
   public token: string;
   public currentUser: UserDtoResponse;
@@ -26,19 +29,26 @@ const defaults = {
 })
 @Injectable()
 export class SecurityState {
-  constructor(private loginControllerService: LoginControllerService,
+  constructor(
+    private loginControllerService: LoginControllerService,
     private userControllerService: UserControllerService,
     private httpClient: HttpClient,
     private coockieService: CookieService,
-    private webSocketService: WebSocketService) { }
+    private webSocketService: WebSocketService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
+
   @Action(LoginAction)
   login({ patchState, dispatch }: StateContext<SecurityStateModel>, { email, password }: LoginAction) {
     return this.loginControllerService.login({ body: { email, password } }).pipe(tap(response => {
       patchState({ token: response.token })
-      localStorage.setItem("token", response.token)
-      localStorage.setItem("currentDate", moment().toISOString())
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.setItem("token", response.token)
+        localStorage.setItem("currentDate", moment().toISOString())
 
-      this.webSocketService.connect();
+        this.webSocketService.connect();
+      }
+
 
       dispatch(new GetCurrentUserAction())
       dispatch(new Navigate(['/my-account']))
@@ -46,29 +56,35 @@ export class SecurityState {
   }
 
   @Action(LoginFromLocalStorageAction)
-  loginFromLocalStorage({ patchState, dispatch }: StateContext<SecurityStateModel>, { }: LoginFromLocalStorageAction) {
-    console.log("in login")
-    const currentDate = localStorage.getItem("currentDate")
-    if (!currentDate && moment().subtract(1, "days").isAfter(moment(currentDate))) {
-      dispatch(new LogoutAction())
-      return
+  loginFromLocalStorage({ patchState, dispatch }: StateContext<SecurityStateModel>) {
+
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
     }
-    const cookieToken = this.coockieService.get("token")
+
+    const currentDate = localStorage.getItem('currentDate');
+
+    if (!currentDate || moment().subtract(1, 'days').isAfter(moment(currentDate))) {
+      dispatch(new LogoutAction());
+      return;
+    }
+
+    const cookieToken = this.coockieService.get('token');
+
     if (cookieToken) {
-      patchState({ token: cookieToken })
+      patchState({ token: cookieToken });
     } else {
-      const storageToken = localStorage.getItem("token")
-      if (storageToken != null) {
-        patchState({ token: storageToken })
-      } else {
+      const storageToken = localStorage.getItem('token');
+      if (!storageToken) {
         return;
       }
-
+      patchState({ token: storageToken });
     }
 
     this.webSocketService.connect();
-    dispatch(new GetCurrentUserAction())
+    dispatch(new GetCurrentUserAction());
   }
+
 
   @Action(RegisterAction)
   register({ }: StateContext<SecurityStateModel>, { user, file }: RegisterAction) {
@@ -80,13 +96,18 @@ export class SecurityState {
   }
 
   @Action(LogoutAction)
-  logout({ patchState, dispatch }: StateContext<SecurityStateModel>) {
+logout({ patchState, dispatch }: StateContext<SecurityStateModel>) {
+
+  if (isPlatformBrowser(this.platformId)) {
     this.webSocketService.disconnect();
-    patchState({ token: null })
-    localStorage.removeItem("token")
-    localStorage.removeItem("currentDate")
-    dispatch(new Navigate(["/login"]))
+    localStorage.removeItem('token');
+    localStorage.removeItem('currentDate');
   }
+
+  patchState({ token: null });
+  dispatch(new Navigate(['/login']));
+}
+
 
   @Action(GetCurrentUserAction)
   getCurrentUser({ patchState }: StateContext<SecurityStateModel>) {
