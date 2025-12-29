@@ -5,6 +5,8 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import {MatButtonModule} from '@angular/material/button';
 import { NgxsModule, Store } from '@ngxs/store';
 import { LoginAction } from '../../state/security.actions';
+import { en } from '@fullcalendar/core/internal-common';
+import { environment } from '../../../../environments/enfironment';
 
 
 
@@ -17,6 +19,7 @@ import { LoginAction } from '../../state/security.actions';
 })
 export class LoginComponent {
 
+  url = environment.apiUrl + "/api/oauth2/authorization/google";
   form = new FormGroup({})
   fields: FormlyFieldConfig[] = [
     {

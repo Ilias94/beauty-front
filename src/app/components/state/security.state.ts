@@ -12,6 +12,7 @@ import { UserDtoResponse } from '../../../api/models';
 import { WebSocketService } from '../../core/websocket/websocket.service';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../../environments/enfironment';
 
 export class SecurityStateModel {
   public token: string;
@@ -92,7 +93,7 @@ export class SecurityState {
     const formdata = new FormData()
     formdata.append("user", JSON.stringify(user))
     formdata.append("file", file)
-    return this.httpClient.post("http://localhost:8080/api/v1/users", formdata)
+    return this.httpClient.post(`${environment.apiUrl}/api/v1/users`, formdata)
   }
 
   @Action(LogoutAction)

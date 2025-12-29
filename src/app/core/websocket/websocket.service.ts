@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import { Store } from '@ngxs/store';
+import { environment } from '../../../environments/enfironment';
 
 @Injectable({ providedIn: 'root' })
 export class WebSocketService {
@@ -28,7 +29,7 @@ export class WebSocketService {
     }
 
     this.client = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
+      brokerURL: `${environment.wsUrl}`,
       connectHeaders: {
         Authorization: `Bearer ${token}`
       },

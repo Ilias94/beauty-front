@@ -6,6 +6,7 @@ import { VideoDtoResponse } from '../../../api/models';
 import { AddVideoAction, DeleteVideoAction, EditVideoDescriptionAction, LoadVideosAction } from './video.actions';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+import { environment } from '../../../environments/enfironment';
 
 export class VideoStateModel {
   public videos: VideoDtoResponse[];
@@ -58,7 +59,7 @@ export class VideoState {
     for (const file of files) {
       formdata.append("videos", file)
     }
-    return this.httpClient.post(`http://localhost:8080/api/v1/video/upload/${courseId}`, formdata)
+    return this.httpClient.post(`${environment.apiUrl}/api/v1/video/upload/${courseId}`, formdata)
   }
 
 
