@@ -13,6 +13,9 @@ import { StudentCoursesComponent } from './components/student-courses/student-co
 import { MyCommentsComponent } from './components/my-comments/my-comments.component';
 import { PaymentStatusComponent } from './components/payment-status/payment-status.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { QuestionResultsComponent } from './components/question-results/question-results.component';
+import { EditQuestionsComponent } from './components/edit-questions/edit-questions.component';
+import { ResolveQuestionsComponent } from './components/resolve-questions/resolve-questions.component';
 
 
 export const routes: Routes = [
@@ -71,5 +74,17 @@ export const routes: Routes = [
     {
         path:"calendar",
         component: CalendarComponent
+    },
+    {
+        path:"questions/:courseId",
+        component: QuestionResultsComponent
+    },
+    {
+        path:"edit-questions/:courseId",
+        component: EditQuestionsComponent
+    },
+    {
+        path:"resolve-questions/:courseId",
+        component: ResolveQuestionsComponent
     }
 ];

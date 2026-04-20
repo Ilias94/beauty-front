@@ -4,6 +4,7 @@ export { CategoryControllerService } from './services/category-controller.servic
 export { TemplateControllerService } from './services/template-controller.service';
 export { VideoControllerService } from './services/video-controller.service';
 export { RatingControllerService } from './services/rating-controller.service';
+export { QuestionControllerService } from './services/question-controller.service';
 export { PaymentControllerService } from './services/payment-controller.service';
 export { LoginControllerService } from './services/login-controller.service';
 export { GeoLocationControllerService } from './services/geo-location-controller.service';

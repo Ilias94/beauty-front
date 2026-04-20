@@ -1,0 +1,35 @@
+<div class="edit-questions-container">
+    <h1>Edit Questions</h1>
+
+    <form [formGroup]="form">
+        <div formArrayName="questions">
+            @for (question of questions.controls;let i = $index; track question ) {
+            <div class="question-block" [formGroupName]="i">
+                <label for="question-{{i}}">Question {{i + 1}}</label>
+                <input id="question-{{i}}" formControlName="question" type="text" class="form-control" />
+                <input id="priority-{{i}}" formControlName="priority" type="number" class="form-control" />
+
+
+                <div formArrayName="answers">
+                    @for (answer of getAnswersArray(question).controls; let j = $index; track answer) {
+                    <div class="answer-block" [formGroupName]="j">
+                        <label for="answer-{{i}}-{{j}}">Answer {{j + 1}}</label>
+                        <input id="answer-{{i}}-{{j}}" formControlName="answer" type="text" class="form-control" />
+                        <input id="answer-{{i}}-{{j}}" formControlName="isCorrect" type="checkbox"
+                            class="form-check-input" />
+                    </div>
+                    }
+                    <button type="button" class="btn btn-link" (click)="addAnswer(i)">Add Answer</button>
+                </div>
+
+                <button type="button" class="btn btn-danger" (click)="removeQuestion(i)">Remove Question</button>
+            </div>
+            }
+        </div>
+        <button type="button" class="btn btn-danger" (click)="addQuestion()">Add Question</button>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" (click)="submit()">Save</button>
+            <button type="button" class="btn btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>

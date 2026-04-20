@@ -10,6 +10,7 @@ import { CategoryControllerService } from './services/category-controller.servic
 import { TemplateControllerService } from './services/template-controller.service';
 import { VideoControllerService } from './services/video-controller.service';
 import { RatingControllerService } from './services/rating-controller.service';
+import { QuestionControllerService } from './services/question-controller.service';
 import { PaymentControllerService } from './services/payment-controller.service';
 import { LoginControllerService } from './services/login-controller.service';
 import { GeoLocationControllerService } from './services/geo-location-controller.service';
@@ -33,6 +34,7 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
     TemplateControllerService,
     VideoControllerService,
     RatingControllerService,
+    QuestionControllerService,
     PaymentControllerService,
     LoginControllerService,
     GeoLocationControllerService,

@@ -24,6 +24,7 @@ import { AiState } from './components/state/ai.state';
 import { PaymentState } from './components/state/payment.state';
 import { FileState } from './components/state/file.state';
 import { VideoState } from './components/state/video.state';
+import { QuestionState } from './components/state/question.state';
 
 
 
@@ -46,7 +47,8 @@ export const appConfig: ApplicationConfig = {
         AiState,
         PaymentState,
         FileState,
-        VideoState
+        VideoState,
+        QuestionState
       ]),
       MatSnackBarModule,
       FormlyModule.forRoot({
