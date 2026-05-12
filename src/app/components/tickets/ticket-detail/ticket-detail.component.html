@@ -1,0 +1,80 @@
+@if (ticket(); as t) {
+  <div class="detail-wrapper">
+
+    <div class="ticket-header">
+      <div>
+        <h2>{{ t.title }}</h2>
+        <span class="meta">{{ t.type }} · #{{ t.id }} · {{ t.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+      </div>
+      <mat-chip [class]="'status-' + (t.status?.toLowerCase() ?? '')">{{ t.status }}</mat-chip>
+    </div>
+
+    <p class="description">{{ t.description }}</p>
+
+    <mat-divider />
+
+    @if (t.resolution) {
+      <div class="resolution-box" [class.ai-resolution]="t.resolution.source === 'AI'">
+        <div class="resolution-header">
+          @if (t.resolution.source === 'AI') {
+            <mat-icon>smart_toy</mat-icon>
+            <strong>{{ 'tickets.aiAnswer' | transloco }}</strong>
+            <span class="confidence">({{ 'tickets.confidence' | transloco }}: {{ (t.resolution.confidenceScore! * 100).toFixed(0) }}%)</span>
+          } @else {
+            <mat-icon>support_agent</mat-icon>
+            <strong>{{ 'tickets.resolvedBy' | transloco }} {{ t.resolution.resolvedByName }}</strong>
+          }
+          <span class="res-time">{{ t.resolution.resolvedAt | date:'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+        <p>{{ t.resolution.content }}</p>
+      </div>
+      <mat-divider />
+    }
+
+    <div class="replies">
+      @for (reply of (t.replies ?? []); track reply.id) {
+        <div class="reply" [class.reply-user]="reply.authorRole === 'USER'"
+                           [class.reply-support]="reply.authorRole === 'SUPPORT'"
+                           [class.reply-ai]="reply.aiGenerated">
+          <div class="reply-meta">
+            @if (reply.aiGenerated) {
+              <mat-icon class="ai-icon">smart_toy</mat-icon>
+            }
+            <span class="reply-author">{{ reply.authorName }}</span>
+            <span class="reply-role">({{ reply.authorRole }})</span>
+            <span class="reply-time">{{ reply.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+          </div>
+          <p>{{ reply.content }}</p>
+        </div>
+      }
+    </div>
+
+    @if (t.status && t.status !== 'RESOLVED' && t.status !== 'CLOSED') {
+      <mat-divider />
+      <form [formGroup]="replyForm" (ngSubmit)="sendReply()" class="reply-form">
+        <mat-form-field appearance="outline" class="reply-input">
+          <mat-label>{{ 'tickets.yourReply' | transloco }}</mat-label>
+          <textarea matInput formControlName="content" rows="3"></textarea>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="replyForm.invalid">
+          <mat-icon>send</mat-icon> {{ 'tickets.send' | transloco }}
+        </button>
+      </form>
+    }
+
+    @if (isSupport() && t.status && t.status !== 'RESOLVED' && t.status !== 'CLOSED') {
+      <mat-divider />
+      <form [formGroup]="resolveForm" (ngSubmit)="resolve()" class="resolve-form">
+        <h3>{{ 'tickets.resolveTicket' | transloco }}</h3>
+        <mat-form-field appearance="outline" class="resolve-input">
+          <mat-label>{{ 'tickets.resolutionNote' | transloco }}</mat-label>
+          <textarea matInput formControlName="content" rows="3"></textarea>
+        </mat-form-field>
+        <button mat-raised-button color="accent" type="submit" [disabled]="resolveForm.invalid">
+          <mat-icon>check_circle</mat-icon> {{ 'tickets.markResolved' | transloco }}
+        </button>
+      </form>
+    }
+
+  </div>
+}

@@ -6,6 +6,7 @@ import { UserDtoRequest } from '../models/user-dto-request';
 export interface CourseDtoRequest {
   address?: AddressDtoResponse;
   category?: CategoryDtoResponse;
+  courseType?: 'IN_PERSON' | 'ONLINE' | 'HYBRID';
   creator?: UserDtoRequest;
   description?: string;
   endDate?: string;

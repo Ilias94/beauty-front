@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E91E63"/>
+      <stop offset="100%" stop-color="#880E4F"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect x="2" y="2" width="96" height="96" rx="22" ry="22" fill="url(#bgGrad)"/>
+  <!-- 5-petal flower centered at (50,50) -->
+  <g transform="translate(50,50)">
+    <ellipse cx="0" cy="-19" rx="7" ry="13" fill="rgba(255,255,255,0.88)" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-19" rx="7" ry="13" fill="rgba(255,255,255,0.88)" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-19" rx="7" ry="13" fill="rgba(255,255,255,0.88)" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-19" rx="7" ry="13" fill="rgba(255,255,255,0.88)" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-19" rx="7" ry="13" fill="rgba(255,255,255,0.88)" transform="rotate(288)"/>
+    <!-- Center -->
+    <circle cx="0" cy="0" r="10" fill="white"/>
+    <circle cx="0" cy="0" r="5" fill="#C2185B"/>
+  </g>
+</svg>

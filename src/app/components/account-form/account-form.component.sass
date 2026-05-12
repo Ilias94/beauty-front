@@ -1,0 +1,279 @@
+.settings-page
+  max-width: 640px
+  margin: 0 auto
+  animation: fadeIn 0.35s ease-out
+
+/* ─── Back link ──────────────────────────── */
+.back-link
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  color: #C2185B
+  font-size: 0.88rem
+  font-weight: 600
+  text-decoration: none
+  margin-bottom: 8px
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+
+  &:hover
+    text-decoration: underline
+
+/* ─── Profile banner ─────────────────────── */
+.profile-banner
+  display: flex
+  align-items: center
+  gap: 16px
+  background: white
+  border-radius: 18px
+  padding: 18px 24px
+  margin-bottom: 20px
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07)
+  flex-wrap: wrap
+
+.banner-avatar
+  width: 56px
+  height: 56px
+  border-radius: 50%
+  object-fit: cover
+  flex-shrink: 0
+  border: 3px solid #F48FB1
+
+.banner-initials
+  background: linear-gradient(135deg, #C2185B, #E91E63)
+  color: white
+  font-size: 1.3rem
+  font-weight: 700
+  display: flex
+  align-items: center
+  justify-content: center
+  font-family: 'Playfair Display', serif
+
+.banner-info
+  flex: 1
+  min-width: 0
+
+.banner-name
+  font-weight: 700
+  font-size: 1rem
+  color: #1a1a1a
+  margin: 0 0 4px
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.banner-email
+  display: flex
+  align-items: center
+  gap: 4px
+  font-size: 0.82rem
+  color: #777
+  margin: 0
+
+  .mat-icon
+    font-size: 14px
+    width: 14px
+    height: 14px
+    color: #C2185B
+
+.banner-role
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  background: rgba(194, 24, 91, 0.08)
+  color: #C2185B
+  border-radius: 20px
+  padding: 4px 14px 4px 10px
+  font-size: 0.78rem
+  font-weight: 700
+  white-space: nowrap
+  flex-shrink: 0
+
+  .mat-icon
+    font-size: 14px
+    width: 14px
+    height: 14px
+
+  &.teacher
+    background: rgba(0, 105, 92, 0.08)
+    color: #00695C
+
+    .mat-icon
+      color: #00695C
+
+.page-title
+  font-family: 'Playfair Display', serif
+  font-size: 1.8rem
+  font-weight: 700
+  color: #1a1a1a
+  margin: 0 0 24px
+
+/* ─── Card ───────────────────────────────── */
+.settings-card
+  background: white
+  border-radius: 18px
+  padding: 28px
+  margin-bottom: 20px
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07)
+
+.card-header
+  display: flex
+  align-items: center
+  gap: 16px
+  margin-bottom: 24px
+
+.card-header-icon
+  width: 44px
+  height: 44px
+  border-radius: 12px
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+
+  .mat-icon
+    color: white
+    font-size: 22px
+    width: 22px
+    height: 22px
+
+.card-title
+  font-family: 'Playfair Display', serif
+  font-size: 1.15rem
+  font-weight: 700
+  color: #1a1a1a
+  margin: 0 0 3px
+
+.card-subtitle
+  font-size: 0.82rem
+  color: #aaa
+  margin: 0
+
+/* ─── Form ───────────────────────────────── */
+.settings-form
+  display: flex
+  flex-direction: column
+  gap: 4px
+
+/* Side-by-side fields */
+::ng-deep .two-col
+  display: flex
+  gap: 12px
+
+  .col
+    flex: 1
+    min-width: 0
+
+::ng-deep formly-field
+  display: block
+  width: 100%
+
+::ng-deep .mat-mdc-form-field
+  width: 100%
+
+.form-actions
+  display: flex
+  justify-content: flex-end
+  margin-top: 12px
+
+.save-btn
+  border-radius: 12px !important
+  font-weight: 600
+  height: 44px
+  gap: 6px
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+
+/* ─── Password strength ──────────────────── */
+.password-strength
+  margin: 4px 0 8px
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+.strength-bar
+  display: flex
+  gap: 4px
+
+.strength-segment
+  flex: 1
+  height: 4px
+  border-radius: 2px
+  background: #eee
+  transition: background 0.3s ease
+
+  &.strength-1.filled
+    background: #e53935
+  &.strength-2.filled
+    background: #ef6c00
+  &.strength-3.filled
+    background: #f9a825
+  &.strength-4.filled
+    background: #7cb342
+  &.strength-5.filled
+    background: #2e7d32
+
+.strength-text
+  font-size: 0.78rem
+  font-weight: 600
+
+  &.strength-1
+    color: #e53935
+  &.strength-2
+    color: #ef6c00
+  &.strength-3
+    color: #f9a825
+  &.strength-4
+    color: #7cb342
+  &.strength-5
+    color: #2e7d32
+
+.password-rules
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 4px 16px
+
+  span
+    display: inline-flex
+    align-items: center
+    gap: 4px
+    font-size: 0.76rem
+    color: #bbb
+    transition: color 0.2s ease
+
+    .mat-icon
+      font-size: 14px
+      width: 14px
+      height: 14px
+      color: #ddd
+      transition: color 0.2s ease
+
+    &.ok
+      color: #2e7d32
+
+      .mat-icon
+        color: #2e7d32
+
+/* ─── Animation ──────────────────────────── */
+@keyframes fadeIn
+  from
+    opacity: 0
+    transform: translateY(10px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+/* ─── Mobile ─────────────────────────────── */
+@media (max-width: 500px)
+  .settings-card
+    padding: 20px
+
+  ::ng-deep .two-col
+    flex-direction: column
+    gap: 0

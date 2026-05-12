@@ -1,28 +1,95 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false">
+
+    <div class="sidenav-brand">
+      <img src="assets/logo-icon.svg" class="brand-logo" alt="Beauty logo">
+      <span class="brand-name">Beauty</span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-nav-list class="nav-list">
+      <a mat-list-item routerLink="/courses" class="nav-item">
+        <mat-icon matListItemIcon>explore</mat-icon>
+        <span matListItemTitle>{{ 'menu.browseCourses' | transloco }}</span>
+      </a>
+
       @if (!token()) {
-      <a mat-list-item routerLink="/login">Login</a>
-      <a mat-list-item routerLink="/registry">Register</a>
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/login" class="nav-item">
+          <mat-icon matListItemIcon>login</mat-icon>
+          <span matListItemTitle>{{ 'menu.login' | transloco }}</span>
+        </a>
+        <a mat-list-item routerLink="/registry" class="nav-item">
+          <mat-icon matListItemIcon>person_add</mat-icon>
+          <span matListItemTitle>{{ 'menu.register' | transloco }}</span>
+        </a>
       }
+
       @else {
-      <a mat-list-item routerLink="/course">Course</a>
-      <a mat-list-item routerLink="/my-account">My-Account</a>
-      <a mat-list-item (click)="logout()">Logout</a>
-      <a mat-list-item routerLink="/calendar">Calendar</a>
+        <a mat-list-item routerLink="/my-account" class="nav-item">
+          <mat-icon matListItemIcon>manage_accounts</mat-icon>
+          <span matListItemTitle>{{ 'menu.myAccount' | transloco }}</span>
+        </a>
+        <a mat-list-item routerLink="/calendar" class="nav-item">
+          <mat-icon matListItemIcon>calendar_month</mat-icon>
+          <span matListItemTitle>{{ 'menu.calendar' | transloco }}</span>
+        </a>
+        @if (currentUser()?.teacher) {
+          <a mat-list-item routerLink="/course" class="nav-item">
+            <mat-icon matListItemIcon>add_circle</mat-icon>
+            <span matListItemTitle>{{ 'menu.createCourse' | transloco }}</span>
+          </a>
+        }
+        <a mat-list-item routerLink="/my-tickets" class="nav-item">
+          <mat-icon matListItemIcon>support_agent</mat-icon>
+          <span matListItemTitle>{{ 'menu.myTickets' | transloco }}</span>
+        </a>
+        <a mat-list-item routerLink="/support/tickets" class="nav-item">
+          <mat-icon matListItemIcon>headset_mic</mat-icon>
+          <span matListItemTitle>{{ 'menu.supportPanel' | transloco }}</span>
+        </a>
+        <mat-divider></mat-divider>
+        <a mat-list-item (click)="logout()" class="nav-item logout-item">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle>{{ 'menu.logout' | transloco }}</span>
+        </a>
       }
-      <a mat-list-item routerLink="/courses">Courses</a>
     </mat-nav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" class="app-toolbar">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        <mat-icon>menu</mat-icon>
       </button>
-      <span>beauty-front</span>
+      <div class="toolbar-brand">
+        <img src="assets/logo-icon.svg" class="toolbar-logo" alt="Beauty logo">
+        <span class="toolbar-title">Beauty</span>
+      </div>
+      <span class="toolbar-spacer"></span>
+
+      <div class="lang-switcher">
+        <button mat-button class="lang-btn" [class.lang-btn-active]="activeLang === 'pl'" (click)="setLang('pl')">
+          🇵🇱 PL
+        </button>
+        <button mat-button class="lang-btn" [class.lang-btn-active]="activeLang === 'en'" (click)="setLang('en')">
+          🇬🇧 EN
+        </button>
+      </div>
+
+      @if (token()) {
+        <app-notification-bell />
+      } @else {
+        <a mat-button routerLink="/login" class="toolbar-login-btn">{{ 'menu.login' | transloco }}</a>
+      }
     </mat-toolbar>
-    <router-outlet></router-outlet>
+
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

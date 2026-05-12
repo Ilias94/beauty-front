@@ -1,12 +1,149 @@
-// Custom margin or padding if needed
-.form-container
-  padding: 20px
-  border-radius: 8px
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
-  background-color: #fff
+.login-page
+  min-height: calc(100vh - 64px)
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 32px 16px
+  background: linear-gradient(160deg, #fdf0f5 0%, #fdf8f5 50%, #f5f0fd 100%)
 
-  .custom-login-btn
-  width: auto // or any specific width like 150px
-  padding-left: 20px // adjust as needed
-  padding-right: 20px // adjust as needed
+.login-card
+  width: 100%
+  max-width: 420px
+  background: white
+  border-radius: 20px
+  padding: 40px 36px
+  box-shadow: 0 8px 40px rgba(194, 24, 91, 0.12), 0 2px 12px rgba(0,0,0,0.06)
+  animation: fadeSlideUp 0.5s ease-out
 
+/* Brand */
+.brand-header
+  text-align: center
+  margin-bottom: 32px
+
+.brand-icon-wrap
+  width: 64px
+  height: 64px
+  border-radius: 50%
+  background: linear-gradient(135deg, #C2185B, #E91E63)
+  display: flex
+  align-items: center
+  justify-content: center
+  margin: 0 auto 16px
+
+  .mat-icon
+    color: white
+    font-size: 32px
+    width: 32px
+    height: 32px
+
+.brand-title
+  font-family: 'Playfair Display', serif
+  font-size: 2rem
+  font-weight: 700
+  color: #C2185B
+  margin: 0 0 6px
+  line-height: 1
+
+.brand-subtitle
+  color: #888
+  font-size: 0.92rem
+  margin: 0
+
+/* Form */
+.login-form
+  display: flex
+  flex-direction: column
+  gap: 4px
+  margin-bottom: 20px
+
+  /* Make formly fields full-width */
+  ::ng-deep formly-field
+    display: block
+    width: 100%
+
+  ::ng-deep .mat-mdc-form-field
+    width: 100%
+
+.submit-btn
+  width: 100%
+  height: 48px
+  font-size: 1rem
+  font-weight: 600
+  border-radius: 12px !important
+  letter-spacing: 0.3px
+  margin-top: 8px
+  gap: 6px
+
+  .mat-icon
+    font-size: 20px
+    width: 20px
+    height: 20px
+
+/* Divider */
+.divider-row
+  display: flex
+  align-items: center
+  gap: 12px
+  margin-bottom: 20px
+
+.divider-line
+  flex: 1
+
+.divider-text
+  color: #bbb
+  font-size: 0.82rem
+  font-weight: 500
+  white-space: nowrap
+
+/* Google button */
+.google-btn
+  width: 100%
+  height: 48px
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 12px
+  background: white
+  border: 1.5px solid #e0e0e0
+  border-radius: 12px
+  font-size: 0.95rem
+  font-weight: 500
+  color: #444
+  cursor: pointer
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease
+  margin-bottom: 24px
+
+  &:hover
+    background: #f8f8f8
+    border-color: #bbb
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1)
+
+  &:active
+    background: #f0f0f0
+
+.google-icon
+  flex-shrink: 0
+
+/* Register link */
+.register-link
+  text-align: center
+  color: #888
+  font-size: 0.9rem
+  margin: 0
+
+  a
+    color: #C2185B
+    font-weight: 600
+    text-decoration: none
+
+    &:hover
+      text-decoration: underline
+
+/* Animation */
+@keyframes fadeSlideUp
+  from
+    opacity: 0
+    transform: translateY(20px)
+  to
+    opacity: 1
+    transform: translateY(0)

@@ -2,24 +2,113 @@
   height: 100%
 
 .sidenav
-  width: 250px
-  box-shadow: 1px 0 4px rgba(0, 0, 0, .24)
+  width: 240px
+  background-color: #fff
+  border-right: 1px solid rgba(0, 0, 0, 0.08)
+  box-shadow: 2px 0 8px rgba(194, 24, 91, 0.08)
 
-.mat-toolbar
-  background-color: #673AB7
-  color: white
+.sidenav-brand
   display: flex
-  justify-content: space-between
-  .toolbar-title
-    flex-grow: 1
-    text-align: center
+  align-items: center
+  gap: 10px
+  padding: 20px 16px 16px
+  cursor: default
 
-.mat-nav-list
-  .mat-list-item
-    color: rgba(0, 0, 0, 0.87)
+  .brand-logo
+    width: 32px
+    height: 32px
+    border-radius: 8px
+
+  .brand-name
+    font-family: 'Playfair Display', serif
+    font-size: 1.4rem
+    font-weight: 700
+    color: #C2185B
+    letter-spacing: 0.5px
+
+.nav-list
+  padding-top: 8px
+
+  .nav-item
+    border-radius: 0 24px 24px 0
+    margin: 2px 12px 2px 0
+    color: #555
+
     &:hover
-      background-color: rgba(0, 0, 0, 0.04)
+      background-color: rgba(194, 24, 91, 0.06)
+      color: #C2185B
+
+    .mat-icon
+      color: #888
+
+    &:hover .mat-icon
+      color: #C2185B
+
+.logout-item
+  color: #e53935 !important
+
+  .mat-icon
+    color: #e53935 !important
+
+.app-toolbar
+  position: sticky
+  top: 0
+  z-index: 100
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15)
+
+.toolbar-brand
+  display: flex
+  align-items: center
+  gap: 8px
+  margin-left: 8px
+
+  .toolbar-logo
+    width: 28px
+    height: 28px
+    border-radius: 6px
+
+  .toolbar-title
+    font-family: 'Playfair Display', serif
+    font-size: 1.2rem
+    font-weight: 600
+    letter-spacing: 0.5px
+
+.toolbar-spacer
+  flex: 1 1 auto
+
+.lang-switcher
+  display: flex
+  align-items: center
+  gap: 2px
+  margin-right: 8px
+
+.lang-btn
+  color: rgba(255, 255, 255, 0.75) !important
+  min-width: 0
+  padding: 0 8px
+  font-size: 0.82rem
+  border-radius: 16px
+
+  &.lang-btn-active
+    color: white !important
+    background: rgba(255, 255, 255, 0.2) !important
+    font-weight: 600
+
+.toolbar-login-btn
+  color: white !important
+  border: 1px solid rgba(255, 255, 255, 0.5)
+  border-radius: 20px
+  padding: 0 16px
+  font-size: 0.9rem
+
+.page-content
+  padding: 24px
+  max-width: 1400px
+  margin: 0 auto
 
 @media (max-width: 768px)
   .sidenav
     width: 100%
+
+  .page-content
+    padding: 16px

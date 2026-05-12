@@ -1,5 +1,25 @@
-<form [formGroup]="form">
+<div class="cf-page">
+
+  <div class="cf-header">
+    <a mat-icon-button routerLink="/creator-courses" class="cf-back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <div class="cf-header-text">
+      <h1>{{ 'courseForm.createTitle' | transloco }}</h1>
+      <p>{{ 'courseForm.createSubtitle' | transloco }}</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form">
     <formly-form [form]="form" [fields]="fields"></formly-form>
-    <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="submit()">Save</button>
+
+    <div class="cf-actions">
+      <a mat-stroked-button routerLink="/creator-courses">{{ 'courseForm.cancel' | transloco }}</a>
+      <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="submit()">
+        <mat-icon>publish</mat-icon>
+        {{ 'courseForm.publishCourse' | transloco }}
+      </button>
+    </div>
   </form>
 
+</div>

@@ -23,8 +23,8 @@ export class UserState {
 constructor(private userControllerService: UserControllerService){}
 
   @Action(ChangeUserDataAction)
-  changeUserData({ }: StateContext<UserStateModel>, { user }: ChangeUserDataAction) {
-
+  changeUserData({ }: StateContext<UserStateModel>, { user, userId }: ChangeUserDataAction) {
+    return this.userControllerService.updateUser({ body: user, id: userId });
   }
 
   @Action(ChangePasswordAction)

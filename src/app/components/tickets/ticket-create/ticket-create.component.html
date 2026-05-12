@@ -1,0 +1,40 @@
+<div class="create-wrapper">
+  <h2>{{ 'tickets.newTicketTitle' | transloco }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="ticket-form">
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'tickets.titleLabel' | transloco }}</mat-label>
+      <input matInput formControlName="title" [placeholder]="'tickets.titlePlaceholder' | transloco" />
+      @if (form.get('title')?.hasError('required')) {
+        <mat-error>{{ 'tickets.titleRequired' | transloco }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'tickets.typeLabel' | transloco }}</mat-label>
+      <mat-select formControlName="type">
+        @for (t of ticketTypes; track t) {
+          <mat-option [value]="t">{{ t }}</mat-option>
+        }
+      </mat-select>
+      @if (form.get('type')?.hasError('required')) {
+        <mat-error>{{ 'tickets.typeRequired' | transloco }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'tickets.descriptionLabel' | transloco }}</mat-label>
+      <textarea matInput formControlName="description" rows="6" [placeholder]="'tickets.descriptionPlaceholder' | transloco"></textarea>
+      @if (form.get('description')?.hasError('required')) {
+        <mat-error>{{ 'tickets.descriptionRequired' | transloco }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="actions">
+      <a mat-button routerLink="/my-tickets">{{ 'tickets.cancel' | transloco }}</a>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">{{ 'tickets.submit' | transloco }}</button>
+    </div>
+
+  </form>
+</div>

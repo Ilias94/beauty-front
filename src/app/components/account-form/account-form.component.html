@@ -1,11 +1,116 @@
-<h2>Change user data</h2>
-<form [formGroup]="userForm">
-    <formly-form [form]="userForm" [fields]="userFields"></formly-form>
-    <button mat-raised-button color="primary" [disabled]="!userForm.valid" (click)="changeUserData()">Change user data</button>
-  </form>
-<hr/>
-<h2>Change password</h2>
-<form [formGroup]="passwordForm">
-    <formly-form [form]="passwordForm" [fields]="passwordFields"></formly-form>
-    <button mat-raised-button color="primary" [disabled]="!passwordForm.valid" (click)="changePassword()">Change password</button>
-  </form>
+<div class="settings-page">
+
+  <!-- ─── Back link ─────────────────────────── -->
+  <a routerLink="/my-account" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    {{ 'account.backToAccount' | transloco }}
+  </a>
+
+  <!-- ─── Profile banner ──────────────────────── -->
+  @if (currentUser()) {
+    <div class="profile-banner">
+      @if (currentUser().fileName) {
+        <img [src]="s3Base + currentUser().fileName" class="banner-avatar" alt="avatar">
+      } @else {
+        <div class="banner-avatar banner-initials">{{ initials() }}</div>
+      }
+      <div class="banner-info">
+        <p class="banner-name">{{ currentUser().firstName }} {{ currentUser().lastName }}</p>
+        <p class="banner-email">
+          <mat-icon>mail</mat-icon>{{ currentUser().email }}
+        </p>
+      </div>
+      <span class="banner-role" [class.teacher]="currentUser().teacher">
+        <mat-icon>{{ currentUser().teacher ? 'school' : 'auto_stories' }}</mat-icon>
+        {{ currentUser().teacher ? ('account.teacher' | transloco) : ('account.student' | transloco) }}
+      </span>
+    </div>
+  }
+
+  <h1 class="page-title">{{ 'account.pageTitle' | transloco }}</h1>
+
+  <!-- ─── Personal info ────────────────────── -->
+  <div class="settings-card">
+    <div class="card-header">
+      <div class="card-header-icon" style="background: linear-gradient(135deg, #C2185B, #E91E63)">
+        <mat-icon>person</mat-icon>
+      </div>
+      <div>
+        <h2 class="card-title">{{ 'account.personalInfoTitle' | transloco }}</h2>
+        <p class="card-subtitle">{{ 'account.personalInfoSubtitle' | transloco }}</p>
+      </div>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="saveUserData()" class="settings-form">
+      <formly-form [form]="userForm" [fields]="userFields" [model]="userModel"></formly-form>
+      <div class="form-actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="!userForm.valid" class="save-btn">
+          <mat-icon>save</mat-icon>
+          {{ 'account.saveChanges' | transloco }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ─── Change password ───────────────────── -->
+  <div class="settings-card">
+    <div class="card-header">
+      <div class="card-header-icon" style="background: linear-gradient(135deg, #7B1FA2, #CE93D8)">
+        <mat-icon>lock</mat-icon>
+      </div>
+      <div>
+        <h2 class="card-title">{{ 'account.changePasswordTitle' | transloco }}</h2>
+        <p class="card-subtitle">{{ 'account.changePasswordSubtitle' | transloco }}</p>
+      </div>
+    </div>
+
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="settings-form">
+      <formly-form [form]="passwordForm" [fields]="passwordFields"></formly-form>
+
+      <!-- Password strength -->
+      @if (newPasswordValue.length > 0) {
+        <div class="password-strength">
+          <div class="strength-bar">
+            @for (i of [1,2,3,4,5]; track i) {
+              <div class="strength-segment"
+                   [class.filled]="i <= passwordStrength"
+                   [class]="i <= passwordStrength ? strengthClass : ''">
+              </div>
+            }
+          </div>
+          <span class="strength-text" [class]="strengthClass">{{ strengthLabel }}</span>
+          <div class="password-rules">
+            <span [class.ok]="passwordChecks.minLength">
+              <mat-icon>{{ passwordChecks.minLength ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              {{ 'password.minLength' | transloco }}
+            </span>
+            <span [class.ok]="passwordChecks.hasUpper">
+              <mat-icon>{{ passwordChecks.hasUpper ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              {{ 'account.uppercase' | transloco }}
+            </span>
+            <span [class.ok]="passwordChecks.hasLower">
+              <mat-icon>{{ passwordChecks.hasLower ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              {{ 'account.lowercase' | transloco }}
+            </span>
+            <span [class.ok]="passwordChecks.hasNumber">
+              <mat-icon>{{ passwordChecks.hasNumber ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              {{ 'password.hasNumber' | transloco }}
+            </span>
+            <span [class.ok]="passwordChecks.hasSpecial">
+              <mat-icon>{{ passwordChecks.hasSpecial ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              {{ 'account.specialChar' | transloco }}
+            </span>
+          </div>
+        </div>
+      }
+
+      <div class="form-actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="!passwordForm.valid" class="save-btn">
+          <mat-icon>lock_reset</mat-icon>
+          {{ 'account.updatePassword' | transloco }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>

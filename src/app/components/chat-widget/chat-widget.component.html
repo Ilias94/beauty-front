@@ -1,0 +1,89 @@
+<!-- ── Floating button ──────────────────────────────── -->
+@if (currentUser()) {
+<button class="chat-fab" (click)="toggleOpen()"
+  [matTooltip]="'chat.title' | transloco"
+  [matBadge]="unreadTotal() > 0 ? unreadTotal() : null"
+  matBadgeColor="warn" matBadgeSize="small">
+  <mat-icon>{{ open() ? 'close' : 'chat' }}</mat-icon>
+</button>
+
+<!-- ── Chat panel ───────────────────────────────────── -->
+@if (open()) {
+  <div class="chat-panel">
+
+    <!-- Panel header -->
+    <div class="panel-header">
+      @if (activeId()) {
+        <button mat-icon-button class="back-btn" (click)="backToList()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="partner-info">
+          @if (activePartner()) {
+            @if (avatarUrl(activePartner()!.partnerFileName); as url) {
+              <img class="avatar-sm" [src]="url" [alt]="activePartner()!.partnerFirstName">
+            } @else {
+              <div class="avatar-sm avatar-initials">{{ initials(activePartner()!.partnerFirstName, activePartner()!.partnerLastName) }}</div>
+            }
+            <span class="partner-name">{{ activePartner()!.partnerFirstName }} {{ activePartner()!.partnerLastName }}</span>
+          }
+        </div>
+      } @else {
+        <span class="panel-title">{{ 'chat.title' | transloco }}</span>
+      }
+    </div>
+
+    <!-- Conversations list -->
+    @if (!activeId()) {
+      <div class="conversations-list">
+        @if (conversations().length === 0) {
+          <div class="empty-chat">
+            <mat-icon>chat_bubble_outline</mat-icon>
+            <p>{{ 'chat.noConversations' | transloco }}</p>
+          </div>
+        }
+        @for (conv of conversations(); track conv.partnerId) {
+          <div class="conv-item" (click)="openConversation(conv.partnerId)">
+            @if (avatarUrl(conv.partnerFileName); as url) {
+              <img class="avatar" [src]="url" [alt]="conv.partnerFirstName">
+            } @else {
+              <div class="avatar avatar-initials">{{ initials(conv.partnerFirstName, conv.partnerLastName) }}</div>
+            }
+            <div class="conv-body">
+              <div class="conv-name">{{ conv.partnerFirstName }} {{ conv.partnerLastName }}</div>
+              <div class="conv-last">{{ conv.lastMessage }}</div>
+            </div>
+            @if (conv.unreadCount > 0) {
+              <span class="unread-badge">{{ conv.unreadCount }}</span>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Message thread -->
+    @if (activeId()) {
+      <div class="messages-area">
+        @for (msg of messages(); track msg.id) {
+          <div class="msg-row" [class.msg-mine]="msg.senderId === currentUser()?.id">
+            <div class="bubble">{{ msg.content }}</div>
+            <div class="msg-time">{{ msg.sentAt | date:'HH:mm' }}</div>
+          </div>
+        }
+        <div #messagesEnd></div>
+      </div>
+
+      <div class="input-row">
+        <textarea class="msg-input" rows="1"
+          [placeholder]="'chat.placeholder' | transloco"
+          [(ngModel)]="newMessage"
+          (keydown)="onKeydown($event)">
+        </textarea>
+        <button mat-icon-button class="send-btn" (click)="send()" [disabled]="!newMessage().trim()">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    }
+
+  </div>
+}
+} <!-- end @if (currentUser()) -->

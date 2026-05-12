@@ -1,84 +1,550 @@
-.filters
+/* ─── Hero ─────────────────────────────────────────── */
+.hero-section
+  background: linear-gradient(135deg, #880E4F 0%, #C2185B 40%, #E91E63 70%, #F48FB1 100%)
+  border-radius: 20px
+  padding: 44px 40px
+  margin-bottom: 28px
   display: flex
-  flex-wrap: wrap
-  gap: 16px
-  margin-bottom: 24px
+  align-items: center
+  justify-content: space-between
+  gap: 24px
+  overflow: hidden
+  position: relative
 
-.search-title
-  flex: 1
+  &::before
+    content: ''
+    position: absolute
+    top: -60px
+    right: -60px
+    width: 240px
+    height: 240px
+    background: rgba(255,255,255,0.06)
+    border-radius: 50%
+
+  &::after
+    content: ''
+    position: absolute
+    bottom: -80px
+    right: 80px
+    width: 180px
+    height: 180px
+    background: rgba(255,255,255,0.04)
+    border-radius: 50%
+
+.hero-content
+  color: white
+  z-index: 1
+
+.hero-title
+  font-family: 'Playfair Display', serif
+  font-size: 2.2rem
+  font-weight: 700
+  margin: 0 0 10px
+  line-height: 1.25
+  text-shadow: 0 2px 12px rgba(0,0,0,0.15)
+
+.hero-subtitle
+  font-size: 1rem
+  font-weight: 300
+  margin: 0
+  opacity: 0.88
+  letter-spacing: 0.3px
+
+.teacher-action-bar
+  display: flex
+  justify-content: flex-end
+  margin-bottom: 12px
+
+.hero-stats
+  display: flex
+  align-items: center
+  gap: 24px
+  color: white
+  z-index: 1
+  background: rgba(255,255,255,0.12)
+  border-radius: 16px
+  padding: 16px 28px
+  backdrop-filter: blur(4px)
+
+.stat
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 2px
+
+  .stat-number
+    font-size: 1.8rem
+    font-weight: 700
+    line-height: 1
+
+  .stat-label
+    font-size: 0.78rem
+    opacity: 0.8
+    text-transform: uppercase
+    letter-spacing: 0.5px
+
+.stat-divider
+  width: 1px
+  height: 36px
+  background: rgba(255,255,255,0.3)
+
+/* ─── Filters ─────────────────────────────────────── */
+.filters-bar
+  display: flex
+  gap: 16px
+  flex-wrap: wrap
+  align-items: center
+  margin-bottom: 16px
+
+.past-toggle
+  align-self: center
+  white-space: nowrap
+
+.search-field
+  flex: 2
   min-width: 240px
 
+.sort-field
+  flex: 1
+  min-width: 200px
+
+/* ─── Category Chips ──────────────────────────────── */
+.chip-filter-row
+  margin-bottom: 16px
+  display: flex
+  align-items: center
+
+.category-chips
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+
+/* ─── Results bar ─────────────────────────────────── */
+.results-bar
+  display: flex
+  align-items: center
+  gap: 12px
+  margin-bottom: 20px
+  min-height: 28px
+
+.results-count
+  font-size: 0.88rem
+  color: #888
+  font-weight: 500
+
+.active-filter
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  background: rgba(194, 24, 91, 0.08)
+  color: #C2185B
+  border-radius: 20px
+  padding: 2px 6px 2px 10px
+  font-size: 0.82rem
+  font-weight: 600
+
+  .mat-icon
+    font-size: 14px
+    width: 14px
+    height: 14px
+
+  .clear-filter-btn
+    width: 20px
+    height: 20px
+    line-height: 20px
+
+    .mat-icon
+      font-size: 14px
+
+/* ─── Grid ────────────────────────────────────────── */
 .courses-grid
   display: grid
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))
-  gap: 24px
-  margin-bottom: 32px
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr))
+  gap: 28px
+  margin-bottom: 40px
 
-@keyframes fadeIn
+/* ─── Card ────────────────────────────────────────── */
+.course-card
+  display: flex
+  flex-direction: column
+  border-radius: 14px !important
+  overflow: hidden
+  animation: fadeSlideIn 0.4s ease-out both
+  animation-delay: calc(var(--card-index, 0) * 40ms)
+  transition: transform 0.25s ease, box-shadow 0.25s ease
+  background: #fff
+
+  &:hover
+    transform: translateY(-6px)
+    box-shadow: 0 14px 36px rgba(194, 24, 91, 0.18) !important
+
+/* Card stripe */
+.card-stripe
+  padding: 20px
+  min-height: 110px
+  display: flex
+  flex-direction: column
+  gap: 12px
+
+.stripe-top
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+.stripe-top-left
+  display: flex
+  align-items: center
+  gap: 6px
+  flex-wrap: wrap
+
+.stripe-top-right
+  display: flex
+  align-items: center
+  gap: 6px
+
+.your-course-badge, .enrolled-badge
+  display: inline-flex
+  align-items: center
+  gap: 3px
+  background: rgba(255, 255, 255, 0.22)
+  color: white
+  font-size: 0.68rem
+  font-weight: 700
+  padding: 2px 8px
+  border-radius: 20px
+  border: 1px solid rgba(255, 255, 255, 0.45)
+  letter-spacing: 0.3px
+  mat-icon
+    font-size: 11px
+    width: 11px
+    height: 11px
+
+.category-label
+  font-size: 0.72rem
+  font-weight: 700
+  color: rgba(255,255,255,0.9)
+  text-transform: uppercase
+  letter-spacing: 0.8px
+
+.status-badge
+  font-size: 0.7rem
+  font-weight: 600
+  padding: 2px 9px
+  border-radius: 20px
+  text-transform: capitalize
+
+  &.status-upcoming
+    background: rgba(255,255,255,0.25)
+    color: white
+
+  &.status-ongoing
+    background: rgba(76, 175, 80, 0.9)
+    color: white
+
+  &.status-past
+    background: rgba(0,0,0,0.25)
+    color: rgba(255,255,255,0.8)
+
+.stripe-bottom
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+.rating-row
+  display: flex
+  align-items: center
+  gap: 3px
+  color: white
+
+  .star-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+    color: #FFD54F
+
+  .rating-value
+    font-size: 0.9rem
+    font-weight: 700
+
+.price-badge
+  font-size: 1.25rem
+  font-weight: 800
+  font-family: 'Playfair Display', serif
+  color: #C2185B
+  background: white
+  padding: 4px 14px
+  border-radius: 24px
+  letter-spacing: -0.3px
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18)
+
+/* Card body */
+.card-body
+  flex: 1
+  padding: 22px !important
+  display: flex
+  flex-direction: column
+
+.course-title
+  font-family: 'Playfair Display', serif
+  font-size: 1.3rem
+  font-weight: 700
+  font-style: italic
+  color: #1a1a1a
+  margin: 0 0 10px
+  line-height: 1.3
+
+.creator-row
+  display: flex
+  align-items: center
+  gap: 8px
+  margin: 0 0 14px
+
+.creator-avatar
+  width: 28px
+  height: 28px
+  border-radius: 50%
+  object-fit: cover
+  flex-shrink: 0
+
+.creator-avatar-initials
+  background: linear-gradient(135deg, #C2185B, #E91E63)
+  color: white
+  font-size: 0.65rem
+  font-weight: 700
+  display: flex
+  align-items: center
+  justify-content: center
+
+.creator-name
+  color: #888
+  font-size: 0.82rem
+
+  .mat-icon
+    font-size: 14px
+    width: 14px
+    height: 14px
+    color: #C2185B
+
+.meta-pills
+  display: flex
+  flex-wrap: wrap
+  gap: 6px
+  margin-bottom: 14px
+
+.meta-pill
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  background: #f7f0f3
+  color: #666
+  font-size: 0.78rem
+  padding: 3px 10px
+  border-radius: 20px
+
+  .mat-icon
+    font-size: 12px
+    width: 12px
+    height: 12px
+
+  &.meta-pill-full
+    background: #fdecea
+    color: #c62828
+    font-weight: 600
+    color: #C2185B
+
+.course-description
+  font-size: 0.9rem
+  line-height: 1.65
+  color: #666
+  margin: 0
+  display: -webkit-box
+  -webkit-line-clamp: 4
+  -webkit-box-orient: vertical
+  overflow: hidden
+  flex: 1
+
+/* Card actions */
+.card-actions
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 12px 14px !important
+  border-top: 1px solid rgba(0,0,0,0.06)
+  flex-wrap: wrap
+
+.enroll-btn
+  border-radius: 20px !important
+  font-weight: 600
+  font-size: 0.85rem
+
+  &.enroll-btn-full
+    background: #f5f5f5 !important
+    color: #aaa !important
+
+.details-btn
+  border-radius: 20px !important
+  font-size: 0.85rem
+
+.owner-actions
+  display: flex
+  gap: 4px
+  margin-left: auto
+
+/* ─── Empty State ─────────────────────────────────── */
+.empty-state
+  text-align: center
+  padding: 72px 32px
+
+  .empty-icon
+    width: 80px
+    height: 80px
+    border-radius: 50%
+    background: rgba(194, 24, 91, 0.08)
+    display: flex
+    align-items: center
+    justify-content: center
+    margin: 0 auto 20px
+
+    .mat-icon
+      font-size: 40px
+      width: 40px
+      height: 40px
+      color: #F48FB1
+
+  h3
+    font-family: 'Playfair Display', serif
+    color: #888
+    margin-bottom: 8px
+    font-size: 1.3rem
+
+  p
+    color: #aaa
+    font-size: 0.95rem
+    margin-bottom: 24px
+
+/* ─── Location Filter ─────────────────────────────── */
+.location-filter
+  margin-bottom: 16px
+
+.location-row
+  display: flex
+  align-items: center
+  gap: 10px
+  flex-wrap: wrap
+
+.location-icon
+  color: #C2185B
+  font-size: 20px
+  width: 20px
+  height: 20px
+  flex-shrink: 0
+
+.city-chips
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+  flex: 1
+
+.city-chip
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  padding: 6px 14px
+  border-radius: 20px
+  border: 1.5px solid #f0e8ed
+  background: white
+  color: #555
+  font-size: 0.85rem
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.15s ease
+  white-space: nowrap
+
+  mat-icon
+    font-size: 14px
+    width: 14px
+    height: 14px
+
+  &:hover
+    border-color: #E91E63
+    color: #C2185B
+    background: #fff5f8
+
+  &.city-chip-active
+    background: linear-gradient(135deg, #C2185B, #E91E63)
+    color: white
+    border-color: transparent
+    font-weight: 700
+
+  &.city-chip-online
+    border-color: #e8f4fd
+    color: #1565C0
+
+    &:hover
+      background: #e8f4fd
+      border-color: #1565C0
+
+    &.city-chip-active
+      background: linear-gradient(135deg, #1565C0, #42A5F5)
+      color: white
+      border-color: transparent
+
+.clear-location-btn
+  flex-shrink: 0
+
+/* ─── Course Type Badge ─────────────────────────────── */
+.course-type-badge
+  display: inline-flex
+  align-items: center
+  gap: 2px
+  padding: 2px 8px
+  border-radius: 20px
+  font-size: 0.68rem
+  font-weight: 700
+  letter-spacing: 0.3px
+
+  mat-icon
+    font-size: 11px
+    width: 11px
+    height: 11px
+
+  &.type-online
+    background: rgba(21, 101, 192, 0.2)
+    color: #e3f2fd
+
+  &.type-hybrid
+    background: rgba(46, 125, 50, 0.2)
+    color: #e8f5e9
+
+/* ─── Paginator ───────────────────────────────────── */
+.paginator
+  border-radius: 14px
+  background: white
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06)
+  margin-bottom: 24px
+
+/* ─── Animation ───────────────────────────────────── */
+@keyframes fadeSlideIn
   from
     opacity: 0
-    transform: translateY(10px)
+    transform: translateY(18px)
   to
     opacity: 1
     transform: translateY(0)
 
-.course-card
-  display: flex
-  flex-direction: column
-  height: 100%
-  animation: fadeIn 0.4s ease-in-out
-  transition: transform 0.3s ease, box-shadow 0.3s ease
+/* ─── Responsive ──────────────────────────────────── */
+@media (max-width: 768px)
+  .hero-section
+    padding: 28px 20px
+    flex-direction: column
+    align-items: flex-start
 
-  &:hover
-    transform: translateY(-6px)
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15)
+  .hero-title
+    font-size: 1.7rem
 
-  .title
-    font-size: 1.4rem
-    font-weight: 700
+  .hero-stats
+    width: 100%
+    justify-content: center
 
-  .date
-    font-size: 1rem
-    font-weight: 500
-    color: #3f51b5
-
-  .participants
-    margin-top: 12px
-    font-size: 1rem
-    font-weight: 600
-    color: #2e7d32
-
-  .description
-    margin-top: 12px
-    font-size: 0.95rem
-    line-height: 1.6
-    color: #444
-    white-space: pre-line
-    background-color: #f9f9f9
-    padding: 12px
-    border-left: 4px solid #3f51b5
-    border-radius: 4px
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05)
-    transition: all 0.3s ease
-
-    &:hover
-      background-color: #eef2ff
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15)
-
-  mat-card-actions
-    display: flex
-    justify-content: space-between
-    margin-top: auto
-    padding-top: 16px
-
-    button[mat-flat-button]
-      transition: background-color 0.3s ease, box-shadow 0.2s ease
-
-      &:hover
-        background-color: #303f9f !important
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)
-
-mat-chip
-  margin-bottom: 6px
-  font-size: 0.75rem
-  font-weight: 600
+  .courses-grid
+    grid-template-columns: 1fr

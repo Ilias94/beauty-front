@@ -1,0 +1,40 @@
+.notif-wrapper
+  min-width: 300px
+  max-width: 400px
+  max-height: 420px
+  overflow-y: auto
+
+.notif-header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 8px 16px
+
+.notif-empty
+  padding: 16px
+  color: rgba(0, 0, 0, 0.54)
+  text-align: center
+  margin: 0
+
+.notif-item
+  padding: 10px 16px
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08)
+  cursor: default
+
+  &:last-child
+    border-bottom: none
+
+.notif-title
+  font-weight: 500
+  font-size: 14px
+  margin-bottom: 2px
+
+.notif-msg
+  font-size: 14px
+  white-space: normal
+  word-wrap: break-word
+
+.notif-time
+  font-size: 12px
+  color: rgba(0, 0, 0, 0.54)
+  margin-top: 4px

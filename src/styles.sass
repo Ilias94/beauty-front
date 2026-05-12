@@ -1,2 +1,55 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global base styles */
 
+html, body
+  height: 100%
+  margin: 0
+  padding: 0
+  font-family: 'Lato', 'Roboto', sans-serif
+  background-color: #fdf8f5
+  color: #2d2d2d
+
+h1, h2, h3, h4, h5, h6
+  font-family: 'Playfair Display', serif
+  font-weight: 600
+
+a
+  color: #C2185B
+  text-decoration: none
+
+  &:hover
+    color: #880E4F
+
+/* Smooth transitions for Angular Material overlays */
+.mat-mdc-card
+  transition: transform 0.3s ease, box-shadow 0.3s ease
+
+/* Scrollbar styling */
+::-webkit-scrollbar
+  width: 6px
+
+::-webkit-scrollbar-track
+  background: #f1f1f1
+
+::-webkit-scrollbar-thumb
+  background: #F48FB1
+  border-radius: 3px
+
+  &:hover
+    background: #C2185B
+
+/* ── Snackbar variants ────────────────────────────── */
+.snack-success .mat-mdc-snackbar-surface
+  background: #2e7d32 !important
+  color: #fff !important
+  border-radius: 8px !important
+  font-weight: 500
+
+.snack-error .mat-mdc-snackbar-surface
+  background: #b71c1c !important
+  color: #fff !important
+  border-radius: 8px !important
+  font-weight: 500
+
+.snack-success .mat-mdc-button.mat-mdc-snack-bar-action,
+.snack-error .mat-mdc-button.mat-mdc-snack-bar-action
+  color: rgba(255,255,255,0.8) !important

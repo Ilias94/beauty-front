@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$beauty-primary: mat.define-palette(mat.$pink-palette, 700, 300, 900);
+$beauty-accent: mat.define-palette(mat.$amber-palette, 600, 200, 900);
+$beauty-warn: mat.define-palette(mat.$red-palette);
+
+$beauty-theme: mat.define-light-theme((
+  color: (
+    primary: $beauty-primary,
+    accent: $beauty-accent,
+    warn: $beauty-warn,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Lato, sans-serif',
+  ),
+  density: 0,
+));
+
+@include mat.all-component-themes($beauty-theme);

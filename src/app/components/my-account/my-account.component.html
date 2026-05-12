@@ -1,48 +1,59 @@
-<div class="user-dashboard">
-  <div class="profile-avatar">
-  @if (currentUser().fileName) {
-    <img class="profile-photo"
-         [src]="'https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/' + currentUser().fileName"
-         alt="Profile photo">
-  } @else {
-    <div class="avatar-fallback">
-      {{ currentUser().firstName.charAt(0) + currentUser().lastName.charAt(0) }}
+@if (currentUser()) {
+  <div class="account-page">
+
+    <!-- ─── Profile hero ──────────────────────────── -->
+    <div class="profile-hero">
+      <div class="hero-bg"></div>
+
+      <div class="profile-main">
+        <!-- Avatar -->
+        <div class="avatar-ring">
+          @if (currentUser().fileName) {
+            <img [src]="s3Base + currentUser().fileName" class="avatar-img" alt="Profile photo" />
+          } @else {
+            <div class="avatar-initials">{{ getInitials() }}</div>
+          }
+        </div>
+
+        <!-- Info -->
+        <div class="profile-info">
+          <h2 class="profile-name">
+            {{ currentUser().firstName }} {{ currentUser().lastName }}
+          </h2>
+          <p class="profile-email">
+            <mat-icon>mail</mat-icon>{{ currentUser().email }}
+          </p>
+          <span class="role-badge" [class.teacher]="currentUser().teacher">
+            <mat-icon>{{ currentUser().teacher ? 'school' : 'auto_stories' }}</mat-icon>
+            {{ getRoleLabel() }}
+          </span>
+        </div>
+
+        <!-- Edit button -->
+        <a mat-stroked-button routerLink="/account" class="edit-btn">
+          <mat-icon>edit</mat-icon>
+          {{ 'account.editProfile' | transloco }}
+        </a>
+      </div>
     </div>
-  }
-</div>
 
+    <!-- ─── Navigation cards ──────────────────────── -->
+    <div class="nav-grid">
+      @for (card of navCards; track card.route) {
+        @if (!card.teacherOnly || currentUser()?.teacher) {
+        <a [routerLink]="card.route" class="nav-card" matRipple>
+          <div class="nav-icon-wrap" [style.background]="card.gradient">
+            <mat-icon>{{ card.icon }}</mat-icon>
+          </div>
+          <div class="nav-text">
+            <span class="nav-title">{{ card.title }}</span>
+            <span class="nav-desc">{{ card.desc }}</span>
+          </div>
+          <mat-icon class="nav-arrow">chevron_right</mat-icon>
+        </a>
+        }
+      }
+    </div>
 
-  <div class="cards-grid">
-    <mat-card class="dashboard-card">
-      <mat-card-title>Change account data</mat-card-title>
-      <mat-card-content>You can change account data</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/account">Account</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="dashboard-card">
-      <mat-card-title>My courses</mat-card-title>
-      <mat-card-content>You can browse your courses here</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/student-courses">Enter</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="dashboard-card">
-      <mat-card-title>Manage your courses</mat-card-title>
-      <mat-card-content>You can manage your courses here</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/creator-courses">Enter</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="dashboard-card">
-      <mat-card-title>Your comments</mat-card-title>
-      <mat-card-content>You can see your comments here</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/my-comments">Enter</button>
-      </mat-card-actions>
-    </mat-card>
   </div>
-</div>
+}

@@ -1,0 +1,240 @@
+.rq-page
+  max-width: 680px
+  margin: 48px auto
+  padding: 0 20px
+
+// ── Progress ──────────────────────────────────────────
+.rq-progress-track
+  height: 8px
+  background: #f0e8ed
+  border-radius: 99px
+  overflow: hidden
+  margin-bottom: 10px
+
+.rq-progress-fill
+  height: 100%
+  background: linear-gradient(90deg, #C2185B, #E91E63)
+  border-radius: 99px
+  transition: width 0.4s ease
+
+.rq-progress-label
+  text-align: right
+  font-size: 0.85rem
+  color: #999
+  margin-bottom: 28px
+
+// ── Question card ─────────────────────────────────────
+.rq-question-card
+  background: white
+  border-radius: 20px
+  padding: 32px 36px
+  box-shadow: 0 4px 24px rgba(194, 24, 91, 0.08)
+  margin-bottom: 24px
+
+.rq-question-number
+  font-size: 0.75rem
+  font-weight: 800
+  letter-spacing: 1.5px
+  text-transform: uppercase
+  color: #E91E63
+  margin-bottom: 14px
+
+.rq-question-text
+  font-family: 'Playfair Display', serif
+  font-size: 1.35rem
+  font-weight: 600
+  color: #1a1a1a
+  line-height: 1.5
+  margin: 0
+
+// ── Answers ───────────────────────────────────────────
+.rq-answers
+  display: flex
+  flex-direction: column
+  gap: 12px
+  margin-bottom: 28px
+
+.rq-answer-btn
+  display: flex
+  align-items: center
+  gap: 14px
+  width: 100%
+  padding: 16px 20px
+  background: white
+  border: 2px solid #f0e8ed
+  border-radius: 14px
+  cursor: pointer
+  transition: all 0.2s ease
+  text-align: left
+  font-size: 1rem
+  color: #1a1a1a
+
+  &:hover:not(:disabled)
+    border-color: #E91E63
+    background: #fff5f8
+    transform: translateX(4px)
+
+  &:disabled
+    cursor: default
+
+  &.rq-selected
+    border-color: #E91E63
+
+  &.rq-correct
+    border-color: #2E7D32
+    background: #f1f8f1
+    color: #1B5E20
+
+  &.rq-wrong
+    border-color: #c62828
+    background: #fff5f5
+    color: #b71c1c
+
+.rq-label
+  width: 34px
+  height: 34px
+  border-radius: 50%
+  background: linear-gradient(135deg, #C2185B, #E91E63)
+  color: white
+  font-size: 0.85rem
+  font-weight: 800
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+
+  .rq-correct &
+    background: #2E7D32
+
+  .rq-wrong &
+    background: #c62828
+
+.rq-answer-text
+  flex: 1
+
+.rq-icon-result
+  font-size: 22px
+  width: 22px
+  height: 22px
+  color: #2E7D32
+
+.rq-icon-wrong
+  color: #c62828
+
+// ── Next button ───────────────────────────────────────
+.rq-next-wrap
+  display: flex
+  justify-content: flex-end
+
+.rq-next-btn
+  min-width: 160px
+  height: 48px
+  font-size: 1rem
+  font-weight: 600
+
+// ── Results ───────────────────────────────────────────
+.rq-results-wrap
+  display: flex
+  flex-direction: column
+  align-items: center
+  text-align: center
+  gap: 16px
+  padding-top: 24px
+
+.rq-score-ring
+  width: 180px
+  height: 180px
+  border-radius: 50%
+  border: 8px solid #E91E63
+  background: white
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  box-shadow: 0 8px 32px rgba(194, 24, 91, 0.2)
+  margin-bottom: 8px
+
+  &.rq-score-high
+    border-color: #2E7D32
+    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.2)
+
+  &.rq-score-low
+    border-color: #f57c00
+    box-shadow: 0 8px 32px rgba(245, 124, 0, 0.2)
+
+.rq-trophy-icon
+  font-size: 28px
+  width: 28px
+  height: 28px
+  color: #E91E63
+  margin-bottom: 4px
+
+  .rq-score-high &
+    color: #2E7D32
+
+  .rq-score-low &
+    color: #f57c00
+
+.rq-score-main
+  display: flex
+  align-items: baseline
+  gap: 2px
+
+.rq-score-num
+  font-size: 2.8rem
+  font-weight: 800
+  font-family: 'Playfair Display', serif
+  color: #1a1a1a
+  line-height: 1
+
+.rq-score-denom
+  font-size: 1.2rem
+  color: #999
+
+.rq-score-pct
+  font-size: 0.9rem
+  color: #aaa
+  margin-top: 4px
+
+.rq-result-title
+  font-family: 'Playfair Display', serif
+  font-size: 1.8rem
+  font-weight: 700
+  color: #1a1a1a
+  margin: 0
+
+.rq-result-sub
+  font-size: 1rem
+  color: #666
+  margin: 0
+
+.rq-result-actions
+  display: flex
+  gap: 14px
+  margin-top: 8px
+  flex-wrap: wrap
+  justify-content: center
+
+// ── Empty state ───────────────────────────────────────
+.rq-empty
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 12px
+  padding: 80px 20px
+  text-align: center
+  color: #999
+
+  mat-icon
+    font-size: 56px
+    width: 56px
+    height: 56px
+    opacity: 0.3
+
+  h3
+    font-size: 1.3rem
+    color: #555
+    margin: 0
+
+  p
+    margin: 0

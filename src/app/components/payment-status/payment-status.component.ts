@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-payment-status',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatChipsModule],
+  imports: [CommonModule, MatCardModule, MatChipsModule, TranslocoModule],
   templateUrl: './payment-status.component.html',
   styleUrl: './payment-status.component.sass'
 })

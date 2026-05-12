@@ -6,11 +6,13 @@ import { UserDtoResponse } from '../models/user-dto-response';
 export interface CourseDtoResponse {
   address?: AddressDtoResponse;
   category?: CategoryDtoResponse;
+  courseType?: 'IN_PERSON' | 'ONLINE' | 'HYBRID';
   creator?: UserDtoResponse;
   description?: string;
   endDate?: string;
   id?: number;
   maxParticipants?: number;
+  participantCount?: number;
   price?: number;
   rating?: number;
   startDate?: string;

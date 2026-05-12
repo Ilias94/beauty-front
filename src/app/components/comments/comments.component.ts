@@ -4,11 +4,12 @@ import { MatCardModule } from '@angular/material/card';
 import { Store } from '@ngxs/store';
 import { ClearCommentsAction } from '../state/comment.actions';
 import { CommentDtoResponse } from '../../../api/models';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-comments',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule, TranslocoModule],
   templateUrl: './comments.component.html',
   styleUrl: './comments.component.sass'
 })

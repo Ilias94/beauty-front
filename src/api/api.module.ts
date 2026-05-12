@@ -9,9 +9,11 @@ import { CourseControllerService } from './services/course-controller.service';
 import { CategoryControllerService } from './services/category-controller.service';
 import { TemplateControllerService } from './services/template-controller.service';
 import { VideoControllerService } from './services/video-controller.service';
+import { TicketControllerService } from './services/ticket-controller.service';
 import { RatingControllerService } from './services/rating-controller.service';
 import { QuestionControllerService } from './services/question-controller.service';
 import { PaymentControllerService } from './services/payment-controller.service';
+import { MessageControllerService } from './services/message-controller.service';
 import { LoginControllerService } from './services/login-controller.service';
 import { GeoLocationControllerService } from './services/geo-location-controller.service';
 import { CommentControllerService } from './services/comment-controller.service';
@@ -33,9 +35,11 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
     CategoryControllerService,
     TemplateControllerService,
     VideoControllerService,
+    TicketControllerService,
     RatingControllerService,
     QuestionControllerService,
     PaymentControllerService,
+    MessageControllerService,
     LoginControllerService,
     GeoLocationControllerService,
     CommentControllerService,

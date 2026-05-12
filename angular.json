@@ -27,10 +27,11 @@
             "inlineStyleLanguage": "sass",
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/theme.scss",
               "src/styles.sass",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
@@ -94,10 +95,11 @@
             "inlineStyleLanguage": "sass",
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/theme.scss",
               "src/styles.sass",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],

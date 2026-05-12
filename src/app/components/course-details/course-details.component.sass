@@ -1,64 +1,395 @@
-.example-card
-  max-width: 700px
-  margin: 2rem auto
-  padding: 1rem
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
-  border-radius: 12px
+// ViewEncapsulation.None — prefiks cd- na wszystkich klasach
 
-  mat-card-header
-    margin-bottom: 1rem
+.cd-page
+  max-width: 1100px
+  margin: 0 auto
+  padding-bottom: 48px
 
-  mat-card-title, mat-card-subtitle
-    font-weight: 500
+// ── Nav ─────────────────────────────────────────────────────────────────
 
-  img[mat-card-image]
-    max-height: 300px
-    width: 100%
-    object-fit: cover
-    border-radius: 12px
-    margin-bottom: 1rem
+.cd-nav
+  margin-bottom: 16px
 
-  mat-card-content
-    display: flex
-    flex-direction: column
-    gap: 0.5rem
-    font-size: 16px
-    line-height: 1.5
-    color: #444
+  a[mat-button]
+    color: rgba(0,0,0,0.55)
+    font-size: 0.9rem
 
-  mat-card-actions
-    display: flex
-    justify-content: flex-end
-    margin-top: 1rem
+    .mat-icon
+      font-size: 18px
+      height: 18px
+      width: 18px
+      vertical-align: middle
+      margin-right: 4px
 
-  button[mat-button]
-    font-weight: 500
+// ── Hero ─────────────────────────────────────────────────────────────────
 
-.price-highlight
-  font-size: 2.0rem
-  font-weight: bold
-  color: #2e7d32 // ciemna zieleń (możesz zmienić np. na #1976d2 dla niebieskiego)
+.cd-hero
+  background: linear-gradient(135deg, #880E4F 0%, #C2185B 55%, #E91E63 100%)
+  border-radius: 20px
+  padding: 36px 40px
+  margin-bottom: 28px
+  color: white
+
+.cd-hero-meta
   display: flex
   align-items: center
-  gap: 0.5rem
+  gap: 10px
+  margin-bottom: 12px
 
-.rating-section
+.cd-category-chip
+  background: rgba(255,255,255,0.2)
+  border-radius: 20px
+  padding: 3px 12px
+  font-size: 0.8rem
+  font-weight: 500
+
+.cd-status-badge
+  border-radius: 20px
+  padding: 3px 12px
+  font-size: 0.78rem
+  font-weight: 600
+  text-transform: uppercase
+  letter-spacing: 0.4px
+
+  &.cd-status-upcoming
+    background: rgba(255,255,255,0.15)
+    border: 1px solid rgba(255,255,255,0.4)
+
+  &.cd-status-ongoing
+    background: #4CAF50
+    color: white
+
+  &.cd-status-past
+    background: rgba(0,0,0,0.2)
+
+.cd-title
+  font-family: 'Playfair Display', serif
+  font-size: 2rem
+  font-weight: 700
+  margin: 0 0 14px
+  line-height: 1.2
+
+.cd-hero-sub
+  display: flex
+  align-items: center
+  gap: 16px
+  flex-wrap: wrap
+
+.cd-rating-pill,
+.cd-instructor-pill
+  display: inline-flex
+  align-items: center
+  gap: 5px
+  background: rgba(255,255,255,0.15)
+  border-radius: 20px
+  padding: 4px 12px
+  font-size: 0.88rem
+
+  .mat-icon
+    font-size: 16px
+    height: 16px
+    width: 16px
+
+// ── Layout ───────────────────────────────────────────────────────────────
+
+.cd-layout
+  display: grid
+  grid-template-columns: 1fr 340px
+  gap: 24px
+  align-items: start
+
+  @media (max-width: 768px)
+    grid-template-columns: 1fr
+
+// ── Cards ────────────────────────────────────────────────────────────────
+
+.cd-card
+  background: white
+  border-radius: 16px
+  padding: 24px
+  margin-bottom: 20px
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06)
+  border: 1px solid rgba(0,0,0,0.06)
+
+.cd-card-title
+  display: flex
+  align-items: center
+  gap: 8px
+  font-size: 1rem
+  font-weight: 600
+  margin: 0 0 16px
+  color: #1a1a1a
+
+  .mat-icon
+    color: #C2185B
+    font-size: 20px
+    height: 20px
+    width: 20px
+
+.cd-description
+  color: #444
+  line-height: 1.7
+  font-size: 0.95rem
+  margin: 0
+
+// ── Location ─────────────────────────────────────────────────────────────
+
+.cd-address-line
+  font-size: 0.95rem
+  color: #333
+  margin: 0 0 6px
+
+.cd-district
+  font-size: 0.85rem
+  color: rgba(0,0,0,0.5)
+  margin: 0
+
+.cd-map-wrap
+  border-radius: 16px
+  overflow: hidden
+  margin-bottom: 20px
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08)
+
+// ── Ratings ──────────────────────────────────────────────────────────────
+
+.cd-ratings-row
+  display: flex
+  gap: 24px
+  align-items: flex-start
+
+  @media (max-width: 480px)
+    flex-direction: column
+
+.cd-rating-divider
+  width: 1px
+  background: rgba(0,0,0,0.1)
+  align-self: stretch
+
+.cd-rating-block
+  flex: 1
   display: flex
   flex-direction: column
-  gap: 1.5rem
-  margin-top: 2rem
-  padding: 1rem
-  background-color: #f9f9f9
-  border-radius: 12px
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05)
+  gap: 8px
 
-.rating-block
+.cd-rating-label
+  font-size: 0.75rem
+  font-weight: 700
+  color: rgba(0,0,0,0.45)
+  text-transform: uppercase
+  letter-spacing: 0.6px
+
+.cd-rating-avg-row
+  display: flex
+  align-items: center
+  gap: 10px
+
+.cd-avg-number
+  font-size: 2.4rem
+  font-weight: 800
+  color: #1a1a1a
+  line-height: 1
+  font-variant-numeric: tabular-nums
+
+.cd-rating-count
+  font-size: 0.8rem
+  color: rgba(0,0,0,0.45)
+
+.cd-rating-hint
+  display: inline-flex
+  align-items: center
+  gap: 3px
+  font-size: 0.78rem
+  color: rgba(0,0,0,0.38)
+  margin-top: -2px
+
+  .mat-icon
+    font-size: 14px
+    height: 14px
+    width: 14px
+
+// ngx-stars color override (uses ViewEncapsulation.None)
+ngx-stars
+  .stars-container
+    gap: 2px !important
+
+// ── Booking card ──────────────────────────────────────────────────────────
+
+.cd-booking-card
+  background: white
+  border-radius: 16px
+  padding: 28px
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1)
+  border: 1px solid rgba(0,0,0,0.06)
+  position: sticky
+  top: 24px
+  margin-bottom: 20px
+
+.cd-price
+  text-align: center
+  margin-bottom: 20px
+
+.cd-price-value
+  font-size: 2.2rem
+  font-weight: 700
+  color: #1a1a1a
+
+.cd-price-free
+  font-size: 2rem
+  font-weight: 700
+  color: #2E7D32
+
+.cd-enroll-btn
+  width: 100%
+  height: 46px
+  font-size: 1rem
+  font-weight: 600
+  margin-bottom: 20px
+
+.cd-enrolled-actions
   display: flex
   flex-direction: column
-  gap: 0.5rem
+  gap: 10px
+  margin-bottom: 20px
 
-  label
+.cd-enrolled-badge
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 10px 14px
+  background: #f1f8f1
+  border-radius: 8px
+  color: #2E7D32
+  font-size: 0.9rem
+  font-weight: 600
+  mat-icon
+    font-size: 20px
+    width: 20px
+    height: 20px
+
+.cd-quiz-btn
+  width: 100%
+  height: 46px
+  font-size: 1rem
+  font-weight: 600
+
+.cd-past-notice
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 12px 16px
+  background: rgba(0, 0, 0, 0.06)
+  border-radius: 8px
+  color: rgba(0, 0, 0, 0.5)
+  font-size: 0.9rem
+  font-weight: 500
+  margin-bottom: 20px
+  mat-icon
+    font-size: 20px
+    width: 20px
+    height: 20px
+
+.cd-owner-actions
+  display: flex
+  flex-direction: column
+  gap: 10px
+  margin-bottom: 20px
+
+.cd-action-btn
+  width: 100%
+
+.cd-details-list
+  display: flex
+  flex-direction: column
+  gap: 14px
+  border-top: 1px solid rgba(0,0,0,0.07)
+  padding-top: 20px
+
+.cd-detail-item
+  display: flex
+  align-items: flex-start
+  gap: 12px
+
+  .mat-icon
+    color: #C2185B
+    font-size: 20px
+    height: 20px
+    width: 20px
+    flex-shrink: 0
+    margin-top: 2px
+
+.cd-detail-text
+  display: flex
+  flex-direction: column
+  gap: 1px
+
+.cd-detail-label
+  font-size: 0.75rem
+  color: rgba(0,0,0,0.45)
+  text-transform: uppercase
+  letter-spacing: 0.3px
+
+.cd-detail-value
+  font-size: 0.9rem
+  color: #1a1a1a
+  font-weight: 500
+
+  &.cd-spots-full
+    color: #c62828
     font-weight: 600
-    font-size: 1.2rem
-    color: #333
 
+// ── Instructor card ───────────────────────────────────────────────────────
+
+.cd-instructor-card
+  background: white
+  border-radius: 16px
+  padding: 20px
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06)
+  border: 1px solid rgba(0,0,0,0.06)
+
+.cd-instructor-heading
+  font-size: 0.8rem
+  font-weight: 600
+  text-transform: uppercase
+  letter-spacing: 0.5px
+  color: rgba(0,0,0,0.45)
+  margin: 0 0 14px
+
+.cd-instructor-info
+  display: flex
+  align-items: center
+  gap: 12px
+
+.cd-avatar-img
+  width: 48px
+  height: 48px
+  border-radius: 50%
+  object-fit: cover
+  flex-shrink: 0
+
+.cd-avatar-initials
+  width: 48px
+  height: 48px
+  border-radius: 50%
+  background: linear-gradient(135deg, #C2185B, #E91E63)
+  color: white
+  display: flex
+  align-items: center
+  justify-content: center
+  font-weight: 700
+  font-size: 1rem
+  flex-shrink: 0
+
+.cd-instructor-name
+  font-weight: 600
+  font-size: 0.95rem
+  margin: 0 0 2px
+  color: #1a1a1a
+
+.cd-instructor-email
+  font-size: 0.8rem
+  color: rgba(0,0,0,0.45)
+  margin: 0
+
+.cd-message-btn
+  margin-top: 12px
+  width: 100%

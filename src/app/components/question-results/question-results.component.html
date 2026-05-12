@@ -1,7 +1,87 @@
-<button mat-button [routerLink]="['/edit-questions', courseId]">
-    Edit Questions
-</button>
+<div class="qr-page">
 
-<button mat-button [routerLink]="['/resolve-questions', courseId]">
-    Resolve Questions
-</button>
+  <!-- ── Nav ──────────────────────────────────────────── -->
+  <div class="qr-nav">
+    <a mat-button [routerLink]="['/course', courseId]">
+      <mat-icon>arrow_back</mat-icon> {{ 'common.backToCourse' | transloco }}
+    </a>
+  </div>
+
+  <!-- ── Header ───────────────────────────────────────── -->
+  <div class="qr-hero">
+    <div class="qr-hero-icon">
+      <mat-icon>quiz</mat-icon>
+    </div>
+    <div>
+      <h1 class="qr-title">{{ 'quiz.courseQuiz' | transloco }}</h1>
+      <p class="qr-subtitle">{{ 'quiz.quizSubtitle' | transloco }}</p>
+    </div>
+  </div>
+
+  @if (questions()?.length) {
+
+    <!-- ── Stats ─────────────────────────────────────── -->
+    <div class="qr-stats">
+      <div class="qr-stat">
+        <mat-icon>help_outline</mat-icon>
+        <span class="qr-stat-value">{{ questions().length }}</span>
+        <span class="qr-stat-label">{{ 'quiz.questions' | transloco }}</span>
+      </div>
+      <div class="qr-stat-divider"></div>
+      <div class="qr-stat">
+        <mat-icon>timer</mat-icon>
+        <span class="qr-stat-value">~{{ questions().length * 1 }}</span>
+        <span class="qr-stat-label">{{ 'quiz.minutes' | transloco }}</span>
+      </div>
+    </div>
+
+    <!-- ── Actions ───────────────────────────────────── -->
+    <div class="qr-actions">
+      <a mat-raised-button color="primary" class="qr-start-btn"
+         [routerLink]="['/resolve-questions', courseId]">
+        <mat-icon>play_arrow</mat-icon> {{ 'quiz.startQuiz' | transloco }}
+      </a>
+      @if (isOwner()) {
+        <a mat-stroked-button [routerLink]="['/edit-questions', courseId]">
+          <mat-icon>edit</mat-icon> {{ 'quiz.editQuestions' | transloco }}
+        </a>
+      }
+    </div>
+
+    <!-- ── Question list (owner only) ────────────────── -->
+    @if (isOwner()) {
+      <div class="qr-list">
+        <h3 class="qr-list-title">{{ 'quiz.questionsListTitle' | transloco }}</h3>
+        @for (q of questions(); track q.id; let i = $index) {
+          <div class="qr-item">
+            <span class="qr-item-num">{{ i + 1 }}</span>
+            <span class="qr-item-text">{{ q.questionDetail?.question }}</span>
+            <span class="qr-item-answers">{{ q.questionDetail?.answers?.length }} {{ 'quiz.answers' | transloco }}</span>
+            <button mat-icon-button color="warn" (click)="deleteQuestion(q.id)" [matTooltip]="'quiz.delete' | transloco">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+  } @else {
+
+    <!-- ── Empty state ────────────────────────────────── -->
+    <div class="qr-empty">
+      <mat-icon>quiz</mat-icon>
+      @if (isOwner()) {
+        <h3>{{ 'quiz.noQuestionsYet' | transloco }}</h3>
+        <p>{{ 'quiz.addQuestionsHint' | transloco }}</p>
+        <a mat-raised-button color="primary" [routerLink]="['/edit-questions', courseId]">
+          <mat-icon>add</mat-icon> {{ 'quiz.createQuiz' | transloco }}
+        </a>
+      } @else {
+        <h3>{{ 'quiz.noQuizAvailable' | transloco }}</h3>
+        <p>{{ 'quiz.instructorNoQuestions' | transloco }}</p>
+      }
+    </div>
+
+  }
+
+</div>

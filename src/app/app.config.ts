@@ -1,12 +1,13 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, isDevMode, PLATFORM_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NgxsModule } from '@ngxs/store';
 import { SecurityState } from './components/state/security.state';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
 import { AbstractControl } from '@angular/forms';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { tokenInterceptor } from './token.interceptor';
@@ -25,17 +26,69 @@ import { PaymentState } from './components/state/payment.state';
 import { FileState } from './components/state/file.state';
 import { VideoState } from './components/state/video.state';
 import { QuestionState } from './components/state/question.state';
+import { NotificationState } from './components/state/notification.state';
+import { TicketState } from './components/state/ticket.state';
+import { ChatState } from './components/state/chat.state';
+import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
+import { inject, Injectable } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { LoginFromLocalStorageAction } from './components/state/security.actions';
+import { filter, firstValueFrom, of, timeout, catchError } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class TranslocoHttpLoader implements TranslocoLoader {
+  private http = inject(HttpClient);
+  getTranslation(lang: string) {
+    return this.http.get<Record<string, unknown>>(`/assets/i18n/${lang}.json`);
+  }
+}
 
 
 
+
+function initializeAuth(store: Store, platformId: Object) {
+  return () => {
+    if (!isPlatformBrowser(platformId)) return Promise.resolve();
+
+    // Synchronously restore token from localStorage/cookie
+    store.dispatch(new LoginFromLocalStorageAction());
+
+    const token = store.selectSnapshot((s: any) => s.security.token);
+    if (!token) return Promise.resolve();
+
+    // Wait for the user object to be fetched (async API call), with a 5s safety timeout
+    return firstValueFrom(
+      store.select(SecurityState.getCurrentUser).pipe(
+        filter(user => user !== null),
+        timeout({ first: 5000, with: () => of(null) }),
+        catchError(() => of(null))
+      )
+    );
+  };
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
     CookieService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAuth,
+      deps: [Store, PLATFORM_ID],
+      multi: true,
+    },
     provideRouter(routes),
     provideClientHydration(),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([tokenInterceptor])),
+    provideTransloco({
+      config: {
+        availableLangs: ['en', 'pl'],
+        defaultLang: 'en',
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }),
     importProvidersFrom(MatSnackBarModule,
       NgxsRouterPluginModule.forRoot(),
       NgxsModule.forRoot([SecurityState,
@@ -48,7 +101,10 @@ export const appConfig: ApplicationConfig = {
         PaymentState,
         FileState,
         VideoState,
-        QuestionState
+        QuestionState,
+        NotificationState,
+        TicketState,
+        ChatState,
       ]),
       MatSnackBarModule,
       FormlyModule.forRoot({
