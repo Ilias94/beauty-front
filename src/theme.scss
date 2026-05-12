@@ -2,17 +2,17 @@
 
 @include mat.core();
 
-$beauty-primary: mat.define-palette(mat.$pink-palette, 700, 300, 900);
-$beauty-accent: mat.define-palette(mat.$amber-palette, 600, 200, 900);
-$beauty-warn: mat.define-palette(mat.$red-palette);
+$beauty-primary: mat.m2-define-palette(mat.$m2-pink-palette, 700, 300, 900);
+$beauty-accent: mat.m2-define-palette(mat.$m2-amber-palette, 600, 200, 900);
+$beauty-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-$beauty-theme: mat.define-light-theme((
+$beauty-theme: mat.m2-define-light-theme((
   color: (
     primary: $beauty-primary,
     accent: $beauty-accent,
     warn: $beauty-warn,
   ),
-  typography: mat.define-typography-config(
+  typography: mat.m2-define-typography-config(
     $font-family: 'Lato, sans-serif',
   ),
   density: 0,
