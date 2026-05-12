@@ -19,9 +19,23 @@ import { RouterModule } from '@angular/router';
     </div>
   `,
   styles: [`
-    .nf-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; text-align: center; }
-    .nf-code { font-size: 6rem; font-weight: 700; color: #C2185B; line-height: 1; }
-    .nf-msg { font-size: 1.2rem; color: rgba(0,0,0,0.55); margin: 0; }
+    .nf-wrap
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      min-height: 60vh
+      gap: 16px
+      text-align: center
+    .nf-code
+      font-size: 6rem
+      font-weight: 700
+      color: #C2185B
+      line-height: 1
+    .nf-msg
+      font-size: 1.2rem
+      color: rgba(0,0,0,0.55)
+      margin: 0
   `]
 })
 export class NotFoundComponent {}
