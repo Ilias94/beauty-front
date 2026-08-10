@@ -14,19 +14,18 @@ import { passwordRegex } from '../../app.const';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-account-form',
-  standalone: true,
-  imports: [
-    FormlyModule,
-    FormlyMaterialModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    RouterModule,
-    TranslocoModule,
-  ],
-  templateUrl: './account-form.component.html',
-  styleUrl: './account-form.component.sass'
+    selector: 'app-account-form',
+    imports: [
+        FormlyModule,
+        FormlyMaterialModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatIconModule,
+        RouterModule,
+        TranslocoModule,
+    ],
+    templateUrl: './account-form.component.html',
+    styleUrl: './account-form.component.sass'
 })
 export class AccountFormComponent implements OnInit {
   private store = inject(Store);

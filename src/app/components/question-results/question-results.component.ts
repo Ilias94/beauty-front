@@ -12,11 +12,10 @@ import { SecurityState } from '../state/security.state';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-question-results',
-  standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslocoModule],
-  templateUrl: './question-results.component.html',
-  styleUrl: './question-results.component.sass'
+    selector: 'app-question-results',
+    imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslocoModule],
+    templateUrl: './question-results.component.html',
+    styleUrl: './question-results.component.sass'
 })
 export class QuestionResultsComponent implements OnInit {
   private store = inject(Store);

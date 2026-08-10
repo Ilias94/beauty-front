@@ -6,11 +6,10 @@ import { CommentsComponent } from '../comments/comments.component';
 import { CommentDtoResponse } from '../../../api/models';
 
 @Component({
-  selector: 'app-my-comments',
-  standalone: true,
-  imports: [CommentsComponent],
-  templateUrl: './my-comments.component.html',
-  styleUrl: './my-comments.component.sass'
+    selector: 'app-my-comments',
+    imports: [CommentsComponent],
+    templateUrl: './my-comments.component.html',
+    styleUrl: './my-comments.component.sass'
 })
 export class MyCommentsComponent implements OnInit {
   store = inject(Store)

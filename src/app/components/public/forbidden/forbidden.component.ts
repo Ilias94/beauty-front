@@ -5,11 +5,10 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-forbidden',
-  standalone: true,
-  imports: [MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
-  templateUrl: './forbidden.component.html',
-  styleUrl: './forbidden.component.sass'
+    selector: 'app-forbidden',
+    imports: [MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
+    templateUrl: './forbidden.component.html',
+    styleUrl: './forbidden.component.sass'
 })
 export class ForbiddenComponent {
 

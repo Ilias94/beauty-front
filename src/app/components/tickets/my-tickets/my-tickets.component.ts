@@ -12,11 +12,10 @@ import { LoadMyTicketsAction } from '../../state/ticket.actions';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-my-tickets',
-  standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatChipsModule, MatIconModule, RouterLink, DatePipe, TranslocoModule],
-  templateUrl: './my-tickets.component.html',
-  styleUrl: './my-tickets.component.sass'
+    selector: 'app-my-tickets',
+    imports: [MatTableModule, MatButtonModule, MatChipsModule, MatIconModule, RouterLink, DatePipe, TranslocoModule],
+    templateUrl: './my-tickets.component.html',
+    styleUrl: './my-tickets.component.sass'
 })
 export class MyTicketsComponent implements OnInit {
   store = inject(Store);

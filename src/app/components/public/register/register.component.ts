@@ -17,22 +17,21 @@ import { environment } from '../../../../environments/enfironment';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormlyModule,
-    FormlyMaterialModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatRippleModule,
-    RouterLink,
-    TranslocoModule,
-  ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.sass'
+    selector: 'app-register',
+    imports: [
+        CommonModule,
+        FormlyModule,
+        FormlyMaterialModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDividerModule,
+        MatRippleModule,
+        RouterLink,
+        TranslocoModule,
+    ],
+    templateUrl: './register.component.html',
+    styleUrl: './register.component.sass'
 })
 export class RegisterComponent {
 

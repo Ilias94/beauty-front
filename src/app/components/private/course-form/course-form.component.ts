@@ -53,16 +53,15 @@ function sectionHeader(icon: string, title: string, desc: string): FormlyFieldCo
 }
 
 @Component({
-  selector: 'app-course-form',
-  standalone: true,
-  encapsulation: ViewEncapsulation.None,
-  imports: [
-    MatNativeDateModule, FormlyMatDatepickerModule, ReactiveFormsModule,
-    FormlyModule, MatButtonModule, MatIconModule, RouterModule,
-    FormlyMaterialModule, NgxMaterialTimepickerModule, TranslocoModule
-  ],
-  templateUrl: './course-form.component.html',
-  styleUrl: './course-form.component.sass'
+    selector: 'app-course-form',
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        MatNativeDateModule, FormlyMatDatepickerModule, ReactiveFormsModule,
+        FormlyModule, MatButtonModule, MatIconModule, RouterModule,
+        FormlyMaterialModule, NgxMaterialTimepickerModule, TranslocoModule
+    ],
+    templateUrl: './course-form.component.html',
+    styleUrl: './course-form.component.sass'
 })
 export class CourseFormComponent {
   searchInput$ = new Subject<string>();

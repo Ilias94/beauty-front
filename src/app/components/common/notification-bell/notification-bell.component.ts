@@ -14,20 +14,19 @@ import { ClearNotificationsAction, MarkAllAsReadAction } from '../../state/notif
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-notification-bell',
-  templateUrl: './notification-bell.component.html',
-  styleUrl: './notification-bell.component.sass',
-  standalone: true,
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    MatBadgeModule,
-    MatMenuModule,
-    MatDividerModule,
-    MatTooltipModule,
-    DatePipe,
-    TranslocoModule,
-  ]
+    selector: 'app-notification-bell',
+    templateUrl: './notification-bell.component.html',
+    styleUrl: './notification-bell.component.sass',
+    imports: [
+        MatIconModule,
+        MatButtonModule,
+        MatBadgeModule,
+        MatMenuModule,
+        MatDividerModule,
+        MatTooltipModule,
+        DatePipe,
+        TranslocoModule,
+    ]
 })
 export class NotificationBellComponent {
   @Select(NotificationState.notifications)

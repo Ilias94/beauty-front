@@ -18,11 +18,10 @@ import {
 import { SecurityState } from '../state/security.state';
 
 @Component({
-  selector: 'app-group-chats-page',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
-  templateUrl: './group-chats-page.component.html',
-  styleUrl: './group-chats-page.component.sass',
+    selector: 'app-group-chats-page',
+    imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
+    templateUrl: './group-chats-page.component.html',
+    styleUrl: './group-chats-page.component.sass'
 })
 export class GroupChatsPageComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messagesEnd') private messagesEnd?: ElementRef;

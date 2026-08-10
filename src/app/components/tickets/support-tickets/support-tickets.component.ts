@@ -16,12 +16,11 @@ import { LoadAllTicketsAction, UpdateTicketStatusAction } from '../../state/tick
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-support-tickets',
-  standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatChipsModule, MatIconModule, MatSelectModule,
-            MatFormFieldModule, FormsModule, RouterLink, DatePipe, TranslocoModule],
-  templateUrl: './support-tickets.component.html',
-  styleUrl: './support-tickets.component.sass'
+    selector: 'app-support-tickets',
+    imports: [MatTableModule, MatButtonModule, MatChipsModule, MatIconModule, MatSelectModule,
+        MatFormFieldModule, FormsModule, RouterLink, DatePipe, TranslocoModule],
+    templateUrl: './support-tickets.component.html',
+    styleUrl: './support-tickets.component.sass'
 })
 export class SupportTicketsComponent implements OnInit {
   store = inject(Store);

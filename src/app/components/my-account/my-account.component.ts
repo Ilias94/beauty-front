@@ -20,11 +20,10 @@ interface NavCard {
 }
 
 @Component({
-  selector: 'app-my-account',
-  standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatRippleModule, RouterModule, TranslocoModule],
-  templateUrl: './my-account.component.html',
-  styleUrl: './my-account.component.sass'
+    selector: 'app-my-account',
+    imports: [MatCardModule, MatButtonModule, MatIconModule, MatRippleModule, RouterModule, TranslocoModule],
+    templateUrl: './my-account.component.html',
+    styleUrl: './my-account.component.sass'
 })
 export class MyAccountComponent {
   private store = inject(Store);

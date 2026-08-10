@@ -6,11 +6,10 @@ import { environment } from '../environments/enfironment';
 
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [MenuComponent, ChatWidgetComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.sass'
+    selector: 'app-root',
+    imports: [MenuComponent, ChatWidgetComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.sass'
 })
 
 export class AppComponent implements OnInit {

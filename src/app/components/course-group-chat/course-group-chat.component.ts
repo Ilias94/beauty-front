@@ -15,11 +15,10 @@ import { ClearCourseMessagesAction, LoadCourseMessagesAction, SendCourseMessageA
 import { SecurityState } from '../state/security.state';
 
 @Component({
-  selector: 'app-course-group-chat',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule],
-  templateUrl: './course-group-chat.component.html',
-  styleUrl: './course-group-chat.component.sass',
+    selector: 'app-course-group-chat',
+    imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule],
+    templateUrl: './course-group-chat.component.html',
+    styleUrl: './course-group-chat.component.sass'
 })
 export class CourseGroupChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   @Input({ required: true }) courseId!: number;

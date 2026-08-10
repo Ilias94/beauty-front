@@ -16,12 +16,11 @@ import { AddReplyAction, ClearTicketDetailAction, LoadTicketDetailAction, Resolv
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-ticket-detail',
-  standalone: true,
-  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, MatFormFieldModule,
-            MatInputModule, MatChipsModule, MatDividerModule, DatePipe, TranslocoModule],
-  templateUrl: './ticket-detail.component.html',
-  styleUrl: './ticket-detail.component.sass'
+    selector: 'app-ticket-detail',
+    imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, MatFormFieldModule,
+        MatInputModule, MatChipsModule, MatDividerModule, DatePipe, TranslocoModule],
+    templateUrl: './ticket-detail.component.html',
+    styleUrl: './ticket-detail.component.sass'
 })
 export class TicketDetailComponent implements OnInit, OnDestroy {
   store = inject(Store);

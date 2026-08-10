@@ -13,20 +13,19 @@ import { environment } from '../../../../environments/enfironment';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    FormlyModule,
-    FormlyMaterialModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    RouterLink,
-    TranslocoModule,
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.sass'
+    selector: 'app-login',
+    imports: [
+        FormlyModule,
+        FormlyMaterialModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDividerModule,
+        RouterLink,
+        TranslocoModule,
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.sass'
 })
 export class LoginComponent {
 

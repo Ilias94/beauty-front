@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 $beauty-primary: mat.m2-define-palette(mat.$m2-pink-palette, 700, 300, 900);
 $beauty-accent: mat.m2-define-palette(mat.$m2-amber-palette, 600, 200, 900);

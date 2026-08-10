@@ -27,17 +27,16 @@ import { OpenChatAction } from '../state/chat.actions';
 import { CourseGroupChatComponent } from '../course-group-chat/course-group-chat.component';
 
 @Component({
-  selector: 'app-course-details',
-  standalone: true,
-  encapsulation: ViewEncapsulation.None,
-  imports: [
-    MatCardModule, MatButtonModule, MatIconModule, MatDialogModule,
-    RouterModule, FormlyModule, FormlyMaterialModule, ReactiveFormsModule,
-    CommentsComponent, NgxStarsModule, GoogleMapsModule, CommonModule, TranslocoModule,
-    CourseGroupChatComponent,
-  ],
-  templateUrl: './course-details.component.html',
-  styleUrl: './course-details.component.sass'
+    selector: 'app-course-details',
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        MatCardModule, MatButtonModule, MatIconModule, MatDialogModule,
+        RouterModule, FormlyModule, FormlyMaterialModule, ReactiveFormsModule,
+        CommentsComponent, NgxStarsModule, GoogleMapsModule, CommonModule, TranslocoModule,
+        CourseGroupChatComponent,
+    ],
+    templateUrl: './course-details.component.html',
+    styleUrl: './course-details.component.sass'
 })
 export class CourseDetailsComponent implements OnInit {
 

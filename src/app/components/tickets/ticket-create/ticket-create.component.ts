@@ -11,11 +11,10 @@ import { CreateTicketAction } from '../../state/ticket.actions';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-ticket-create',
-  standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, RouterLink, TranslocoModule],
-  templateUrl: './ticket-create.component.html',
-  styleUrl: './ticket-create.component.sass'
+    selector: 'app-ticket-create',
+    imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, RouterLink, TranslocoModule],
+    templateUrl: './ticket-create.component.html',
+    styleUrl: './ticket-create.component.sass'
 })
 export class TicketCreateComponent {
   store = inject(Store);

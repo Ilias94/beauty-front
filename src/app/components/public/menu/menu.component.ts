@@ -18,24 +18,23 @@ import { NotificationBellComponent } from '../../common/notification-bell/notifi
 import { TranslocoService, TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.sass',
-  standalone: true,
-  imports: [
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatDividerModule,
-    AsyncPipe,
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    NotificationBellComponent,
-    TranslocoModule,
-  ]
+    selector: 'app-menu',
+    templateUrl: './menu.component.html',
+    styleUrl: './menu.component.sass',
+    imports: [
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatListModule,
+        MatIconModule,
+        MatDividerModule,
+        AsyncPipe,
+        RouterOutlet,
+        RouterLink,
+        RouterLinkActive,
+        NotificationBellComponent,
+        TranslocoModule,
+    ]
 })
 export class MenuComponent implements OnInit{
   private breakpointObserver = inject(BreakpointObserver);

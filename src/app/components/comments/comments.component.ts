@@ -7,11 +7,10 @@ import { CommentDtoResponse } from '../../../api/models';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-comments',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, TranslocoModule],
-  templateUrl: './comments.component.html',
-  styleUrl: './comments.component.sass'
+    selector: 'app-comments',
+    imports: [CommonModule, MatCardModule, TranslocoModule],
+    templateUrl: './comments.component.html',
+    styleUrl: './comments.component.sass'
 })
 export class CommentsComponent implements OnDestroy{
   store = inject(Store)

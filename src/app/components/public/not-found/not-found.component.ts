@@ -5,10 +5,9 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-not-found',
-  standalone: true,
-  imports: [MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
-  template: `
+    selector: 'app-not-found',
+    imports: [MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
+    template: `
     <div class="nf-wrap">
       <span class="nf-code">404</span>
       <p class="nf-msg">{{ 'notFound.message' | transloco }}</p>
@@ -18,7 +17,7 @@ import { RouterModule } from '@angular/router';
       </button>
     </div>
   `,
-  styles: [`
+    styles: [`
     .nf-wrap
       display: flex
       flex-direction: column

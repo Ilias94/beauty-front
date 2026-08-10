@@ -11,11 +11,10 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 type Phase = 'quiz' | 'results';
 
 @Component({
-  selector: 'app-resolve-questions',
-  standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, TranslocoModule],
-  templateUrl: './resolve-questions.component.html',
-  styleUrl: './resolve-questions.component.sass'
+    selector: 'app-resolve-questions',
+    imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, TranslocoModule],
+    templateUrl: './resolve-questions.component.html',
+    styleUrl: './resolve-questions.component.sass'
 })
 export class ResolveQuestionsComponent implements OnInit {
   private store = inject(Store);

@@ -6,11 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-payment-status',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, MatChipsModule, TranslocoModule],
-  templateUrl: './payment-status.component.html',
-  styleUrl: './payment-status.component.sass'
+    selector: 'app-payment-status',
+    imports: [CommonModule, MatCardModule, MatChipsModule, TranslocoModule],
+    templateUrl: './payment-status.component.html',
+    styleUrl: './payment-status.component.sass'
 })
 export class PaymentStatusComponent implements OnInit {
    status: string | null = null;

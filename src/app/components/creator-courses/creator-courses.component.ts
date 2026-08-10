@@ -7,10 +7,9 @@ import { CoursesComponent } from '../courses/courses.component';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-creator-courses',
-  standalone: true,
-  imports: [CoursesComponent, RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, TranslocoModule],
-  templateUrl: './creator-courses.component.html',
-  styleUrl: './creator-courses.component.sass'
+    selector: 'app-creator-courses',
+    imports: [CoursesComponent, RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, TranslocoModule],
+    templateUrl: './creator-courses.component.html',
+    styleUrl: './creator-courses.component.sass'
 })
 export class CreatorCoursesComponent { }

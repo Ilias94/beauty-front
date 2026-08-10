@@ -16,11 +16,10 @@ import {
 import { SecurityState } from '../state/security.state';
 
 @Component({
-  selector: 'app-chat-widget',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatBadgeModule, MatTooltipModule, TranslocoModule],
-  templateUrl: './chat-widget.component.html',
-  styleUrl: './chat-widget.component.sass',
+    selector: 'app-chat-widget',
+    imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatBadgeModule, MatTooltipModule, TranslocoModule],
+    templateUrl: './chat-widget.component.html',
+    styleUrl: './chat-widget.component.sass'
 })
 export class ChatWidgetComponent implements AfterViewChecked {
   @ViewChild('messagesEnd') private messagesEnd?: ElementRef;

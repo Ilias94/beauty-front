@@ -24,15 +24,14 @@ type AnswerForm = FormGroup<{
 }>
 
 @Component({
-  selector: 'app-edit-questions',
-  standalone: true,
-  imports: [
-    CommonModule, ReactiveFormsModule, RouterModule,
-    MatFormFieldModule, MatInputModule, MatButtonModule,
-    MatIconModule, MatCheckboxModule, MatTooltipModule, TranslocoModule,
-  ],
-  templateUrl: './edit-questions.component.html',
-  styleUrl: './edit-questions.component.sass'
+    selector: 'app-edit-questions',
+    imports: [
+        CommonModule, ReactiveFormsModule, RouterModule,
+        MatFormFieldModule, MatInputModule, MatButtonModule,
+        MatIconModule, MatCheckboxModule, MatTooltipModule, TranslocoModule,
+    ],
+    templateUrl: './edit-questions.component.html',
+    styleUrl: './edit-questions.component.sass'
 })
 export class EditQuestionsComponent implements OnInit {
   fb = inject(FormBuilder);

@@ -32,11 +32,10 @@ function getCourseStatus(startDate: string, endDate: string): 'upcoming' | 'ongo
 }
 
 @Component({
-  selector: 'app-calendar',
-  standalone: true,
-  imports: [FullCalendarModule, TranslocoModule, MatProgressSpinnerModule],
-  templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.sass'
+    selector: 'app-calendar',
+    imports: [FullCalendarModule, TranslocoModule, MatProgressSpinnerModule],
+    templateUrl: './calendar.component.html',
+    styleUrl: './calendar.component.sass'
 })
 export class CalendarComponent {
   private store = inject(Store);

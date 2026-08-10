@@ -28,30 +28,29 @@ import { SecurityState } from '../state/security.state';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-courses',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatPaginatorModule,
-    MatButtonModule,
-    RouterModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatInputModule,
-    MatIconModule,
-    NgxStarsModule,
-    MatCardModule,
-    MatTooltipModule,
-    MatChipsModule,
-    MatDividerModule,
-    MatSlideToggleModule,
-    TranslocoModule,
-  ],
-  templateUrl: './courses.component.html',
-  styleUrl: './courses.component.sass'
+    selector: 'app-courses',
+    imports: [
+        CommonModule,
+        MatPaginatorModule,
+        MatButtonModule,
+        RouterModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        MatInputModule,
+        MatIconModule,
+        NgxStarsModule,
+        MatCardModule,
+        MatTooltipModule,
+        MatChipsModule,
+        MatDividerModule,
+        MatSlideToggleModule,
+        TranslocoModule,
+    ],
+    templateUrl: './courses.component.html',
+    styleUrl: './courses.component.sass'
 })
 export class CoursesComponent implements OnInit {
 

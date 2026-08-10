@@ -16,20 +16,17 @@ import { DeleteVideoAction, EditVideoDescriptionAction, LoadVideosAction } from 
 import { FormlyFieldConfig } from '@ngx-formly/core';
 
 @Component({
-  selector: 'app-course-online',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatGridListModule
-  ],
-
-  templateUrl: './course-online.component.html',
-  styleUrls: ['./course-online.component.sass'],
-
+    selector: 'app-course-online',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatGridListModule
+    ],
+    templateUrl: './course-online.component.html',
+    styleUrls: ['./course-online.component.sass']
 })
 export class CourseOnlineComponent implements OnInit {
 
