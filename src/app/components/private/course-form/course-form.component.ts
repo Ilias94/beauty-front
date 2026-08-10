@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, effect, Signal } from '@angular/core';
+import { Component, ViewEncapsulation, effect, Signal, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
@@ -6,7 +6,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { Store } from '@ngxs/store';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { SaveCourseAction } from '../../state/course.actions';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
@@ -67,6 +67,7 @@ function sectionHeader(icon: string, title: string, desc: string): FormlyFieldCo
 export class CourseFormComponent {
   searchInput$ = new Subject<string>();
   prompt: Signal<string> = toSignal(this.store.select((s: any) => s.ai.prompt));
+  private router = inject(Router);
 
   form = new FormGroup({});
 
@@ -78,11 +79,14 @@ export class CourseFormComponent {
       fieldGroupClassName: 'cf-card',
       fieldGroup: [
         {
+          template: '<p class="cf-radio-label">Delivery Format <span class="cf-required">*</span></p>'
+        },
+        {
           key: 'courseType',
           type: 'radio',
           defaultValue: 'IN_PERSON',
+          wrappers: [],
           props: {
-            label: 'Delivery Format',
             required: true,
             options: [
               { value: 'IN_PERSON', label: '🏢 In-Person — students attend at a physical location' },
@@ -138,7 +142,7 @@ export class CourseFormComponent {
                 label: 'Price (PLN)',
                 placeholder: '150',
                 type: 'number',
-                min: 10,
+                min: 0,
                 required: true,
                 appearance: 'outline',
               }
@@ -155,6 +159,91 @@ export class CourseFormComponent {
               }
             }
           ]
+        }
+      ]
+    },
+
+    // ── Level, Language & Certificate ───────────────────────────────────
+    sectionHeader('school', 'Course Details', 'Level, language and certificate'),
+    {
+      fieldGroupClassName: 'cf-card',
+      fieldGroup: [
+        {
+          fieldGroupClassName: 'cf-grid-2',
+          fieldGroup: [
+            {
+              key: 'courseLevel',
+              type: 'select',
+              defaultValue: 'BEGINNER',
+              props: {
+                label: 'Difficulty Level',
+                required: true,
+                appearance: 'outline',
+                options: [
+                  { value: 'BEGINNER',     label: '🟢 Beginner — no prior experience needed' },
+                  { value: 'INTERMEDIATE', label: '🟡 Intermediate — some experience recommended' },
+                  { value: 'ADVANCED',     label: '🔴 Advanced — professional-level content' },
+                ]
+              }
+            },
+            {
+              key: 'language',
+              type: 'select',
+              defaultValue: 'pl',
+              props: {
+                label: 'Course Language',
+                required: true,
+                appearance: 'outline',
+                options: [
+                  { value: 'pl', label: '🇵🇱 Polish' },
+                  { value: 'en', label: '🇬🇧 English' },
+                ]
+              }
+            }
+          ]
+        },
+        {
+          template: '<p class="cf-radio-label" style="margin-top:8px">Certificate</p>'
+        },
+        {
+          key: 'certificate',
+          type: 'radio',
+          defaultValue: false,
+          wrappers: [],
+          props: {
+            options: [
+              { value: true,  label: '🎓 Yes — students receive a completion certificate' },
+              { value: false, label: '❌ No — no certificate issued' },
+            ]
+          }
+        }
+      ]
+    },
+
+    // ── What you'll learn ───────────────────────────────────────────────
+    sectionHeader('lightbulb', 'What You\'ll Learn', 'Learning outcomes and prerequisites'),
+    {
+      fieldGroupClassName: 'cf-card',
+      fieldGroup: [
+        {
+          key: 'learningOutcomes',
+          type: 'textarea',
+          props: {
+            label: 'Learning Outcomes',
+            placeholder: '• Master blending techniques\n• Create professional makeup looks\n• Work with various skin tones',
+            rows: 4,
+            appearance: 'outline',
+          }
+        },
+        {
+          key: 'prerequisites',
+          type: 'textarea',
+          props: {
+            label: 'Prerequisites',
+            placeholder: 'What should students know or bring before attending...',
+            rows: 3,
+            appearance: 'outline',
+          }
         }
       ]
     },
@@ -190,14 +279,27 @@ export class CourseFormComponent {
           ]
         },
         {
-          key: 'timePicker',
-          type: 'time-picker',
-          className: 'cf-half',
-          props: {
-            label: 'Start Time',
-            placeholder: 'Select time',
-            required: true,
-          }
+          fieldGroupClassName: 'cf-grid-2',
+          fieldGroup: [
+            {
+              key: 'timePicker',
+              type: 'time-picker',
+              props: {
+                label: 'Start Time',
+                placeholder: 'Select time',
+                required: true,
+              }
+            },
+            {
+              key: 'endTimePicker',
+              type: 'time-picker',
+              props: {
+                label: 'End Time',
+                placeholder: 'Select time',
+                required: false,
+              }
+            }
+          ]
         }
       ]
     },
@@ -247,7 +349,7 @@ export class CourseFormComponent {
             {
               key: 'district',
               type: 'input',
-              props: { label: 'District', placeholder: 'District', required: true, appearance: 'outline' }
+              props: { label: 'District', placeholder: 'District (optional)', required: false, appearance: 'outline' }
             },
             {
               key: 'apartmentNumber',
@@ -296,7 +398,7 @@ export class CourseFormComponent {
     });
   }
 
-  submit() {
+  private buildCoursePayload(status: 'DRAFT' | 'PUBLISHED'): any {
     const date: Date = this.form.get('startDate')?.value;
     const time: string = this.form.get('timePicker')?.value;
     const courseType = this.form.get('courseType')?.value || 'IN_PERSON';
@@ -311,24 +413,50 @@ export class CourseFormComponent {
     }
 
     const endDate = this.form.get('endDate')?.value as Date;
+    const endTime: string = this.form.get('endTimePicker')?.value;
+    let endDateTimeIso: string | null = null;
+    if (endDate && endTime) {
+      const [h, m] = endTime.split(':').map(Number);
+      const combined = new Date(endDate);
+      combined.setHours(h, m, 0, 0);
+      endDateTimeIso = toLocalIsoString(combined);
+    } else if (endDate) {
+      endDateTimeIso = toLocalIsoDateOnly(endDate);
+    }
 
-    this.store.dispatch(new SaveCourseAction({
-      title: this.form.get('title')?.value,
-      description: this.form.get('description')?.value,
-      price: this.form.get('price')?.value,
-      maxParticipants: this.form.get('maxParticipants')?.value,
+    return {
+      title:            this.form.get('title')?.value,
+      description:      this.form.get('description')?.value,
+      price:            this.form.get('price')?.value,
+      maxParticipants:  this.form.get('maxParticipants')?.value,
       courseType,
+      courseLevel:      this.form.get('courseLevel')?.value || 'BEGINNER',
+      language:         this.form.get('language')?.value || 'pl',
+      certificate:      this.form.get('certificate')?.value ?? false,
+      learningOutcomes: this.form.get('learningOutcomes')?.value || null,
+      prerequisites:    this.form.get('prerequisites')?.value || null,
+      status,
       startDate: startDateTimeIso,
-      endDate: endDate ? toLocalIsoDateOnly(endDate) : null,
+      endDate:   endDateTimeIso,
       address: isOnline ? null : {
-        district: this.form.get('district')?.value,
-        street: this.form.get('street')?.value,
-        streetNumber: this.form.get('streetNumber')?.value,
-        apartmentNumber: this.form.get('apartmentNumber')?.value,
-        city: this.form.get('city')?.value,
-        postalCode: this.form.get('postalCode')?.value,
+        district:        this.form.get('district')?.value || null,
+        street:          this.form.get('street')?.value,
+        streetNumber:    this.form.get('streetNumber')?.value,
+        apartmentNumber: this.form.get('apartmentNumber')?.value || null,
+        city:            this.form.get('city')?.value,
+        postalCode:      this.form.get('postalCode')?.value,
       },
       category: { label: this.form.get('category')?.value }
-    }));
+    };
+  }
+
+  submit() {
+    this.store.dispatch(new SaveCourseAction(this.buildCoursePayload('PUBLISHED')))
+      .subscribe(() => this.router.navigate(['/creator-courses']));
+  }
+
+  saveDraft() {
+    this.store.dispatch(new SaveCourseAction(this.buildCoursePayload('DRAFT')))
+      .subscribe(() => this.router.navigate(['/creator-courses']));
   }
 }

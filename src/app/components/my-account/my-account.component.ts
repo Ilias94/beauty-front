@@ -50,21 +50,6 @@ export class MyAccountComponent {
           gradient: 'linear-gradient(135deg, #C2185B, #E91E63)',
         },
         {
-          icon: 'auto_stories',
-          title: this.transloco.translate('account.myCourses'),
-          desc: this.transloco.translate('account.myCoursesDesc'),
-          route: '/student-courses',
-          gradient: 'linear-gradient(135deg, #7B1FA2, #CE93D8)',
-        },
-        {
-          icon: 'school',
-          title: this.transloco.translate('account.teaching'),
-          desc: this.transloco.translate('account.teachingDesc'),
-          route: '/creator-courses',
-          gradient: 'linear-gradient(135deg, #00695C, #4DB6AC)',
-          teacherOnly: true,
-        },
-        {
           icon: 'chat_bubble',
           title: this.transloco.translate('account.myComments'),
           desc: this.transloco.translate('account.myCommentsDesc'),

@@ -8,6 +8,7 @@ export interface UserDtoResponse {
   fileName?: string;
   firstName?: string;
   id?: number;
+  instructorRating?: number;
   lastModifiedBy?: string;
   lastModifiedDate?: string;
   lastName?: string;

@@ -1,0 +1,103 @@
+<div class="gcp-page">
+
+  <div class="gcp-header">
+    <a mat-button routerLink="/my-account" class="gcp-back">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <mat-icon class="gcp-header-icon">groups</mat-icon>
+    <h2 class="gcp-title">{{ 'groupChats.title' | transloco }}</h2>
+  </div>
+
+  <div class="gcp-layout">
+
+    <!-- Course list -->
+    <div class="gcp-list">
+      @if (myChatCourses().length === 0) {
+        <div class="gcp-no-courses">
+          <mat-icon>forum</mat-icon>
+          <p>{{ 'groupChats.noCourses' | transloco }}</p>
+        </div>
+      }
+      @for (course of myChatCourses(); track course.id) {
+        <button class="gcp-course-item"
+          [class.active]="selectedCourse()?.id === course.id"
+          (click)="selectCourse(course)">
+          <div class="gcp-course-avatar">{{ course.title[0] }}</div>
+          <span class="gcp-course-name">{{ course.title }}</span>
+          @if (selectedCourse()?.id === course.id) {
+            <mat-icon class="gcp-course-check">chevron_right</mat-icon>
+          }
+        </button>
+      }
+    </div>
+
+    <!-- Chat panel -->
+    <div class="gcp-chat">
+      @if (!selectedCourse()) {
+        <div class="gcp-placeholder">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          <p>{{ 'groupChats.selectCourse' | transloco }}</p>
+        </div>
+      } @else {
+
+        <!-- Header -->
+        <div class="gcp-chat-header">
+          <mat-icon>groups</mat-icon>
+          <div class="gcp-chat-header-text">
+            <span class="gcp-chat-title">{{ selectedCourse()!.title }}</span>
+            <span class="gcp-chat-sub">{{ 'groupChat.title' | transloco }}</span>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="gcp-messages">
+          @for (msg of messages(); track msg.id) {
+            <div class="gcp-msg-row" [class.gcp-msg-mine]="msg.senderId === currentUser()?.id">
+
+              @if (msg.senderId !== currentUser()?.id) {
+                <div class="gcp-avatar">
+                  @if (avatarUrl(msg.senderFileName); as url) {
+                    <img [src]="url" [alt]="msg.senderFirstName" class="gcp-avatar-img">
+                  } @else {
+                    <div class="gcp-avatar-initials">{{ initials(msg.senderFirstName, msg.senderLastName) }}</div>
+                  }
+                </div>
+              }
+
+              <div class="gcp-bubble-wrap">
+                @if (msg.senderId !== currentUser()?.id) {
+                  <span class="gcp-sender-name">{{ msg.senderFirstName }} {{ msg.senderLastName }}</span>
+                }
+                <div class="gcp-bubble">{{ msg.content }}</div>
+                <div class="gcp-time">{{ msg.sentAt | date:'d MMM, HH:mm' }}</div>
+              </div>
+            </div>
+          }
+
+          @if (messages().length === 0) {
+            <div class="gcp-empty">
+              <mat-icon>forum</mat-icon>
+              <p>{{ 'groupChat.empty' | transloco }}</p>
+            </div>
+          }
+
+          <div #messagesEnd></div>
+        </div>
+
+        <!-- Input -->
+        <div class="gcp-input-row">
+          <textarea class="gcp-input" rows="1"
+            [placeholder]="'groupChat.placeholder' | transloco"
+            [(ngModel)]="newMessage"
+            (keydown)="onKeydown($event)">
+          </textarea>
+          <button mat-icon-button class="gcp-send-btn" (click)="send()" [disabled]="!newMessage().trim()">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+
+      }
+    </div>
+
+  </div>
+</div>

@@ -6,12 +6,15 @@
   background-color: #fff
   border-right: 1px solid rgba(0, 0, 0, 0.08)
   box-shadow: 2px 0 8px rgba(194, 24, 91, 0.08)
+  display: flex
+  flex-direction: column
 
 .sidenav-brand
   display: flex
   align-items: center
   gap: 10px
-  padding: 20px 16px 16px
+  padding: 20px 16px 14px
+  flex-shrink: 0
   cursor: default
 
   .brand-logo
@@ -26,23 +29,55 @@
     color: #C2185B
     letter-spacing: 0.5px
 
-.nav-list
-  padding-top: 8px
+// Scrollable area below brand
+.nav-scroll
+  flex: 1
+  overflow-y: auto
+  padding-bottom: 12px
 
-  .nav-item
-    border-radius: 0 24px 24px 0
-    margin: 2px 12px 2px 0
-    color: #555
+// ── Section labels ──────────────────────────────────────
+.nav-section-label
+  font-size: 10.5px
+  font-weight: 700
+  letter-spacing: 0.9px
+  text-transform: uppercase
+  color: #aaa
+  padding: 14px 18px 4px
+  margin: 0
 
-    &:hover
-      background-color: rgba(194, 24, 91, 0.06)
-      color: #C2185B
+.nav-section
+  padding-top: 0 !important
+  padding-bottom: 0 !important
+
+.nav-divider
+  margin: 8px 0 !important
+
+// ── Nav items ───────────────────────────────────────────
+.nav-item
+  border-radius: 0 24px 24px 0
+  margin: 1px 10px 1px 0
+  color: #555
+  transition: background .15s, color .15s
+
+  &:hover
+    background-color: rgba(194, 24, 91, 0.06)
+    color: #C2185B
 
     .mat-icon
-      color: #888
-
-    &:hover .mat-icon
       color: #C2185B
+
+  .mat-icon
+    color: #888
+    transition: color .15s
+
+// Active route highlight
+.nav-active
+  background: rgba(194, 24, 91, 0.1) !important
+  color: #C2185B !important
+  font-weight: 600
+
+  .mat-icon
+    color: #C2185B !important
 
 .logout-item
   color: #e53935 !important
@@ -50,6 +85,11 @@
   .mat-icon
     color: #e53935 !important
 
+  &:hover
+    background-color: rgba(229, 57, 53, 0.06) !important
+    color: #e53935 !important
+
+// ── Toolbar ─────────────────────────────────────────────
 .app-toolbar
   position: sticky
   top: 0
@@ -101,6 +141,7 @@
   padding: 0 16px
   font-size: 0.9rem
 
+// ── Content ─────────────────────────────────────────────
 .page-content
   padding: 24px
   max-width: 1400px

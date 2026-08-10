@@ -9,56 +9,95 @@
       <span class="brand-name">Beauty</span>
     </div>
 
-    <mat-divider></mat-divider>
+    <div class="nav-scroll">
 
-    <mat-nav-list class="nav-list">
-      <a mat-list-item routerLink="/courses" class="nav-item">
-        <mat-icon matListItemIcon>explore</mat-icon>
-        <span matListItemTitle>{{ 'menu.browseCourses' | transloco }}</span>
-      </a>
+      <!-- ── DISCOVER ─────────────────────────────── -->
+      <mat-nav-list class="nav-section">
+        <a mat-list-item routerLink="/courses" routerLinkActive="nav-active" class="nav-item">
+          <mat-icon matListItemIcon>explore</mat-icon>
+          <span matListItemTitle>{{ 'menu.browseCourses' | transloco }}</span>
+        </a>
+      </mat-nav-list>
 
-      @if (!token()) {
-        <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/login" class="nav-item">
-          <mat-icon matListItemIcon>login</mat-icon>
-          <span matListItemTitle>{{ 'menu.login' | transloco }}</span>
-        </a>
-        <a mat-list-item routerLink="/registry" class="nav-item">
-          <mat-icon matListItemIcon>person_add</mat-icon>
-          <span matListItemTitle>{{ 'menu.register' | transloco }}</span>
-        </a>
-      }
+      @if (token()) {
 
-      @else {
-        <a mat-list-item routerLink="/my-account" class="nav-item">
-          <mat-icon matListItemIcon>manage_accounts</mat-icon>
-          <span matListItemTitle>{{ 'menu.myAccount' | transloco }}</span>
-        </a>
-        <a mat-list-item routerLink="/calendar" class="nav-item">
-          <mat-icon matListItemIcon>calendar_month</mat-icon>
-          <span matListItemTitle>{{ 'menu.calendar' | transloco }}</span>
-        </a>
-        @if (currentUser()?.teacher) {
-          <a mat-list-item routerLink="/course" class="nav-item">
-            <mat-icon matListItemIcon>add_circle</mat-icon>
-            <span matListItemTitle>{{ 'menu.createCourse' | transloco }}</span>
+        <!-- ── MY LEARNING ──────────────────────────── -->
+        <p class="nav-section-label">{{ 'menu.sectionLearning' | transloco }}</p>
+        <mat-nav-list class="nav-section">
+          <a mat-list-item routerLink="/student-courses" routerLinkActive="nav-active" class="nav-item">
+            <mat-icon matListItemIcon>auto_stories</mat-icon>
+            <span matListItemTitle>{{ 'menu.myCourses' | transloco }}</span>
           </a>
+          <a mat-list-item routerLink="/group-chats" routerLinkActive="nav-active" class="nav-item">
+            <mat-icon matListItemIcon>groups</mat-icon>
+            <span matListItemTitle>{{ 'menu.groupChats' | transloco }}</span>
+          </a>
+          <a mat-list-item routerLink="/calendar" routerLinkActive="nav-active" class="nav-item">
+            <mat-icon matListItemIcon>calendar_month</mat-icon>
+            <span matListItemTitle>{{ 'menu.calendar' | transloco }}</span>
+          </a>
+        </mat-nav-list>
+
+        <!-- ── TEACHING (teacher only) ──────────────── -->
+        @if (currentUser()?.teacher) {
+          <p class="nav-section-label">{{ 'menu.sectionTeaching' | transloco }}</p>
+          <mat-nav-list class="nav-section">
+            <a mat-list-item routerLink="/creator-courses" routerLinkActive="nav-active" class="nav-item">
+              <mat-icon matListItemIcon>school</mat-icon>
+              <span matListItemTitle>{{ 'menu.myTeaching' | transloco }}</span>
+            </a>
+            <a mat-list-item routerLink="/course" routerLinkActive="nav-active"
+              [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+              <mat-icon matListItemIcon>add_circle</mat-icon>
+              <span matListItemTitle>{{ 'menu.createCourse' | transloco }}</span>
+            </a>
+          </mat-nav-list>
         }
-        <a mat-list-item routerLink="/my-tickets" class="nav-item">
-          <mat-icon matListItemIcon>support_agent</mat-icon>
-          <span matListItemTitle>{{ 'menu.myTickets' | transloco }}</span>
-        </a>
-        <a mat-list-item routerLink="/support/tickets" class="nav-item">
-          <mat-icon matListItemIcon>headset_mic</mat-icon>
-          <span matListItemTitle>{{ 'menu.supportPanel' | transloco }}</span>
-        </a>
-        <mat-divider></mat-divider>
-        <a mat-list-item (click)="logout()" class="nav-item logout-item">
-          <mat-icon matListItemIcon>logout</mat-icon>
-          <span matListItemTitle>{{ 'menu.logout' | transloco }}</span>
-        </a>
+
+        <!-- ── ACCOUNT ──────────────────────────────── -->
+        <p class="nav-section-label">{{ 'menu.sectionAccount' | transloco }}</p>
+        <mat-nav-list class="nav-section">
+          <a mat-list-item routerLink="/account" routerLinkActive="nav-active" class="nav-item">
+            <mat-icon matListItemIcon>manage_accounts</mat-icon>
+            <span matListItemTitle>{{ 'menu.accountSettings' | transloco }}</span>
+          </a>
+          <a mat-list-item routerLink="/my-tickets" routerLinkActive="nav-active" class="nav-item">
+            <mat-icon matListItemIcon>support_agent</mat-icon>
+            <span matListItemTitle>{{ 'menu.myTickets' | transloco }}</span>
+          </a>
+          @if (currentUser()?.roles?.includes('SUPPORT')) {
+            <a mat-list-item routerLink="/support/tickets" routerLinkActive="nav-active" class="nav-item">
+              <mat-icon matListItemIcon>headset_mic</mat-icon>
+              <span matListItemTitle>{{ 'menu.supportPanel' | transloco }}</span>
+            </a>
+          }
+        </mat-nav-list>
+
+        <mat-divider class="nav-divider"></mat-divider>
+        <mat-nav-list class="nav-section">
+          <a mat-list-item (click)="logout()" class="nav-item logout-item">
+            <mat-icon matListItemIcon>logout</mat-icon>
+            <span matListItemTitle>{{ 'menu.logout' | transloco }}</span>
+          </a>
+        </mat-nav-list>
+
+      } @else {
+
+        <!-- ── GUEST ─────────────────────────────────── -->
+        <mat-nav-list class="nav-section">
+          <a mat-list-item routerLink="/login" routerLinkActive="nav-active" class="nav-item">
+            <mat-icon matListItemIcon>login</mat-icon>
+            <span matListItemTitle>{{ 'menu.login' | transloco }}</span>
+          </a>
+          <a mat-list-item routerLink="/registry" routerLinkActive="nav-active" class="nav-item">
+            <mat-icon matListItemIcon>person_add</mat-icon>
+            <span matListItemTitle>{{ 'menu.register' | transloco }}</span>
+          </a>
+        </mat-nav-list>
+
       }
-    </mat-nav-list>
+    </div>
+
   </mat-sidenav>
 
   <mat-sidenav-content>

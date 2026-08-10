@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop'
 import { LoginAction, LoginFromLocalStorageAction, LogoutAction } from '../../state/security.actions';
@@ -32,6 +32,7 @@ import { TranslocoService, TranslocoModule } from '@jsverse/transloco';
     AsyncPipe,
     RouterOutlet,
     RouterLink,
+    RouterLinkActive,
     NotificationBellComponent,
     TranslocoModule,
   ]

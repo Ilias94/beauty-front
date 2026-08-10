@@ -21,6 +21,7 @@ import { MyTicketsComponent } from './components/tickets/my-tickets/my-tickets.c
 import { TicketCreateComponent } from './components/tickets/ticket-create/ticket-create.component';
 import { TicketDetailComponent } from './components/tickets/ticket-detail/ticket-detail.component';
 import { SupportTicketsComponent } from './components/tickets/support-tickets/support-tickets.component';
+import { GroupChatsPageComponent } from './components/group-chats-page/group-chats-page.component';
 
 
 export const routes: Routes = [
@@ -107,6 +108,11 @@ export const routes: Routes = [
         component: SupportTicketsComponent,
         canActivate: [authGuard],
         data: { roles: ['SUPPORT'] }
+    },
+    {
+        path: 'group-chats',
+        component: GroupChatsPageComponent,
+        canActivate: [authGuard]
     },
     { path: '**', component: NotFoundComponent },
 ];

@@ -191,7 +191,15 @@
                 {{ course.creator.firstName?.[0] }}{{ course.creator.lastName?.[0] }}
               </div>
             }
-            <span class="creator-name">{{ course.creator.firstName }} {{ course.creator.lastName }}</span>
+            <div class="creator-info">
+              <span class="creator-name">{{ course.creator.firstName }} {{ course.creator.lastName }}</span>
+              @if (course.creator.instructorRating) {
+                <span class="instructor-rating-badge">
+                  <mat-icon class="instructor-star">star</mat-icon>
+                  {{ course.creator.instructorRating | number:'1.1-1' }}
+                </span>
+              }
+            </div>
           </div>
         }
 

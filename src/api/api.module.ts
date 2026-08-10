@@ -16,6 +16,7 @@ import { PaymentControllerService } from './services/payment-controller.service'
 import { MessageControllerService } from './services/message-controller.service';
 import { LoginControllerService } from './services/login-controller.service';
 import { GeoLocationControllerService } from './services/geo-location-controller.service';
+import { CourseMessageControllerService } from './services/course-message-controller.service';
 import { CommentControllerService } from './services/comment-controller.service';
 import { AiControllerService } from './services/ai-controller.service';
 import { ReportControllerService } from './services/report-controller.service';
@@ -42,6 +43,7 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
     MessageControllerService,
     LoginControllerService,
     GeoLocationControllerService,
+    CourseMessageControllerService,
     CommentControllerService,
     AiControllerService,
     ReportControllerService,

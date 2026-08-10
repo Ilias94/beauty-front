@@ -15,6 +15,10 @@
 
     <div class="cf-actions">
       <a mat-stroked-button routerLink="/creator-courses">{{ 'courseForm.cancel' | transloco }}</a>
+      <button mat-stroked-button class="cf-draft-btn" (click)="saveDraft()">
+        <mat-icon>save</mat-icon>
+        {{ 'courseForm.saveDraft' | transloco }}
+      </button>
       <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="submit()">
         <mat-icon>publish</mat-icon>
         {{ 'courseForm.publishCourse' | transloco }}

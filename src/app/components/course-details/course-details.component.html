@@ -101,7 +101,7 @@
 
             <div class="cd-rating-divider"></div>
 
-            <!-- User's own rating (interactive) -->
+            <!-- User's own course rating (interactive) -->
             <div class="cd-rating-block">
               <span class="cd-rating-label">{{ 'courseDetails.yourRating' | transloco }}</span>
               <ngx-stars #currentRating
@@ -111,6 +111,24 @@
                 [maxStars]="5"
                 [readonly]="false"
                 (ratingOutput)="handleRating($event)">
+              </ngx-stars>
+              <span class="cd-rating-hint">
+                <mat-icon>touch_app</mat-icon> {{ 'courseDetails.clickToRate' | transloco }}
+              </span>
+            </div>
+
+            <div class="cd-rating-divider"></div>
+
+            <!-- User's instructor rating (interactive) -->
+            <div class="cd-rating-block">
+              <span class="cd-rating-label">{{ 'courseDetails.yourInstructorRating' | transloco }}</span>
+              <ngx-stars #currentInstructorRating
+                [color]="'#FF9800'"
+                [size]="1.4"
+                [wholeStars]="false"
+                [maxStars]="5"
+                [readonly]="false"
+                (ratingOutput)="handleInstructorRating($event)">
               </ngx-stars>
               <span class="cd-rating-hint">
                 <mat-icon>touch_app</mat-icon> {{ 'courseDetails.clickToRate' | transloco }}
@@ -254,6 +272,20 @@
                   {{ course().creator.firstName }} {{ course().creator.lastName }}
                 </p>
                 <p class="cd-instructor-email">{{ course().creator.email }}</p>
+                @if (course().creator.instructorRating) {
+                  <div class="cd-instructor-rating">
+                    <span class="cd-rating-label">{{ 'courseDetails.instructorRatingLabel' | transloco }}</span>
+                    <ngx-stars
+                      [color]="'#FF9800'"
+                      [size]="1"
+                      [wholeStars]="false"
+                      [maxStars]="5"
+                      [readonly]="true"
+                      [initialStars]="course().creator.instructorRating">
+                    </ngx-stars>
+                    <span class="cd-avg-number">{{ course().creator.instructorRating | number:'1.1-1' }}</span>
+                  </div>
+                }
               </div>
             </div>
             @if (currentUser() && !isOwner()) {
@@ -267,6 +299,11 @@
 
       </div>
     </div>
+
+    <!-- Floating group chat widget -->
+    @if (isOwner() || isEnrolled()) {
+      <app-course-group-chat [courseId]="courseId" [courseTitle]="course().title"></app-course-group-chat>
+    }
   }
 
 </div>

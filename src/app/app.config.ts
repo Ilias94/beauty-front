@@ -29,6 +29,7 @@ import { QuestionState } from './components/state/question.state';
 import { NotificationState } from './components/state/notification.state';
 import { TicketState } from './components/state/ticket.state';
 import { ChatState } from './components/state/chat.state';
+import { GroupChatState } from './components/state/group-chat.state';
 import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
@@ -90,7 +91,6 @@ export const appConfig: ApplicationConfig = {
       loader: TranslocoHttpLoader,
     }),
     importProvidersFrom(MatSnackBarModule,
-      NgxsRouterPluginModule.forRoot(),
       NgxsModule.forRoot([SecurityState,
         CourseState,
         UserState,
@@ -105,7 +105,9 @@ export const appConfig: ApplicationConfig = {
         NotificationState,
         TicketState,
         ChatState,
+        GroupChatState,
       ]),
+      NgxsRouterPluginModule.forRoot(),
       MatSnackBarModule,
       FormlyModule.forRoot({
         validators: [{ name: 'passwordMatch', validation: fieldMatchValidator }],

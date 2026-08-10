@@ -12,6 +12,7 @@ export interface CourseDtoResponse {
   endDate?: string;
   id?: number;
   maxParticipants?: number;
+  parentCourseId?: number;
   participantCount?: number;
   price?: number;
   rating?: number;

@@ -3,12 +3,18 @@
     "browseCourses": "Przeglądaj kursy",
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
-    "myAccount": "Moje konto",
+    "myCourses": "Moje kursy",
+    "groupChats": "Czaty grupowe",
     "calendar": "Kalendarz",
+    "myTeaching": "Prowadzone kursy",
     "createCourse": "Utwórz kurs",
+    "accountSettings": "Ustawienia konta",
     "myTickets": "Moje zgłoszenia",
     "supportPanel": "Panel wsparcia",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "sectionLearning": "Nauka",
+    "sectionTeaching": "Nauczanie",
+    "sectionAccount": "Konto"
   },
   "auth": {
     "brandSubtitle": "Witaj z powrotem — zaloguj się, aby kontynuować",
@@ -96,8 +102,10 @@
     "averageRating": "Średnia ocena",
     "review": "opinia",
     "reviews": "opinii",
-    "yourRating": "Twoja ocena",
+    "yourRating": "Twoja ocena kursu",
+    "yourInstructorRating": "Ocena instruktora",
     "clickToRate": "Kliknij gwiazdki, aby ocenić",
+    "instructorRatingLabel": "Ocena instruktora",
     "leaveReview": "Zostaw recenzję",
     "postComment": "Dodaj komentarz",
     "reviewsTitle": "Recenzje",
@@ -122,6 +130,7 @@
     "createTitle": "Utwórz nowy kurs",
     "createSubtitle": "Podziel się swoją wiedzą z uczniami",
     "cancel": "Anuluj",
+    "saveDraft": "Zapisz szkic",
     "publishCourse": "Opublikuj kurs",
     "courseFormatSection": "Format kursu",
     "courseFormatDesc": "Jak będzie prowadzony ten kurs",
@@ -165,7 +174,27 @@
     "categoryDesc": "Jaki rodzaj kursu beauty to jest",
     "courseCategory": "Kategoria kursu",
     "categoryPlaceholder": "Wybierz kategorię",
-    "aiHint": "AI generuje sugestię opisu na podstawie Twojego tytułu"
+    "aiHint": "AI generuje sugestię opisu na podstawie Twojego tytułu",
+    "detailsSection": "Szczegóły kursu",
+    "detailsDesc": "Poziom, język i certyfikat",
+    "difficultyLevel": "Poziom trudności",
+    "beginner": "🟢 Początkujący — nie wymagane wcześniejsze doświadczenie",
+    "intermediate": "🟡 Średniozaawansowany — wskazane pewne doświadczenie",
+    "advanced": "🔴 Zaawansowany — treści na poziomie profesjonalnym",
+    "courseLanguage": "Język kursu",
+    "languagePl": "🇵🇱 Polski",
+    "languageEn": "🇬🇧 Angielski",
+    "certificate": "Certyfikat",
+    "certificateYes": "🎓 Tak — uczestnicy otrzymują certyfikat ukończenia",
+    "certificateNo": "❌ Nie — brak certyfikatu",
+    "learningSection": "Czego się nauczysz",
+    "learningDesc": "Efekty kształcenia i wymagania wstępne",
+    "learningOutcomes": "Efekty kształcenia",
+    "learningOutcomesPlaceholder": "• Opanowanie technik blendowania\n• Tworzenie profesjonalnych makijaży\n• Praca z różnymi odcieniami skóry",
+    "prerequisites": "Wymagania wstępne",
+    "prerequisitesPlaceholder": "Co uczestnik powinien wiedzieć lub mieć przed kursem...",
+    "endTime": "Godzina zakończenia",
+    "endTimePlaceholder": "Wybierz godzinę"
   },
   "account": {
     "editProfile": "Edytuj profil",
@@ -177,6 +206,8 @@
     "teachingDesc": "Kursy, które stworzyłeś",
     "myComments": "Moje komentarze",
     "myCommentsDesc": "Twoje recenzje i opinie",
+    "groupChats": "Czaty grupowe",
+    "groupChatsDesc": "Wiadomości grupowe zapisanych kursów",
     "teacher": "Nauczyciel",
     "student": "Uczeń",
     "personalInfoTitle": "Dane osobowe",
@@ -341,5 +372,15 @@
     "permanent_makeup_artist": "Makijaż permanentny",
     "hair_colorist": "Koloryzatorka",
     "wax_specialist": "Depilacja woskiem"
+  },
+  "groupChat": {
+    "title": "Czat grupy",
+    "empty": "Brak wiadomości. Napisz pierwszą!",
+    "placeholder": "Napisz wiadomość do grupy… (Enter aby wysłać)"
+  },
+  "groupChats": {
+    "title": "Czaty grupowe",
+    "noCourses": "Brak kursów z aktywnym chatem grupowym",
+    "selectCourse": "Wybierz kurs po lewej, aby otworzyć czat"
   }
 }

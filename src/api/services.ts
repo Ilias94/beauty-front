@@ -10,6 +10,7 @@ export { PaymentControllerService } from './services/payment-controller.service'
 export { MessageControllerService } from './services/message-controller.service';
 export { LoginControllerService } from './services/login-controller.service';
 export { GeoLocationControllerService } from './services/geo-location-controller.service';
+export { CourseMessageControllerService } from './services/course-message-controller.service';
 export { CommentControllerService } from './services/comment-controller.service';
 export { AiControllerService } from './services/ai-controller.service';
 export { ReportControllerService } from './services/report-controller.service';

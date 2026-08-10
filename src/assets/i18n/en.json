@@ -3,12 +3,18 @@
     "browseCourses": "Browse Courses",
     "login": "Login",
     "register": "Register",
-    "myAccount": "My Account",
+    "myCourses": "My Courses",
+    "groupChats": "Group Chats",
     "calendar": "Calendar",
+    "myTeaching": "Courses I Teach",
     "createCourse": "Create Course",
+    "accountSettings": "Account Settings",
     "myTickets": "My Tickets",
     "supportPanel": "Support Panel",
-    "logout": "Logout"
+    "logout": "Logout",
+    "sectionLearning": "Learning",
+    "sectionTeaching": "Teaching",
+    "sectionAccount": "Account"
   },
   "auth": {
     "brandSubtitle": "Welcome back — sign in to continue",
@@ -96,8 +102,10 @@
     "averageRating": "Average rating",
     "review": "review",
     "reviews": "reviews",
-    "yourRating": "Your rating",
+    "yourRating": "Your course rating",
+    "yourInstructorRating": "Rate the instructor",
     "clickToRate": "Click stars to rate",
+    "instructorRatingLabel": "Instructor rating",
     "leaveReview": "Leave a review",
     "postComment": "Post Comment",
     "reviewsTitle": "Reviews",
@@ -122,6 +130,7 @@
     "createTitle": "Create New Course",
     "createSubtitle": "Share your expertise with students",
     "cancel": "Cancel",
+    "saveDraft": "Save Draft",
     "publishCourse": "Publish Course",
     "courseFormatSection": "Course Format",
     "courseFormatDesc": "How will this course be delivered",
@@ -165,7 +174,27 @@
     "categoryDesc": "What type of beauty course is this",
     "courseCategory": "Course Category",
     "categoryPlaceholder": "Select a category",
-    "aiHint": "AI is generating a description suggestion based on your title"
+    "aiHint": "AI is generating a description suggestion based on your title",
+    "detailsSection": "Course Details",
+    "detailsDesc": "Level, language and certificate",
+    "difficultyLevel": "Difficulty Level",
+    "beginner": "🟢 Beginner — no prior experience needed",
+    "intermediate": "🟡 Intermediate — some experience recommended",
+    "advanced": "🔴 Advanced — professional-level content",
+    "courseLanguage": "Course Language",
+    "languagePl": "🇵🇱 Polish",
+    "languageEn": "🇬🇧 English",
+    "certificate": "Certificate",
+    "certificateYes": "🎓 Yes — students receive a completion certificate",
+    "certificateNo": "❌ No — no certificate issued",
+    "learningSection": "What You'll Learn",
+    "learningDesc": "Learning outcomes and prerequisites",
+    "learningOutcomes": "Learning Outcomes",
+    "learningOutcomesPlaceholder": "• Master blending techniques\n• Create professional makeup looks\n• Work with various skin tones",
+    "prerequisites": "Prerequisites",
+    "prerequisitesPlaceholder": "What should students know or bring before attending...",
+    "endTime": "End Time",
+    "endTimePlaceholder": "Select time"
   },
   "account": {
     "editProfile": "Edit profile",
@@ -177,6 +206,8 @@
     "teachingDesc": "Courses you have created",
     "myComments": "My Comments",
     "myCommentsDesc": "Your reviews and feedback",
+    "groupChats": "Group Chats",
+    "groupChatsDesc": "Group messages for your courses",
     "teacher": "Teacher",
     "student": "Student",
     "personalInfoTitle": "Personal Information",
@@ -341,5 +372,15 @@
     "permanent_makeup_artist": "Permanent Makeup Artist",
     "hair_colorist": "Hair Colorist",
     "wax_specialist": "Wax Specialist"
+  },
+  "groupChat": {
+    "title": "Group Chat",
+    "empty": "No messages yet. Be the first to write!",
+    "placeholder": "Write a message to the group… (Enter to send)"
+  },
+  "groupChats": {
+    "title": "Group Chats",
+    "noCourses": "No courses with an active group chat",
+    "selectCourse": "Select a course on the left to open the chat"
   }
 }

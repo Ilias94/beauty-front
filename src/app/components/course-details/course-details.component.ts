@@ -24,6 +24,7 @@ import { SecurityState } from '../state/security.state';
 import { CreatePaymentAction } from '../state/payment.actions';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { OpenChatAction } from '../state/chat.actions';
+import { CourseGroupChatComponent } from '../course-group-chat/course-group-chat.component';
 
 @Component({
   selector: 'app-course-details',
@@ -33,6 +34,7 @@ import { OpenChatAction } from '../state/chat.actions';
     MatCardModule, MatButtonModule, MatIconModule, MatDialogModule,
     RouterModule, FormlyModule, FormlyMaterialModule, ReactiveFormsModule,
     CommentsComponent, NgxStarsModule, GoogleMapsModule, CommonModule, TranslocoModule,
+    CourseGroupChatComponent,
   ],
   templateUrl: './course-details.component.html',
   styleUrl: './course-details.component.sass'
@@ -58,6 +60,7 @@ export class CourseDetailsComponent implements OnInit {
   readonly s3Base = 'https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/';
 
   @ViewChild('currentRating') currentRatingComponent: NgxStarsComponent;
+  @ViewChild('currentInstructorRating') currentInstructorRatingComponent: NgxStarsComponent;
   @ViewChild('courseRating') courseRatingComponent: NgxStarsComponent;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
@@ -161,8 +164,18 @@ export class CourseDetailsComponent implements OnInit {
     this.store.dispatch(new SaveCommentAction(commentDto));
   }
 
+  private pendingInstructorRating: number | null = null;
+
   handleRating(rating: number): void {
-    this.store.dispatch(new SaveRatingAction({ courseId: this.courseId, value: rating }));
+    this.store.dispatch(new SaveRatingAction({
+      courseId: this.courseId,
+      value: rating,
+      instructorRating: this.pendingInstructorRating ?? undefined
+    }));
+  }
+
+  handleInstructorRating(rating: number): void {
+    this.pendingInstructorRating = rating;
   }
 
   openDialog(): void {
