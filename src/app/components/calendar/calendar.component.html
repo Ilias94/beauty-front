@@ -1,3 +1,11 @@
+<header class="page-header">
+  <div>
+    <p class="eyebrow">{{ 'calendar.eyebrow' | transloco }}</p>
+    <h1 class="page-title">{{ 'menu.calendar' | transloco }}</h1>
+    <p class="page-subtitle">{{ 'calendar.subtitle' | transloco }}</p>
+  </div>
+</header>
+
 <div class="calendar-card">
   <div class="calendar-wrapper">
     <full-calendar [options]="calendarOptions()"></full-calendar>

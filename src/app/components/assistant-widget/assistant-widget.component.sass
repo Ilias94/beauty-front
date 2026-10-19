@@ -8,20 +8,20 @@
   width: 56px
   height: 56px
   border-radius: 50%
-  background: linear-gradient(135deg, #880E4F, #C2185B)
+  background: var(--accent)
   color: #fff
   border: none
   cursor: pointer
   display: flex
   align-items: center
   justify-content: center
-  box-shadow: 0 4px 16px rgba(136, 14, 79, 0.4)
+  box-shadow: 0 4px 16px rgba(140, 47, 75, 0.35)
   transition: transform 0.2s, box-shadow 0.2s
   z-index: 1000
 
   &:hover
     transform: scale(1.08)
-    box-shadow: 0 6px 20px rgba(136, 14, 79, 0.5)
+    box-shadow: 0 6px 20px rgba(140, 47, 75, 0.45)
 
   mat-icon
     font-size: 26px
@@ -64,7 +64,7 @@
   align-items: center
   gap: 0.6rem
   padding: 0.9rem 1rem
-  background: linear-gradient(135deg, #C2185B, #880E4F)
+  background: var(--accent)
   color: #fff
   flex-shrink: 0
 
@@ -90,18 +90,18 @@
   display: flex
   flex-direction: column
   gap: 0.5rem
-  background: #fdf8f5
+  background: var(--bg)
 
 .intro
   font-family: 'Lato', sans-serif
   font-size: 0.85rem
-  color: #555
+  color: var(--ink-2)
   padding: 0.5rem 0.25rem
 
   ul
     margin: 0.5rem 0 0
     padding-left: 1.1rem
-    color: #880E4F
+    color: var(--accent-hover)
 
   li
     margin-bottom: 0.3rem
@@ -116,7 +116,7 @@
     align-items: flex-end
 
     .bubble
-      background: #C2185B
+      background: var(--accent)
       color: #fff
       border-radius: 16px 16px 4px 16px
 
@@ -133,8 +133,8 @@
   white-space: pre-line
 
 .bubble-error
-  background: #fff3f3
-  color: #b3261e
+  background: var(--danger-soft)
+  color: var(--danger)
 
 .typing
   display: flex
@@ -145,7 +145,7 @@
     width: 7px
     height: 7px
     border-radius: 50%
-    background: #F48FB1
+    background: var(--accent-soft-2)
     animation: blink 1.2s infinite both
 
     &:nth-child(2)
@@ -166,13 +166,13 @@
   align-items: flex-end
   gap: 0.25rem
   padding: 0.6rem 0.75rem 0.3rem
-  border-top: 1px solid #f0e6e6
+  border-top: 1px solid var(--line)
   background: #fff
   flex-shrink: 0
 
 .msg-input
   flex: 1
-  border: 1.5px solid #f0c0d0
+  border: 1.5px solid var(--line-strong)
   border-radius: 12px
   padding: 0.5rem 0.75rem
   font-family: 'Lato', sans-serif
@@ -184,19 +184,19 @@
   transition: border-color 0.2s
 
   &:focus
-    border-color: #C2185B
+    border-color: var(--accent)
 
 .send-btn
-  color: #C2185B !important
+  color: var(--accent) !important
   flex-shrink: 0
 
   &:disabled
-    color: #ddd !important
+    color: var(--line-strong) !important
 
 .disclaimer
   font-family: 'Lato', sans-serif
   font-size: 0.68rem
-  color: #aaa
+  color: var(--ink-3)
   text-align: center
   padding: 0 0.75rem 0.5rem
   background: #fff

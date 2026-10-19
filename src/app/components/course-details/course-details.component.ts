@@ -1,22 +1,19 @@
-import { Component, DestroyRef, ElementRef, OnInit, Signal, ViewChild, ViewEncapsulation, computed, effect, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, ElementRef, OnInit, Signal, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { GetCourseByIdAction } from '../state/course.actions';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GetCommentsAction, SaveCommentAction } from '../state/comment.actions';
-import { FormlyMaterialModule } from '@ngx-formly/material';
 import { CommentsComponent } from '../comments/comments.component';
-import { NgxStarsComponent, NgxStarsModule } from 'ngx-stars';
 import { GetCurrentUserRatingByCourseIdAction, SaveRatingAction } from '../state/rating.actions';
 import { CommentDtoResponse, CourseDtoResponse, RatingDto, UserDtoResponse } from '../../../api/models';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { CommonModule } from '@angular/common';
+import { DOCUMENT, DecimalPipe } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CourseOnlineComponent } from '../course-online/course-online.component';
 import { AddVideoAction } from '../state/video.actions';
@@ -25,15 +22,17 @@ import { CreatePaymentAction } from '../state/payment.actions';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { OpenChatAction } from '../state/chat.actions';
 import { CourseGroupChatComponent } from '../course-group-chat/course-group-chat.component';
+import { StarRatingComponent } from '../../shared/star-rating/star-rating.component';
+import { DateRangePipe, PricePipe } from '../../shared/format.pipes';
+import { categoryKey, categoryVisual } from '../../shared/category-visual';
+import { S3_BASE } from '../../app.const';
 
 @Component({
     selector: 'app-course-details',
-    encapsulation: ViewEncapsulation.None,
     imports: [
-        MatCardModule, MatButtonModule, MatIconModule, MatDialogModule,
-        RouterModule, FormlyModule, FormlyMaterialModule, ReactiveFormsModule,
-        CommentsComponent, NgxStarsModule, GoogleMapsModule, CommonModule, TranslocoModule,
-        CourseGroupChatComponent,
+        MatButtonModule, MatIconModule, MatDialogModule, MatFormFieldModule, MatInputModule,
+        RouterModule, ReactiveFormsModule, CommentsComponent, GoogleMapsModule, DecimalPipe,
+        TranslocoModule, CourseGroupChatComponent, StarRatingComponent, PricePipe, DateRangePipe,
     ],
     templateUrl: './course-details.component.html',
     styleUrl: './course-details.component.sass'
@@ -42,113 +41,104 @@ export class CourseDetailsComponent implements OnInit {
 
   store = inject(Store);
   activatedRoute = inject(ActivatedRoute);
+  private dialog = inject(MatDialog);
   private transloco = inject(TranslocoService);
-
-  course: Signal<CourseDtoResponse> = toSignal(this.store.select(state => state.course.course));
-  comments: Signal<CommentDtoResponse[]> = toSignal(this.store.select(state => state.comment.comments));
-  currentUserRating: Signal<RatingDto> = toSignal(this.store.select(state => state.rating.currentUserRating));
-  currentUser: Signal<UserDtoResponse> = toSignal(this.store.select(SecurityState.getCurrentUser));
-
   private destroyRef = inject(DestroyRef);
 
-  courseId: number;
-  zoom = 14;
-  position: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
-  mapOptions: google.maps.MapOptions = { center: { lat: 0, lng: 0 }, mapId: '3f141cd4fa2bff29fb6f46f8' };
+  course: Signal<CourseDtoResponse | undefined> = toSignal(this.store.select(state => state.course.course));
+  comments: Signal<CommentDtoResponse[]> = toSignal(this.store.select(state => state.comment.comments), { initialValue: [] });
+  currentUserRating: Signal<RatingDto | undefined> = toSignal(this.store.select(state => state.rating.currentUserRating));
+  currentUser: Signal<UserDtoResponse | undefined> = toSignal(this.store.select(SecurityState.getCurrentUser));
 
-  readonly s3Base = 'https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/';
+  courseId!: number;
+  /** The store keeps the previously opened course until the new one arrives. */
+  loaded = computed(() => this.course()?.id != null && String(this.course()!.id) === String(this.courseId));
 
-  @ViewChild('currentRating') currentRatingComponent: NgxStarsComponent;
-  @ViewChild('currentInstructorRating') currentInstructorRatingComponent: NgxStarsComponent;
-  @ViewChild('courseRating') courseRatingComponent: NgxStarsComponent;
+  zoom = 15;
+  mapOptions: google.maps.MapOptions = { mapId: '3f141cd4fa2bff29fb6f46f8', disableDefaultUI: true, zoomControl: true };
+  position = signal<google.maps.LatLngLiteral | null>(null);
+
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  isOwner = computed(() => {
-    const user = this.currentUser();
-    const course = this.course();
-    return !!user?.ownedCourseIds?.includes(course?.id);
+  visual = computed(() => categoryVisual(this.course()?.category?.label));
+  categoryKey = computed(() => categoryKey(this.course()?.category?.label));
+  imageSrc = computed(() => {
+    const url = this.course()?.imageUrl;
+    if (!url) return null;
+    return url.startsWith('http') ? url : S3_BASE + url;
+  });
+  creatorAvatar = computed(() => {
+    const fileName = this.course()?.creator?.fileName;
+    return fileName ? S3_BASE + fileName : null;
   });
 
-  isEnrolled = computed(() => {
-    const user = this.currentUser();
-    const course = this.course();
-    return !!user?.enrolledCourseIds?.includes(course?.id);
-  });
-
-  isFull = computed(() => {
-    const c = this.course();
-    return c ? (c.participantCount ?? 0) >= (c.maxParticipants ?? 0) : false;
-  });
-
+  isOwner = computed(() => !!this.currentUser()?.ownedCourseIds?.includes(this.course()?.id!));
+  isEnrolled = computed(() => !!this.currentUser()?.enrolledCourseIds?.includes(this.course()?.id!));
   spotsLeft = computed(() => {
     const c = this.course();
     return c ? Math.max(0, (c.maxParticipants ?? 0) - (c.participantCount ?? 0)) : 0;
   });
+  isFull = computed(() => !!this.course() && this.spotsLeft() === 0);
+  fillPercent = computed(() => {
+    const c = this.course();
+    const max = c?.maxParticipants ?? 0;
+    return max ? Math.min(100, Math.round(((c?.participantCount ?? 0) / max) * 100)) : 0;
+  });
+  status = computed<'upcoming' | 'ongoing' | 'past'>(() => {
+    const c = this.course();
+    const now = new Date();
+    const start = c?.startDate ? new Date(c.startDate) : null;
+    const end = c?.endDate ? new Date(c.endDate) : null;
+    if (!start || now < start) return 'upcoming';
+    if (end && now > end) return 'past';
+    return 'ongoing';
+  });
+  /** "Learning outcomes" is free text; one line or semicolon-separated item per bullet. */
+  outcomes = computed(() => (this.course()?.learningOutcomes ?? '')
+    .split(/\r?\n|;/).map(s => s.replace(/^[-•*]\s*/, '').trim()).filter(Boolean));
+  canReview = computed(() => !!this.currentUser() && this.isEnrolled() && !this.isOwner());
+  showMobileBar = computed(() => this.loaded() && !this.isOwner() && !this.isEnrolled() && this.status() !== 'past' && !this.isFull());
 
-  form = new FormGroup({});
-  fields: FormlyFieldConfig[] = [];
+  /** Course language is stored as a code ("pl"); show its name in the UI language. */
+  languageName(code?: string): string {
+    if (!code) return '';
+    try {
+      const name = new Intl.DisplayNames([this.transloco.getActiveLang()], { type: 'language' }).of(code);
+      return name ? name.charAt(0).toUpperCase() + name.slice(1) : code;
+    } catch {
+      return code;
+    }
+  }
 
-  constructor(private dialog: MatDialog) {
-    this.transloco.selectTranslation().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.fields = [{
-        key: 'comment',
-        type: 'textarea',
-        props: {
-          label: this.transloco.translate('courseDetails.leaveReview'),
-          placeholder: this.transloco.translate('courseDetails.commentPlaceholder'),
-          required: true,
-          rows: 4,
-          appearance: 'outline',
-        }
-      }];
-    });
+  reviewControl = new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(2000)] });
+  private pendingInstructorRating: number | null = null;
+  instructorRatingPreview = signal<number | null>(null);
+
+  constructor() {
+    // The floating chat/assistant buttons move up while the mobile booking bar is shown (see styles.sass).
+    const body = inject(DOCUMENT).body;
+    effect(() => body.classList.toggle('has-bottom-bar', this.showMobileBar()));
+    this.destroyRef.onDestroy(() => body.classList.remove('has-bottom-bar'));
 
     effect(() => {
-      const rating = this.currentUserRating();
-      const course = this.course();
-      if (this.currentRatingComponent && rating?.value != null) {
-        this.currentRatingComponent.setRating(rating.value);
-      }
-      if (this.courseRatingComponent && course?.rating != null) {
-        this.courseRatingComponent.setRating(course.rating);
-      }
-      if (course?.address?.lat != null) {
-        const center = { lat: course.address.lat, lng: course.address.lng };
-        this.mapOptions = { center, mapId: '3f141cd4fa2bff29fb6f46f8' };
-        this.position = center;
-      }
+      const address = this.course()?.address;
+      // Addresses that were never geocoded come back as 0,0 (in the Atlantic), so treat that as "no position".
+      const known = address?.lat != null && address?.lng != null && !(address.lat === 0 && address.lng === 0);
+      this.position.set(known ? { lat: address!.lat!, lng: address!.lng! } : null);
     });
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.courseId = params['id'];
-      this.store.dispatch(new GetCourseByIdAction(this.courseId));
-      this.store.dispatch(new GetCommentsAction(this.courseId));
-      this.store.dispatch(new GetCurrentUserRatingByCourseIdAction(this.courseId));
+      this.store.dispatch([
+        new GetCourseByIdAction(this.courseId),
+        new GetCommentsAction(this.courseId),
+      ]);
+      if (this.store.selectSnapshot(state => state.security.token)) {
+        this.store.dispatch(new GetCurrentUserRatingByCourseIdAction(this.courseId));
+      }
     });
-  }
-
-  translateCategory(label: string): string {
-    if (!label) return '';
-    const key = 'categories.' + label.toLowerCase().replace(/\s+/g, '_');
-    const translated = this.transloco.translate<string>(key);
-    return translated === key ? label : translated;
-  }
-
-  translateStatus(status: string): string {
-    return this.transloco.translate('status.' + status);
-  }
-
-  getStatus(): 'upcoming' | 'ongoing' | 'past' {
-    const now = new Date();
-    const start = this.course()?.startDate ? new Date(this.course().startDate) : null;
-    const end = this.course()?.endDate ? new Date(this.course().endDate) : null;
-    if (!start || now < start) return 'upcoming';
-    if (end && now > end) return 'past';
-    return 'ongoing';
   }
 
   enroll(): void {
@@ -156,14 +146,10 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   saveComment(): void {
-    const commentDto: CommentDtoResponse = {
-      content: this.form.get('comment').value,
-      courseId: this.courseId
-    };
-    this.store.dispatch(new SaveCommentAction(commentDto));
+    if (this.reviewControl.invalid) return;
+    this.store.dispatch(new SaveCommentAction({ content: this.reviewControl.value.trim(), courseId: this.courseId }))
+      .subscribe(() => this.reviewControl.reset());
   }
-
-  private pendingInstructorRating: number | null = null;
 
   handleRating(rating: number): void {
     this.store.dispatch(new SaveRatingAction({
@@ -175,11 +161,13 @@ export class CourseDetailsComponent implements OnInit {
 
   handleInstructorRating(rating: number): void {
     this.pendingInstructorRating = rating;
+    this.instructorRatingPreview.set(rating);
   }
 
-  openDialog(): void {
+  openVideos(): void {
     this.dialog.open(CourseOnlineComponent, {
       width: '900px',
+      maxWidth: '96vw',
       data: { courseId: this.courseId }
     });
   }
@@ -194,7 +182,9 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   messageInstructor(): void {
-    const c = this.course().creator;
-    this.store.dispatch(new OpenChatAction(c.id, c.firstName, c.lastName, c.fileName));
+    const c = this.course()?.creator;
+    if (c) {
+      this.store.dispatch(new OpenChatAction(c.id, c.firstName, c.lastName, c.fileName));
+    }
   }
 }

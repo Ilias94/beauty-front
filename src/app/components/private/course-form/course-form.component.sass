@@ -1,3 +1,8 @@
+:host
+  display: block
+  // The app shell adds no padding; each page sets its own like .page in styles.sass.
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
 // ViewEncapsulation.None — all selectors prefixed with cf- to avoid global conflicts
 
 .cf-page
@@ -13,7 +18,7 @@
 // ── Header ──────────────────────────────────────────────────────────────
 
 .cf-header
-  background: linear-gradient(135deg, #880E4F 0%, #C2185B 55%, #E91E63 100%)
+  background: var(--accent)
   border-radius: 20px
   padding: 28px 32px
   margin-bottom: 32px
@@ -28,7 +33,7 @@
 
 .cf-header-text
   h1
-    font-family: 'Playfair Display', serif
+    font-family: var(--font-display)
     font-size: 1.7rem
     font-weight: 700
     margin: 0 0 4px
@@ -50,7 +55,7 @@
   width: 42px
   height: 42px
   border-radius: 12px
-  background: linear-gradient(135deg, #C2185B, #E91E63)
+  background: var(--accent)
   color: white
   display: flex
   align-items: center
@@ -62,7 +67,7 @@
   font-size: 1rem
   font-weight: 600
   margin: 0 0 2px
-  color: #1a1a1a
+  color: var(--ink)
 
 .cf-section-desc
   font-size: 0.8rem
@@ -109,7 +114,7 @@
   font-weight: 400
 
 .cf-required
-  color: #e53935
+  color: var(--danger)
 
 formly-field:has(.mat-mdc-radio-group)
   display: block
@@ -127,7 +132,7 @@ formly-field:has(.mat-mdc-radio-group)
   align-items: center
   gap: 6px
   font-size: 0.78rem
-  color: #7B1FA2
+  color: var(--ink-2)
   background: rgba(123, 31, 162, 0.07)
   padding: 5px 12px
   border-radius: 20px
@@ -157,5 +162,5 @@ formly-field:has(.mat-mdc-radio-group)
     font-size: 0.95rem
 
   .cf-draft-btn
-    color: #C2185B
-    border-color: #C2185B
+    color: var(--accent)
+    border-color: var(--accent)

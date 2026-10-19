@@ -51,8 +51,8 @@ export class SecurityState {
       }
 
 
+      // LoginComponent navigates afterwards (to the page the user came from).
       dispatch(new GetCurrentUserAction())
-      dispatch(new Navigate(['/my-account']))
     }))
   }
 
@@ -112,7 +112,7 @@ export class SecurityState {
       this.coockieService.delete('token');
       this.coockieService.delete('token', '/');
     }
-    patchState({ token: null });
+    patchState({ token: null, currentUser: null });
     dispatch(new Navigate(['/login']));
   }
 

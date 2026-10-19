@@ -1,413 +1,431 @@
-// ViewEncapsulation.None — prefiks cd- na wszystkich klasach
-
-.cd-page
-  max-width: 1100px
-  margin: 0 auto
-  padding-bottom: 48px
-
-// ── Nav ─────────────────────────────────────────────────────────────────
-
-.cd-nav
-  margin-bottom: 16px
-
-  a[mat-button]
-    color: rgba(0,0,0,0.55)
-    font-size: 0.9rem
-
-    .mat-icon
-      font-size: 18px
-      height: 18px
-      width: 18px
-      vertical-align: middle
-      margin-right: 4px
-
-// ── Hero ─────────────────────────────────────────────────────────────────
-
-.cd-hero
-  background: linear-gradient(135deg, #880E4F 0%, #C2185B 55%, #E91E63 100%)
-  border-radius: 20px
-  padding: 36px 40px
-  margin-bottom: 28px
-  color: white
-
-.cd-hero-meta
+.crumbs
   display: flex
   align-items: center
-  gap: 10px
-  margin-bottom: 12px
-
-.cd-category-chip
-  background: rgba(255,255,255,0.2)
-  border-radius: 20px
-  padding: 3px 12px
-  font-size: 0.8rem
-  font-weight: 500
-
-.cd-status-badge
-  border-radius: 20px
-  padding: 3px 12px
-  font-size: 0.78rem
+  gap: 4px
+  font-size: 14px
   font-weight: 600
-  text-transform: uppercase
-  letter-spacing: 0.4px
+  color: var(--ink-3)
+  margin-bottom: 24px
 
-  &.cd-status-upcoming
-    background: rgba(255,255,255,0.15)
-    border: 1px solid rgba(255,255,255,0.4)
+  a
+    color: var(--ink-2)
 
-  &.cd-status-ongoing
-    background: #4CAF50
-    color: white
+    &:hover
+      color: var(--ink)
 
-  &.cd-status-past
-    background: rgba(0,0,0,0.2)
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
 
-.cd-title
-  font-family: 'Playfair Display', serif
-  font-size: 2rem
+.layout
+  display: grid
+  grid-template-columns: minmax(0, 1fr) 360px
+  gap: 48px
+  align-items: start
+
+// ── Main column ────────────────────────────────────────────
+.head
+  .eyebrow
+    margin-bottom: 12px
+
+.title
+  font-size: clamp(32px, 4.4vw, 50px)
+  line-height: 1.08
+
+.head-meta
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  gap: 10px 20px
+  margin-top: 16px
+  color: var(--ink-2)
+  font-weight: 600
+
+.meta-item
+  display: inline-flex
+  align-items: center
+  gap: 6px
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+    color: var(--ink-3)
+
+  strong
+    color: var(--ink)
+
+.media
+  margin-top: 28px
+  aspect-ratio: 16 / 8
+  border-radius: var(--radius-lg)
+  overflow: hidden
+  display: grid
+  place-items: center
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.media-icon
+  font-size: 96px
+  width: 96px
+  height: 96px
+  opacity: 0.5
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48
+
+.section
+  padding: 36px 0
+  border-bottom: 1px solid var(--line)
+
+  &:last-child
+    border-bottom: 0
+
+  h2
+    font-size: 26px
+    margin-bottom: 16px
+
+.section-head
+  display: flex
+  align-items: baseline
+  justify-content: space-between
+  gap: 12px
+
+  .score
+    color: var(--ink-2)
+
+    strong
+      font-family: var(--font-display)
+      font-size: 26px
+      font-weight: 500
+      color: var(--ink)
+
+.prose
+  font-size: 16.5px
+  line-height: 1.7
+  color: var(--ink)
+  white-space: pre-line
+  max-width: 68ch
+
+.facts
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))
+  gap: 1px
+  margin: 24px 0 0
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  overflow: hidden
+  background: var(--line)
+
+  div
+    background: var(--surface)
+    padding: 14px 16px
+
+  dt
+    font-size: 12px
+    font-weight: 700
+    letter-spacing: 0.06em
+    text-transform: uppercase
+    color: var(--ink-3)
+    margin-bottom: 4px
+
+  dd
+    margin: 0
+    font-weight: 600
+
+.checklist
+  list-style: none
+  padding: 0
+  margin: 0
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))
+  gap: 12px 28px
+
+  li
+    display: flex
+    gap: 10px
+    line-height: 1.5
+
+  .mat-icon
+    flex-shrink: 0
+    width: 22px
+    height: 22px
+    font-size: 16px
+    display: grid
+    place-items: center
+    border-radius: 50%
+    background: var(--success-soft)
+    color: var(--success)
+
+.place
+  display: flex
+  gap: 12px
+
+  > .mat-icon
+    color: var(--accent)
+
+.place-line
   font-weight: 700
-  margin: 0 0 14px
-  line-height: 1.2
 
-.cd-hero-sub
+.map
+  margin-top: 18px
+  border-radius: var(--radius)
+  overflow: hidden
+  border: 1px solid var(--line)
+
+.instructor
   display: flex
   align-items: center
   gap: 16px
   flex-wrap: wrap
-
-.cd-rating-pill,
-.cd-instructor-pill
-  display: inline-flex
-  align-items: center
-  gap: 5px
-  background: rgba(255,255,255,0.15)
-  border-radius: 20px
-  padding: 4px 12px
-  font-size: 0.88rem
-
-  .mat-icon
-    font-size: 16px
-    height: 16px
-    width: 16px
-
-// ── Layout ───────────────────────────────────────────────────────────────
-
-.cd-layout
-  display: grid
-  grid-template-columns: 1fr 340px
-  gap: 24px
-  align-items: start
-
-  @media (max-width: 768px)
-    grid-template-columns: 1fr
-
-// ── Cards ────────────────────────────────────────────────────────────────
-
-.cd-card
-  background: white
-  border-radius: 16px
-  padding: 24px
-  margin-bottom: 20px
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06)
-  border: 1px solid rgba(0,0,0,0.06)
-
-.cd-card-title
-  display: flex
-  align-items: center
-  gap: 8px
-  font-size: 1rem
-  font-weight: 600
-  margin: 0 0 16px
-  color: #1a1a1a
-
-  .mat-icon
-    color: #C2185B
-    font-size: 20px
-    height: 20px
-    width: 20px
-
-.cd-description
-  color: #444
-  line-height: 1.7
-  font-size: 0.95rem
-  margin: 0
-
-// ── Location ─────────────────────────────────────────────────────────────
-
-.cd-address-line
-  font-size: 0.95rem
-  color: #333
-  margin: 0 0 6px
-
-.cd-district
-  font-size: 0.85rem
-  color: rgba(0,0,0,0.5)
-  margin: 0
-
-.cd-map-wrap
-  border-radius: 16px
-  overflow: hidden
-  margin-bottom: 20px
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08)
-
-// ── Ratings ──────────────────────────────────────────────────────────────
-
-.cd-ratings-row
-  display: flex
-  gap: 24px
-  align-items: flex-start
-
-  @media (max-width: 480px)
-    flex-direction: column
-
-.cd-rating-divider
-  width: 1px
-  background: rgba(0,0,0,0.1)
-  align-self: stretch
-
-.cd-rating-block
-  flex: 1
-  display: flex
-  flex-direction: column
-  gap: 8px
-
-.cd-rating-label
-  font-size: 0.75rem
-  font-weight: 700
-  color: rgba(0,0,0,0.45)
-  text-transform: uppercase
-  letter-spacing: 0.6px
-
-.cd-rating-avg-row
-  display: flex
-  align-items: center
-  gap: 10px
-
-.cd-avg-number
-  font-size: 2.4rem
-  font-weight: 800
-  color: #1a1a1a
-  line-height: 1
-  font-variant-numeric: tabular-nums
-
-.cd-rating-count
-  font-size: 0.8rem
-  color: rgba(0,0,0,0.45)
-
-.cd-rating-hint
-  display: inline-flex
-  align-items: center
-  gap: 3px
-  font-size: 0.78rem
-  color: rgba(0,0,0,0.38)
-  margin-top: -2px
-
-  .mat-icon
-    font-size: 14px
-    height: 14px
-    width: 14px
-
-// ngx-stars color override (uses ViewEncapsulation.None)
-ngx-stars
-  .stars-container
-    gap: 2px !important
-
-// ── Booking card ──────────────────────────────────────────────────────────
-
-.cd-booking-card
-  background: white
-  border-radius: 16px
-  padding: 28px
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1)
-  border: 1px solid rgba(0,0,0,0.06)
-  position: sticky
-  top: 24px
-  margin-bottom: 20px
-
-.cd-price
-  text-align: center
-  margin-bottom: 20px
-
-.cd-price-value
-  font-size: 2.2rem
-  font-weight: 700
-  color: #1a1a1a
-
-.cd-price-free
-  font-size: 2rem
-  font-weight: 700
-  color: #2E7D32
-
-.cd-enroll-btn
-  width: 100%
-  height: 46px
-  font-size: 1rem
-  font-weight: 600
-  margin-bottom: 20px
-
-.cd-enrolled-actions
-  display: flex
-  flex-direction: column
-  gap: 10px
-  margin-bottom: 20px
-
-.cd-enrolled-badge
-  display: flex
-  align-items: center
-  gap: 8px
-  padding: 10px 14px
-  background: #f1f8f1
-  border-radius: 8px
-  color: #2E7D32
-  font-size: 0.9rem
-  font-weight: 600
-  mat-icon
-    font-size: 20px
-    width: 20px
-    height: 20px
-
-.cd-quiz-btn
-  width: 100%
-  height: 46px
-  font-size: 1rem
-  font-weight: 600
-
-.cd-past-notice
-  display: flex
-  align-items: center
-  gap: 8px
-  padding: 12px 16px
-  background: rgba(0, 0, 0, 0.06)
-  border-radius: 8px
-  color: rgba(0, 0, 0, 0.5)
-  font-size: 0.9rem
-  font-weight: 500
-  margin-bottom: 20px
-  mat-icon
-    font-size: 20px
-    width: 20px
-    height: 20px
-
-.cd-owner-actions
-  display: flex
-  flex-direction: column
-  gap: 10px
-  margin-bottom: 20px
-
-.cd-action-btn
-  width: 100%
-
-.cd-details-list
-  display: flex
-  flex-direction: column
-  gap: 14px
-  border-top: 1px solid rgba(0,0,0,0.07)
-  padding-top: 20px
-
-.cd-detail-item
-  display: flex
-  align-items: flex-start
-  gap: 12px
-
-  .mat-icon
-    color: #C2185B
-    font-size: 20px
-    height: 20px
-    width: 20px
-    flex-shrink: 0
-    margin-top: 2px
-
-.cd-detail-text
-  display: flex
-  flex-direction: column
-  gap: 1px
-
-.cd-detail-label
-  font-size: 0.75rem
-  color: rgba(0,0,0,0.45)
-  text-transform: uppercase
-  letter-spacing: 0.3px
-
-.cd-detail-value
-  font-size: 0.9rem
-  color: #1a1a1a
-  font-weight: 500
-
-  &.cd-spots-full
-    color: #c62828
-    font-weight: 600
-
-// ── Instructor card ───────────────────────────────────────────────────────
-
-.cd-instructor-card
-  background: white
-  border-radius: 16px
   padding: 20px
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06)
-  border: 1px solid rgba(0,0,0,0.06)
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
 
-.cd-instructor-heading
-  font-size: 0.8rem
-  font-weight: 600
-  text-transform: uppercase
-  letter-spacing: 0.5px
-  color: rgba(0,0,0,0.45)
-  margin: 0 0 14px
-
-.cd-instructor-info
-  display: flex
-  align-items: center
-  gap: 12px
-
-.cd-avatar-img
-  width: 48px
-  height: 48px
+.instructor-avatar
+  width: 64px
+  height: 64px
   border-radius: 50%
   object-fit: cover
   flex-shrink: 0
 
-.cd-avatar-initials
-  width: 48px
-  height: 48px
-  border-radius: 50%
-  background: linear-gradient(135deg, #C2185B, #E91E63)
-  color: white
+  &.initials
+    display: grid
+    place-items: center
+    background: var(--accent-soft)
+    color: var(--accent)
+    font: 700 20px var(--font-ui)
+
+.instructor-body
+  flex: 1
+  min-width: 160px
+
+.instructor-name
+  font-family: var(--font-display)
+  font-size: 21px
+
+.instructor-rating
+  display: flex
+  align-items: center
+  gap: 6px
+  font-size: 14px
+  color: var(--ink-2)
+  margin-top: 4px
+
+.review-box
+  padding: 22px
+  border-radius: var(--radius)
+  background: var(--surface-2)
+  margin-bottom: 24px
+
+.rate-row
+  display: flex
+  gap: 32px
+  flex-wrap: wrap
+
+.rate-label
+  font-weight: 700
+  font-size: 14px
+  margin-bottom: 4px
+
+.hint
+  font-size: 13px
+  color: var(--ink-3)
+  margin: 8px 0 16px
+
+.review-field
+  width: 100%
+
+  ::ng-deep .mat-mdc-text-field-wrapper
+    background: var(--surface)
+
+.review-actions
+  display: flex
+  justify-content: flex-end
+  margin-top: 12px
+
+// ── Booking card ───────────────────────────────────────────
+.side
+  position: sticky
+  top: calc(var(--header-h) + 24px)
+
+.booking
+  padding: 26px
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  background: var(--surface)
+  box-shadow: var(--shadow-2)
+
+.price
+  font-family: var(--font-display)
+  font-size: 38px
+  font-weight: 500
+  line-height: 1.1
+
+.booking-facts
+  list-style: none
+  padding: 0
+  margin: 20px 0
+  display: flex
+  flex-direction: column
+  gap: 14px
+
+  li
+    display: flex
+    gap: 12px
+
+    > .mat-icon
+      color: var(--ink-3)
+      margin-top: 2px
+
+    div
+      display: flex
+      flex-direction: column
+
+.fact-label
+  font-size: 12px
+  font-weight: 700
+  letter-spacing: 0.06em
+  text-transform: uppercase
+  color: var(--ink-3)
+
+.small
+  font-size: 13px
+
+.seats
+  margin-bottom: 18px
+
+  .seats-text
+    font-size: 14px
+    font-weight: 600
+    margin-bottom: 6px
+
+  .bar
+    height: 6px
+    border-radius: 6px
+    background: var(--surface-3)
+    overflow: hidden
+
+    span
+      display: block
+      height: 100%
+      border-radius: 6px
+      background: var(--ink-2)
+
+  &.low
+    color: var(--warning)
+
+    .bar span
+      background: var(--warning)
+
+  &.full
+    color: var(--danger)
+
+    .bar span
+      background: var(--danger)
+
+.cta
+  width: 100%
+  --mdc-filled-button-container-height: 52px
+  --mdc-outlined-button-container-height: 48px
+  font-size: 16px !important
+
+.fine-print
   display: flex
   align-items: center
   justify-content: center
-  font-weight: 700
-  font-size: 1rem
-  flex-shrink: 0
+  gap: 6px
+  margin-top: 12px
+  font-size: 13px
+  color: var(--ink-3)
 
-.cd-instructor-name
-  font-weight: 600
-  font-size: 0.95rem
-  margin: 0 0 2px
-  color: #1a1a1a
+  .mat-icon
+    font-size: 15px
+    width: 15px
+    height: 15px
 
-.cd-instructor-email
-  font-size: 0.8rem
-  color: rgba(0,0,0,0.45)
-  margin: 0
-
-.cd-instructor-rating
+.notice, .enrolled-note, .owner-note
   display: flex
   align-items: center
-  gap: 4px
-  margin-top: 6px
+  gap: 8px
+  padding: 12px 14px
+  border-radius: var(--radius-sm)
+  font-weight: 600
+  font-size: 14px
 
-  .cd-rating-label
-    font-size: 0.75rem
-    color: rgba(0,0,0,0.45)
+.notice
+  background: var(--surface-2)
+  color: var(--ink-2)
 
-  ngx-stars
-    display: inline-flex
+.enrolled
+  display: flex
+  flex-direction: column
+  gap: 10px
 
-  .cd-avg-number
-    font-size: 0.8rem
-    font-weight: 600
-    color: #FF9800
+.enrolled-note
+  background: var(--success-soft)
+  color: var(--success)
 
-.cd-message-btn
-  margin-top: 12px
-  width: 100%
+.owner-tools
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+.owner-note
+  background: var(--accent-soft)
+  color: var(--accent)
+  margin-bottom: 4px
+
+.mobile-bar
+  display: none
+
+// ── Responsive ─────────────────────────────────────────────
+@media (max-width: 980px)
+  .layout
+    grid-template-columns: 1fr
+    gap: 8px
+
+  .side
+    position: static
+    order: -1
+    margin-top: 4px
+
+  .main
+    display: contents
+
+  .head
+    order: -2
+
+  .media
+    order: -3
+    margin-top: 0
+    aspect-ratio: 16 / 9
+
+  .section
+    order: 1
+
+@media (max-width: 640px)
+  .booking
+    box-shadow: none
+
+  .mobile-bar
+    position: fixed
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 950
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 16px
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom))
+    background: rgba(255, 255, 255, 0.96)
+    backdrop-filter: blur(10px)
+    border-top: 1px solid var(--line)
+
+  .mobile-price
+    font-family: var(--font-display)
+    font-size: 22px

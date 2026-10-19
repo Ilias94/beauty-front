@@ -3,9 +3,55 @@
 @include mat.elevation-classes();
 @include mat.app-background();
 
-$beauty-primary: mat.m2-define-palette(mat.$m2-pink-palette, 700, 300, 900);
-$beauty-accent: mat.m2-define-palette(mat.$m2-amber-palette, 600, 200, 900);
-$beauty-warn: mat.m2-define-palette(mat.$m2-red-palette);
+// Built around the Bellademy accent (#8C2F4B, shade 600); keep in sync with --accent in styles.sass.
+$bellademy-rose: (
+  50: #F6E8EC,
+  100: #EDD3DA,
+  200: #DDAAB8,
+  300: #C98095,
+  400: #B25B76,
+  500: #9C3E5E,
+  600: #8C2F4B,
+  700: #74263E,
+  800: #5C1E31,
+  900: #431624,
+  A100: #F8C9D6,
+  A200: #EE97AF,
+  A400: #D9587C,
+  A700: #B83A5E,
+  contrast: (
+    50: rgba(black, 0.87), 100: rgba(black, 0.87), 200: rgba(black, 0.87), 300: white,
+    400: white, 500: white, 600: white, 700: white, 800: white, 900: white,
+    A100: rgba(black, 0.87), A200: rgba(black, 0.87), A400: white, A700: white,
+  )
+);
+
+// Warm neutrals used as the secondary palette.
+$bellademy-sand: (
+  50: #FAF7F3,
+  100: #F4EEE7,
+  200: #EDE5DB,
+  300: #D6CABB,
+  400: #B9A994,
+  500: #9C8A72,
+  600: #7E6E59,
+  700: #5E554E,
+  800: #3E3732,
+  900: #1F1A17,
+  A100: #F4EEE7,
+  A200: #EDE5DB,
+  A400: #B9A994,
+  A700: #5E554E,
+  contrast: (
+    50: rgba(black, 0.87), 100: rgba(black, 0.87), 200: rgba(black, 0.87), 300: rgba(black, 0.87),
+    400: rgba(black, 0.87), 500: white, 600: white, 700: white, 800: white, 900: white,
+    A100: rgba(black, 0.87), A200: rgba(black, 0.87), A400: rgba(black, 0.87), A700: white,
+  )
+);
+
+$beauty-primary: mat.m2-define-palette($bellademy-rose, 600, 200, 800);
+$beauty-accent: mat.m2-define-palette($bellademy-sand, 700, 200, 900);
+$beauty-warn: mat.m2-define-palette(mat.$m2-red-palette, 700);
 
 $beauty-theme: mat.m2-define-light-theme((
   color: (
@@ -14,7 +60,7 @@ $beauty-theme: mat.m2-define-light-theme((
     warn: $beauty-warn,
   ),
   typography: mat.m2-define-typography-config(
-    $font-family: 'Lato, sans-serif',
+    $font-family: 'Manrope, system-ui, sans-serif',
   ),
   density: 0,
 ));

@@ -1,29 +1,51 @@
-.page-header
+.page-header .mat-icon
+  margin-right: 4px
+
+.list
+  list-style: none
+  padding: 0
+  margin: 0
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  overflow: hidden
+
+  li + li
+    border-top: 1px solid var(--line)
+
+.item
   display: flex
-  justify-content: space-between
   align-items: center
-  padding: 24px 16px 16px
+  gap: 16px
+  padding: 16px 20px
+  color: var(--ink)
+  transition: background var(--dur) var(--ease)
 
-.ticket-table
-  width: 100%
+  &:hover
+    color: var(--ink)
+    background: var(--surface-2)
 
-.empty-state
-  text-align: center
-  padding: 48px
-  color: rgba(0,0,0,.54)
+    .chevron
+      color: var(--ink)
+      transform: translateX(2px)
 
-.status-open
-  background: #e3f2fd !important
-  color: #1565c0 !important
+.item-main
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: 2px
 
-.status-in_progress
-  background: #fff8e1 !important
-  color: #f57f17 !important
+.item-title
+  font-weight: 700
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
 
-.status-resolved, .status-closed, .status-auto_resolved
-  background: #e8f5e9 !important
-  color: #2e7d32 !important
+.item-meta
+  font-size: 13px
+  color: var(--ink-3)
 
-.status-reopened
-  background: #fce4ec !important
-  color: #c62828 !important
+.chevron
+  color: var(--ink-3)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)

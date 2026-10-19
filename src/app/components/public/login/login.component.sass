@@ -1,149 +1,95 @@
-.login-page
-  min-height: calc(100vh - 64px)
+// Shared look of the auth screens (login and register use the same structure).
+.auth
+  display: grid
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr)
+  min-height: calc(100vh - var(--header-h))
+
+.auth-main
   display: flex
   align-items: center
   justify-content: center
-  padding: 32px 16px
-  background: linear-gradient(160deg, #fdf0f5 0%, #fdf8f5 50%, #f5f0fd 100%)
+  padding: 48px var(--gutter)
 
-.login-card
+.auth-form
   width: 100%
   max-width: 420px
-  background: white
-  border-radius: 20px
-  padding: 40px 36px
-  box-shadow: 0 8px 40px rgba(194, 24, 91, 0.12), 0 2px 12px rgba(0,0,0,0.06)
-  animation: fadeSlideUp 0.5s ease-out
 
-/* Brand */
-.brand-header
-  text-align: center
-  margin-bottom: 32px
+.auth-title
+  font-size: clamp(32px, 4vw, 42px)
+  margin-top: 10px
 
-.brand-icon-wrap
-  width: 64px
-  height: 64px
-  border-radius: 50%
-  background: linear-gradient(135deg, #C2185B, #E91E63)
-  display: flex
-  align-items: center
-  justify-content: center
-  margin: 0 auto 16px
+.auth-lead
+  color: var(--ink-2)
+  margin: 10px 0 28px
 
-  .mat-icon
-    color: white
-    font-size: 32px
-    width: 32px
-    height: 32px
-
-.brand-title
-  font-family: 'Playfair Display', serif
-  font-size: 2rem
-  font-weight: 700
-  color: #C2185B
-  margin: 0 0 6px
-  line-height: 1
-
-.brand-subtitle
-  color: #888
-  font-size: 0.92rem
-  margin: 0
-
-/* Form */
-.login-form
-  display: flex
-  flex-direction: column
-  gap: 4px
-  margin-bottom: 20px
-
-  /* Make formly fields full-width */
-  ::ng-deep formly-field
-    display: block
-    width: 100%
-
-  ::ng-deep .mat-mdc-form-field
-    width: 100%
-
-.submit-btn
-  width: 100%
-  height: 48px
-  font-size: 1rem
-  font-weight: 600
-  border-radius: 12px !important
-  letter-spacing: 0.3px
-  margin-top: 8px
-  gap: 6px
-
-  .mat-icon
-    font-size: 20px
-    width: 20px
-    height: 20px
-
-/* Divider */
-.divider-row
-  display: flex
-  align-items: center
-  gap: 12px
-  margin-bottom: 20px
-
-.divider-line
-  flex: 1
-
-.divider-text
-  color: #bbb
-  font-size: 0.82rem
-  font-weight: 500
-  white-space: nowrap
-
-/* Google button */
 .google-btn
   width: 100%
-  height: 48px
+  height: 50px
   display: flex
   align-items: center
   justify-content: center
-  gap: 12px
-  background: white
-  border: 1.5px solid #e0e0e0
-  border-radius: 12px
-  font-size: 0.95rem
-  font-weight: 500
-  color: #444
+  gap: 10px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  font: 700 15px var(--font-ui)
+  color: var(--ink)
   cursor: pointer
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease
-  margin-bottom: 24px
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease)
 
   &:hover
-    background: #f8f8f8
-    border-color: #bbb
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1)
+    border-color: var(--ink-3)
+    background: var(--surface-2)
 
-  &:active
-    background: #f0f0f0
+.divider
+  display: flex
+  align-items: center
+  gap: 12px
+  margin: 24px 0
+  color: var(--ink-3)
+  font-size: 13px
+  font-weight: 600
 
-.google-icon
-  flex-shrink: 0
+  &::before, &::after
+    content: ''
+    flex: 1
+    height: 1px
+    background: var(--line)
 
-/* Register link */
-.register-link
+.form-error
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 12px 14px
+  margin-bottom: 16px
+  border-radius: var(--radius-sm)
+  background: var(--danger-soft)
+  color: var(--danger)
+  font-weight: 600
+  font-size: 14px
+
+.field
+  width: 100%
+
+.submit
+  width: 100%
+  margin-top: 4px
+  --mdc-filled-button-container-height: 52px
+  font-size: 16px !important
+
+  mat-spinner
+    margin: 0 auto
+    --mdc-circular-progress-active-indicator-color: #fff
+
+.switch
+  margin-top: 24px
   text-align: center
-  color: #888
-  font-size: 0.9rem
-  margin: 0
+  color: var(--ink-2)
 
   a
-    color: #C2185B
-    font-weight: 600
-    text-decoration: none
+    font-weight: 700
 
-    &:hover
-      text-decoration: underline
-
-/* Animation */
-@keyframes fadeSlideUp
-  from
-    opacity: 0
-    transform: translateY(20px)
-  to
-    opacity: 1
-    transform: translateY(0)
+@media (max-width: 900px)
+  .auth
+    grid-template-columns: 1fr
+    min-height: auto

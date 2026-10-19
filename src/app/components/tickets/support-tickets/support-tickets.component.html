@@ -1,11 +1,15 @@
+<div class="page">
 <div class="page-header">
-  <h2>{{ 'tickets.supportTickets' | transloco }}</h2>
+  <div>
+    <p class="eyebrow">{{ 'tickets.supportEyebrow' | transloco }}</p>
+    <h1 class="page-title">{{ 'tickets.supportTickets' | transloco }}</h1>
+  </div>
   <mat-form-field appearance="outline" class="filter">
     <mat-label>{{ 'tickets.filterByStatus' | transloco }}</mat-label>
     <mat-select [(ngModel)]="filterStatus">
       <mat-option value="">{{ 'tickets.all' | transloco }}</mat-option>
       @for (s of statuses; track s) {
-        <mat-option [value]="s">{{ s }}</mat-option>
+        <mat-option [value]="s">{{ ('tickets.statuses.' + s) | transloco }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
@@ -30,7 +34,7 @@
 
   <ng-container matColumnDef="type">
     <mat-header-cell *matHeaderCellDef>{{ 'tickets.type' | transloco }}</mat-header-cell>
-    <mat-cell *matCellDef="let t">{{ t.type }}</mat-cell>
+    <mat-cell *matCellDef="let t">{{ ('tickets.types.' + t.type) | transloco }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="status">
@@ -38,7 +42,7 @@
     <mat-cell *matCellDef="let t">
       <mat-select [value]="t.status" (selectionChange)="changeStatus(t, $event.value)" class="status-select">
         @for (s of statuses; track s) {
-          <mat-option [value]="s">{{ s }}</mat-option>
+          <mat-option [value]="s">{{ ('tickets.statuses.' + s) | transloco }}</mat-option>
         }
       </mat-select>
     </mat-cell>
@@ -65,3 +69,4 @@
 @if (!filtered.length) {
   <p class="empty-state">{{ 'tickets.noTicketsFound' | transloco }}</p>
 }
+</div>

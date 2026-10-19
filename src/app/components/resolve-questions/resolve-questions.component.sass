@@ -6,21 +6,21 @@
 // ── Progress ──────────────────────────────────────────
 .rq-progress-track
   height: 8px
-  background: #f0e8ed
+  background: var(--accent-soft)
   border-radius: 99px
   overflow: hidden
   margin-bottom: 10px
 
 .rq-progress-fill
   height: 100%
-  background: linear-gradient(90deg, #C2185B, #E91E63)
+  background: var(--accent)
   border-radius: 99px
   transition: width 0.4s ease
 
 .rq-progress-label
   text-align: right
   font-size: 0.85rem
-  color: #999
+  color: var(--ink-3)
   margin-bottom: 28px
 
 // ── Question card ─────────────────────────────────────
@@ -28,7 +28,7 @@
   background: white
   border-radius: 20px
   padding: 32px 36px
-  box-shadow: 0 4px 24px rgba(194, 24, 91, 0.08)
+  box-shadow: 0 4px 24px rgba(140, 47, 75, 0.08)
   margin-bottom: 24px
 
 .rq-question-number
@@ -36,14 +36,14 @@
   font-weight: 800
   letter-spacing: 1.5px
   text-transform: uppercase
-  color: #E91E63
+  color: var(--accent)
   margin-bottom: 14px
 
 .rq-question-text
-  font-family: 'Playfair Display', serif
+  font-family: var(--font-display)
   font-size: 1.35rem
   font-weight: 600
-  color: #1a1a1a
+  color: var(--ink)
   line-height: 1.5
   margin: 0
 
@@ -61,40 +61,40 @@
   width: 100%
   padding: 16px 20px
   background: white
-  border: 2px solid #f0e8ed
+  border: 2px solid var(--accent-soft)
   border-radius: 14px
   cursor: pointer
   transition: all 0.2s ease
   text-align: left
   font-size: 1rem
-  color: #1a1a1a
+  color: var(--ink)
 
   &:hover:not(:disabled)
-    border-color: #E91E63
-    background: #fff5f8
+    border-color: var(--accent)
+    background: var(--accent-soft)
     transform: translateX(4px)
 
   &:disabled
     cursor: default
 
   &.rq-selected
-    border-color: #E91E63
+    border-color: var(--accent)
 
   &.rq-correct
-    border-color: #2E7D32
-    background: #f1f8f1
-    color: #1B5E20
+    border-color: var(--success)
+    background: var(--success-soft)
+    color: var(--success)
 
   &.rq-wrong
-    border-color: #c62828
-    background: #fff5f5
-    color: #b71c1c
+    border-color: var(--danger)
+    background: var(--danger-soft)
+    color: var(--danger)
 
 .rq-label
   width: 34px
   height: 34px
   border-radius: 50%
-  background: linear-gradient(135deg, #C2185B, #E91E63)
+  background: var(--accent)
   color: white
   font-size: 0.85rem
   font-weight: 800
@@ -104,10 +104,10 @@
   flex-shrink: 0
 
   .rq-correct &
-    background: #2E7D32
+    background: var(--success)
 
   .rq-wrong &
-    background: #c62828
+    background: var(--danger)
 
 .rq-answer-text
   flex: 1
@@ -116,10 +116,10 @@
   font-size: 22px
   width: 22px
   height: 22px
-  color: #2E7D32
+  color: var(--success)
 
 .rq-icon-wrong
-  color: #c62828
+  color: var(--danger)
 
 // ── Next button ───────────────────────────────────────
 .rq-next-wrap
@@ -145,35 +145,35 @@
   width: 180px
   height: 180px
   border-radius: 50%
-  border: 8px solid #E91E63
+  border: 8px solid var(--accent)
   background: white
   display: flex
   flex-direction: column
   align-items: center
   justify-content: center
-  box-shadow: 0 8px 32px rgba(194, 24, 91, 0.2)
+  box-shadow: 0 8px 32px rgba(140, 47, 75, 0.2)
   margin-bottom: 8px
 
   &.rq-score-high
-    border-color: #2E7D32
+    border-color: var(--success)
     box-shadow: 0 8px 32px rgba(46, 125, 50, 0.2)
 
   &.rq-score-low
-    border-color: #f57c00
+    border-color: var(--warning)
     box-shadow: 0 8px 32px rgba(245, 124, 0, 0.2)
 
 .rq-trophy-icon
   font-size: 28px
   width: 28px
   height: 28px
-  color: #E91E63
+  color: var(--accent)
   margin-bottom: 4px
 
   .rq-score-high &
-    color: #2E7D32
+    color: var(--success)
 
   .rq-score-low &
-    color: #f57c00
+    color: var(--warning)
 
 .rq-score-main
   display: flex
@@ -183,29 +183,29 @@
 .rq-score-num
   font-size: 2.8rem
   font-weight: 800
-  font-family: 'Playfair Display', serif
-  color: #1a1a1a
+  font-family: var(--font-display)
+  color: var(--ink)
   line-height: 1
 
 .rq-score-denom
   font-size: 1.2rem
-  color: #999
+  color: var(--ink-3)
 
 .rq-score-pct
   font-size: 0.9rem
-  color: #aaa
+  color: var(--ink-3)
   margin-top: 4px
 
 .rq-result-title
-  font-family: 'Playfair Display', serif
+  font-family: var(--font-display)
   font-size: 1.8rem
   font-weight: 700
-  color: #1a1a1a
+  color: var(--ink)
   margin: 0
 
 .rq-result-sub
   font-size: 1rem
-  color: #666
+  color: var(--ink-2)
   margin: 0
 
 .rq-result-actions
@@ -223,7 +223,7 @@
   gap: 12px
   padding: 80px 20px
   text-align: center
-  color: #999
+  color: var(--ink-3)
 
   mat-icon
     font-size: 56px
@@ -233,7 +233,7 @@
 
   h3
     font-size: 1.3rem
-    color: #555
+    color: var(--ink-2)
     margin: 0
 
   p

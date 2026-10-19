@@ -1,34 +1,30 @@
-import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID, signal, computed, HostListener, DestroyRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs/operators';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Select, Store } from '@ngxs/store';
-import { toSignal } from '@angular/core/rxjs-interop'
-import { LoginAction, LoginFromLocalStorageAction, LogoutAction } from '../../state/security.actions';
-import { NotificationBellComponent } from '../../common/notification-bell/notification-bell.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Store } from '@ngxs/store';
 import { TranslocoService, TranslocoModule } from '@jsverse/transloco';
+import { LogoutAction } from '../../state/security.actions';
+import { NotificationBellComponent } from '../../common/notification-bell/notification-bell.component';
+import { S3_BASE } from '../../../app.const';
 
+/** App shell: sticky top bar, account menu, mobile drawer and footer around the routed page. */
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
     styleUrl: './menu.component.sass',
     imports: [
-        MatToolbarModule,
         MatButtonModule,
-        MatSidenavModule,
-        MatListModule,
         MatIconModule,
+        MatMenuModule,
         MatDividerModule,
-        AsyncPipe,
+        MatTooltipModule,
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
@@ -36,47 +32,67 @@ import { TranslocoService, TranslocoModule } from '@jsverse/transloco';
         TranslocoModule,
     ]
 })
-export class MenuComponent implements OnInit{
-  private breakpointObserver = inject(BreakpointObserver);
+export class MenuComponent {
+  private store = inject(Store);
   private transloco = inject(TranslocoService);
   private platformId = inject(PLATFORM_ID);
 
-  @Select(state => state.security.token)
-  private token$ !: Observable<string>
+  token = toSignal(this.store.select(state => state.security.token));
+  currentUser = toSignal(this.store.select(state => state.security.currentUser));
 
-  public token = toSignal(this.token$)
+  isTeacher = computed(() => !!this.currentUser()?.teacher);
+  isSupport = computed(() => !!this.currentUser()?.roles?.includes('SUPPORT'));
+  initials = computed(() => {
+    const user = this.currentUser();
+    return ((user?.firstName?.[0] ?? '') + (user?.lastName?.[0] ?? '')).toUpperCase() || '·';
+  });
+  avatarUrl = computed(() => {
+    const fileName = this.currentUser()?.fileName;
+    return fileName ? S3_BASE + fileName : null;
+  });
 
-  public currentUser = toSignal(this.store.select(state => state.security.currentUser))
+  drawerOpen = signal(false);
+  scrolled = signal(false);
+  activeLang = signal(this.transloco.getActiveLang());
+  readonly year = new Date().getFullYear();
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
-
-  activeLang = this.transloco.getActiveLang();
-
-  constructor(private store: Store){
+  constructor() {
     if (isPlatformBrowser(this.platformId)) {
       const saved = localStorage.getItem('lang');
       if (saved && ['en', 'pl'].includes(saved)) {
-        this.transloco.setActiveLang(saved);
-        this.activeLang = saved;
+        this.setLang(saved);
       }
     }
+    inject(Router).events
+      .pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(inject(DestroyRef)))
+      .subscribe(() => this.drawerOpen.set(false));
   }
 
-  ngOnInit(): void {}
+  @HostListener('window:scroll')
+  onScroll() {
+    this.scrolled.set(window.scrollY > 4);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.drawerOpen.set(false);
+  }
+
+  toggleDrawer() {
+    this.drawerOpen.update(open => !open);
+  }
 
   setLang(lang: string): void {
     this.transloco.setActiveLang(lang);
-    this.activeLang = lang;
+    this.activeLang.set(lang);
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('lang', lang);
+      document.documentElement.lang = lang;
     }
   }
 
   logout() {
-    this.store.dispatch(new LogoutAction())
+    this.drawerOpen.set(false);
+    this.store.dispatch(new LogoutAction());
   }
 }

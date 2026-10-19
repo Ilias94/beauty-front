@@ -1,214 +1,113 @@
-.account-page
-  max-width: 760px
-  margin: 0 auto
-  animation: fadeIn 0.4s ease-out
-
-/* ─── Profile hero ──────────────────────── */
-.profile-hero
-  position: relative
-  border-radius: 20px
-  overflow: hidden
-  margin-bottom: 24px
-  padding: 110px 32px 32px
-  background: white
-  box-shadow: 0 4px 20px rgba(194, 24, 91, 0.1)
-
-.hero-bg
-  position: absolute
-  inset: 0
-  background: linear-gradient(135deg, #880E4F 0%, #C2185B 40%, #E91E63 70%, #F48FB1 100%)
-  height: 140px
-
-.profile-main
-  position: relative
+.profile
   display: flex
-  align-items: flex-end
+  align-items: center
   gap: 24px
   flex-wrap: wrap
+  padding-bottom: 32px
+  border-bottom: 1px solid var(--line)
 
-/* Avatar */
-.avatar-ring
-  width: 100px
-  height: 100px
-  border-radius: 50%
-  border: 4px solid white
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2)
-  overflow: hidden
+.avatar
+  width: 96px
+  height: 96px
   flex-shrink: 0
-  margin-top: 30px
-
-.avatar-img
-  width: 100%
-  height: 100%
-  object-fit: cover
-
-.avatar-initials
-  width: 100%
-  height: 100%
-  background: linear-gradient(135deg, #C2185B, #E91E63)
-  color: white
-  font-size: 2.2rem
-  font-weight: 700
-  display: flex
-  align-items: center
-  justify-content: center
-  font-family: 'Playfair Display', serif
-  text-transform: uppercase
-
-/* Info */
-.profile-info
-  flex: 1
-  min-width: 0
-  padding-bottom: 4px
-
-.profile-name
-  font-family: 'Playfair Display', serif
-  font-size: 1.6rem
-  font-weight: 700
-  color: #1a1a1a
-  margin: 0 0 6px
-  white-space: nowrap
+  border-radius: 50%
   overflow: hidden
-  text-overflow: ellipsis
-
-.profile-email
-  display: flex
-  align-items: center
-  gap: 5px
-  color: #555
-  font-size: 0.88rem
-  margin: 0 0 10px
-
-  .mat-icon
-    font-size: 15px
-    width: 15px
-    height: 15px
-    color: #C2185B
-
-.role-badge
-  display: inline-flex
-  align-items: center
-  gap: 4px
-  background: rgba(194, 24, 91, 0.1)
-  color: #C2185B
-  border-radius: 20px
-  padding: 3px 12px 3px 8px
-  font-size: 0.78rem
-  font-weight: 700
-
-  .mat-icon
-    font-size: 14px
-    width: 14px
-    height: 14px
-
-  &.teacher
-    background: rgba(0, 105, 92, 0.1)
-    color: #00695C
-
-    .mat-icon
-      color: #00695C
-
-.edit-btn
-  color: #C2185B !important
-  border-color: rgba(194, 24, 91, 0.3) !important
-  border-radius: 20px !important
-  font-weight: 600
-  align-self: flex-end
-  white-space: nowrap
-
-/* ─── Navigation grid ───────────────────── */
-.nav-grid
   display: grid
-  grid-template-columns: 1fr 1fr
+  place-items: center
+  background: var(--accent-soft)
+  color: var(--accent)
+  font: 600 32px var(--font-display)
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.profile-body
+  flex: 1
+  min-width: 200px
+
+.name
+  font-size: clamp(30px, 4vw, 40px)
+  margin-top: 6px
+
+.email
+  color: var(--ink-2)
+  margin-top: 4px
+
+.edit .mat-icon
+  margin-right: 6px
+
+.stats
+  display: flex
+  gap: 48px
+  flex-wrap: wrap
+  margin: 28px 0 36px
+
+  dt
+    font-size: 12px
+    font-weight: 700
+    letter-spacing: 0.08em
+    text-transform: uppercase
+    color: var(--ink-3)
+
+  dd
+    margin: 4px 0 0
+    font: 500 34px/1 var(--font-display)
+
+    span
+      font-size: 18px
+      color: var(--ink-3)
+
+.shortcuts
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
   gap: 14px
 
-.nav-card
+.shortcut
   display: flex
   align-items: center
   gap: 16px
-  background: white
-  border-radius: 16px
-  padding: 20px
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06)
-  text-decoration: none
-  color: inherit
-  transition: transform 0.22s ease, box-shadow 0.22s ease
-  cursor: pointer
+  padding: 18px 20px
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  color: var(--ink)
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease)
 
   &:hover
-    transform: translateY(-4px)
-    box-shadow: 0 8px 28px rgba(194, 24, 91, 0.14)
+    color: var(--ink)
+    border-color: var(--line-strong)
+    box-shadow: var(--shadow-2)
+    transform: translateY(-2px)
 
-.nav-icon-wrap
-  width: 48px
-  height: 48px
-  border-radius: 14px
-  display: flex
-  align-items: center
-  justify-content: center
+    .arrow
+      color: var(--accent)
+      transform: translateX(3px)
+
+.icon
+  width: 44px
+  height: 44px
   flex-shrink: 0
+  border-radius: 12px
+  display: grid
+  place-items: center
+  background: var(--surface-2)
+  color: var(--ink-2)
 
-  .mat-icon
-    color: white
-    font-size: 24px
-    width: 24px
-    height: 24px
-
-.nav-text
+.text
   flex: 1
-  min-width: 0
   display: flex
   flex-direction: column
-  gap: 2px
+  min-width: 0
 
-.nav-title
-  font-size: 0.95rem
-  font-weight: 700
-  color: #222
+  strong
+    font-size: 15.5px
 
-.nav-desc
-  font-size: 0.78rem
-  color: #aaa
-  white-space: nowrap
-  overflow: hidden
-  text-overflow: ellipsis
+  span
+    font-size: 13.5px
+    color: var(--ink-3)
 
-.nav-arrow
-  color: #ddd
-  font-size: 20px
-  width: 20px
-  height: 20px
-  flex-shrink: 0
-  transition: color 0.2s ease, transform 0.2s ease
-
-  .nav-card:hover &
-    color: #C2185B
-    transform: translateX(2px)
-
-/* ─── Animation ─────────────────────────── */
-@keyframes fadeIn
-  from
-    opacity: 0
-    transform: translateY(12px)
-  to
-    opacity: 1
-    transform: translateY(0)
-
-/* ─── Mobile ─────────────────────────────── */
-@media (max-width: 600px)
-  .profile-hero
-    padding: 36px 20px 24px
-
-  .profile-main
-    flex-direction: column
-    align-items: flex-start
-
-  .avatar-ring
-    margin-top: 30px
-
-  .edit-btn
-    width: 100%
-    justify-content: center
-
-  .nav-grid
-    grid-template-columns: 1fr
+.arrow
+  color: var(--ink-3)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)

@@ -16,7 +16,7 @@
   width: 64px
   height: 64px
   border-radius: 18px
-  background: linear-gradient(135deg, #C2185B, #E91E63)
+  background: var(--accent)
   display: flex
   align-items: center
   justify-content: center
@@ -29,15 +29,15 @@
     color: white
 
 .qr-title
-  font-family: 'Playfair Display', serif
+  font-family: var(--font-display)
   font-size: 2rem
   font-weight: 700
-  color: #1a1a1a
+  color: var(--ink)
   margin: 0 0 4px
 
 .qr-subtitle
   font-size: 1rem
-  color: #888
+  color: var(--ink-3)
   margin: 0
 
 // Stats
@@ -60,7 +60,7 @@
   padding: 0 24px
 
   mat-icon
-    color: #E91E63
+    color: var(--accent)
     font-size: 22px
     width: 22px
     height: 22px
@@ -68,19 +68,19 @@
 .qr-stat-value
   font-size: 1.6rem
   font-weight: 800
-  color: #1a1a1a
+  color: var(--ink)
   line-height: 1
 
 .qr-stat-label
   font-size: 0.78rem
-  color: #aaa
+  color: var(--ink-3)
   text-transform: uppercase
   letter-spacing: 0.5px
 
 .qr-stat-divider
   width: 1px
   height: 48px
-  background: #f0e8ed
+  background: var(--accent-soft)
 
 // Actions
 .qr-actions
@@ -107,7 +107,7 @@
   font-weight: 700
   text-transform: uppercase
   letter-spacing: 1px
-  color: #aaa
+  color: var(--ink-3)
   margin: 0 0 16px
 
 .qr-item
@@ -115,7 +115,7 @@
   align-items: center
   gap: 14px
   padding: 14px 0
-  border-bottom: 1px solid #f5f0f3
+  border-bottom: 1px solid var(--accent-soft)
 
   &:last-child
     border-bottom: none
@@ -124,8 +124,8 @@
   width: 28px
   height: 28px
   border-radius: 50%
-  background: #fce4ec
-  color: #C2185B
+  background: var(--accent-soft)
+  color: var(--accent)
   font-size: 0.78rem
   font-weight: 700
   display: flex
@@ -136,11 +136,11 @@
 .qr-item-text
   flex: 1
   font-size: 0.95rem
-  color: #333
+  color: var(--ink)
 
 .qr-item-answers
   font-size: 0.78rem
-  color: #bbb
+  color: var(--line-strong)
 
 // Empty state
 .qr-empty
@@ -155,13 +155,13 @@
     font-size: 64px
     width: 64px
     height: 64px
-    color: #f0e8ed
+    color: var(--accent-soft)
 
   h3
     font-size: 1.4rem
-    color: #555
+    color: var(--ink-2)
     margin: 0
 
   p
-    color: #999
+    color: var(--ink-3)
     margin: 0

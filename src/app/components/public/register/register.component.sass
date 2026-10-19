@@ -1,406 +1,232 @@
-.register-page
-  min-height: calc(100vh - 64px)
-  display: flex
-  align-items: flex-start
-  justify-content: center
-  padding: 32px 16px 48px
-  background: linear-gradient(160deg, #fdf0f5 0%, #fdf8f5 50%, #f5f0fd 100%)
+// Layout and the shared controls mirror login.component.sass.
+.auth
+  display: grid
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr)
+  min-height: calc(100vh - var(--header-h))
 
-.register-card
+.auth-main
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 48px var(--gutter)
+
+.auth-form
   width: 100%
-  max-width: 480px
-  background: white
-  border-radius: 20px
-  padding: 36px 36px 28px
-  box-shadow: 0 8px 40px rgba(194, 24, 91, 0.12), 0 2px 12px rgba(0,0,0,0.06)
-  animation: fadeSlideUp 0.4s ease-out
+  max-width: 460px
 
-/* ─── Brand ─────────────────────────────── */
-.brand-header
-  text-align: center
-  margin-bottom: 24px
+.auth-title
+  font-size: clamp(32px, 4vw, 42px)
+  margin-top: 10px
 
-.brand-icon-wrap
-  width: 56px
-  height: 56px
-  border-radius: 50%
-  background: linear-gradient(135deg, #C2185B, #E91E63)
+.auth-lead
+  color: var(--ink-2)
+  margin: 10px 0 28px
+
+.google-btn
+  width: 100%
+  height: 50px
   display: flex
   align-items: center
   justify-content: center
-  margin: 0 auto 12px
-
-  .mat-icon
-    color: white
-    font-size: 28px
-    width: 28px
-    height: 28px
-
-.brand-title
-  font-family: 'Playfair Display', serif
-  font-size: 1.8rem
-  font-weight: 700
-  color: #C2185B
-  margin: 0 0 4px
-
-.brand-subtitle
-  color: #999
-  font-size: 0.88rem
-  margin: 0
-
-/* ─── Avatar ─────────────────────────────── */
-.avatar-section
-  display: flex
-  flex-direction: column
-  align-items: center
-  gap: 8px
-  margin-bottom: 24px
-
-.avatar-wrap
-  width: 88px
-  height: 88px
-  border-radius: 50%
-  border: 2.5px dashed #F48FB1
+  gap: 10px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  font: 700 15px var(--font-ui)
+  color: var(--ink)
   cursor: pointer
-  position: relative
-  overflow: hidden
-  display: flex
-  align-items: center
-  justify-content: center
-  transition: border-color 0.2s ease, transform 0.2s ease
-  background: #fdf0f5
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease)
 
   &:hover
-    border-color: #C2185B
-    transform: scale(1.04)
+    border-color: var(--ink-3)
+    background: var(--surface-2)
 
-.avatar-preview
-  width: 100%
-  height: 100%
-  object-fit: cover
-
-.avatar-overlay
-  position: absolute
-  inset: 0
-  background: rgba(194, 24, 91, 0.5)
+.divider
   display: flex
   align-items: center
-  justify-content: center
-  opacity: 0
-  transition: opacity 0.2s ease
-
-  .mat-icon
-    color: white
-    font-size: 24px
-
-  .avatar-wrap:hover &
-    opacity: 1
-
-.avatar-placeholder
-  display: flex
-  flex-direction: column
-  align-items: center
-  gap: 4px
-  color: #C2185B
-
-  .mat-icon
-    font-size: 28px
-    width: 28px
-    height: 28px
-
-  span
-    font-size: 0.7rem
-    font-weight: 600
-
-.remove-avatar-btn
-  display: inline-flex
-  align-items: center
-  gap: 4px
-  background: none
-  border: none
-  color: #e53935
-  font-size: 0.78rem
-  cursor: pointer
-  padding: 0
-
-  .mat-icon
-    font-size: 14px
-    width: 14px
-    height: 14px
-
-  &:hover
-    text-decoration: underline
-
-/* ─── Form ───────────────────────────────── */
-.register-form
-  display: flex
-  flex-direction: column
-  gap: 4px
-
-/* Side-by-side firstName / lastName */
-::ng-deep .two-col
-  display: flex
   gap: 12px
-
-  .col
-    flex: 1
-    min-width: 0
-
-/* Full-width formly fields */
-::ng-deep formly-field
-  display: block
-  width: 100%
-
-::ng-deep .mat-mdc-form-field
-  width: 100%
-
-/* ─── Section label ──────────────────────── */
-.section-label
-  display: flex
-  align-items: center
-  gap: 6px
-  font-size: 0.78rem
-  font-weight: 700
-  text-transform: uppercase
-  letter-spacing: 0.6px
-  color: #C2185B
-  margin: 12px 0 4px
-
-  .mat-icon
-    font-size: 16px
-    width: 16px
-    height: 16px
-
-/* ─── Password strength ──────────────────── */
-.password-strength
-  margin: 4px 0 8px
-  display: flex
-  flex-direction: column
-  gap: 8px
-
-.strength-bar
-  display: flex
-  gap: 4px
-
-.strength-segment
-  flex: 1
-  height: 4px
-  border-radius: 2px
-  background: #eee
-  transition: background 0.3s ease
-
-  &.strength-1.filled
-    background: #e53935
-
-  &.strength-2.filled
-    background: #ef6c00
-
-  &.strength-3.filled
-    background: #f9a825
-
-  &.strength-4.filled
-    background: #7cb342
-
-  &.strength-5.filled
-    background: #2e7d32
-
-.strength-text
-  font-size: 0.78rem
+  margin: 24px 0
+  color: var(--ink-3)
+  font-size: 13px
   font-weight: 600
 
-  &.strength-1
-    color: #e53935
+  &::before, &::after
+    content: ''
+    flex: 1
+    height: 1px
+    background: var(--line)
 
-  &.strength-2
-    color: #ef6c00
+// ── Account type ───────────────────────────────────────────
+.types
+  border: 0
+  padding: 0
+  margin: 0 0 20px
 
-  &.strength-3
-    color: #f9a825
+  legend
+    float: none
+    width: auto
+    font: 700 14px var(--font-ui)
+    margin-bottom: 10px
 
-  &.strength-4
-    color: #7cb342
-
-  &.strength-5
-    color: #2e7d32
-
-.password-rules
+.types-grid
   display: grid
   grid-template-columns: 1fr 1fr
-  gap: 4px 12px
+  gap: 10px
 
-  span
+
+.type
+  position: relative
+  display: flex
+  align-items: flex-start
+  gap: 10px
+  padding: 14px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius)
+  background: var(--surface)
+  cursor: pointer
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease)
+
+  input
+    position: absolute
+    opacity: 0
+    pointer-events: none
+
+  .mat-icon
+    color: var(--ink-3)
+    flex-shrink: 0
+
+  &:hover
+    border-color: var(--ink-3)
+
+  &.on
+    border-color: var(--accent)
+    box-shadow: 0 0 0 1px var(--accent)
+
+    .mat-icon
+      color: var(--accent)
+
+  &:has(input:focus-visible)
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+.type-text
+  display: flex
+  flex-direction: column
+  gap: 2px
+  font-size: 13px
+  color: var(--ink-2)
+  line-height: 1.4
+
+  strong
+    font-size: 14.5px
+    color: var(--ink)
+
+// ── Fields ─────────────────────────────────────────────────
+.two-col
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 10px
+
+  mat-form-field
+    width: 100%
+
+.field
+  width: 100%
+
+.rules
+  list-style: none
+  padding: 0
+  margin: -8px 0 16px
+  display: flex
+  flex-wrap: wrap
+  gap: 6px 14px
+
+  li
     display: inline-flex
     align-items: center
     gap: 4px
-    font-size: 0.76rem
-    color: #bbb
-    transition: color 0.2s ease
+    font-size: 12.5px
+    font-weight: 600
+    color: var(--ink-3)
 
     .mat-icon
-      font-size: 14px
-      width: 14px
-      height: 14px
-      color: #ddd
-      transition: color 0.2s ease
+      font-size: 16px
+      width: 16px
+      height: 16px
 
     &.ok
-      color: #2e7d32
+      color: var(--success)
 
-      .mat-icon
-        color: #2e7d32
-
-/* ─── Account type ───────────────────────── */
-.account-type-row
+// ── Photo ──────────────────────────────────────────────────
+.photo
   display: flex
-  gap: 12px
-  margin-bottom: 4px
+  align-items: center
+  gap: 14px
+  margin: 4px 0 22px
 
-.type-card
-  flex: 1
+.photo-btn
+  width: 56px
+  height: 56px
+  flex-shrink: 0
+  border-radius: 50%
+  border: 1px dashed var(--line-strong)
+  background: var(--surface-2)
+  color: var(--ink-3)
+  display: grid
+  place-items: center
+  cursor: pointer
+  overflow: hidden
+  padding: 0
+
+  &:hover
+    border-color: var(--ink-3)
+    color: var(--ink)
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.photo-text
   display: flex
   flex-direction: column
-  align-items: center
-  gap: 4px
-  padding: 16px 12px
-  border: 2px solid #eee
-  border-radius: 14px
-  background: white
+  font-size: 13px
+  color: var(--ink-3)
+
+  strong
+    font-size: 14px
+    color: var(--ink)
+
+.link-btn
+  margin-left: auto
+  border: 0
+  background: transparent
+  font: 700 13px var(--font-ui)
+  color: var(--danger)
   cursor: pointer
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease
-  position: relative
-  text-align: center
 
-  &:hover
-    border-color: #F48FB1
-    background: #fff8fb
-
-  &.selected
-    border-color: #C2185B
-    background: linear-gradient(135deg, #fdf0f5, #fff)
-
-    .type-icon
-      color: #C2185B
-
-    .type-name
-      color: #C2185B
-
-.type-icon
-  font-size: 28px
-  width: 28px
-  height: 28px
-  color: #ccc
-  transition: color 0.2s ease
-
-.type-name
-  font-size: 0.92rem
-  font-weight: 700
-  color: #555
-  transition: color 0.2s ease
-
-.type-desc
-  font-size: 0.72rem
-  color: #aaa
-  line-height: 1.3
-
-.type-check
-  position: absolute
-  top: 8px
-  right: 8px
-  font-size: 18px
-  width: 18px
-  height: 18px
-  color: #C2185B
-
-/* ─── Submit ─────────────────────────────── */
-.submit-btn
+.submit
   width: 100%
-  height: 48px
-  font-size: 1rem
-  font-weight: 600
-  border-radius: 12px !important
-  letter-spacing: 0.3px
-  margin-top: 16px
-  gap: 6px
+  --mdc-filled-button-container-height: 52px
+  font-size: 16px !important
 
-  .mat-icon
-    font-size: 20px
-    width: 20px
-    height: 20px
+  mat-spinner
+    margin: 0 auto
+    --mdc-circular-progress-active-indicator-color: #fff
 
-/* ─── Divider ────────────────────────────── */
-.divider-row
-  display: flex
-  align-items: center
-  gap: 12px
-  margin: 20px 0
-
-.divider-line
-  flex: 1
-
-.divider-text
-  color: #bbb
-  font-size: 0.78rem
-  white-space: nowrap
-
-/* ─── Google ─────────────────────────────── */
-.google-btn
-  width: 100%
-  height: 48px
-  display: flex
-  align-items: center
-  justify-content: center
-  gap: 12px
-  background: white
-  border: 1.5px solid #e0e0e0
-  border-radius: 12px
-  font-size: 0.95rem
-  font-weight: 500
-  color: #444
-  cursor: pointer
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease
-  margin-bottom: 20px
-
-  &:hover
-    background: #f8f8f8
-    border-color: #bbb
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1)
-
-.google-icon
-  flex-shrink: 0
-
-/* ─── Login link ─────────────────────────── */
-.login-link
+.switch
+  margin-top: 24px
   text-align: center
-  color: #888
-  font-size: 0.88rem
-  margin: 0
+  color: var(--ink-2)
 
   a
-    color: #C2185B
-    font-weight: 600
-    text-decoration: none
+    font-weight: 700
 
-    &:hover
-      text-decoration: underline
+@media (max-width: 900px)
+  .auth
+    grid-template-columns: 1fr
+    min-height: auto
 
-/* ─── Animation ──────────────────────────── */
-@keyframes fadeSlideUp
-  from
-    opacity: 0
-    transform: translateY(20px)
-  to
-    opacity: 1
-    transform: translateY(0)
-
-/* ─── Mobile ─────────────────────────────── */
 @media (max-width: 480px)
-  .register-card
-    padding: 28px 20px 24px
-    border-radius: 16px
-
-  ::ng-deep .two-col
-    flex-direction: column
-    gap: 0
-
-  .password-rules
+  .types-grid, .two-col
     grid-template-columns: 1fr

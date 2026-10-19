@@ -1,52 +1,37 @@
-<div class="page-header">
-  <h2>{{ 'tickets.myTickets' | transloco }}</h2>
-  <a mat-raised-button color="primary" routerLink="/my-tickets/new">
-    <mat-icon>add</mat-icon> {{ 'tickets.newTicket' | transloco }}
-  </a>
+<div class="page-narrow">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">{{ 'tickets.eyebrow' | transloco }}</p>
+      <h1 class="page-title">{{ 'tickets.myTickets' | transloco }}</h1>
+      <p class="page-subtitle">{{ 'tickets.myTicketsSubtitle' | transloco }}</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/my-tickets/new">
+      <mat-icon>add</mat-icon>{{ 'tickets.newTicket' | transloco }}
+    </a>
+  </header>
+
+  @if (tickets()?.length) {
+    <ul class="list">
+      @for (t of tickets(); track t.id) {
+        <li>
+          <a class="item" [routerLink]="['/my-tickets', t.id]">
+            <div class="item-main">
+              <span class="item-title">{{ t.title }}</span>
+              <span class="item-meta">
+                #{{ t.id }} · {{ ('tickets.types.' + t.type) | transloco }} · {{ t.createdAt | dateRange }}
+              </span>
+            </div>
+            <span class="tag" [class]="statusTag(t.status)">{{ ('tickets.statuses.' + t.status) | transloco }}</span>
+            <mat-icon class="chevron">chevron_right</mat-icon>
+          </a>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="empty-state">
+      <div class="empty-icon"><mat-icon>support_agent</mat-icon></div>
+      <h3>{{ 'tickets.emptyTitle' | transloco }}</h3>
+      <p>{{ 'tickets.noTickets' | transloco }}</p>
+    </div>
+  }
 </div>
-
-<mat-table [dataSource]="tickets() ?? []" class="ticket-table">
-
-  <ng-container matColumnDef="id">
-    <mat-header-cell *matHeaderCellDef>{{ 'tickets.id' | transloco }}</mat-header-cell>
-    <mat-cell *matCellDef="let t">{{ t.id }}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="title">
-    <mat-header-cell *matHeaderCellDef>{{ 'tickets.title' | transloco }}</mat-header-cell>
-    <mat-cell *matCellDef="let t">{{ t.title }}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="type">
-    <mat-header-cell *matHeaderCellDef>{{ 'tickets.type' | transloco }}</mat-header-cell>
-    <mat-cell *matCellDef="let t">{{ t.type }}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="status">
-    <mat-header-cell *matHeaderCellDef>{{ 'tickets.status' | transloco }}</mat-header-cell>
-    <mat-cell *matCellDef="let t">
-      <mat-chip [class]="'status-' + (t.status?.toLowerCase() ?? '')">{{ t.status }}</mat-chip>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="createdAt">
-    <mat-header-cell *matHeaderCellDef>{{ 'tickets.created' | transloco }}</mat-header-cell>
-    <mat-cell *matCellDef="let t">{{ t.createdAt | date:'dd.MM.yyyy HH:mm' }}</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
-    <mat-cell *matCellDef="let t">
-      <a mat-icon-button [routerLink]="['/my-tickets', t.id]">
-        <mat-icon>chevron_right</mat-icon>
-      </a>
-    </mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
-
-@if (!tickets()?.length) {
-  <p class="empty-state">{{ 'tickets.noTickets' | transloco }}</p>
-}

@@ -3,10 +3,10 @@
 
     <div class="ticket-header">
       <div>
-        <h2>{{ t.title }}</h2>
-        <span class="meta">{{ t.type }} · #{{ t.id }} · {{ t.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+        <h1 class="title">{{ t.title }}</h1>
+        <span class="meta">{{ ('tickets.types.' + t.type) | transloco }} · #{{ t.id }} · {{ t.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
       </div>
-      <mat-chip [class]="'status-' + (t.status?.toLowerCase() ?? '')">{{ t.status }}</mat-chip>
+      <span class="tag" [class]="statusTag(t.status)">{{ ('tickets.statuses.' + t.status) | transloco }}</span>
     </div>
 
     <p class="description">{{ t.description }}</p>
@@ -41,7 +41,7 @@
               <mat-icon class="ai-icon">smart_toy</mat-icon>
             }
             <span class="reply-author">{{ reply.authorName }}</span>
-            <span class="reply-role">({{ reply.authorRole }})</span>
+            <span class="reply-role">{{ ('tickets.roles.' + reply.authorRole) | transloco }}</span>
             <span class="reply-time">{{ reply.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
           </div>
           <p>{{ reply.content }}</p>

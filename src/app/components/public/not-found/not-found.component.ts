@@ -8,33 +8,24 @@ import { RouterModule } from '@angular/router';
     selector: 'app-not-found',
     imports: [MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
     template: `
-    <div class="nf-wrap">
+    <div class="empty-state nf">
       <span class="nf-code">404</span>
-      <p class="nf-msg">{{ 'notFound.message' | transloco }}</p>
-      <button mat-flat-button color="primary" routerLink="/courses">
-        <mat-icon>home</mat-icon>
-        {{ 'notFound.home' | transloco }}
-      </button>
+      <h1>{{ 'notFound.title' | transloco }}</h1>
+      <p>{{ 'notFound.message' | transloco }}</p>
+      <a mat-flat-button color="primary" routerLink="/courses">{{ 'notFound.home' | transloco }}</a>
     </div>
   `,
     styles: [`
-    .nf-wrap
-      display: flex
-      flex-direction: column
-      align-items: center
-      justify-content: center
+    .nf
       min-height: 60vh
-      gap: 16px
-      text-align: center
+      justify-content: center
+
     .nf-code
-      font-size: 6rem
-      font-weight: 700
-      color: #C2185B
-      line-height: 1
-    .nf-msg
-      font-size: 1.2rem
-      color: rgba(0,0,0,0.55)
-      margin: 0
+      font: italic 500 clamp(96px, 16vw, 168px)/1 var(--font-display)
+      color: var(--accent)
+
+    h1
+      font-size: clamp(28px, 4vw, 38px)
   `]
 })
 export class NotFoundComponent {}

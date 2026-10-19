@@ -1,0 +1,237 @@
+:host
+  display: block
+
+.course-card
+  position: relative
+  display: flex
+  flex-direction: column
+  height: 100%
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  overflow: hidden
+  color: var(--ink)
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease)
+
+  &:hover
+    color: var(--ink)
+    transform: translateY(-3px)
+    box-shadow: var(--shadow-2)
+    border-color: var(--line-strong)
+
+    .media img
+      transform: scale(1.03)
+
+  &.is-past
+    .media
+      filter: grayscale(0.6)
+      opacity: 0.85
+
+// ── Media ──────────────────────────────────────────────────
+.media
+  position: relative
+  aspect-ratio: 16 / 10
+  display: grid
+  place-items: center
+  overflow: hidden
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    transition: transform 400ms var(--ease)
+
+.media-icon
+  font-size: 64px
+  width: 64px
+  height: 64px
+  opacity: 0.55
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48
+
+.media-tags
+  position: absolute
+  left: 12px
+  bottom: 12px
+  display: flex
+  gap: 6px
+
+.tag-on-media, .tag-relation
+  background: rgba(255, 255, 255, 0.92)
+  color: var(--ink)
+  backdrop-filter: blur(6px)
+
+.tag-relation
+  position: absolute
+  top: 12px
+  right: 12px
+
+.tag-enrolled
+  color: var(--success)
+
+// ── Body ───────────────────────────────────────────────────
+.body
+  flex: 1
+  padding: 16px 18px 12px
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+.eyebrow-row
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 8px
+
+.category
+  font-size: 12px
+  font-weight: 700
+  letter-spacing: 0.06em
+  text-transform: uppercase
+  color: var(--ink-3)
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.rating
+  display: inline-flex
+  align-items: center
+  gap: 2px
+  font-size: 13px
+  font-weight: 700
+  color: var(--ink)
+
+  .mat-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+    color: #C48A2C
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20
+
+.title
+  font-size: 19px
+  line-height: 1.25
+  display: -webkit-box
+  -webkit-line-clamp: 2
+  -webkit-box-orient: vertical
+  overflow: hidden
+
+// The title link stretches over the whole card, so the card is one big target
+// while the owner tools (z-index 2) stay separately clickable.
+.card-link
+  color: var(--ink)
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 1
+    border-radius: var(--radius)
+
+  &:hover
+    color: var(--ink)
+
+  &:focus-visible
+    outline: none
+
+    &::after
+      outline: 2px solid var(--accent)
+      outline-offset: 2px
+
+.date
+  display: flex
+  align-items: center
+  gap: 6px
+  font-size: 14px
+  color: var(--ink-2)
+
+  .mat-icon
+    font-size: 17px
+    width: 17px
+    height: 17px
+    color: var(--ink-3)
+
+.creator
+  margin-top: auto
+  padding-top: 6px
+  display: flex
+  align-items: center
+  gap: 8px
+
+.avatar
+  width: 26px
+  height: 26px
+  border-radius: 50%
+  object-fit: cover
+  flex-shrink: 0
+
+.avatar-initials
+  display: grid
+  place-items: center
+  background: var(--accent-soft)
+  color: var(--accent)
+  font-size: 11px
+  font-weight: 700
+
+.creator-name
+  font-size: 13.5px
+  color: var(--ink-2)
+  font-weight: 600
+
+// ── Footer ─────────────────────────────────────────────────
+.footer
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+  padding: 12px 18px 16px
+  border-top: 1px solid var(--line)
+
+.price
+  font-family: var(--font-display)
+  font-size: 21px
+  font-weight: 500
+  white-space: nowrap
+
+.spots
+  display: flex
+  flex-direction: column
+  align-items: flex-end
+  gap: 5px
+  font-size: 12.5px
+  font-weight: 600
+  color: var(--ink-2)
+  min-width: 0
+
+  .bar
+    width: 96px
+    height: 4px
+    border-radius: 4px
+    background: var(--surface-3)
+    overflow: hidden
+
+    span
+      display: block
+      height: 100%
+      border-radius: 4px
+      background: var(--ink-3)
+
+  &.spots-low
+    color: var(--warning)
+
+    .bar span
+      background: var(--warning)
+
+  &.spots-full
+    color: var(--danger)
+
+    .bar span
+      background: var(--danger)
+
+.tools
+  position: relative
+  z-index: 2
+  display: flex
+  gap: 2px
+
+  .mat-mdc-icon-button
+    color: var(--ink-2)

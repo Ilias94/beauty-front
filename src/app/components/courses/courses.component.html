@@ -1,294 +1,172 @@
-<!-- ─── HERO ──────────────────────────────────────────────── -->
-<div class="hero-section">
-  <div class="hero-content">
-    <h1 class="hero-title">{{ 'courses.heroTitle' | transloco }}</h1>
-    <p class="hero-subtitle">{{ 'courses.heroSubtitle' | transloco }}</p>
-  </div>
-  <div class="hero-stats" *ngIf="pageCourses()?.totalElements">
-    <div class="stat">
-      <span class="stat-number">{{ pageCourses().totalElements }}</span>
-      <span class="stat-label">{{ 'courses.coursesCount' | transloco }}</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-number">{{ categories()?.length || 0 }}</span>
-      <span class="stat-label">{{ 'courses.categoriesCount' | transloco }}</span>
-    </div>
-  </div>
-</div>
+<div class="page">
 
-<!-- ─── TEACHER ACTION BAR ────────────────────────────────── -->
-<div class="teacher-action-bar" [style.display]="currentUser()?.teacher ? 'flex' : 'none'">
-  <a mat-raised-button color="primary" routerLink="/course">
-    <mat-icon>add</mat-icon>
-    {{ 'courses.createCourse' | transloco }}
-  </a>
-</div>
-
-<!-- ─── FILTERS ───────────────────────────────────────────── -->
-<div class="filters-bar">
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>{{ 'courses.searchLabel' | transloco }}</mat-label>
-    <mat-icon matPrefix>search</mat-icon>
-    <input matInput #inputTitle type="text" [matAutocomplete]="auto"
-      (keyup)="autocompleteSubject.next(inputTitle.value)" />
-    @if (inputTitle.value) {
-      <button matSuffix mat-icon-button (click)="inputTitle.value=''; clearFilter()">
-        <mat-icon>close</mat-icon>
-      </button>
-    }
-    <mat-autocomplete #auto="matAutocomplete">
-      @for (title of titleAutocomplete(); track title) {
-        <mat-option (click)="selectAutocomplete(title)" [value]="title">{{ title }}</mat-option>
+  <!-- ─── Header ─────────────────────────────────────────── -->
+  <header class="catalog-head">
+    <div>
+      @switch (mode()) {
+        @case ('student') {
+          <p class="eyebrow">{{ 'courses.studentEyebrow' | transloco }}</p>
+          <h1 class="page-title">{{ 'courses.studentTitle' | transloco }}</h1>
+          <p class="page-subtitle">{{ 'courses.studentSubtitle' | transloco }}</p>
+        }
+        @case ('creator') {
+          <p class="eyebrow">{{ 'courses.creatorEyebrow' | transloco }}</p>
+          <h1 class="page-title">{{ 'courses.creatorTitle' | transloco }}</h1>
+          <p class="page-subtitle">{{ 'courses.creatorSubtitle' | transloco }}</p>
+        }
+        @default {
+          <p class="eyebrow">{{ 'courses.catalogEyebrow' | transloco }}</p>
+          <h1 class="page-title">{{ 'courses.catalogTitle' | transloco }}</h1>
+          <p class="page-subtitle">{{ 'courses.catalogSubtitle' | transloco }}</p>
+        }
       }
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="sort-field">
-    <mat-label>{{ 'courses.sortByLabel' | transloco }}</mat-label>
-    <mat-icon matPrefix>sort</mat-icon>
-    <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange($event.value)">
-      @for (opt of sortOptions; track opt.value) {
-        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  @if (!isCurrentCreator() && !isCurrentStudent()) {
-    <mat-slide-toggle [(ngModel)]="showPast" (change)="onShowPastChange()" class="past-toggle">
-      {{ 'courses.showPastCourses' | transloco }}
-    </mat-slide-toggle>
-  }
-</div>
-
-<!-- ─── CATEGORY CHIPS ───────────────────────────────────── -->
-<div class="chip-filter-row">
-  <mat-chip-listbox class="category-chips">
-    <mat-chip-option
-      [selected]="selectedCategoryId === null"
-      (click)="onCategorySelect(null)"
-      color="primary">
-      {{ 'courses.allCourses' | transloco }}
-    </mat-chip-option>
-    @for (cat of categories(); track cat.id) {
-      <mat-chip-option
-        [selected]="selectedCategoryId === cat.id"
-        (click)="onCategorySelect(cat.id)"
-        color="primary">
-        {{ translateCategory(cat.label) }}
-      </mat-chip-option>
+    </div>
+    @if (mode() === 'creator') {
+      <a mat-flat-button color="primary" routerLink="/course"><mat-icon>add</mat-icon>{{ 'courses.createCourse' | transloco }}</a>
     }
-  </mat-chip-listbox>
-</div>
+  </header>
 
-<!-- ─── LOCATION FILTER ───────────────────────────────────── -->
-@if (!isCurrentCreator() && !isCurrentStudent()) {
-  <div class="location-filter">
-    <div class="location-row">
-      <mat-icon class="location-icon">location_on</mat-icon>
-      <div class="city-chips">
-        @for (city of popularCities; track city) {
-          <button class="city-chip" [class.city-chip-active]="selectedCity === city" (click)="onCitySelect(city)">
-            {{ city }}
+  <!-- ─── Search & filters ───────────────────────────────── -->
+  <!-- "My courses" lists are short; filters only appear once there is something to filter. -->
+  @if (mode() === 'catalog' || (pageCourses()?.totalElements ?? 0) > 0 || hasActiveFilters()) {
+  <section class="filters" [attr.aria-label]="'courses.filtersLabel' | transloco">
+    <div class="filter-bar">
+      <label class="search">
+        <mat-icon>search</mat-icon>
+        <input type="search" [placeholder]="'courses.searchPlaceholder' | transloco"
+          [ngModel]="searchTitle" (ngModelChange)="onSearchInput($event)"
+          (keydown.enter)="search()" [matAutocomplete]="auto"
+          [attr.aria-label]="'courses.searchLabel' | transloco">
+        @if (searchTitle) {
+          <button type="button" class="clear-btn" (click)="clearSearch()" [attr.aria-label]="'courses.clearSearch' | transloco">
+            <mat-icon>close</mat-icon>
           </button>
         }
-        <button class="city-chip city-chip-online" [class.city-chip-active]="selectedCourseType === 'ONLINE'" (click)="onCourseTypeSelect('ONLINE')">
-          <mat-icon>videocam</mat-icon> {{ 'courses.online' | transloco }}
-        </button>
-        <button class="city-chip city-chip-online" [class.city-chip-active]="selectedCourseType === 'HYBRID'" (click)="onCourseTypeSelect('HYBRID')">
-          <mat-icon>merge_type</mat-icon> {{ 'courses.hybrid' | transloco }}
-        </button>
-      </div>
-      @if (selectedCity || selectedCourseType) {
-        <button mat-icon-button class="clear-location-btn" (click)="clearLocationFilters()" [matTooltip]="'tooltip.clearLocationFilter' | transloco">
-          <mat-icon>close</mat-icon>
-        </button>
-      }
-    </div>
-  </div>
-}
-
-<!-- ─── RESULTS BAR ──────────────────────────────────────── -->
-<div class="results-bar">
-  <span class="results-count">
-    @if (pageCourses()?.totalElements) {
-      {{ pageCourses().totalElements }} {{ pageCourses().totalElements !== 1 ? ('courses.coursesCount' | transloco) : ('courses.coursesCount' | transloco) }}
-    }
-  </span>
-  @if (selectedCategoryId) {
-    <span class="active-filter">
-      <mat-icon>label</mat-icon>
-      {{ getSelectedCategoryLabel() }}
-      <button mat-icon-button class="clear-filter-btn" (click)="onCategorySelect(null)">
-        <mat-icon>close</mat-icon>
-      </button>
-    </span>
-  }
-</div>
-
-<!-- ─── COURSE GRID ──────────────────────────────────────── -->
-<div class="courses-grid">
-  @for (course of pageCourses()?.content; track course.id; let i = $index) {
-    <mat-card class="course-card" [style.--card-index]="i">
-
-      <!-- Coloured header strip -->
-      <div class="card-stripe" [style.background]="getCardGradient(course.category?.id)">
-        <div class="stripe-top">
-          <div class="stripe-top-left">
-            <span class="category-label">{{ translateCategory(course.category?.label) || ('courses.general' | transloco) }}</span>
-            @if (course.courseType === 'ONLINE') {
-              <span class="course-type-badge type-online"><mat-icon>videocam</mat-icon>{{ 'courses.online' | transloco }}</span>
-            } @else if (course.courseType === 'HYBRID') {
-              <span class="course-type-badge type-hybrid"><mat-icon>merge_type</mat-icon>{{ 'courses.hybrid' | transloco }}</span>
-            }
-          </div>
-          <div class="stripe-top-right">
-            @if (isOwner(course.id)) {
-              <span class="your-course-badge">
-                <mat-icon>edit</mat-icon> {{ 'courses.yourCourse' | transloco }}
-              </span>
-            } @else if (isEnrolled(course.id)) {
-              <span class="enrolled-badge">
-                <mat-icon>check_circle</mat-icon> {{ 'courses.enrolled' | transloco }}
-              </span>
-            }
-            <span class="status-badge status-{{ getCourseStatus(course.startDate, course.endDate) }}">
-              {{ translateStatus(getCourseStatus(course.startDate, course.endDate)) }}
-            </span>
-          </div>
-        </div> <!-- end stripe-top -->
-        <div class="stripe-bottom">
-          @if (course.rating) {
-            <div class="rating-row">
-              <mat-icon class="star-icon">star</mat-icon>
-              <span class="rating-value">{{ course.rating | number:'1.1-1' }}</span>
-            </div>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="search($event.option.value)">
+          @for (title of titleAutocomplete(); track title) {
+            <mat-option [value]="title">{{ title }}</mat-option>
           }
-          @if (course.price != null) {
-            <div class="price-badge">
-              @if (course.price === 0) {
-                {{ 'courses.free' | transloco }}
-              } @else {
-                {{ course.price | currency:'PLN':'symbol-narrow':'1.0-0' }}
-              }
-            </div>
+        </mat-autocomplete>
+      </label>
+
+      @if (mode() === 'catalog') {
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-field city-field">
+          <mat-icon matPrefix>location_on</mat-icon>
+          <mat-select [ngModel]="selectedCity" (ngModelChange)="onCitySelect($event)"
+            [placeholder]="'courses.anyCity' | transloco" [attr.aria-label]="'courses.cityLabel' | transloco">
+            <mat-option [value]="null">{{ 'courses.anyCity' | transloco }}</mat-option>
+            @for (city of distinctCities(); track city) {
+              <mat-option [value]="city">{{ city }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-field sort-field">
+        <mat-icon matPrefix>swap_vert</mat-icon>
+        <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange($event.value)" [attr.aria-label]="'courses.sortByLabel' | transloco">
+          <!-- Explicit trigger: the option labels are translated after the select first renders. -->
+          <mat-select-trigger>{{ sortLabelKey() | transloco }}</mat-select-trigger>
+          @for (opt of sortOptions; track opt.value) {
+            <mat-option [value]="opt.value">{{ opt.key | transloco }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (mode() === 'catalog') {
+      <div class="filter-row">
+        <div class="segmented" role="radiogroup" [attr.aria-label]="'courses.typeLabel' | transloco">
+          @for (type of courseTypes; track type.key) {
+            <button type="button" role="radio" [attr.aria-checked]="selectedCourseType === type.value"
+              [class.on]="selectedCourseType === type.value" (click)="onCourseTypeSelect(type.value)">
+              {{ type.key | transloco }}
+            </button>
           }
         </div>
+        <mat-checkbox [(ngModel)]="showPast" (change)="onShowPastChange()" class="past-check">
+          {{ 'courses.showPastCourses' | transloco }}
+        </mat-checkbox>
       </div>
+    }
 
-      <!-- Body -->
-      <mat-card-content class="card-body">
-        <h3 class="course-title">{{ course.title }}</h3>
+    <div class="pills" role="radiogroup" [attr.aria-label]="'courses.categoryLabel' | transloco">
+      <button type="button" class="pill" role="radio" [attr.aria-checked]="selectedCategoryId === null"
+        [class.on]="selectedCategoryId === null" (click)="onCategorySelect(null)">
+        {{ 'courses.allCategories' | transloco }}
+      </button>
+      @for (cat of categories(); track cat.id) {
+        <button type="button" class="pill" role="radio" [attr.aria-checked]="selectedCategoryId === cat.id"
+          [class.on]="selectedCategoryId === cat.id" (click)="onCategorySelect(cat.id)">
+          {{ categoryLabel(cat) }}
+        </button>
+      }
+    </div>
+  </section>
+  }
 
-        @if (course.creator?.firstName) {
-          <div class="creator-row">
-            @if (course.creator.fileName) {
-              <img class="creator-avatar"
-                   [src]="s3Base + course.creator.fileName"
-                   [alt]="course.creator.firstName">
-            } @else {
-              <div class="creator-avatar creator-avatar-initials">
-                {{ course.creator.firstName?.[0] }}{{ course.creator.lastName?.[0] }}
-              </div>
-            }
-            <div class="creator-info">
-              <span class="creator-name">{{ course.creator.firstName }} {{ course.creator.lastName }}</span>
-              @if (course.creator.instructorRating) {
-                <span class="instructor-rating-badge">
-                  <mat-icon class="instructor-star">star</mat-icon>
-                  {{ course.creator.instructorRating | number:'1.1-1' }}
-                </span>
-              }
-            </div>
-          </div>
-        }
+  <!-- ─── Results meta ───────────────────────────────────── -->
+  <div class="results-meta" aria-live="polite">
+    @if (!loading && (mode() === 'catalog' || (pageCourses()?.totalElements ?? 0) > 0)) {
+      <span class="count">{{ 'courses.resultsCount' | transloco: { count: pageCourses()?.totalElements ?? 0 } }}</span>
+    }
+    @if (hasActiveFilters()) {
+      <button type="button" class="reset-link" (click)="clearAllFilters()">{{ 'courses.clearFilters' | transloco }}</button>
+    }
+  </div>
 
-        <div class="meta-pills">
-          @if (course.address?.city) {
-            <span class="meta-pill">
-              <mat-icon>place</mat-icon>{{ course.address.city }}
-            </span>
-          }
-          <span class="meta-pill">
-            <mat-icon>calendar_today</mat-icon>
-            {{ course.startDate | date:'d MMM y' }}
-          </span>
-          @if (isFull(course)) {
-            <span class="meta-pill meta-pill-full">
-              <mat-icon>person_off</mat-icon>{{ 'courses.full' | transloco }}
-            </span>
-          } @else {
-            <span class="meta-pill">
-              <mat-icon>group</mat-icon>{{ 'courses.spotsLeft' | transloco:{count: spotsLeft(course), max: course.maxParticipants} }}
-            </span>
-          }
+  <!-- ─── Grid ───────────────────────────────────────────── -->
+  @if (loading && !pageCourses()?.content?.length) {
+    <div class="grid" aria-hidden="true">
+      @for (s of skeletons; track $index) {
+        <div class="skeleton-card">
+          <div class="skeleton media-sk"></div>
+          <div class="skeleton line-sk w60"></div>
+          <div class="skeleton line-sk w90"></div>
+          <div class="skeleton line-sk w40"></div>
         </div>
-
-        <p class="course-description">{{ course.description }}</p>
-      </mat-card-content>
-
-      <!-- Actions -->
-      <mat-card-actions class="card-actions">
-        @if (isOwner(course.id)) {
-          <a mat-stroked-button [routerLink]="['/course', course.id]" class="details-btn">{{ 'courses.details' | transloco }}</a>
-          <span class="owner-actions">
-            <a mat-icon-button [routerLink]="['/questions', course.id]" [matTooltip]="'tooltip.quiz' | transloco">
-              <mat-icon>quiz</mat-icon>
-            </a>
-            <button mat-icon-button color="accent" [matTooltip]="'tooltip.excelReport' | transloco" (click)="downloadExcelFile(course.id)">
-              <mat-icon>table_chart</mat-icon>
-            </button>
-            <button mat-icon-button color="accent" [matTooltip]="'tooltip.csvReport' | transloco" (click)="downloadCsvFile(course.id)">
-              <mat-icon>download</mat-icon>
-            </button>
-          </span>
-        } @else if (isEnrolled(course.id)) {
-          <a mat-flat-button color="primary" class="enroll-btn"
-             [routerLink]="['/questions', course.id]">
-            <mat-icon>quiz</mat-icon> {{ 'courses.goToQuiz' | transloco }}
-          </a>
-          <a mat-stroked-button [routerLink]="['/course', course.id]" class="details-btn">{{ 'courses.details' | transloco }}</a>
-        } @else if (isFull(course)) {
-          <button mat-flat-button class="enroll-btn enroll-btn-full" disabled>
-            <mat-icon>person_off</mat-icon> {{ 'courses.full' | transloco }}
-          </button>
-          <a mat-stroked-button [routerLink]="['/course', course.id]" class="details-btn">{{ 'courses.details' | transloco }}</a>
-        } @else {
-          <button mat-flat-button color="primary" class="enroll-btn"
-              (click)="buyCourse(course.id)"
-              [disabled]="getCourseStatus(course.startDate, course.endDate) === 'past'">
-            <mat-icon>shopping_cart</mat-icon> {{ 'courses.enroll' | transloco }}
-          </button>
-          <a mat-stroked-button [routerLink]="['/course', course.id]" class="details-btn">{{ 'courses.details' | transloco }}</a>
+      }
+    </div>
+  } @else if (pageCourses()?.content?.length) {
+    <div class="grid" [class.is-loading]="loading">
+      @for (course of pageCourses()?.content; track course.id) {
+        <app-course-card [course]="course" [relation]="relationOf(course.id)"
+          (downloadExcel)="downloadExcelFile($event)" (downloadCsv)="downloadCsvFile($event)" />
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <div class="empty-icon"><mat-icon>{{ mode() === 'catalog' ? 'search_off' : 'auto_stories' }}</mat-icon></div>
+      @switch (mode()) {
+        @case ('student') {
+          <h3>{{ 'courses.studentEmptyTitle' | transloco }}</h3>
+          <p>{{ 'courses.studentEmptyText' | transloco }}</p>
+          <a mat-flat-button color="primary" routerLink="/courses">{{ 'courses.browseCatalog' | transloco }}</a>
         }
-      </mat-card-actions>
-    </mat-card>
+        @case ('creator') {
+          <h3>{{ 'courses.creatorEmptyTitle' | transloco }}</h3>
+          <p>{{ 'courses.creatorEmptyText' | transloco }}</p>
+          <a mat-flat-button color="primary" routerLink="/course">{{ 'courses.createCourse' | transloco }}</a>
+        }
+        @default {
+          <h3>{{ 'courses.noCourses' | transloco }}</h3>
+          <p>{{ 'courses.noCoursesHint' | transloco }}</p>
+          @if (hasActiveFilters()) {
+            <button mat-stroked-button type="button" (click)="clearAllFilters()">{{ 'courses.clearFilters' | transloco }}</button>
+          }
+        }
+      }
+    </div>
+  }
+
+  <!-- ─── Pagination ─────────────────────────────────────── -->
+  @if ((pageCourses()?.totalElements ?? 0) > size) {
+    <mat-paginator class="paginator"
+      [pageSizeOptions]="[12, 24, 48]"
+      [length]="pageCourses()?.totalElements"
+      [pageSize]="size"
+      [pageIndex]="page"
+      (page)="changePage($event)">
+    </mat-paginator>
   }
 </div>
-
-<!-- ─── EMPTY STATE ──────────────────────────────────────── -->
-@if (!pageCourses()?.content?.length) {
-  <div class="empty-state">
-    <div class="empty-icon">
-      <mat-icon>search_off</mat-icon>
-    </div>
-    <h3>{{ 'courses.noCourses' | transloco }}</h3>
-    <p>{{ 'courses.noCoursesHint' | transloco }}</p>
-    <button mat-flat-button color="primary" (click)="onCategorySelect(null)">
-      {{ 'courses.showAllCourses' | transloco }}
-    </button>
-  </div>
-}
-
-<!-- ─── PAGINATOR ────────────────────────────────────────── -->
-@if (pageCourses()?.totalElements > 0) {
-  <mat-paginator
-    class="paginator"
-    [pageSizeOptions]="[9, 18, 36]"
-    showFirstLastButtons
-    [length]="pageCourses().totalElements"
-    [pageSize]="pageCourses().size || 9"
-    [pageIndex]="page"
-    (page)="changePage($event)">
-  </mat-paginator>
-}

@@ -15,10 +15,10 @@
   gap: 12px
 
 .eq-title
-  font-family: 'Playfair Display', serif
+  font-family: var(--font-display)
   font-size: 2rem
   font-weight: 700
-  color: #1a1a1a
+  color: var(--ink)
   margin: 0
 
 .eq-save-btn
@@ -31,7 +31,7 @@
   padding: 24px 28px
   margin-bottom: 20px
   box-shadow: 0 2px 16px rgba(0,0,0,0.06)
-  border: 1px solid #f5f0f3
+  border: 1px solid var(--accent-soft)
 
 .eq-question-header
   display: flex
@@ -44,7 +44,7 @@
   font-weight: 800
   text-transform: uppercase
   letter-spacing: 1.2px
-  color: #E91E63
+  color: var(--accent)
 
 .eq-question-field
   width: 100%
@@ -53,12 +53,12 @@
 .eq-answers-label
   font-size: 0.82rem
   font-weight: 600
-  color: #555
+  color: var(--ink-2)
   margin-bottom: 12px
 
 .eq-answers-hint
   font-weight: 400
-  color: #aaa
+  color: var(--ink-3)
 
 .eq-answers-list
   display: flex
@@ -75,7 +75,7 @@
   width: 30px
   height: 30px
   border-radius: 50%
-  background: linear-gradient(135deg, #C2185B, #E91E63)
+  background: var(--accent)
   color: white
   font-size: 0.78rem
   font-weight: 800
@@ -93,18 +93,18 @@
 
 .eq-add-answer-btn
   font-size: 0.85rem
-  color: #E91E63
-  border-color: #f0e8ed
+  color: var(--accent)
+  border-color: var(--accent-soft)
 
 .eq-add-question-btn
   width: 100%
   height: 56px
-  border: 2px dashed #f0c8d8
+  border: 2px dashed var(--accent-soft-2)
   border-radius: 16px
   font-size: 1rem
-  color: #C2185B
+  color: var(--accent)
   margin-top: 8px
 
   &:hover
-    border-color: #E91E63
-    background: #fff5f8
+    border-color: var(--accent)
+    background: var(--accent-soft)

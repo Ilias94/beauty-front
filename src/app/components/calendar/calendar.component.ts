@@ -16,13 +16,14 @@ import plLocale from '@fullcalendar/core/locales/pl';
 import { CourseDtoResponse } from '../../../api/models';
 
 const STATUS_COLORS: Record<string, { bg: string; border: string }> = {
-  upcoming: { bg: '#C2185B', border: '#880E4F' },
-  ongoing:  { bg: '#2e7d32', border: '#1b5e20' },
-  past:     { bg: '#9e9e9e', border: '#757575' },
+  upcoming: { bg: '#8C2F4B', border: '#74263E' },
+  ongoing:  { bg: '#3E7B57', border: '#2F6145' },
+  past:     { bg: '#B9A994', border: '#9C8A72' },
 };
 
-const OWNER_COLOR    = { bg: '#6A1B9A', border: '#4A148C' };
-const ENROLLED_COLOR = { bg: '#0277BD', border: '#01579B' };
+// Same hex values as the --accent / --success / --info tokens in styles.sass (FullCalendar needs literal colours).
+const OWNER_COLOR    = { bg: '#5E554E', border: '#3E3732' };
+const ENROLLED_COLOR = { bg: '#3D5A80', border: '#2E4562' };
 
 function getCourseStatus(startDate: string, endDate: string): 'upcoming' | 'ongoing' | 'past' {
   const now = new Date();

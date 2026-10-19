@@ -83,8 +83,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([tokenInterceptor])),
     provideTransloco({
       config: {
-        availableLangs: ['en', 'pl'],
-        defaultLang: 'en',
+        availableLangs: ['pl', 'en'],
+        defaultLang: 'pl',
+        fallbackLang: 'pl',
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
       },

@@ -24,12 +24,12 @@
   margin: 16px 0
   padding: 16px
   border-radius: 8px
-  background: #e8f5e9
-  border-left: 4px solid #2e7d32
+  background: var(--success-soft)
+  border-left: 4px solid var(--success)
 
   &.ai-resolution
-    background: #f5f5f5
-    border-left-color: #757575
+    background: var(--surface-2)
+    border-left-color: var(--ink-2)
 
 .resolution-header
   display: flex
@@ -60,21 +60,21 @@
 .reply
   padding: 12px 16px
   border-radius: 8px
-  background: #f5f5f5
+  background: var(--surface-2)
   max-width: 80%
 
   &.reply-user
     align-self: flex-end
-    background: #e3f2fd
+    background: var(--info-soft)
 
   &.reply-support
     align-self: flex-start
-    background: #fff8e1
+    background: var(--warning-soft)
 
   &.reply-ai
     align-self: flex-start
-    background: #f5f5f5
-    border: 1px dashed #bdbdbd
+    background: var(--surface-2)
+    border: 1px dashed var(--line-strong)
 
   p
     margin: 4px 0 0
@@ -114,17 +114,17 @@
     width: 100%
 
 .status-open
-  background: #e3f2fd !important
-  color: #1565c0 !important
+  background: var(--info-soft) !important
+  color: var(--info) !important
 
 .status-in_progress
-  background: #fff8e1 !important
-  color: #f57f17 !important
+  background: var(--warning-soft) !important
+  color: var(--warning) !important
 
 .status-resolved, .status-closed, .status-auto_resolved
-  background: #e8f5e9 !important
-  color: #2e7d32 !important
+  background: var(--success-soft) !important
+  color: var(--success) !important
 
 .status-reopened
-  background: #fce4ec !important
-  color: #c62828 !important
+  background: var(--accent-soft) !important
+  color: var(--danger) !important

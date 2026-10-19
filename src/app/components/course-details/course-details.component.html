@@ -1,309 +1,282 @@
-<div class="cd-page">
+<div class="page">
 
-  <div class="cd-nav">
-    <a mat-button routerLink="/courses">
-      <mat-icon>arrow_back</mat-icon> {{ 'courseDetails.backToCourses' | transloco }}
-    </a>
-  </div>
+  <nav class="crumbs" [attr.aria-label]="'courseDetails.breadcrumb' | transloco">
+    <a routerLink="/courses">{{ 'menu.browseCourses' | transloco }}</a>
+    @if (loaded() && course()?.category?.label) {
+      <mat-icon>chevron_right</mat-icon>
+      <span>{{ categoryKey() | transloco }}</span>
+    }
+  </nav>
 
-  @if (course()) {
-
-    <!-- ── Hero ─────────────────────────────────────────────────── -->
-    <div class="cd-hero">
-      <div class="cd-hero-content">
-        <div class="cd-hero-meta">
-          @if (course().category?.label) {
-            <span class="cd-category-chip">{{ translateCategory(course().category.label) }}</span>
-          }
-          <span class="cd-status-badge cd-status-{{ getStatus() }}">{{ translateStatus(getStatus()) }}</span>
-        </div>
-        <h1 class="cd-title">{{ course().title }}</h1>
-        <div class="cd-hero-sub">
-          @if (course().rating) {
-            <span class="cd-rating-pill">
-              <mat-icon>star</mat-icon>{{ course().rating | number:'1.1-1' }}
-            </span>
-          }
-          @if (course().creator?.firstName) {
-            <span class="cd-instructor-pill">
-              <mat-icon>person</mat-icon>
-              {{ course().creator.firstName }} {{ course().creator.lastName }}
-            </span>
-          }
-        </div>
+  @if (!loaded()) {
+    <!-- Loading placeholder -->
+    <div class="layout" aria-hidden="true">
+      <div class="main">
+        <div class="skeleton" style="height: 18px; width: 140px"></div>
+        <div class="skeleton" style="height: 46px; width: 80%; margin-top: 16px"></div>
+        <div class="skeleton" style="aspect-ratio: 16/8; margin-top: 28px; border-radius: var(--radius-lg)"></div>
       </div>
+      <aside class="side"><div class="skeleton" style="height: 360px; border-radius: var(--radius-lg)"></div></aside>
     </div>
+  } @else {
+    @let c = course()!;
 
-    <!-- ── Two-column layout ─────────────────────────────────────── -->
-    <div class="cd-layout">
+    <div class="layout">
+      <!-- ── Main column ───────────────────────────────── -->
+      <div class="main">
+        <header class="head">
+          <p class="eyebrow">{{ categoryKey() | transloco }}</p>
+          <h1 class="title">{{ c.title }}</h1>
+          <div class="head-meta">
+            @if (c.rating) {
+              <span class="meta-item rating">
+                <app-star-rating [value]="c.rating" size="sm" />
+                <strong>{{ c.rating | number: '1.1-1' }}</strong>
+                @if (comments().length) {
+                  <a class="muted" href="#reviews">({{ 'courseDetails.reviewsCount' | transloco: { count: comments().length } }})</a>
+                }
+              </span>
+            }
+            <span class="meta-item">
+              @switch (c.courseType) {
+                @case ('ONLINE') { <mat-icon>videocam</mat-icon>{{ 'courses.online' | transloco }} }
+                @case ('HYBRID') { <mat-icon>devices</mat-icon>{{ 'courses.hybrid' | transloco }}@if (c.address?.city) { · {{ c.address?.city }} } }
+                @default { <mat-icon>location_on</mat-icon>{{ c.address?.city || ('courses.inPerson' | transloco) }} }
+              }
+            </span>
+            @if (status() !== 'upcoming') {
+              <span class="tag" [class.tag-success]="status() === 'ongoing'">{{ ('status.' + status()) | transloco }}</span>
+            }
+          </div>
+        </header>
 
-      <!-- Left: main content -->
-      <div class="cd-main">
-
-        <!-- Description -->
-        <div class="cd-card">
-          <h3 class="cd-card-title">
-            <mat-icon>description</mat-icon> {{ 'courseDetails.aboutCourse' | transloco }}
-          </h3>
-          <p class="cd-description">{{ course().description }}</p>
+        <div class="media" [style.background]="visual().tint" [style.color]="visual().ink">
+          @if (imageSrc(); as src) {
+            <img [src]="src" [alt]="c.title">
+          } @else {
+            <mat-icon class="media-icon">{{ visual().icon }}</mat-icon>
+          }
         </div>
+
+        <!-- About -->
+        <section class="section">
+          <h2>{{ 'courseDetails.aboutCourse' | transloco }}</h2>
+          <p class="prose">{{ c.description }}</p>
+          <dl class="facts">
+            @if (c.courseLevel) {
+              <div><dt>{{ 'courseDetails.level' | transloco }}</dt><dd>{{ ('courseDetails.levels.' + c.courseLevel) | transloco }}</dd></div>
+            }
+            @if (c.language) {
+              <div><dt>{{ 'courseDetails.language' | transloco }}</dt><dd>{{ languageName(c.language) }}</dd></div>
+            }
+            <div><dt>{{ 'courseDetails.certificate' | transloco }}</dt><dd>{{ (c.certificate ? 'common.yes' : 'common.no') | transloco }}</dd></div>
+            <div><dt>{{ 'courseDetails.groupSize' | transloco }}</dt><dd>{{ 'courseDetails.groupSizeValue' | transloco: { max: c.maxParticipants } }}</dd></div>
+          </dl>
+        </section>
+
+        @if (outcomes().length) {
+          <section class="section">
+            <h2>{{ 'courseDetails.outcomes' | transloco }}</h2>
+            <ul class="checklist">
+              @for (item of outcomes(); track $index) {
+                <li><mat-icon>check</mat-icon><span>{{ item }}</span></li>
+              }
+            </ul>
+          </section>
+        }
+
+        @if (c.prerequisites) {
+          <section class="section">
+            <h2>{{ 'courseDetails.prerequisites' | transloco }}</h2>
+            <p class="prose">{{ c.prerequisites }}</p>
+          </section>
+        }
 
         <!-- Location -->
-        @if (course().address) {
-          <div class="cd-card">
-            <h3 class="cd-card-title">
-              <mat-icon>location_on</mat-icon> {{ 'courseDetails.location' | transloco }}
-            </h3>
-            <p class="cd-address-line">
-              {{ course().address.street }} {{ course().address.streetNumber }}
-              @if (course().address.apartmentNumber) {
-                / {{ course().address.apartmentNumber }}
-              },
-              {{ course().address.postalCode }} {{ course().address.city }}
-            </p>
-            @if (course().address.district) {
-              <p class="cd-district">{{ course().address.district }}</p>
+        @if (c.address && c.courseType !== 'ONLINE') {
+          <section class="section">
+            <h2>{{ 'courseDetails.location' | transloco }}</h2>
+            <div class="place">
+              <mat-icon>location_on</mat-icon>
+              <div>
+                <p class="place-line">
+                  {{ c.address.street }} {{ c.address.streetNumber }}@if (c.address.apartmentNumber) {/{{ c.address.apartmentNumber }}}
+                </p>
+                <p class="muted">{{ c.address.postalCode }} {{ c.address.city }}@if (c.address.district) { · {{ c.address.district }} }</p>
+              </div>
+            </div>
+            @if (position(); as pos) {
+              <div class="map">
+                <google-map height="300px" width="100%" [zoom]="zoom" [center]="pos" [options]="mapOptions">
+                  <map-advanced-marker [position]="pos" />
+                </google-map>
+              </div>
             }
-          </div>
-
-          <div class="cd-map-wrap">
-            <google-map height="280px" width="100%" [zoom]="zoom" [options]="mapOptions">
-              <map-advanced-marker [position]="position" #markerElem="mapAdvancedMarker">
-              </map-advanced-marker>
-            </google-map>
-          </div>
+          </section>
         }
 
-        <!-- Ratings -->
-        <div class="cd-card">
-          <h3 class="cd-card-title">
-            <mat-icon>star</mat-icon> {{ 'courseDetails.ratings' | transloco }}
-          </h3>
-          <div class="cd-ratings-row">
-
-            <!-- Average rating (readonly) -->
-            <div class="cd-rating-block">
-              <span class="cd-rating-label">{{ 'courseDetails.averageRating' | transloco }}</span>
-              <div class="cd-rating-avg-row">
-                @if (course().rating) {
-                  <span class="cd-avg-number">{{ course().rating | number:'1.1-1' }}</span>
+        <!-- Instructor -->
+        @if (c.creator) {
+          <section class="section">
+            <h2>{{ 'courseDetails.instructor' | transloco }}</h2>
+            <div class="instructor">
+              @if (creatorAvatar(); as avatar) {
+                <img [src]="avatar" alt="" class="instructor-avatar">
+              } @else {
+                <span class="instructor-avatar initials">{{ c.creator.firstName?.[0] }}{{ c.creator.lastName?.[0] }}</span>
+              }
+              <div class="instructor-body">
+                <p class="instructor-name">{{ c.creator.firstName }} {{ c.creator.lastName }}</p>
+                @if (c.creator.instructorRating) {
+                  <p class="instructor-rating">
+                    <app-star-rating [value]="c.creator.instructorRating" size="sm" />
+                    {{ c.creator.instructorRating | number: '1.1-1' }} · {{ 'courseDetails.instructorRatingLabel' | transloco }}
+                  </p>
                 }
-                <ngx-stars #courseRating
-                  [color]="'#E91E63'"
-                  [size]="1.4"
-                  [wholeStars]="false"
-                  [maxStars]="5"
-                  [readonly]="true">
-                </ngx-stars>
               </div>
-              <span class="cd-rating-count">{{ comments()?.length || 0 }} {{ comments()?.length === 1 ? ('courseDetails.review' | transloco) : ('courseDetails.reviews' | transloco) }}</span>
+              @if (currentUser() && !isOwner()) {
+                <button mat-stroked-button type="button" (click)="messageInstructor()">
+                  <mat-icon>chat</mat-icon>{{ 'chat.messageInstructor' | transloco }}
+                </button>
+              }
             </div>
+          </section>
+        }
 
-            <div class="cd-rating-divider"></div>
-
-            <!-- User's own course rating (interactive) -->
-            <div class="cd-rating-block">
-              <span class="cd-rating-label">{{ 'courseDetails.yourRating' | transloco }}</span>
-              <ngx-stars #currentRating
-                [color]="'#E91E63'"
-                [size]="1.4"
-                [wholeStars]="false"
-                [maxStars]="5"
-                [readonly]="false"
-                (ratingOutput)="handleRating($event)">
-              </ngx-stars>
-              <span class="cd-rating-hint">
-                <mat-icon>touch_app</mat-icon> {{ 'courseDetails.clickToRate' | transloco }}
-              </span>
-            </div>
-
-            <div class="cd-rating-divider"></div>
-
-            <!-- User's instructor rating (interactive) -->
-            <div class="cd-rating-block">
-              <span class="cd-rating-label">{{ 'courseDetails.yourInstructorRating' | transloco }}</span>
-              <ngx-stars #currentInstructorRating
-                [color]="'#FF9800'"
-                [size]="1.4"
-                [wholeStars]="false"
-                [maxStars]="5"
-                [readonly]="false"
-                (ratingOutput)="handleInstructorRating($event)">
-              </ngx-stars>
-              <span class="cd-rating-hint">
-                <mat-icon>touch_app</mat-icon> {{ 'courseDetails.clickToRate' | transloco }}
-              </span>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Comment form -->
-        <div class="cd-card">
-          <h3 class="cd-card-title">
-            <mat-icon>chat_bubble</mat-icon> {{ 'courseDetails.leaveReview' | transloco }}
-          </h3>
-          <form [formGroup]="form">
-            <formly-form [form]="form" [fields]="fields"></formly-form>
-            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="saveComment()">
-              {{ 'courseDetails.postComment' | transloco }}
-            </button>
-          </form>
-        </div>
-
-        <!-- Comments list -->
-        <div class="cd-card">
-          <h3 class="cd-card-title">
-            <mat-icon>forum</mat-icon> {{ 'courseDetails.reviewsTitle' | transloco }}
-          </h3>
-          <app-comments [comments]="comments()"></app-comments>
-        </div>
-
-      </div>
-
-      <!-- Right: sidebar -->
-      <div class="cd-sidebar">
-
-        <!-- Booking card -->
-        <div class="cd-booking-card">
-          <div class="cd-price">
-            @if (course().price === 0) {
-              <span class="cd-price-free">{{ 'courses.free' | transloco }}</span>
-            } @else {
-              <span class="cd-price-value">{{ course().price | currency:'PLN':'symbol-narrow':'1.0-0' }}</span>
+        <!-- Reviews -->
+        <section class="section" id="reviews">
+          <div class="section-head">
+            <h2>{{ 'courseDetails.reviewsTitle' | transloco }}</h2>
+            @if (c.rating) {
+              <span class="score"><strong>{{ c.rating | number: '1.1-1' }}</strong> / 5</span>
             }
           </div>
 
-          @if (isOwner()) {
-            <div class="cd-owner-actions">
-              <input hidden #fileInput (change)="onFileSelected($event)" multiple type="file">
-              <button mat-stroked-button class="cd-action-btn" (click)="onUpload()">
-                <mat-icon>upload</mat-icon> {{ 'courseDetails.addVideos' | transloco }}
-              </button>
-              <button mat-stroked-button class="cd-action-btn" (click)="openDialog()">
-                <mat-icon>play_circle</mat-icon> {{ 'courseDetails.manageVideos' | transloco }}
-              </button>
-              <a mat-stroked-button class="cd-action-btn" [routerLink]="['/questions', courseId]">
-                <mat-icon>quiz</mat-icon> {{ 'courseDetails.quiz' | transloco }}
-              </a>
-            </div>
-          } @else if (getStatus() === 'past') {
-            <div class="cd-past-notice">
-              <mat-icon>event_busy</mat-icon>
-              {{ 'courseDetails.courseEnded' | transloco }}
-            </div>
-          } @else if (isEnrolled()) {
-            <div class="cd-enrolled-actions">
-              <div class="cd-enrolled-badge">
-                <mat-icon>check_circle</mat-icon> {{ 'courseDetails.youreEnrolled' | transloco }}
+          @if (canReview()) {
+            <div class="review-box">
+              <div class="rate-row">
+                <div>
+                  <p class="rate-label">{{ 'courseDetails.yourRating' | transloco }}</p>
+                  <app-star-rating [readonly]="false" [value]="currentUserRating()?.value" size="lg"
+                    [label]="'courseDetails.yourRating' | transloco" (rate)="handleRating($event)" />
+                </div>
+                <div>
+                  <p class="rate-label">{{ 'courseDetails.yourInstructorRating' | transloco }}</p>
+                  <app-star-rating [readonly]="false" [value]="instructorRatingPreview()" size="lg"
+                    [label]="'courseDetails.yourInstructorRating' | transloco" (rate)="handleInstructorRating($event)" />
+                </div>
               </div>
-              <a mat-raised-button color="primary" class="cd-quiz-btn" [routerLink]="['/questions', courseId]">
-                <mat-icon>quiz</mat-icon> {{ 'courseDetails.goToQuiz' | transloco }}
-              </a>
+              <p class="hint">{{ 'courseDetails.rateHint' | transloco }}</p>
+              <mat-form-field appearance="outline" class="review-field" subscriptSizing="dynamic">
+                <mat-label>{{ 'courseDetails.leaveReview' | transloco }}</mat-label>
+                <textarea matInput rows="4" [formControl]="reviewControl"
+                  [placeholder]="'courseDetails.commentPlaceholder' | transloco"></textarea>
+              </mat-form-field>
+              <div class="review-actions">
+                <button mat-flat-button color="primary" type="button" [disabled]="reviewControl.invalid" (click)="saveComment()">
+                  {{ 'courseDetails.postComment' | transloco }}
+                </button>
+              </div>
             </div>
-          } @else if (isFull()) {
-            <div class="cd-past-notice">
-              <mat-icon>person_off</mat-icon> {{ 'courseDetails.courseFull' | transloco }}
-            </div>
-          } @else {
-            <button mat-raised-button color="primary" class="cd-enroll-btn" (click)="enroll()">
-              <mat-icon>shopping_cart</mat-icon> {{ 'courseDetails.enrollNow' | transloco }}
-            </button>
           }
 
-          <div class="cd-details-list">
-            @if (course().startDate) {
-              <div class="cd-detail-item">
-                <mat-icon>calendar_today</mat-icon>
-                <div class="cd-detail-text">
-                  <span class="cd-detail-label">{{ 'courseDetails.startLabel' | transloco }}</span>
-                  <span class="cd-detail-value">{{ course().startDate | date:'d MMM y, HH:mm' }}</span>
-                </div>
-              </div>
-            }
-            @if (course().endDate) {
-              <div class="cd-detail-item">
-                <mat-icon>event</mat-icon>
-                <div class="cd-detail-text">
-                  <span class="cd-detail-label">{{ 'courseDetails.endLabel' | transloco }}</span>
-                  <span class="cd-detail-value">{{ course().endDate | date:'d MMM y' }}</span>
-                </div>
-              </div>
-            }
-            @if (course().maxParticipants) {
-              <div class="cd-detail-item">
-                <mat-icon>group</mat-icon>
-                <div class="cd-detail-text">
-                  <span class="cd-detail-label">{{ 'courseDetails.spotsLabel' | transloco }}</span>
-                  @if (isFull()) {
-                    <span class="cd-detail-value cd-spots-full">{{ 'courseDetails.spotsFull' | transloco:{max: course().maxParticipants} }}</span>
-                  } @else {
-                    <span class="cd-detail-value">{{ 'courseDetails.spotsAvailable' | transloco:{left: spotsLeft(), max: course().maxParticipants} }}</span>
-                  }
-                </div>
-              </div>
-            }
-            @if (course().category?.label) {
-              <div class="cd-detail-item">
-                <mat-icon>category</mat-icon>
-                <div class="cd-detail-text">
-                  <span class="cd-detail-label">{{ 'courseDetails.categoryLabel' | transloco }}</span>
-                  <span class="cd-detail-value">{{ translateCategory(course().category.label) }}</span>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
+          <app-comments [comments]="comments()" />
+        </section>
+      </div>
 
-        <!-- Instructor card -->
-        @if (course().creator) {
-          <div class="cd-instructor-card">
-            <h4 class="cd-instructor-heading">{{ 'courseDetails.instructor' | transloco }}</h4>
-            <div class="cd-instructor-info">
-              @if (course().creator.fileName) {
-                <img [src]="s3Base + course().creator.fileName" class="cd-avatar-img" alt="Instructor">
-              } @else {
-                <div class="cd-avatar-initials">
-                  {{ course().creator.firstName?.[0] }}{{ course().creator.lastName?.[0] }}
-                </div>
-              }
+      <!-- ── Booking card ──────────────────────────────── -->
+      <aside class="side">
+        <div class="booking">
+          <div class="price">{{ c.price | price }}</div>
+
+          <ul class="booking-facts">
+            <li>
+              <mat-icon>calendar_month</mat-icon>
               <div>
-                <p class="cd-instructor-name">
-                  {{ course().creator.firstName }} {{ course().creator.lastName }}
-                </p>
-                <p class="cd-instructor-email">{{ course().creator.email }}</p>
-                @if (course().creator.instructorRating) {
-                  <div class="cd-instructor-rating">
-                    <span class="cd-rating-label">{{ 'courseDetails.instructorRatingLabel' | transloco }}</span>
-                    <ngx-stars
-                      [color]="'#FF9800'"
-                      [size]="1"
-                      [wholeStars]="false"
-                      [maxStars]="5"
-                      [readonly]="true"
-                      [initialStars]="course().creator.instructorRating">
-                    </ngx-stars>
-                    <span class="cd-avg-number">{{ course().creator.instructorRating | number:'1.1-1' }}</span>
-                  </div>
+                <span class="fact-label">{{ 'courseDetails.dates' | transloco }}</span>
+                <span>{{ c.startDate | dateRange: c.endDate }}</span>
+                <span class="muted small">{{ 'courseDetails.startsAt' | transloco }} {{ c.startDate | dateRange: null : true }}</span>
+              </div>
+            </li>
+            <li>
+              <mat-icon>{{ c.courseType === 'ONLINE' ? 'videocam' : 'location_on' }}</mat-icon>
+              <div>
+                <span class="fact-label">{{ 'courseDetails.where' | transloco }}</span>
+                <span>
+                  @switch (c.courseType) {
+                    @case ('ONLINE') { {{ 'courseDetails.onlineWhere' | transloco }} }
+                    @case ('HYBRID') { {{ 'courses.hybrid' | transloco }}@if (c.address?.city) {, {{ c.address?.city }}} }
+                    @default { {{ c.address?.city }} }
+                  }
+                </span>
+              </div>
+            </li>
+          </ul>
+
+          @if (status() !== 'past' && !isOwner()) {
+            <div class="seats" [class.low]="spotsLeft() > 0 && spotsLeft() <= 3" [class.full]="isFull()">
+              <div class="seats-text">
+                @if (isFull()) {
+                  {{ 'courses.full' | transloco }}
+                } @else {
+                  {{ 'courseDetails.seatsLeft' | transloco: { left: spotsLeft(), max: c.maxParticipants } }}
                 }
               </div>
+              <div class="bar"><span [style.width.%]="fillPercent()"></span></div>
             </div>
-            @if (currentUser() && !isOwner()) {
-              <button mat-stroked-button color="primary" class="cd-message-btn" (click)="messageInstructor()">
-                <mat-icon>chat</mat-icon>
-                {{ 'chat.messageInstructor' | transloco }}
-              </button>
-            }
-          </div>
-        }
+          }
 
-      </div>
+          <!-- Primary action -->
+          @if (isOwner()) {
+            <div class="owner-tools">
+              <p class="owner-note"><mat-icon>verified</mat-icon>{{ 'courseDetails.ownerNote' | transloco }}</p>
+              <input hidden #fileInput (change)="onFileSelected($event)" multiple type="file" accept="video/*">
+              <button mat-stroked-button type="button" (click)="onUpload()"><mat-icon>upload</mat-icon>{{ 'courseDetails.addVideos' | transloco }}</button>
+              <button mat-stroked-button type="button" (click)="openVideos()"><mat-icon>play_circle</mat-icon>{{ 'courseDetails.manageVideos' | transloco }}</button>
+              <a mat-stroked-button [routerLink]="['/questions', courseId]"><mat-icon>quiz</mat-icon>{{ 'courseDetails.quiz' | transloco }}</a>
+            </div>
+          } @else if (isEnrolled()) {
+            <div class="enrolled">
+              <p class="enrolled-note"><mat-icon>check_circle</mat-icon>{{ 'courseDetails.youreEnrolled' | transloco }}</p>
+              @if (c.courseType !== 'IN_PERSON') {
+                <button mat-flat-button color="primary" type="button" class="cta" (click)="openVideos()">
+                  <mat-icon>play_circle</mat-icon>{{ 'courseDetails.watchMaterials' | transloco }}
+                </button>
+              }
+              <a mat-stroked-button class="cta" [routerLink]="['/questions', courseId]"><mat-icon>quiz</mat-icon>{{ 'courseDetails.goToQuiz' | transloco }}</a>
+            </div>
+          } @else if (status() === 'past') {
+            <p class="notice"><mat-icon>event_busy</mat-icon>{{ 'courseDetails.courseEnded' | transloco }}</p>
+          } @else if (isFull()) {
+            <p class="notice"><mat-icon>group_off</mat-icon>{{ 'courseDetails.courseFull' | transloco }}</p>
+          } @else if (!currentUser()) {
+            <a mat-flat-button color="primary" class="cta" routerLink="/login">{{ 'courseDetails.loginToEnroll' | transloco }}</a>
+            <p class="fine-print">{{ 'courseDetails.noAccount' | transloco }} <a routerLink="/registry">{{ 'menu.register' | transloco }}</a></p>
+          } @else {
+            <button mat-flat-button color="primary" type="button" class="cta" (click)="enroll()">{{ 'courseDetails.enrollNow' | transloco }}</button>
+            <p class="fine-print"><mat-icon>lock</mat-icon>{{ 'courseDetails.securePayment' | transloco }}</p>
+          }
+        </div>
+      </aside>
     </div>
 
-    <!-- Floating group chat widget -->
+    <!-- Mobile booking bar -->
+    @if (showMobileBar()) {
+      <div class="mobile-bar">
+        <div>
+          <div class="mobile-price">{{ c.price | price }}</div>
+          <div class="muted small">{{ c.startDate | dateRange: c.endDate }}</div>
+        </div>
+        @if (currentUser()) {
+          <button mat-flat-button color="primary" type="button" (click)="enroll()">{{ 'courseDetails.enrollShort' | transloco }}</button>
+        } @else {
+          <a mat-flat-button color="primary" routerLink="/login">{{ 'courseDetails.enrollShort' | transloco }}</a>
+        }
+      </div>
+    }
+
     @if (isOwner() || isEnrolled()) {
-      <app-course-group-chat [courseId]="courseId" [courseTitle]="course().title"></app-course-group-chat>
+      <app-course-group-chat [courseId]="courseId" [courseTitle]="c.title" />
     }
   }
-
 </div>

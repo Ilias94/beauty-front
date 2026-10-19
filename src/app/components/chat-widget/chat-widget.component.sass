@@ -6,20 +6,20 @@
   width: 56px
   height: 56px
   border-radius: 50%
-  background: #C2185B
+  background: var(--accent)
   color: #fff
   border: none
   cursor: pointer
   display: flex
   align-items: center
   justify-content: center
-  box-shadow: 0 4px 16px rgba(194, 24, 91, 0.4)
+  box-shadow: 0 4px 16px rgba(140, 47, 75, 0.4)
   transition: transform 0.2s, box-shadow 0.2s
   z-index: 1000
 
   &:hover
     transform: scale(1.08)
-    box-shadow: 0 6px 20px rgba(194, 24, 91, 0.5)
+    box-shadow: 0 6px 20px rgba(140, 47, 75, 0.5)
 
   mat-icon
     font-size: 26px
@@ -56,12 +56,12 @@
   align-items: center
   gap: 0.6rem
   padding: 0.9rem 1rem
-  background: linear-gradient(135deg, #C2185B, #880E4F)
+  background: var(--accent)
   color: #fff
   flex-shrink: 0
 
 .panel-title
-  font-family: 'Playfair Display', serif
+  font-family: var(--font-display)
   font-size: 1rem
   font-weight: 600
 
@@ -71,7 +71,7 @@
   gap: 0.5rem
 
 .partner-name
-  font-family: 'Lato', sans-serif
+  font-family: var(--font-ui)
   font-size: 0.9rem
   font-weight: 600
 
@@ -95,16 +95,16 @@
 
 .avatar-initials
   background: rgba(255,255,255,0.25)
-  color: #C2185B
+  color: var(--accent)
   display: flex
   align-items: center
   justify-content: center
-  font-family: 'Lato', sans-serif
+  font-family: var(--font-ui)
   font-size: 0.75rem
   font-weight: 700
 
   &.avatar-sm
-    background: #F48FB1
+    background: var(--accent-soft-2)
     color: #fff
 
 // ── Conversations ─────────────────────────────────────────────
@@ -120,37 +120,37 @@
   padding: 0.75rem 1rem
   cursor: pointer
   transition: background 0.15s
-  border-bottom: 1px solid #fdf0f5
+  border-bottom: 1px solid var(--accent-soft)
 
   &:hover
-    background: #fff5f8
+    background: var(--accent-soft)
 
 .conv-body
   flex: 1
   overflow: hidden
 
 .conv-name
-  font-family: 'Lato', sans-serif
+  font-family: var(--font-ui)
   font-size: 0.88rem
   font-weight: 600
-  color: #2d2d2d
+  color: var(--ink)
 
 .conv-last
-  font-family: 'Lato', sans-serif
+  font-family: var(--font-ui)
   font-size: 0.78rem
-  color: #888
+  color: var(--ink-3)
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
 
 .unread-badge
-  background: #C2185B
+  background: var(--accent)
   color: #fff
   border-radius: 10px
   padding: 2px 7px
   font-size: 0.72rem
   font-weight: 700
-  font-family: 'Lato', sans-serif
+  font-family: var(--font-ui)
   flex-shrink: 0
 
 .empty-chat
@@ -159,7 +159,7 @@
   align-items: center
   justify-content: center
   padding: 3rem 1rem
-  color: #bbb
+  color: var(--line-strong)
 
   mat-icon
     font-size: 48px
@@ -168,7 +168,7 @@
     margin-bottom: 0.5rem
 
   p
-    font-family: 'Lato', sans-serif
+    font-family: var(--font-ui)
     font-size: 0.85rem
 
 // ── Messages ─────────────────────────────────────────────────
@@ -179,7 +179,7 @@
   display: flex
   flex-direction: column
   gap: 0.5rem
-  background: #fdf8f5
+  background: var(--bg)
 
 .msg-row
   display: flex
@@ -190,7 +190,7 @@
     align-items: flex-end
 
     .bubble
-      background: #C2185B
+      background: var(--accent)
       color: #fff
       border-radius: 16px 16px 4px 16px
 
@@ -199,7 +199,7 @@
   padding: 0.5rem 0.8rem
   background: #fff
   border-radius: 16px 16px 16px 4px
-  font-family: 'Lato', sans-serif
+  font-family: var(--font-ui)
   font-size: 0.88rem
   line-height: 1.4
   box-shadow: 0 1px 4px rgba(0,0,0,0.08)
@@ -207,7 +207,7 @@
 
 .msg-time
   font-size: 0.7rem
-  color: #aaa
+  color: var(--ink-3)
   margin-top: 2px
   padding: 0 4px
 
@@ -217,16 +217,16 @@
   align-items: flex-end
   gap: 0.25rem
   padding: 0.6rem 0.75rem
-  border-top: 1px solid #f0e6e6
+  border-top: 1px solid var(--line)
   background: #fff
   flex-shrink: 0
 
 .msg-input
   flex: 1
-  border: 1.5px solid #f0c0d0
+  border: 1.5px solid var(--line-strong)
   border-radius: 12px
   padding: 0.5rem 0.75rem
-  font-family: 'Lato', sans-serif
+  font-family: var(--font-ui)
   font-size: 0.88rem
   resize: none
   outline: none
@@ -235,11 +235,11 @@
   transition: border-color 0.2s
 
   &:focus
-    border-color: #C2185B
+    border-color: var(--accent)
 
 .send-btn
-  color: #C2185B !important
+  color: var(--accent) !important
   flex-shrink: 0
 
   &:disabled
-    color: #ddd !important
+    color: var(--line-strong) !important

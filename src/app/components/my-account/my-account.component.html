@@ -1,59 +1,55 @@
-@if (currentUser()) {
-  <div class="account-page">
-
-    <!-- ─── Profile hero ──────────────────────────── -->
-    <div class="profile-hero">
-      <div class="hero-bg"></div>
-
-      <div class="profile-main">
-        <!-- Avatar -->
-        <div class="avatar-ring">
-          @if (currentUser().fileName) {
-            <img [src]="s3Base + currentUser().fileName" class="avatar-img" alt="Profile photo" />
-          } @else {
-            <div class="avatar-initials">{{ getInitials() }}</div>
-          }
-        </div>
-
-        <!-- Info -->
-        <div class="profile-info">
-          <h2 class="profile-name">
-            {{ currentUser().firstName }} {{ currentUser().lastName }}
-          </h2>
-          <p class="profile-email">
-            <mat-icon>mail</mat-icon>{{ currentUser().email }}
-          </p>
-          <span class="role-badge" [class.teacher]="currentUser().teacher">
-            <mat-icon>{{ currentUser().teacher ? 'school' : 'auto_stories' }}</mat-icon>
-            {{ getRoleLabel() }}
-          </span>
-        </div>
-
-        <!-- Edit button -->
-        <a mat-stroked-button routerLink="/account" class="edit-btn">
-          <mat-icon>edit</mat-icon>
-          {{ 'account.editProfile' | transloco }}
-        </a>
+@if (currentUser(); as user) {
+  <div class="page">
+    <header class="profile">
+      <div class="avatar">
+        @if (avatarUrl(); as url) {
+          <img [src]="url" alt="">
+        } @else {
+          <span>{{ initials() }}</span>
+        }
       </div>
-    </div>
+      <div class="profile-body">
+        <p class="eyebrow">{{ (user.teacher ? 'account.teacher' : 'account.student') | transloco }}</p>
+        <h1 class="name">{{ user.firstName }} {{ user.lastName }}</h1>
+        <p class="email">{{ user.email }}</p>
+      </div>
+      <a mat-stroked-button routerLink="/account" class="edit">
+        <mat-icon>edit</mat-icon>{{ 'account.editProfile' | transloco }}
+      </a>
+    </header>
 
-    <!-- ─── Navigation cards ──────────────────────── -->
-    <div class="nav-grid">
-      @for (card of navCards; track card.route) {
-        @if (!card.teacherOnly || currentUser()?.teacher) {
-        <a [routerLink]="card.route" class="nav-card" matRipple>
-          <div class="nav-icon-wrap" [style.background]="card.gradient">
-            <mat-icon>{{ card.icon }}</mat-icon>
+    <dl class="stats">
+      <div>
+        <dt>{{ 'account.statEnrolled' | transloco }}</dt>
+        <dd>{{ enrolledCount() }}</dd>
+      </div>
+      @if (user.teacher) {
+        <div>
+          <dt>{{ 'account.statTeaching' | transloco }}</dt>
+          <dd>{{ ownedCount() }}</dd>
+        </div>
+        @if (user.instructorRating) {
+          <div>
+            <dt>{{ 'account.statRating' | transloco }}</dt>
+            <dd>{{ user.instructorRating.toFixed(1) }}<span>/5</span></dd>
           </div>
-          <div class="nav-text">
-            <span class="nav-title">{{ card.title }}</span>
-            <span class="nav-desc">{{ card.desc }}</span>
-          </div>
-          <mat-icon class="nav-arrow">chevron_right</mat-icon>
-        </a>
         }
       }
-    </div>
+    </dl>
 
+    <nav class="shortcuts" [attr.aria-label]="'account.shortcuts' | transloco">
+      @for (s of shortcuts; track s.route) {
+        @if (!s.teacherOnly || user.teacher) {
+          <a [routerLink]="s.route" class="shortcut">
+            <span class="icon"><mat-icon>{{ s.icon }}</mat-icon></span>
+            <span class="text">
+              <strong>{{ s.titleKey | transloco }}</strong>
+              <span>{{ s.descKey | transloco }}</span>
+            </span>
+            <mat-icon class="arrow">arrow_forward</mat-icon>
+          </a>
+        }
+      }
+    </nav>
   </div>
 }

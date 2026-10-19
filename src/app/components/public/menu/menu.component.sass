@@ -1,155 +1,345 @@
-.sidenav-container
-  height: 100%
-
-.sidenav
-  width: 240px
-  background-color: #fff
-  border-right: 1px solid rgba(0, 0, 0, 0.08)
-  box-shadow: 2px 0 8px rgba(194, 24, 91, 0.08)
+:host
   display: flex
   flex-direction: column
+  min-height: 100vh
 
-.sidenav-brand
+.skip-link
+  position: absolute
+  left: 12px
+  top: -48px
+  z-index: 2000
+  padding: 10px 16px
+  border-radius: var(--radius-sm)
+  background: var(--ink)
+  color: #fff
+  font-weight: 700
+
+  &:focus
+    top: 12px
+    color: #fff
+
+// ── Top bar ────────────────────────────────────────────────
+.site-header
+  position: sticky
+  top: 0
+  z-index: 900
+  height: var(--header-h)
+  background: rgba(250, 247, 243, 0.86)
+  backdrop-filter: saturate(160%) blur(12px)
+  -webkit-backdrop-filter: saturate(160%) blur(12px)
+  border-bottom: 1px solid transparent
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease)
+
+  &.scrolled
+    border-bottom-color: var(--line)
+    background: rgba(250, 247, 243, 0.94)
+
+.header-inner
+  height: 100%
+  max-width: var(--content-max)
+  margin: 0 auto
+  padding: 0 var(--gutter)
+  display: flex
+  align-items: center
+  gap: 28px
+
+.brand
   display: flex
   align-items: center
   gap: 10px
-  padding: 20px 16px 14px
+  color: var(--ink)
   flex-shrink: 0
-  cursor: default
-
-  .brand-logo
-    width: 32px
-    height: 32px
-    border-radius: 8px
-
-  .brand-name
-    font-family: 'Playfair Display', serif
-    font-size: 1.4rem
-    font-weight: 700
-    color: #C2185B
-    letter-spacing: 0.5px
-
-// Scrollable area below brand
-.nav-scroll
-  flex: 1
-  overflow-y: auto
-  padding-bottom: 12px
-
-// ── Section labels ──────────────────────────────────────
-.nav-section-label
-  font-size: 10.5px
-  font-weight: 700
-  letter-spacing: 0.9px
-  text-transform: uppercase
-  color: #aaa
-  padding: 14px 18px 4px
-  margin: 0
-
-.nav-section
-  padding-top: 0 !important
-  padding-bottom: 0 !important
-
-.nav-divider
-  margin: 8px 0 !important
-
-// ── Nav items ───────────────────────────────────────────
-.nav-item
-  border-radius: 0 24px 24px 0
-  margin: 1px 10px 1px 0
-  color: #555
-  transition: background .15s, color .15s
 
   &:hover
-    background-color: rgba(194, 24, 91, 0.06)
-    color: #C2185B
+    color: var(--ink)
+
+.brand-mark
+  border-radius: 9px
+
+.wordmark
+  font-family: var(--font-display)
+  font-size: 23px
+  font-weight: 500
+  letter-spacing: -0.02em
+  font-variation-settings: 'opsz' 96, 'SOFT' 100
+
+.main-nav
+  display: flex
+  align-items: center
+  gap: 4px
+  min-width: 0
+
+  a
+    position: relative
+    padding: 8px 12px
+    border-radius: var(--radius-pill)
+    color: var(--ink-2)
+    font-weight: 600
+    font-size: 14.5px
+    white-space: nowrap
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease)
+
+    &:hover
+      color: var(--ink)
+      background: var(--surface-2)
+
+    &.active
+      color: var(--ink)
+
+      &::after
+        content: ''
+        position: absolute
+        left: 12px
+        right: 12px
+        bottom: -1px
+        height: 2px
+        border-radius: 2px
+        background: var(--accent)
+
+.header-actions
+  margin-left: auto
+  display: flex
+  align-items: center
+  gap: 10px
+
+.lang-toggle
+  display: inline-flex
+  padding: 3px
+  border-radius: var(--radius-pill)
+  background: var(--surface-2)
+
+  button
+    border: 0
+    background: transparent
+    font: 700 12px var(--font-ui)
+    letter-spacing: 0.04em
+    color: var(--ink-3)
+    padding: 5px 10px
+    border-radius: var(--radius-pill)
+    cursor: pointer
+    transition: all var(--dur) var(--ease)
+
+    &.on
+      background: var(--surface)
+      color: var(--ink)
+      box-shadow: var(--shadow-1)
+
+.create-btn mat-icon
+  margin-right: 4px
+
+.login-link
+  color: var(--ink)
+  font-weight: 700
+  font-size: 14.5px
+  padding: 8px 12px
+
+  &:hover
+    color: var(--accent)
+
+.avatar-btn
+  width: 40px
+  height: 40px
+  padding: 0
+  border-radius: 50%
+  border: 1px solid var(--line-strong)
+  background: var(--accent-soft)
+  color: var(--accent)
+  font: 700 13px var(--font-ui)
+  cursor: pointer
+  display: grid
+  place-items: center
+  overflow: hidden
+  transition: box-shadow var(--dur) var(--ease)
+
+  &:hover
+    box-shadow: 0 0 0 4px var(--accent-soft)
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.icon-btn
+  width: 40px
+  height: 40px
+  display: none
+  place-items: center
+  border: 0
+  border-radius: 50%
+  background: transparent
+  color: var(--ink)
+  cursor: pointer
+
+  &:hover
+    background: var(--surface-2)
+
+// ── Account menu (rendered in an overlay, so styled via ::ng-deep) ──
+::ng-deep .account-menu
+  min-width: 250px !important
+
+  .account-head
+    padding: 14px 16px 12px
+
+  .account-name
+    font-weight: 700
+    color: var(--ink)
+
+  .account-email
+    font-size: 13px
+    color: var(--ink-3)
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .mat-mdc-menu-item
+    font-family: var(--font-ui)
+    font-weight: 600
+    min-height: 44px
 
     .mat-icon
-      color: #C2185B
+      color: var(--ink-2)
 
-  .mat-icon
-    color: #888
-    transition: color .15s
+// ── Mobile drawer ──────────────────────────────────────────
+.drawer-backdrop
+  position: fixed
+  inset: var(--header-h) 0 0 0
+  background: rgba(31, 26, 23, 0.32)
+  z-index: 880
+  animation: fade 160ms var(--ease)
 
-// Active route highlight
-.nav-active
-  background: rgba(194, 24, 91, 0.1) !important
-  color: #C2185B !important
-  font-weight: 600
+.drawer
+  position: fixed
+  top: var(--header-h)
+  left: 0
+  bottom: 0
+  width: min(320px, 86vw)
+  background: var(--bg)
+  border-right: 1px solid var(--line)
+  z-index: 890
+  overflow-y: auto
+  padding: 16px 12px 32px
+  animation: slideIn 200ms var(--ease)
 
-  .mat-icon
-    color: #C2185B !important
-
-.logout-item
-  color: #e53935 !important
-
-  .mat-icon
-    color: #e53935 !important
-
-  &:hover
-    background-color: rgba(229, 57, 53, 0.06) !important
-    color: #e53935 !important
-
-// ── Toolbar ─────────────────────────────────────────────
-.app-toolbar
-  position: sticky
-  top: 0
-  z-index: 100
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15)
-
-.toolbar-brand
+.drawer-nav
   display: flex
-  align-items: center
-  gap: 8px
-  margin-left: 8px
-
-  .toolbar-logo
-    width: 28px
-    height: 28px
-    border-radius: 6px
-
-  .toolbar-title
-    font-family: 'Playfair Display', serif
-    font-size: 1.2rem
-    font-weight: 600
-    letter-spacing: 0.5px
-
-.toolbar-spacer
-  flex: 1 1 auto
-
-.lang-switcher
-  display: flex
-  align-items: center
+  flex-direction: column
   gap: 2px
-  margin-right: 8px
 
-.lang-btn
-  color: rgba(255, 255, 255, 0.75) !important
+  a, .drawer-logout
+    display: flex
+    align-items: center
+    gap: 14px
+    padding: 12px 14px
+    border-radius: var(--radius-sm)
+    color: var(--ink)
+    font: 600 15px var(--font-ui)
+    border: 0
+    background: transparent
+    text-align: left
+    cursor: pointer
+
+    .mat-icon
+      color: var(--ink-3)
+
+    &:hover
+      background: var(--surface-2)
+
+    &.active
+      background: var(--accent-soft)
+      color: var(--accent)
+
+      .mat-icon
+        color: var(--accent)
+
+  .drawer-logout
+    margin-top: 12px
+    color: var(--danger)
+
+    .mat-icon
+      color: var(--danger)
+
+.drawer-label
+  margin: 18px 14px 6px
+  font-size: 11px
+  font-weight: 700
+  letter-spacing: 0.12em
+  text-transform: uppercase
+  color: var(--ink-3)
+
+@keyframes fade
+  from
+    opacity: 0
+
+@keyframes slideIn
+  from
+    transform: translateX(-16px)
+    opacity: 0
+
+// ── Page & footer ──────────────────────────────────────────
+.site-main
+  flex: 1
   min-width: 0
-  padding: 0 8px
-  font-size: 0.82rem
-  border-radius: 16px
 
-  &.lang-btn-active
-    color: white !important
-    background: rgba(255, 255, 255, 0.2) !important
-    font-weight: 600
+.site-footer
+  border-top: 1px solid var(--line)
+  margin-top: 48px
 
-.toolbar-login-btn
-  color: white !important
-  border: 1px solid rgba(255, 255, 255, 0.5)
-  border-radius: 20px
-  padding: 0 16px
-  font-size: 0.9rem
-
-// ── Content ─────────────────────────────────────────────
-.page-content
-  padding: 24px
-  max-width: 1400px
+.footer-inner
+  max-width: var(--content-max)
   margin: 0 auto
+  padding: 32px var(--gutter) 40px
+  display: grid
+  grid-template-columns: 1fr auto
+  gap: 16px 32px
+  align-items: start
 
-@media (max-width: 768px)
-  .sidenav
-    width: 100%
+.footer-brand
+  .wordmark
+    font-size: 20px
 
-  .page-content
-    padding: 16px
+  p
+    color: var(--ink-3)
+    font-size: 14px
+    margin-top: 4px
+
+.footer-links
+  display: flex
+  gap: 20px
+  flex-wrap: wrap
+
+  a
+    color: var(--ink-2)
+    font-weight: 600
+    font-size: 14px
+
+    &:hover
+      color: var(--ink)
+
+.footer-copy
+  grid-column: 1 / -1
+  color: var(--ink-3)
+  font-size: 13px
+
+// ── Responsive ─────────────────────────────────────────────
+@media (max-width: 1060px)
+  .main-nav a:nth-child(n+4)
+    display: none
+
+@media (max-width: 900px)
+  .main-nav, .create-btn
+    display: none
+
+  .icon-btn
+    display: grid
+
+  .header-inner
+    gap: 8px
+
+@media (max-width: 520px)
+  .lang-toggle, .signup-btn
+    display: none
+
+  .wordmark
+    font-size: 21px
+
+  .footer-inner
+    grid-template-columns: 1fr

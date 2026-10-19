@@ -1,77 +1,69 @@
-import { Component, DestroyRef, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
-import { FormlyMaterialModule } from '@ngx-formly/material';
+import { Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { RouterLink } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { LoginAction } from '../../state/security.actions';
 import { environment } from '../../../../environments/enfironment';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
+import { AuthAsideComponent } from '../auth-aside/auth-aside.component';
 
 @Component({
     selector: 'app-login',
     imports: [
-        FormlyModule,
-        FormlyMaterialModule,
         ReactiveFormsModule,
         MatButtonModule,
         MatIconModule,
-        MatDividerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
         RouterLink,
         TranslocoModule,
+        AuthAsideComponent,
     ],
     templateUrl: './login.component.html',
     styleUrl: './login.component.sass'
 })
 export class LoginComponent {
+  private store = inject(Store);
+  private router = inject(Router);
+  private returnUrl: string = inject(ActivatedRoute).snapshot.queryParamMap.get('returnUrl') ?? '/courses';
 
   readonly googleUrl = environment.apiUrl + '/api/oauth2/authorization/google';
-  private transloco = inject(TranslocoService);
-  private destroyRef = inject(DestroyRef);
 
-  form = new FormGroup({});
-  fields: FormlyFieldConfig[] = [];
+  form = new FormGroup({
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+  });
 
-  constructor(private store: Store) {
-    this.transloco.selectTranslation().pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.fields = [
-        {
-          key: 'email',
-          type: 'input',
-          props: {
-            label: this.transloco.translate('auth.emailLabel'),
-            placeholder: this.transloco.translate('auth.emailPlaceholder'),
-            type: 'email',
-            appearance: 'outline',
-            required: true,
-          }
-        },
-        {
-          key: 'password',
-          type: 'input',
-          props: {
-            label: this.transloco.translate('auth.passwordLabel'),
-            placeholder: this.transloco.translate('auth.passwordPlaceholder'),
-            type: 'password',
-            appearance: 'outline',
-            required: true,
-          }
-        }
-      ];
-    });
-  }
+  hidePassword = signal(true);
+  submitting = signal(false);
+  error = signal(false);
 
   login(): void {
-    this.store.dispatch(new LoginAction(
-      this.form.get('email')?.value,
-      this.form.get('password')?.value
-    ));
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.error.set(false);
+    this.submitting.set(true);
+    const { email, password } = this.form.getRawValue();
+    this.store.dispatch(new LoginAction(email.trim(), password)).subscribe({
+      next: () => {
+        this.submitting.set(false);
+        // Only follow local paths, never an absolute URL from the query string.
+        const target = this.returnUrl.startsWith('/') && !this.returnUrl.startsWith('//') ? this.returnUrl : '/courses';
+        this.router.navigateByUrl(target);
+      },
+      error: () => {
+        this.submitting.set(false);
+        this.error.set(true);
+      },
+    });
   }
 
   loginWithGoogle(): void {

@@ -14,6 +14,7 @@ import { TicketState } from '../../state/ticket.state';
 import { SecurityState } from '../../state/security.state';
 import { AddReplyAction, ClearTicketDetailAction, LoadTicketDetailAction, ResolveTicketAction } from '../../state/ticket.actions';
 import { TranslocoModule } from '@jsverse/transloco';
+import { ticketStatusTag } from '../ticket-ui';
 
 @Component({
     selector: 'app-ticket-detail',
@@ -30,11 +31,13 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   ticket = toSignal(this.store.select(TicketState.selectedTicket));
   currentUser = toSignal(this.store.select(SecurityState.getCurrentUser));
 
+  readonly statusTag = ticketStatusTag;
+
   replyForm = this.fb.group({ content: ['', Validators.required] });
   resolveForm = this.fb.group({ content: ['', Validators.required] });
 
   isSupport() {
-    return this.currentUser()?.roles?.some((r: any) => r.name === 'SUPPORT') ?? false;
+    return this.currentUser()?.roles?.includes('SUPPORT') ?? false;
   }
 
   ngOnInit() {

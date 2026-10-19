@@ -1,3 +1,8 @@
+:host
+  display: block
+  // The app shell adds no padding; each page sets its own like .page in styles.sass.
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
 // ── Page shell ───────────────────────────────────────────
 .gcp-page
   max-width: 1100px
@@ -19,7 +24,7 @@
   color: rgba(0,0,0,.55)
 
 .gcp-header-icon
-  color: #5C6BC0
+  color: var(--info)
   font-size: 28px
   width: 28px
   height: 28px
@@ -28,7 +33,7 @@
   font-size: 22px
   font-weight: 700
   margin: 0
-  color: #333
+  color: var(--ink)
 
 // ── Two-column layout ────────────────────────────────────
 .gcp-layout
@@ -45,7 +50,7 @@
   width: 280px
   flex-shrink: 0
   background: #fff
-  border-right: 1px solid #e8eaf6
+  border-right: 1px solid var(--info-soft)
   overflow-y: auto
   display: flex
   flex-direction: column
@@ -57,7 +62,7 @@
   justify-content: center
   flex: 1
   padding: 24px 16px
-  color: #9E9E9E
+  color: var(--ink-3)
   text-align: center
 
   mat-icon
@@ -65,7 +70,7 @@
     width: 40px
     height: 40px
     margin-bottom: 8px
-    color: #B0BEC5
+    color: var(--line-strong)
 
   p
     font-size: 13px
@@ -82,23 +87,23 @@
   text-align: left
   cursor: pointer
   transition: background .15s
-  border-bottom: 1px solid #f0f0f0
+  border-bottom: 1px solid var(--line)
 
   &:hover
-    background: #EDE7F6
+    background: var(--info-soft)
 
   &.active
-    background: #E8EAF6
+    background: var(--info-soft)
 
     .gcp-course-name
-      color: #3949AB
+      color: var(--info)
       font-weight: 600
 
 .gcp-course-avatar
   width: 40px
   height: 40px
   border-radius: 50%
-  background: linear-gradient(135deg, #3949AB, #5C6BC0)
+  background: var(--info)
   color: #fff
   display: flex
   align-items: center
@@ -116,7 +121,7 @@
   white-space: nowrap
 
 .gcp-course-check
-  color: #5C6BC0
+  color: var(--info)
   font-size: 20px
   width: 20px
   height: 20px
@@ -127,7 +132,7 @@
   flex: 1
   display: flex
   flex-direction: column
-  background: #EDE7F6
+  background: var(--info-soft)
   min-width: 0
 
 .gcp-placeholder
@@ -137,14 +142,14 @@
   align-items: center
   justify-content: center
   background: #fff
-  color: #9E9E9E
+  color: var(--ink-3)
   gap: 12px
 
   mat-icon
     font-size: 56px
     width: 56px
     height: 56px
-    color: #C5CAE9
+    color: var(--info-soft)
 
   p
     font-size: 15px
@@ -156,7 +161,7 @@
   align-items: center
   gap: 12px
   padding: 14px 18px
-  background: linear-gradient(135deg, #3949AB 0%, #5C6BC0 100%)
+  background: var(--info)
   color: #fff
   flex-shrink: 0
 
@@ -196,7 +201,7 @@
     flex-direction: row-reverse
 
     .gcp-bubble
-      background: #C5CAE9
+      background: var(--info-soft)
       border-radius: 14px 14px 4px 14px
 
     .gcp-time
@@ -215,7 +220,7 @@
   width: 32px
   height: 32px
   border-radius: 50%
-  background: #3949AB
+  background: var(--info)
   color: #fff
   display: flex
   align-items: center
@@ -231,7 +236,7 @@
 .gcp-sender-name
   font-size: 11px
   font-weight: 600
-  color: #3949AB
+  color: var(--info)
   margin-bottom: 3px
   padding-left: 8px
 
@@ -246,7 +251,7 @@
 
 .gcp-time
   font-size: 10px
-  color: #999
+  color: var(--ink-3)
   margin-top: 3px
   padding: 0 6px
 
@@ -257,14 +262,14 @@
   justify-content: center
   flex: 1
   padding: 40px 0
-  color: #9E9E9E
+  color: var(--ink-3)
 
   mat-icon
     font-size: 44px
     width: 44px
     height: 44px
     margin-bottom: 8px
-    color: #B0BEC5
+    color: var(--line-strong)
 
   p
     font-size: 14px
@@ -276,7 +281,7 @@
   align-items: flex-end
   gap: 8px
   padding: 12px 14px
-  background: #f5f5f5
+  background: var(--surface-2)
   flex-shrink: 0
 
 .gcp-input
@@ -295,8 +300,8 @@
   box-shadow: 0 1px 3px rgba(0,0,0,.08)
 
 .gcp-send-btn
-  color: #5C6BC0
+  color: var(--info)
   flex-shrink: 0
 
   &:disabled
-    color: #ccc
+    color: var(--line-strong)

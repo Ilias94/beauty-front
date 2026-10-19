@@ -1,5 +1,7 @@
 <div class="create-wrapper">
-  <h2>{{ 'tickets.newTicketTitle' | transloco }}</h2>
+  <p class="eyebrow">{{ 'tickets.eyebrow' | transloco }}</p>
+  <h1 class="page-title">{{ 'tickets.newTicketTitle' | transloco }}</h1>
+  <p class="page-subtitle">{{ 'tickets.newTicketSubtitle' | transloco }}</p>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="ticket-form">
 
@@ -15,7 +17,7 @@
       <mat-label>{{ 'tickets.typeLabel' | transloco }}</mat-label>
       <mat-select formControlName="type">
         @for (t of ticketTypes; track t) {
-          <mat-option [value]="t">{{ t }}</mat-option>
+          <mat-option [value]="t">{{ ('tickets.types.' + t) | transloco }}</mat-option>
         }
       </mat-select>
       @if (form.get('type')?.hasError('required')) {
@@ -33,7 +35,7 @@
 
     <div class="actions">
       <a mat-button routerLink="/my-tickets">{{ 'tickets.cancel' | transloco }}</a>
-      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">{{ 'tickets.submit' | transloco }}</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">{{ 'tickets.submit' | transloco }}</button>
     </div>
 
   </form>
