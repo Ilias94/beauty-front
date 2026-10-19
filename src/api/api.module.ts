@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { UserControllerService } from './services/user-controller.service';
+import { FaqControllerService } from './services/faq-controller.service';
 import { CourseControllerService } from './services/course-controller.service';
 import { CategoryControllerService } from './services/category-controller.service';
 import { TemplateControllerService } from './services/template-controller.service';
@@ -18,6 +19,7 @@ import { LoginControllerService } from './services/login-controller.service';
 import { GeoLocationControllerService } from './services/geo-location-controller.service';
 import { CourseMessageControllerService } from './services/course-message-controller.service';
 import { CommentControllerService } from './services/comment-controller.service';
+import { AssistantControllerService } from './services/assistant-controller.service';
 import { AiControllerService } from './services/ai-controller.service';
 import { ReportControllerService } from './services/report-controller.service';
 import { ParticipantsControllerService } from './services/participants-controller.service';
@@ -32,6 +34,7 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
   declarations: [],
   providers: [
     UserControllerService,
+    FaqControllerService,
     CourseControllerService,
     CategoryControllerService,
     TemplateControllerService,
@@ -45,6 +48,7 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
     GeoLocationControllerService,
     CourseMessageControllerService,
     CommentControllerService,
+    AssistantControllerService,
     AiControllerService,
     ReportControllerService,
     ParticipantsControllerService,

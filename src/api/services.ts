@@ -1,4 +1,5 @@
 export { UserControllerService } from './services/user-controller.service';
+export { FaqControllerService } from './services/faq-controller.service';
 export { CourseControllerService } from './services/course-controller.service';
 export { CategoryControllerService } from './services/category-controller.service';
 export { TemplateControllerService } from './services/template-controller.service';
@@ -12,6 +13,7 @@ export { LoginControllerService } from './services/login-controller.service';
 export { GeoLocationControllerService } from './services/geo-location-controller.service';
 export { CourseMessageControllerService } from './services/course-message-controller.service';
 export { CommentControllerService } from './services/comment-controller.service';
+export { AssistantControllerService } from './services/assistant-controller.service';
 export { AiControllerService } from './services/ai-controller.service';
 export { ReportControllerService } from './services/report-controller.service';
 export { ParticipantsControllerService } from './services/participants-controller.service';

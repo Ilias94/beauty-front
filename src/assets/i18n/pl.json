@@ -347,6 +347,19 @@
     "placeholder": "Napisz wiadomość… (Enter aby wysłać)",
     "messageInstructor": "Napisz do instruktora"
   },
+  "assistant": {
+    "title": "Asystent AI",
+    "intro": "Cześć! Pomogę Ci znaleźć kurs i odpowiem na pytania o Twoje kursy, płatności i zgłoszenia. Na przykład:",
+    "example1": "Jakie kursy manicure są w Krakowie?",
+    "example2": "Na jakie kursy jestem zapisana?",
+    "example3": "Czy moja ostatnia płatność przeszła?",
+    "placeholder": "Zadaj pytanie… (Enter aby wysłać)",
+    "remaining": "Pozostało dziś: {{count}}",
+    "disclaimer": "Asystent korzysta z AI i może się mylić.",
+    "limitReached": "Dzienny limit pytań został wykorzystany. Wróć jutro albo napisz zgłoszenie do supportu.",
+    "disabled": "Asystent jest chwilowo wyłączony.",
+    "error": "Coś poszło nie tak. Spróbuj ponownie za chwilę."
+  },
   "calendar": {
     "today": "Dziś",
     "month": "Miesiąc",

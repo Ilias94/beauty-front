@@ -347,6 +347,19 @@
     "placeholder": "Write a message… (Enter to send)",
     "messageInstructor": "Message Instructor"
   },
+  "assistant": {
+    "title": "AI assistant",
+    "intro": "Hi! I can help you find a course and answer questions about your courses, payments and support tickets. For example:",
+    "example1": "Which manicure courses are there in Kraków?",
+    "example2": "Which courses am I enrolled in?",
+    "example3": "Did my last payment go through?",
+    "placeholder": "Ask a question… (Enter to send)",
+    "remaining": "Left today: {{count}}",
+    "disclaimer": "The assistant uses AI and can make mistakes.",
+    "limitReached": "You've used today's question limit. Come back tomorrow or open a support ticket.",
+    "disabled": "The assistant is temporarily turned off.",
+    "error": "Something went wrong. Please try again in a moment."
+  },
   "calendar": {
     "today": "Today",
     "month": "Month",
