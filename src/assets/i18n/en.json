@@ -139,7 +139,12 @@
     "inPerson": "In person",
     "categoryLabel": "Category",
     "allCategories": "All categories",
-    "resultsCount": "{{count}} courses",
+    "resultsCount": {
+      "one": "{{count}} course",
+      "few": "{{count}} courses",
+      "many": "{{count}} courses",
+      "other": "{{count}} courses"
+    },
     "clearFilters": "Clear filters",
     "sortSoonest": "Soonest first",
     "studentEmptyTitle": "No courses yet",
@@ -148,7 +153,58 @@
     "creatorEmptyText": "Create your first course: description, dates, price and seats. It takes a few minutes.",
     "browseCatalog": "Browse courses",
     "spotsLeftShort": "Seats left: {{count}}",
-    "ratingLabel": "Rated {{rating}} out of 5 by {{count}}"
+    "ratingLabel": "Rated {{rating}} out of 5 by {{count}}",
+    "searchHeading": "What are you looking for?",
+    "sortHeading": "Order",
+    "removeFilter": "Remove filter: {{name}}",
+    "catalogTitleLead": "Find a course",
+    "catalogTitleAccent": "made for you",
+    "statCourses": {
+      "one": "upcoming course",
+      "few": "upcoming courses",
+      "many": "upcoming courses",
+      "other": "upcoming courses"
+    },
+    "statCities": {
+      "one": "city",
+      "few": "cities",
+      "many": "cities",
+      "other": "cities"
+    },
+    "statCategories": {
+      "one": "category",
+      "few": "categories",
+      "many": "categories",
+      "other": "categories"
+    },
+    "levelShort": {
+      "BEGINNER": "Beginner",
+      "INTERMEDIATE": "Intermediate",
+      "ADVANCED": "Advanced"
+    },
+    "certificateShort": "Certificate",
+    "durationDays": {
+      "one": "{{count}} day",
+      "few": "{{count}} days",
+      "many": "{{count}} days",
+      "other": "{{count}} days"
+    },
+    "durationWeeks": {
+      "one": "{{count}} week",
+      "few": "{{count}} weeks",
+      "many": "{{count}} weeks",
+      "other": "{{count}} weeks"
+    },
+    "spotsLeftFew": {
+      "one": "Only {{count}} seat left",
+      "few": "Only {{count}} seats left",
+      "many": "Only {{count}} seats left",
+      "other": "Only {{count}} seats left"
+    },
+    "instructorRatingLabel": "Instructor rated {{rating}} out of 5",
+    "enrolledTooltip": "Enrolled / all seats",
+    "specDuration": "Length",
+    "specLevel": "Level"
   },
   "courseDetails": {
     "backToCourses": "Back to courses",

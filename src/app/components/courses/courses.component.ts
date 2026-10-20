@@ -6,20 +6,20 @@ import { CommonModule } from '@angular/common';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { GetCategoriesAction } from '../state/category.actions';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { debounceTime, Subject } from 'rxjs';
 import { CategoryDtoResponse, PageCourseDtoResponse } from '../../../api/models';
 import { DownloadFileCsvAction, DownloadFileExcelAction } from '../state/file.actions';
 import { SecurityState } from '../state/security.state';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { CourseCardComponent, CourseRelation } from './course-card/course-card.component';
-import { categoryKey } from '../../shared/category-visual';
+import { CategoryVisual, categoryKey, categoryVisual } from '../../shared/category-visual';
+import { SpotlightDirective } from '../../shared/spotlight.directive';
+import { PluralPipe } from '../../shared/plural.pipe';
 
 type CourseType = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
 
@@ -34,14 +34,14 @@ type CourseType = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
         MatPaginatorModule,
         MatButtonModule,
         RouterModule,
-        MatFormFieldModule,
         MatSelectModule,
         FormsModule,
         MatAutocompleteModule,
         MatIconModule,
-        MatCheckboxModule,
         TranslocoModule,
         CourseCardComponent,
+        SpotlightDirective,
+        PluralPipe,
     ],
     templateUrl: './courses.component.html',
     styleUrl: './courses.component.sass'
@@ -77,13 +77,15 @@ export class CoursesComponent implements OnInit {
   searchTitle = '';
   private appliedTitle = '';
   loading = true;
+  /** Upcoming courses in the whole catalogue, for the header; filters don't change it. */
+  catalogTotal: number | null = null;
   private searchInput = new Subject<string>();
 
-  readonly courseTypes: { value: CourseType | null; key: string }[] = [
-    { value: null, key: 'courses.typeAll' },
-    { value: 'IN_PERSON', key: 'courses.inPerson' },
-    { value: 'ONLINE', key: 'courses.online' },
-    { value: 'HYBRID', key: 'courses.hybrid' },
+  readonly courseTypes: { value: CourseType | null; key: string; icon: string }[] = [
+    { value: null, key: 'courses.typeAll', icon: 'apps' },
+    { value: 'IN_PERSON', key: 'courses.inPerson', icon: 'location_on' },
+    { value: 'ONLINE', key: 'courses.online', icon: 'videocam' },
+    { value: 'HYBRID', key: 'courses.hybrid', icon: 'devices' },
   ];
 
   readonly sortOptions = [
@@ -137,6 +139,46 @@ export class CoursesComponent implements OnInit {
   selectedCategoryLabel(): string {
     const category = this.categories()?.find(c => c.id === this.selectedCategoryId);
     return category ? this.categoryLabel(category) : '';
+  }
+
+  /** The category's tint and icon, the same ones its courses use when they have no photo. */
+  visualOf(category: CategoryDtoResponse): CategoryVisual {
+    return categoryVisual(category.label);
+  }
+
+  /** "Kraków · Warszawa +6" for the tag floating by the header art. */
+  citiesPreview(): string {
+    const cities = this.distinctCities();
+    const shown = cities.slice(0, 2).join(' · ');
+    return cities.length > 2 ? `${shown} +${cities.length - 2}` : shown;
+  }
+
+  typeIndex(): number {
+    return Math.max(0, this.courseTypes.findIndex(t => t.value === this.selectedCourseType));
+  }
+
+  /** The whole segment opens its select; a click on the select itself already toggles it. */
+  openSelect(select: MatSelect, event: MouseEvent): void {
+    if (!(event.target as HTMLElement).closest('mat-select')) select.open();
+  }
+
+  togglePast(): void {
+    this.showPast = !this.showPast;
+    this.onShowPastChange();
+  }
+
+  /** The filters in effect, each with the action that removes only that one. */
+  activeChips(): { id: string; label: string; clear: () => void }[] {
+    const chips: { id: string; label: string; clear: () => void }[] = [];
+    if (this.appliedTitle) chips.push({ id: 'title', label: `„${this.appliedTitle}”`, clear: () => this.clearSearch() });
+    if (this.selectedCategoryId) chips.push({ id: 'category', label: this.selectedCategoryLabel(), clear: () => this.onCategorySelect(null) });
+    if (this.selectedCity) chips.push({ id: 'city', label: this.selectedCity, clear: () => this.onCitySelect(null) });
+    if (this.selectedCourseType) {
+      const type = this.courseTypes.find(t => t.value === this.selectedCourseType)!;
+      chips.push({ id: 'type', label: this.transloco.translate(type.key), clear: () => this.onCourseTypeSelect(null) });
+    }
+    if (this.showPast) chips.push({ id: 'past', label: this.transloco.translate('courses.showPastCourses'), clear: () => this.togglePast() });
+    return chips;
   }
 
   onSearchInput(value: string): void {
@@ -228,13 +270,17 @@ export class CoursesComponent implements OnInit {
 
   private refresh(): void {
     this.loading = true;
+    const unfiltered = this.mode() === 'catalog' && !this.hasActiveFilters();
     this.store.dispatch(new GetPageCoursesAction(
       this.page, this.size, this.selectedCategoryId, this.appliedTitle || null,
       this.sortBy, this.direction,
       this.isCurrentCreator(), this.isCurrentStudent(), this.computeHidePast(),
       this.selectedCity, this.selectedCourseType
     )).subscribe({
-      next: () => this.loading = false,
+      next: () => {
+        this.loading = false;
+        if (unfiltered) this.catalogTotal = this.pageCourses()?.totalElements ?? null;
+      },
       error: () => this.loading = false,
     });
   }

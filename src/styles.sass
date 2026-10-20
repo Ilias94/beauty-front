@@ -23,6 +23,10 @@
   --accent-soft-2: #EDD3DA
   --on-accent: #FFFFFF
 
+  // Gold: rating stars and the logo's sparkle only (gold-bright where it sits on wine)
+  --gold: #C48A2C
+  --gold-bright: #E2B15F
+
   // Status
   --success: #3E7B57
   --success-soft: #E5F1E9
@@ -544,6 +548,11 @@ img
 
       .mdc-list-item__primary-text
         color: var(--accent) !important
+
+// Selects opened from the catalog's search panel: at least as wide as a segment, a step below it.
+.console-panel
+  min-width: 220px
+  margin-top: 14px
 
 // Checkbox: softly rounded box, accent when checked.
 .mat-mdc-checkbox

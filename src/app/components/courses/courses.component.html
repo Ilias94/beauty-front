@@ -1,8 +1,8 @@
 <div class="page">
 
   <!-- ─── Header ─────────────────────────────────────────── -->
-  <header class="catalog-head">
-    <div>
+  <header class="catalog-head" [class.hero]="mode() === 'catalog'">
+    <div class="head-copy">
       @switch (mode()) {
         @case ('student') {
           <p class="eyebrow">{{ 'courses.studentEyebrow' | transloco }}</p>
@@ -16,24 +16,58 @@
         }
         @default {
           <p class="eyebrow">{{ 'courses.catalogEyebrow' | transloco }}</p>
-          <h1 class="page-title">{{ 'courses.catalogTitle' | transloco }}</h1>
+          <h1 class="page-title hero-title">
+            {{ 'courses.catalogTitleLead' | transloco }}
+            <em class="hero-accent">{{ 'courses.catalogTitleAccent' | transloco }}<svg class="swash" viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11C40 4 92 2.5 197 7.5"/></svg></em>
+          </h1>
           <p class="page-subtitle">{{ 'courses.catalogSubtitle' | transloco }}</p>
+
+          <!-- The catalogue's size, from the unfiltered list, the cities and the categories. -->
+          @if (catalogTotal !== null) {
+            <dl class="hero-stats">
+              <div><dt>{{ catalogTotal }}</dt><dd>{{ catalogTotal | plural: 'courses.statCourses' | transloco }}</dd></div>
+              <div><dt>{{ distinctCities().length }}</dt><dd>{{ distinctCities().length | plural: 'courses.statCities' | transloco }}</dd></div>
+              <div><dt>{{ categories().length }}</dt><dd>{{ categories().length | plural: 'courses.statCategories' | transloco }}</dd></div>
+            </dl>
+          }
         }
       }
     </div>
+
+    @if (mode() === 'catalog') {
+      <!-- The brand's wall of arched salon mirrors (the logo's shape, as on the design system's cover).
+           It stands behind the search panel, which covers its foot. -->
+      <div class="hero-art" aria-hidden="true">
+        <span class="arch arch-wine">
+          <span class="arch-frame"></span><span class="arch-frame"></span><span class="arch-frame"></span>
+          <span class="spark"></span>
+        </span>
+        <span class="arch arch-gold"></span>
+        <span class="arch arch-blush"></span>
+        <span class="arch arch-ink"></span>
+        @if (distinctCities().length) {
+          <span class="float-tag tag-cities"><mat-icon>location_on</mat-icon>{{ citiesPreview() }}</span>
+        }
+        <span class="float-tag tag-online"><mat-icon>videocam</mat-icon>{{ 'courses.online' | transloco }}</span>
+      </div>
+    }
   </header>
 
   <!-- ─── Search & filters ───────────────────────────────── -->
   <!-- "My courses" lists are short; filters only appear once there is something to filter. -->
   @if (mode() === 'catalog' || (pageCourses()?.totalElements ?? 0) > 0 || hasActiveFilters()) {
   <section class="filters" [attr.aria-label]="'courses.filtersLabel' | transloco">
-    <div class="filter-bar">
-      <label class="search">
-        <mat-icon>search</mat-icon>
-        <input type="search" [placeholder]="'courses.searchPlaceholder' | transloco"
-          [ngModel]="searchTitle" (ngModelChange)="onSearchInput($event)"
-          (keydown.enter)="search()" [matAutocomplete]="auto"
-          [attr.aria-label]="'courses.searchLabel' | transloco">
+    <!-- One search panel: what, where and in which order, each segment with its own heading. -->
+    <div class="console">
+      <label class="seg seg-search">
+        <mat-icon class="seg-icon">search</mat-icon>
+        <span class="seg-text">
+          <span class="seg-label">{{ 'courses.searchHeading' | transloco }}</span>
+          <input type="search" [placeholder]="'courses.searchPlaceholder' | transloco"
+            [ngModel]="searchTitle" (ngModelChange)="onSearchInput($event)"
+            (keydown.enter)="search()" [matAutocomplete]="auto"
+            [attr.aria-label]="'courses.searchLabel' | transloco">
+        </span>
         @if (searchTitle) {
           <button type="button" class="clear-btn" (click)="clearSearch()" [attr.aria-label]="'courses.clearSearch' | transloco">
             <mat-icon>close</mat-icon>
@@ -47,55 +81,75 @@
       </label>
 
       @if (mode() === 'catalog') {
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-field city-field">
-          <mat-icon matPrefix>location_on</mat-icon>
-          <mat-select [ngModel]="selectedCity" (ngModelChange)="onCitySelect($event)"
-            [placeholder]="'courses.anyCity' | transloco" [attr.aria-label]="'courses.cityLabel' | transloco">
-            <mat-option [value]="null">{{ 'courses.anyCity' | transloco }}</mat-option>
-            @for (city of distinctCities(); track city) {
-              <mat-option [value]="city">{{ city }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+        <div class="seg seg-pick" (click)="openSelect(citySelect, $event)">
+          <mat-icon class="seg-icon">location_on</mat-icon>
+          <span class="seg-text">
+            <span class="seg-label" id="city-heading">{{ 'courses.cityLabel' | transloco }}</span>
+            <mat-select #citySelect panelClass="console-panel" [panelWidth]="null" aria-labelledby="city-heading"
+              [ngModel]="selectedCity" (ngModelChange)="onCitySelect($event)" [placeholder]="'courses.anyCity' | transloco">
+              <mat-option [value]="null">{{ 'courses.anyCity' | transloco }}</mat-option>
+              @for (city of distinctCities(); track city) {
+                <mat-option [value]="city">{{ city }}</mat-option>
+              }
+            </mat-select>
+          </span>
+          <mat-icon class="seg-caret" aria-hidden="true">expand_more</mat-icon>
+        </div>
       }
 
-      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-field sort-field">
-        <mat-icon matPrefix>swap_vert</mat-icon>
-        <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange($event.value)" [attr.aria-label]="'courses.sortByLabel' | transloco">
-          <!-- Explicit trigger: the option labels are translated after the select first renders. -->
-          <mat-select-trigger>{{ sortLabelKey() | transloco }}</mat-select-trigger>
-          @for (opt of sortOptions; track opt.value) {
-            <mat-option [value]="opt.value">{{ opt.key | transloco }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      <div class="seg seg-pick" (click)="openSelect(sortSelect, $event)">
+        <mat-icon class="seg-icon">swap_vert</mat-icon>
+        <span class="seg-text">
+          <span class="seg-label" id="sort-heading">{{ 'courses.sortHeading' | transloco }}</span>
+          <mat-select #sortSelect panelClass="console-panel" [panelWidth]="null" aria-labelledby="sort-heading"
+            [(value)]="selectedSort" (selectionChange)="onSortChange($event.value)">
+            <!-- Explicit trigger: the option labels are translated after the select first renders. -->
+            <mat-select-trigger>{{ sortLabelKey() | transloco }}</mat-select-trigger>
+            @for (opt of sortOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.key | transloco }}</mat-option>
+            }
+          </mat-select>
+        </span>
+        <mat-icon class="seg-caret" aria-hidden="true">expand_more</mat-icon>
+      </div>
     </div>
 
     @if (mode() === 'catalog') {
       <div class="filter-row">
-        <div class="segmented" role="radiogroup" [attr.aria-label]="'courses.typeLabel' | transloco">
+        <!-- Equal columns, so the white indicator can slide by its own width to the chosen form. -->
+        <div class="type-switch" role="radiogroup" [attr.aria-label]="'courses.typeLabel' | transloco"
+          [style.--idx]="typeIndex()" [style.--n]="courseTypes.length">
+          <span class="type-indicator" aria-hidden="true"></span>
           @for (type of courseTypes; track type.key) {
             <button type="button" role="radio" [attr.aria-checked]="selectedCourseType === type.value"
               [class.on]="selectedCourseType === type.value" (click)="onCourseTypeSelect(type.value)">
-              {{ type.key | transloco }}
+              <mat-icon>{{ type.icon }}</mat-icon>{{ type.key | transloco }}
             </button>
           }
         </div>
-        <mat-checkbox [(ngModel)]="showPast" (change)="onShowPastChange()" class="past-check">
+
+        <button type="button" class="switch" role="switch" [attr.aria-checked]="showPast" (click)="togglePast()">
+          <span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>
           {{ 'courses.showPastCourses' | transloco }}
-        </mat-checkbox>
+        </button>
       </div>
     }
 
-    <div class="pills" role="radiogroup" [attr.aria-label]="'courses.categoryLabel' | transloco">
-      <button type="button" class="pill" role="radio" [attr.aria-checked]="selectedCategoryId === null"
+    <div class="cat-tiles" role="radiogroup" [attr.aria-label]="'courses.categoryLabel' | transloco">
+      <button type="button" class="cat-tile cat-all" appSpotlight role="radio" [attr.aria-checked]="selectedCategoryId === null"
         [class.on]="selectedCategoryId === null" (click)="onCategorySelect(null)">
-        {{ 'courses.allCategories' | transloco }}
+        <span class="cat-icon"><mat-icon>apps</mat-icon></span>
+        <span class="cat-name">{{ 'courses.allCategories' | transloco }}</span>
+        <mat-icon class="cat-check" aria-hidden="true">check_circle</mat-icon>
       </button>
       @for (cat of categories(); track cat.id) {
-        <button type="button" class="pill" role="radio" [attr.aria-checked]="selectedCategoryId === cat.id"
-          [class.on]="selectedCategoryId === cat.id" (click)="onCategorySelect(cat.id)">
-          {{ categoryLabel(cat) }}
+        @let look = visualOf(cat);
+        <button type="button" class="cat-tile" appSpotlight role="radio" [attr.aria-checked]="selectedCategoryId === cat.id"
+          [class.on]="selectedCategoryId === cat.id" (click)="onCategorySelect(cat.id)"
+          [style.--cat-tint]="look.tint" [style.--cat-ink]="look.ink">
+          <span class="cat-icon"><mat-icon>{{ look.icon }}</mat-icon></span>
+          <span class="cat-name">{{ categoryLabel(cat) }}</span>
+          <mat-icon class="cat-check" aria-hidden="true">check_circle</mat-icon>
         </button>
       }
     </div>
@@ -105,9 +159,16 @@
   <!-- ─── Results meta ───────────────────────────────────── -->
   <div class="results-meta" aria-live="polite">
     @if (!loading && (mode() === 'catalog' || (pageCourses()?.totalElements ?? 0) > 0)) {
-      <span class="count">{{ 'courses.resultsCount' | transloco: { count: pageCourses()?.totalElements ?? 0 } }}</span>
+      <span class="count">{{ (pageCourses()?.totalElements ?? 0) | plural: 'courses.resultsCount' | transloco: { count: pageCourses()?.totalElements ?? 0 } }}</span>
     }
-    @if (hasActiveFilters()) {
+    <!-- Each active filter as a chip that removes just that one. -->
+    @for (chip of activeChips(); track chip.id) {
+      <button type="button" class="active-chip" (click)="chip.clear()"
+        [attr.aria-label]="'courses.removeFilter' | transloco: { name: chip.label }">
+        {{ chip.label }}<mat-icon>close</mat-icon>
+      </button>
+    }
+    @if (activeChips().length > 1) {
       <button type="button" class="reset-link" (click)="clearAllFilters()">{{ 'courses.clearFilters' | transloco }}</button>
     }
   </div>

@@ -139,7 +139,12 @@
     "inPerson": "Stacjonarne",
     "categoryLabel": "Kategoria",
     "allCategories": "Wszystkie kategorie",
-    "resultsCount": "{{count}} kursów",
+    "resultsCount": {
+      "one": "{{count}} kurs",
+      "few": "{{count}} kursy",
+      "many": "{{count}} kursów",
+      "other": "{{count}} kursu"
+    },
     "clearFilters": "Wyczyść filtry",
     "sortSoonest": "Najbliższy termin",
     "studentEmptyTitle": "Nie masz jeszcze kursów",
@@ -148,7 +153,58 @@
     "creatorEmptyText": "Utwórz pierwszy kurs: opis, termin, cena i miejsca. Zajmie to kilka minut.",
     "browseCatalog": "Przeglądaj kursy",
     "spotsLeftShort": "Wolne miejsca: {{count}}",
-    "ratingLabel": "Ocena {{rating}} na 5, liczba ocen: {{count}}"
+    "ratingLabel": "Ocena {{rating}} na 5, liczba ocen: {{count}}",
+    "searchHeading": "Czego szukasz?",
+    "sortHeading": "Kolejność",
+    "removeFilter": "Usuń filtr: {{name}}",
+    "catalogTitleLead": "Znajdź kurs",
+    "catalogTitleAccent": "dla siebie",
+    "statCourses": {
+      "one": "aktualny kurs",
+      "few": "aktualne kursy",
+      "many": "aktualnych kursów",
+      "other": "aktualnego kursu"
+    },
+    "statCities": {
+      "one": "miasto",
+      "few": "miasta",
+      "many": "miast",
+      "other": "miasta"
+    },
+    "statCategories": {
+      "one": "kategoria",
+      "few": "kategorie",
+      "many": "kategorii",
+      "other": "kategorii"
+    },
+    "levelShort": {
+      "BEGINNER": "Podstawowy",
+      "INTERMEDIATE": "Średni",
+      "ADVANCED": "Zaawansowany"
+    },
+    "certificateShort": "Certyfikat",
+    "durationDays": {
+      "one": "{{count}} dzień",
+      "few": "{{count}} dni",
+      "many": "{{count}} dni",
+      "other": "{{count}} dnia"
+    },
+    "durationWeeks": {
+      "one": "{{count}} tydzień",
+      "few": "{{count}} tygodnie",
+      "many": "{{count}} tygodni",
+      "other": "{{count}} tygodnia"
+    },
+    "spotsLeftFew": {
+      "one": "Zostało {{count}} miejsce",
+      "few": "Zostały {{count}} miejsca",
+      "many": "Zostało {{count}} miejsc",
+      "other": "Zostało {{count}} miejsca"
+    },
+    "instructorRatingLabel": "Ocena prowadzącej osoby: {{rating}} na 5",
+    "enrolledTooltip": "Zapisane osoby / wszystkie miejsca",
+    "specDuration": "Czas trwania",
+    "specLevel": "Poziom"
   },
   "courseDetails": {
     "backToCourses": "Wróć do kursów",
