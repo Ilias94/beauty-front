@@ -109,19 +109,59 @@
   white-space: pre-line
   max-width: 68ch
 
+// Folded long description: fades out, "Show more" opens it.
+.prose-wrap
+  position: relative
+
+  &.folded
+    max-height: 260px
+    overflow: hidden
+
+    &::after
+      content: ''
+      position: absolute
+      left: 0
+      right: 0
+      bottom: 0
+      height: 96px
+      background: linear-gradient(transparent, var(--bg))
+      pointer-events: none
+
+.more
+  display: inline-flex
+  align-items: center
+  gap: 2px
+  margin-top: 10px
+  padding: 6px 2px
+  border: 0
+  background: transparent
+  font: 700 14.5px var(--font-ui)
+  color: var(--accent)
+  cursor: pointer
+
+  &:hover
+    color: var(--accent-hover)
+
+    .mat-icon
+      transform: translateY(2px)
+
+  .mat-icon
+    transition: transform var(--dur) var(--ease)
+
+// Facts as tiles that stretch to fill each row, so an odd count never leaves a gap.
 .facts
-  display: grid
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))
-  gap: 1px
+  display: flex
+  flex-wrap: wrap
+  gap: 10px
   margin: 24px 0 0
-  border: 1px solid var(--line)
-  border-radius: var(--radius)
-  overflow: hidden
-  background: var(--line)
 
   div
-    background: var(--surface)
+    flex: 1 1 170px
+    min-width: 0
     padding: 14px 16px
+    border: 1px solid var(--line)
+    border-radius: var(--radius)
+    background: var(--surface)
 
   dt
     font-size: 12px
@@ -373,6 +413,80 @@
   display: flex
   flex-direction: column
   gap: 8px
+
+// Instructor actions as a list: icon, name, one-line hint, chevron.
+.tools
+  display: flex
+  flex-direction: column
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  overflow: hidden
+
+.tool
+  display: flex
+  align-items: center
+  gap: 12px
+  width: 100%
+  padding: 12px 12px 12px 14px
+  border: 0
+  border-bottom: 1px solid var(--line)
+  background: var(--surface)
+  font-family: var(--font-ui)
+  color: var(--ink)
+  text-align: left
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease)
+
+  &:last-child
+    border-bottom: 0
+
+  &:hover
+    background: var(--bg)
+    color: var(--ink)
+
+    .tool-icon
+      background: var(--accent)
+      color: #fff
+
+    .chev
+      color: var(--accent)
+      transform: translateX(3px)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: -2px
+
+.tool-icon
+  width: 36px
+  height: 36px
+  flex-shrink: 0
+  border-radius: 10px
+  display: grid
+  place-items: center
+  background: var(--accent-soft)
+  color: var(--accent)
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+
+.tool-text
+  flex: 1
+  display: flex
+  flex-direction: column
+  font-size: 12.5px
+  line-height: 1.35
+  color: var(--ink-3)
+
+  strong
+    font-size: 14px
+    color: var(--ink)
+
+.chev
+  color: var(--line-strong)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
 
 .owner-note
   background: var(--accent-soft)

@@ -96,6 +96,10 @@ export class CourseDetailsComponent implements OnInit {
   /** "Learning outcomes" is free text; one line or semicolon-separated item per bullet. */
   outcomes = computed(() => (this.course()?.learningOutcomes ?? '')
     .split(/\r?\n|;/).map(s => s.replace(/^[-•*]\s*/, '').trim()).filter(Boolean));
+  /** Long descriptions start folded so the booking card, outcomes and reviews stay within reach. */
+  longDescription = computed(() => (this.course()?.description?.length ?? 0) > 700);
+  descriptionOpen = signal(false);
+  instructorName = computed(() => [this.course()?.creator?.firstName, this.course()?.creator?.lastName].filter(Boolean).join(' '));
   canReview = computed(() => !!this.currentUser() && this.isEnrolled() && !this.isOwner());
   showMobileBar = computed(() => this.loaded() && !this.isOwner() && !this.isEnrolled() && this.status() !== 'past' && !this.isFull());
 
@@ -168,7 +172,7 @@ export class CourseDetailsComponent implements OnInit {
     this.dialog.open(CourseOnlineComponent, {
       width: '900px',
       maxWidth: '96vw',
-      data: { courseId: this.courseId }
+      data: { courseId: this.courseId, courseTitle: this.course()?.title, canEdit: this.isOwner() }
     });
   }
 

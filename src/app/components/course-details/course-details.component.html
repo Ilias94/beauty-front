@@ -61,7 +61,16 @@
         <!-- About -->
         <section class="section">
           <h2>{{ 'courseDetails.aboutCourse' | transloco }}</h2>
-          <p class="prose">{{ c.description }}</p>
+          <div class="prose-wrap" [class.folded]="longDescription() && !descriptionOpen()">
+            <p class="prose" id="course-description">{{ c.description }}</p>
+          </div>
+          @if (longDescription()) {
+            <button type="button" class="more" (click)="descriptionOpen.set(!descriptionOpen())"
+                    [attr.aria-expanded]="descriptionOpen()" aria-controls="course-description">
+              {{ (descriptionOpen() ? 'courseDetails.showLess' : 'courseDetails.showMore') | transloco }}
+              <mat-icon>{{ descriptionOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+          }
           <dl class="facts">
             @if (c.courseLevel) {
               <div><dt>{{ 'courseDetails.level' | transloco }}</dt><dd>{{ ('courseDetails.levels.' + c.courseLevel) | transloco }}</dd></div>
@@ -116,7 +125,7 @@
         }
 
         <!-- Instructor -->
-        @if (c.creator) {
+        @if (c.creator && instructorName()) {
           <section class="section">
             <h2>{{ 'courseDetails.instructor' | transloco }}</h2>
             <div class="instructor">
@@ -126,7 +135,7 @@
                 <span class="instructor-avatar initials">{{ c.creator.firstName?.[0] }}{{ c.creator.lastName?.[0] }}</span>
               }
               <div class="instructor-body">
-                <p class="instructor-name">{{ c.creator.firstName }} {{ c.creator.lastName }}</p>
+                <p class="instructor-name">{{ instructorName() }}</p>
                 @if (c.creator.instructorRating) {
                   <p class="instructor-rating">
                     <app-star-rating [value]="c.creator.instructorRating" size="sm" />
@@ -231,9 +240,23 @@
             <div class="owner-tools">
               <p class="owner-note"><mat-icon>verified</mat-icon>{{ 'courseDetails.ownerNote' | transloco }}</p>
               <input hidden #fileInput (change)="onFileSelected($event)" multiple type="file" accept="video/*">
-              <button mat-stroked-button type="button" (click)="onUpload()"><mat-icon>upload</mat-icon>{{ 'courseDetails.addVideos' | transloco }}</button>
-              <button mat-stroked-button type="button" (click)="openVideos()"><mat-icon>play_circle</mat-icon>{{ 'courseDetails.manageVideos' | transloco }}</button>
-              <a mat-stroked-button [routerLink]="['/questions', courseId]"><mat-icon>quiz</mat-icon>{{ 'courseDetails.quiz' | transloco }}</a>
+              <div class="tools">
+                <button type="button" class="tool" (click)="onUpload()">
+                  <span class="tool-icon"><mat-icon>upload</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.addVideos' | transloco }}</strong>{{ 'courseDetails.addVideosHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </button>
+                <button type="button" class="tool" (click)="openVideos()">
+                  <span class="tool-icon"><mat-icon>play_circle</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.manageVideos' | transloco }}</strong>{{ 'courseDetails.manageVideosHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </button>
+                <a class="tool" [routerLink]="['/questions', courseId]">
+                  <span class="tool-icon"><mat-icon>quiz</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.quiz' | transloco }}</strong>{{ 'courseDetails.quizHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </a>
+              </div>
             </div>
           } @else if (isEnrolled()) {
             <div class="enrolled">

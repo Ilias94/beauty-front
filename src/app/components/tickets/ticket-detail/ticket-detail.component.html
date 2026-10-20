@@ -1,80 +1,102 @@
-@if (ticket(); as t) {
-  <div class="detail-wrapper">
+<div class="detail-wrapper">
+  <a class="back-link" [routerLink]="isSupport() ? '/support/tickets' : '/my-tickets'">
+    <mat-icon>arrow_back</mat-icon>{{ (isSupport() ? 'tickets.supportTickets' : 'menu.myTickets') | transloco }}
+  </a>
 
-    <div class="ticket-header">
-      <div>
-        <h1 class="title">{{ t.title }}</h1>
-        <span class="meta">{{ ('tickets.types.' + t.type) | transloco }} · #{{ t.id }} · {{ t.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+  @if (ticket(); as t) {
+    @let open = t.status && t.status !== 'RESOLVED' && t.status !== 'CLOSED';
+
+    <!-- Header -->
+    <header class="ticket-header">
+      <p class="eyebrow">{{ ('tickets.types.' + t.type) | transloco }} · #{{ t.id }}</p>
+      <div class="title-row">
+        <h1 class="page-title">{{ t.title }}</h1>
+        <span class="tag status" [class]="statusTag(t.status)">{{ ('tickets.statuses.' + t.status) | transloco }}</span>
       </div>
-      <span class="tag" [class]="statusTag(t.status)">{{ ('tickets.statuses.' + t.status) | transloco }}</span>
-    </div>
+      <p class="meta"><mat-icon>schedule</mat-icon>{{ t.createdAt | date:'dd.MM.yyyy, HH:mm' }}</p>
+    </header>
 
-    <p class="description">{{ t.description }}</p>
-
-    <mat-divider />
-
-    @if (t.resolution) {
-      <div class="resolution-box" [class.ai-resolution]="t.resolution.source === 'AI'">
-        <div class="resolution-header">
-          @if (t.resolution.source === 'AI') {
-            <mat-icon>smart_toy</mat-icon>
-            <strong>{{ 'tickets.aiAnswer' | transloco }}</strong>
-            <span class="confidence">({{ 'tickets.confidence' | transloco }}: {{ (t.resolution.confidenceScore! * 100).toFixed(0) }}%)</span>
-          } @else {
-            <mat-icon>support_agent</mat-icon>
-            <strong>{{ 'tickets.resolvedBy' | transloco }} {{ t.resolution.resolvedByName }}</strong>
-          }
-          <span class="res-time">{{ t.resolution.resolvedAt | date:'dd.MM.yyyy HH:mm' }}</span>
+    <!-- Conversation: the description is the first message -->
+    <div class="thread">
+      <article class="msg mine">
+        <span class="avatar">{{ initials(t.authorName) }}</span>
+        <div class="bubble">
+          <div class="msg-meta"><strong>{{ t.authorName }}</strong></div>
+          <p>{{ t.description }}</p>
         </div>
-        <p>{{ t.resolution.content }}</p>
-      </div>
-      <mat-divider />
-    }
+      </article>
 
-    <div class="replies">
       @for (reply of (t.replies ?? []); track reply.id) {
-        <div class="reply" [class.reply-user]="reply.authorRole === 'USER'"
-                           [class.reply-support]="reply.authorRole === 'SUPPORT'"
-                           [class.reply-ai]="reply.aiGenerated">
-          <div class="reply-meta">
-            @if (reply.aiGenerated) {
-              <mat-icon class="ai-icon">smart_toy</mat-icon>
-            }
-            <span class="reply-author">{{ reply.authorName }}</span>
-            <span class="reply-role">{{ ('tickets.roles.' + reply.authorRole) | transloco }}</span>
-            <span class="reply-time">{{ reply.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+        <article class="msg" [class.mine]="reply.authorRole === 'USER'" [class.support]="reply.authorRole === 'SUPPORT'" [class.ai]="reply.aiGenerated">
+          <span class="avatar">
+            @if (reply.aiGenerated) { <mat-icon>auto_awesome</mat-icon> } @else { {{ initials(reply.authorName) }} }
+          </span>
+          <div class="bubble">
+            <div class="msg-meta">
+              <strong>{{ reply.authorName }}</strong>
+              <span class="role">{{ ('tickets.roles.' + reply.authorRole) | transloco }}</span>
+              <time>{{ reply.createdAt | date:'dd.MM, HH:mm' }}</time>
+            </div>
+            <p>{{ reply.content }}</p>
           </div>
-          <p>{{ reply.content }}</p>
-        </div>
+        </article>
+      }
+
+      @if (t.resolution) {
+        <section class="resolution" [class.ai-resolution]="t.resolution.source === 'AI'">
+          <span class="res-icon"><mat-icon>{{ t.resolution.source === 'AI' ? 'auto_awesome' : 'task_alt' }}</mat-icon></span>
+          <div>
+            <div class="res-head">
+              @if (t.resolution.source === 'AI') {
+                <strong>{{ 'tickets.aiAnswer' | transloco }}</strong>
+                <span class="tag">{{ 'tickets.confidence' | transloco }}: {{ (t.resolution.confidenceScore! * 100).toFixed(0) }}%</span>
+              } @else {
+                <strong>{{ 'tickets.resolvedBy' | transloco }} {{ t.resolution.resolvedByName }}</strong>
+              }
+              <time>{{ t.resolution.resolvedAt | date:'dd.MM.yyyy, HH:mm' }}</time>
+            </div>
+            <p>{{ t.resolution.content }}</p>
+          </div>
+        </section>
       }
     </div>
 
-    @if (t.status && t.status !== 'RESOLVED' && t.status !== 'CLOSED') {
-      <mat-divider />
-      <form [formGroup]="replyForm" (ngSubmit)="sendReply()" class="reply-form">
-        <mat-form-field appearance="outline" class="reply-input">
+    <!-- Reply composer -->
+    @if (open) {
+      <form [formGroup]="replyForm" (ngSubmit)="sendReply()" class="composer surface">
+        <mat-form-field appearance="outline" class="composer-input" subscriptSizing="dynamic">
           <mat-label>{{ 'tickets.yourReply' | transloco }}</mat-label>
-          <textarea matInput formControlName="content" rows="3"></textarea>
+          <textarea matInput formControlName="content" rows="3" (keydown)="onReplyKey($event)"></textarea>
         </mat-form-field>
-        <button mat-flat-button color="primary" type="submit" [disabled]="replyForm.invalid">
-          <mat-icon>send</mat-icon> {{ 'tickets.send' | transloco }}
-        </button>
+        <div class="composer-actions">
+          <span class="hint">{{ 'tickets.sendHint' | transloco }}</span>
+          <button mat-flat-button color="primary" type="submit" [disabled]="replyForm.invalid">
+            <mat-icon iconPositionEnd>send</mat-icon>{{ 'tickets.send' | transloco }}
+          </button>
+        </div>
       </form>
     }
 
-    @if (isSupport() && t.status && t.status !== 'RESOLVED' && t.status !== 'CLOSED') {
-      <mat-divider />
-      <form [formGroup]="resolveForm" (ngSubmit)="resolve()" class="resolve-form">
-        <h3>{{ 'tickets.resolveTicket' | transloco }}</h3>
-        <mat-form-field appearance="outline" class="resolve-input">
+    @if (isSupport() && open) {
+      <form [formGroup]="resolveForm" (ngSubmit)="resolve()" class="resolve-form surface">
+        <h3><mat-icon>task_alt</mat-icon>{{ 'tickets.resolveTicket' | transloco }}</h3>
+        <mat-form-field appearance="outline" class="composer-input" subscriptSizing="dynamic">
           <mat-label>{{ 'tickets.resolutionNote' | transloco }}</mat-label>
           <textarea matInput formControlName="content" rows="3"></textarea>
         </mat-form-field>
-        <button mat-flat-button color="accent" type="submit" [disabled]="resolveForm.invalid">
-          <mat-icon>check_circle</mat-icon> {{ 'tickets.markResolved' | transloco }}
-        </button>
+        <div class="composer-actions">
+          <span></span>
+          <button mat-flat-button color="primary" type="submit" [disabled]="resolveForm.invalid">
+            <mat-icon>check_circle</mat-icon>{{ 'tickets.markResolved' | transloco }}
+          </button>
+        </div>
       </form>
     }
-
-  </div>
-}
+  } @else {
+    <div aria-hidden="true">
+      <div class="skeleton" style="height: 16px; width: 160px"></div>
+      <div class="skeleton" style="height: 40px; width: 70%; margin-top: 12px"></div>
+      <div class="skeleton" style="height: 96px; margin-top: 32px; border-radius: var(--radius-lg)"></div>
+    </div>
+  }
+</div>

@@ -206,7 +206,12 @@
     "loginToEnroll": "Zaloguj się, aby się zapisać",
     "noAccount": "Nie masz konta?",
     "enrollShort": "Zapisz się",
-    "securePayment": "Bezpieczna płatność przez Stripe"
+    "securePayment": "Bezpieczna płatność przez Stripe",
+    "showMore": "Pokaż cały opis",
+    "showLess": "Zwiń opis",
+    "addVideosHint": "Wgraj nagrania z zajęć",
+    "manageVideosHint": "Przeglądaj i usuwaj filmy",
+    "quizHint": "Pytania sprawdzające dla uczestników"
   },
   "courseForm": {
     "createTitle": "Nowy kurs",
@@ -369,7 +374,8 @@
       "USER": "Ty",
       "SUPPORT": "Zespół wsparcia",
       "ADMIN": "Administrator"
-    }
+    },
+    "sendHint": "Ctrl + Enter, aby wysłać"
   },
   "quiz": {
     "courseQuiz": "Quiz kursu",
@@ -442,7 +448,10 @@
   "common": {
     "backToCourse": "Wróć do kursu",
     "yes": "Tak",
-    "no": "Nie"
+    "no": "Nie",
+    "close": "Zamknij",
+    "cancel": "Anuluj",
+    "save": "Zapisz"
   },
   "validation": {
     "required": "To pole jest wymagane",
@@ -617,5 +626,20 @@
     "showPreview": "Podgląd",
     "closePreview": "Zamknij podgląd",
     "aiUnavailable": "Nie udało się teraz przygotować propozycji. Spróbuj za chwilę albo napisz opis samodzielnie."
+  },
+  "videos": {
+    "eyebrow": "Materiały wideo",
+    "title": "Materiały wideo",
+    "playlist": "Lista filmów",
+    "count": "Filmy: {{count}}",
+    "emptyTitle": "Nie ma jeszcze filmów",
+    "emptyOwner": "Dodaj nagrania przyciskiem „Dodaj filmy” na stronie kursu. Pojawią się tutaj dla uczestników.",
+    "emptyParticipant": "Instruktorka nie dodała jeszcze nagrań. Zajrzyj tu później.",
+    "description": "Opis filmu",
+    "noDescription": "Ten film nie ma jeszcze opisu.",
+    "addDescription": "Dodaj opis",
+    "editDescription": "Edytuj opis",
+    "delete": "Usuń film",
+    "confirmDelete": "Kliknij ponownie, aby usunąć"
   }
 }

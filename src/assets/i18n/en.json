@@ -206,7 +206,12 @@
     "loginToEnroll": "Log in to enroll",
     "noAccount": "No account yet?",
     "enrollShort": "Enroll",
-    "securePayment": "Secure payment with Stripe"
+    "securePayment": "Secure payment with Stripe",
+    "showMore": "Show full description",
+    "showLess": "Show less",
+    "addVideosHint": "Upload class recordings",
+    "manageVideosHint": "Browse and remove videos",
+    "quizHint": "Check-up questions for participants"
   },
   "courseForm": {
     "createTitle": "New course",
@@ -369,7 +374,8 @@
       "USER": "You",
       "SUPPORT": "Support team",
       "ADMIN": "Administrator"
-    }
+    },
+    "sendHint": "Ctrl + Enter to send"
   },
   "quiz": {
     "courseQuiz": "Course Quiz",
@@ -442,7 +448,10 @@
   "common": {
     "backToCourse": "Back to course",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "validation": {
     "required": "This field is required",
@@ -617,5 +626,20 @@
     "showPreview": "Preview",
     "closePreview": "Close preview",
     "aiUnavailable": "Couldn't prepare a suggestion right now. Try again in a moment or write the description yourself."
+  },
+  "videos": {
+    "eyebrow": "Video lessons",
+    "title": "Video lessons",
+    "playlist": "Video list",
+    "count": "Videos: {{count}}",
+    "emptyTitle": "No videos yet",
+    "emptyOwner": "Add recordings with \"Add videos\" on the course page. Participants will see them here.",
+    "emptyParticipant": "The instructor hasn't added any recordings yet. Check back later.",
+    "description": "Video description",
+    "noDescription": "This video has no description yet.",
+    "addDescription": "Add description",
+    "editDescription": "Edit description",
+    "delete": "Delete video",
+    "confirmDelete": "Click again to delete"
   }
 }

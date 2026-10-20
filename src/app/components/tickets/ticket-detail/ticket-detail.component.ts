@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,8 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
 import { TicketState } from '../../state/ticket.state';
 import { SecurityState } from '../../state/security.state';
 import { AddReplyAction, ClearTicketDetailAction, LoadTicketDetailAction, ResolveTicketAction } from '../../state/ticket.actions';
@@ -18,8 +16,8 @@ import { ticketStatusTag } from '../ticket-ui';
 
 @Component({
     selector: 'app-ticket-detail',
-    imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, MatFormFieldModule,
-        MatInputModule, MatChipsModule, MatDividerModule, DatePipe, TranslocoModule],
+    imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatIconModule, MatFormFieldModule,
+        MatInputModule, DatePipe, TranslocoModule],
     templateUrl: './ticket-detail.component.html',
     styleUrl: './ticket-detail.component.sass'
 })
@@ -40,6 +38,10 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
     return this.currentUser()?.roles?.includes('SUPPORT') ?? false;
   }
 
+  initials(name?: string | null): string {
+    return (name ?? '?').split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+  }
+
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.store.dispatch(new LoadTicketDetailAction(id));
@@ -47,6 +49,14 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(new ClearTicketDetailAction());
+  }
+
+  /** Ctrl/Cmd + Enter sends, like most chat and mail apps. */
+  onReplyKey(event: KeyboardEvent) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+      event.preventDefault();
+      this.sendReply();
+    }
   }
 
   sendReply() {

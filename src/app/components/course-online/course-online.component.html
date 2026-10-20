@@ -1,24 +1,88 @@
-<div class="videos-container">
-  <h2 class="section-title">Video materials</h2>
+<div class="player-dialog">
+  <header class="head">
+    <div>
+      <p class="eyebrow">{{ 'videos.eyebrow' | transloco }}</p>
+      <h2>{{ data.courseTitle || ('videos.title' | transloco) }}</h2>
+    </div>
+    <button mat-icon-button type="button" (click)="close()" [attr.aria-label]="'common.close' | transloco">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
 
-  <div class="videos-grid">
-    <mat-card *ngFor="let video of videos()" class="video-card mat-elevation-z4">
-      <mat-card-header>
-        <mat-card-title>{{ video.title }}</mat-card-title>
-        <mat-card-subtitle>{{ video.description }}</mat-card-subtitle>
-      </mat-card-header>
+  @if (loading()) {
+    <div class="layout" aria-hidden="true">
+      <div class="skeleton stage-sk"></div>
+      <div class="list-sk">
+        <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      </div>
+    </div>
+  } @else if (!videos().length) {
+    <div class="empty-state">
+      <span class="empty-icon"><mat-icon>video_library</mat-icon></span>
+      <h3>{{ 'videos.emptyTitle' | transloco }}</h3>
+      <p>{{ (data.canEdit ? 'videos.emptyOwner' : 'videos.emptyParticipant') | transloco }}</p>
+    </div>
+  } @else {
+    @let video = current();
+    <div class="layout">
+      <!-- Player -->
+      <section class="stage">
+        @if (video) {
+          <video class="player" controls preload="metadata" [src]="video.url"></video>
+          <div class="now">
+            <h3>{{ video.title }}</h3>
 
-      <mat-card-content>
-        <video class="video-player" controls [src]="video.url"></video>
-      </mat-card-content>
-      <input matInput placeholder="description" [value]="video.description" #descriptionInput>
-      <button mat-stroked-button color="warn" (click)="updateDescription(video.id, descriptionInput.value)">Add
-        description</button>
-      <button mat-stroked-button (click)="deleteVideo(video.id, data.courseId)">Delete video</button>
-    </mat-card>
-  </div>
+            @if (editing()) {
+              <mat-form-field appearance="outline" class="desc-field" subscriptSizing="dynamic">
+                <mat-label>{{ 'videos.description' | transloco }}</mat-label>
+                <textarea matInput #desc rows="3" [value]="video.description ?? ''"></textarea>
+              </mat-form-field>
+              <div class="edit-actions">
+                <button mat-button type="button" (click)="editing.set(false)">{{ 'common.cancel' | transloco }}</button>
+                <button mat-flat-button color="primary" type="button" (click)="saveDescription(desc.value)">{{ 'common.save' | transloco }}</button>
+              </div>
+            } @else {
+              @if (video.description) {
+                <p class="desc">{{ video.description }}</p>
+              } @else if (data.canEdit) {
+                <p class="desc muted">{{ 'videos.noDescription' | transloco }}</p>
+              }
+              @if (data.canEdit) {
+                <div class="owner-actions">
+                  <button mat-stroked-button type="button" class="btn-sm" (click)="editing.set(true)">
+                    <mat-icon>edit</mat-icon>{{ (video.description ? 'videos.editDescription' : 'videos.addDescription') | transloco }}
+                  </button>
+                  <button mat-button type="button" class="delete" [class.confirm]="confirmDeleteId() === video.id"
+                          (click)="deleteVideo(video.id!)">
+                    <mat-icon>delete_outline</mat-icon>
+                    {{ (confirmDeleteId() === video.id ? 'videos.confirmDelete' : 'videos.delete') | transloco }}
+                  </button>
+                </div>
+              }
+            }
+          </div>
+        }
+      </section>
 
-  <div class="close-btn">
-    <button mat-stroked-button color="warn" (click)="close()">Close</button>
-  </div>
+      <!-- Playlist -->
+      <nav class="playlist" [attr.aria-label]="'videos.playlist' | transloco">
+        <p class="count">{{ 'videos.count' | transloco: { count: videos().length } }}</p>
+        <ol>
+          @for (v of videos(); track v.id; let i = $index) {
+            <li>
+              <button type="button" class="item" [class.on]="v.id === video?.id" [attr.aria-current]="v.id === video?.id" (click)="select(v)">
+                <span class="num">
+                  @if (v.id === video?.id) { <mat-icon>play_arrow</mat-icon> } @else { {{ i + 1 }} }
+                </span>
+                <span class="item-text">
+                  <strong>{{ v.title }}</strong>
+                  @if (v.description) { <span>{{ v.description }}</span> }
+                </span>
+              </button>
+            </li>
+          }
+        </ol>
+      </nav>
+    </div>
+  }
 </div>
