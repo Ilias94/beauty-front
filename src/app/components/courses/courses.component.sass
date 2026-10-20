@@ -153,16 +153,11 @@
     font-weight: 600
     color: var(--ink-2)
 
+// Desktop: all categories visible, wrapping to a second line. Phones swipe instead (below).
 .pills
   display: flex
+  flex-wrap: wrap
   gap: 8px
-  overflow-x: auto
-  padding-bottom: 4px
-  scrollbar-width: none
-  mask-image: linear-gradient(90deg, #000 92%, transparent)
-
-  &::-webkit-scrollbar
-    display: none
 
 .pill
   flex-shrink: 0
@@ -254,6 +249,18 @@
 @media (max-width: 640px)
   .dense-field
     flex: 1 1 calc(50% - 5px)
+
+  // One swipeable row running to the screen edge, so the cut-off pill reads as "more this way".
+  .pills
+    flex-wrap: nowrap
+    overflow-x: auto
+    margin: 0 calc(-1 * var(--gutter))
+    padding: 0 var(--gutter) 4px
+    scroll-padding-inline: var(--gutter)
+    scrollbar-width: none
+
+    &::-webkit-scrollbar
+      display: none
 
   .grid
     gap: 16px
