@@ -148,7 +148,7 @@
     "creatorEmptyText": "Utwórz pierwszy kurs: opis, termin, cena i miejsca. Zajmie to kilka minut.",
     "browseCatalog": "Przeglądaj kursy",
     "spotsLeftShort": "Wolne miejsca: {{count}}",
-    "ratingLabel": "Ocena {{rating}} na 5"
+    "ratingLabel": "Ocena {{rating}} na 5, liczba ocen: {{count}}"
   },
   "courseDetails": {
     "backToCourses": "Wróć do kursów",
@@ -616,7 +616,16 @@
   "rating": {
     "readonlyLabel": "Ocena {{value}} na 5",
     "interactiveLabel": "Wybierz ocenę",
-    "starLabel": "{{value}} na 5"
+    "starLabel": "{{value}} na 5",
+    "count": {
+      "one": "{{count}} ocena",
+      "few": "{{count}} oceny",
+      "many": "{{count}} ocen",
+      "other": "{{count}} oceny"
+    },
+    "none": "Brak ocen",
+    "breakdown": "Rozkład ocen",
+    "barLabel": "{{stars}} na 5: {{count}}"
   },
   "myComments": {
     "title": "Opinie, które dodano",

@@ -28,14 +28,14 @@
           <p class="eyebrow">{{ categoryKey() | transloco }}</p>
           <h1 class="title">{{ c.title }}</h1>
           <div class="head-meta">
-            @if (c.rating) {
-              <span class="meta-item rating">
-                <app-star-rating [value]="c.rating" size="sm" />
-                <strong>{{ c.rating | number: '1.1-1' }}</strong>
-                @if (comments().length) {
-                  <a class="muted" href="#reviews">({{ 'courseDetails.reviewsCount' | transloco: { count: comments().length } }})</a>
-                }
-              </span>
+            @if (rating().count) {
+              <a class="meta-item rating" href="#reviews">
+                <app-star-rating [value]="rating().average" size="sm" />
+                <strong>{{ rating().average | number: '1.1-1' }}</strong>
+                <span class="muted">({{ rating().count | plural: 'rating.count' | transloco: { count: rating().count } }})</span>
+              </a>
+            } @else {
+              <span class="meta-item muted"><mat-icon>star_outline</mat-icon>{{ 'rating.none' | transloco }}</span>
             }
             <span class="meta-item">
               @switch (c.courseType) {
@@ -185,10 +185,28 @@
         <section class="section" id="reviews">
           <div class="section-head">
             <h2>{{ 'courseDetails.reviewsTitle' | transloco }}</h2>
-            @if (c.rating) {
-              <span class="score"><strong>{{ c.rating | number: '1.1-1' }}</strong> / 5</span>
-            }
           </div>
+
+          @if (rating().count) {
+            <div class="rating-summary">
+              <div class="rating-score">
+                <strong>{{ rating().average | number: '1.1-1' }}</strong>
+                <app-star-rating [value]="rating().average" size="md" />
+                <span>{{ rating().count | plural: 'rating.count' | transloco: { count: rating().count } }}</span>
+              </div>
+              @if (rating().counts.length) {
+                <ul class="rating-bars" [attr.aria-label]="'rating.breakdown' | transloco">
+                  @for (bar of ratingBars(); track bar.stars) {
+                    <li [attr.aria-label]="'rating.barLabel' | transloco: { stars: bar.stars, count: bar.n }">
+                      <span class="bar-label" aria-hidden="true">{{ bar.stars }}<mat-icon>star</mat-icon></span>
+                      <span class="bar" aria-hidden="true"><span [style.width.%]="bar.percent"></span></span>
+                      <span class="bar-count" aria-hidden="true">{{ bar.n }}</span>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          }
 
           @if (canReview()) {
             <div class="review-box">

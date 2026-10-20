@@ -22,6 +22,7 @@ export interface CourseDtoResponse {
   prerequisites?: string;
   price?: number;
   rating?: number;
+  ratingCount?: number;
   startDate?: string;
   status?: 'DRAFT' | 'PUBLISHED';
   title?: string;

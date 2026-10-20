@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GetCommentsAction, SaveCommentAction } from '../state/comment.actions';
 import { CommentsComponent } from '../comments/comments.component';
-import { GetCurrentUserRatingByCourseIdAction, SaveRatingAction } from '../state/rating.actions';
+import { GetCurrentUserRatingByCourseIdAction, GetRatingSummaryAction, SaveRatingAction } from '../state/rating.actions';
 import { CommentDtoResponse, CourseDtoResponse, RatingDto, UserDtoResponse } from '../../../api/models';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DOCUMENT, DecimalPipe } from '@angular/common';
@@ -25,6 +25,7 @@ import { ChatApiService } from '../../services/chat-api.service';
 import { CourseGroupChatComponent } from '../course-group-chat/course-group-chat.component';
 import { StarRatingComponent } from '../../shared/star-rating/star-rating.component';
 import { DateRangePipe, PricePipe } from '../../shared/format.pipes';
+import { PluralPipe } from '../../shared/plural.pipe';
 import { categoryKey, categoryVisual } from '../../shared/category-visual';
 import { S3_BASE } from '../../app.const';
 
@@ -33,7 +34,7 @@ import { S3_BASE } from '../../app.const';
     imports: [
         MatButtonModule, MatIconModule, MatDialogModule, MatFormFieldModule, MatInputModule,
         RouterModule, ReactiveFormsModule, CommentsComponent, GoogleMapsModule, DecimalPipe,
-        TranslocoModule, CourseGroupChatComponent, StarRatingComponent, PricePipe, DateRangePipe,
+        TranslocoModule, CourseGroupChatComponent, StarRatingComponent, PricePipe, DateRangePipe, PluralPipe,
     ],
     templateUrl: './course-details.component.html',
     styleUrl: './course-details.component.sass'
@@ -54,6 +55,7 @@ export class CourseDetailsComponent implements OnInit {
   comments: Signal<CommentDtoResponse[]> = toSignal(this.store.select(state => state.comment.comments), { initialValue: [] });
   currentUserRating: Signal<RatingDto | undefined> = toSignal(this.store.select(state => state.rating.currentUserRating));
   currentUser: Signal<UserDtoResponse | undefined> = toSignal(this.store.select(SecurityState.getCurrentUser));
+  private ratingSummary = toSignal(this.store.select(state => state.rating.summary));
 
   courseId!: number;
   /** The store keeps the previously opened course until the new one arrives. */
@@ -105,6 +107,23 @@ export class CourseDetailsComponent implements OnInit {
   longDescription = computed(() => (this.course()?.description?.length ?? 0) > 700);
   descriptionOpen = signal(false);
   instructorName = computed(() => [this.course()?.creator?.firstName, this.course()?.creator?.lastName].filter(Boolean).join(' '));
+  /** This course's ratings: the summary once it has loaded, the course's stored average until then. */
+  rating = computed(() => {
+    const summary = this.ratingSummary();
+    if (summary && String(summary.courseId) === String(this.courseId)) {
+      return { average: summary.average ?? 0, count: summary.count ?? 0, counts: summary.counts ?? [] };
+    }
+    const c = this.course();
+    return { average: c?.rating ?? 0, count: c?.ratingCount ?? 0, counts: [] as number[] };
+  });
+  /** One bar per star level, five stars first. */
+  ratingBars = computed(() => {
+    const { count, counts } = this.rating();
+    return [5, 4, 3, 2, 1].map(stars => {
+      const n = counts[stars - 1] ?? 0;
+      return { stars, n, percent: count ? Math.round((n / count) * 100) : 0 };
+    });
+  });
   canReview = computed(() => !!this.currentUser() && this.isEnrolled() && !this.isOwner());
   showMobileBar = computed(() => this.loaded() && !this.isOwner() && !this.isEnrolled() && this.status() !== 'past' && !this.isFull());
 
@@ -151,6 +170,7 @@ export class CourseDetailsComponent implements OnInit {
       this.store.dispatch([
         new GetCourseByIdAction(this.courseId),
         new GetCommentsAction(this.courseId),
+        new GetRatingSummaryAction(this.courseId),
       ]);
       if (this.store.selectSnapshot(state => state.security.token)) {
         this.store.dispatch(new GetCurrentUserRatingByCourseIdAction(this.courseId));

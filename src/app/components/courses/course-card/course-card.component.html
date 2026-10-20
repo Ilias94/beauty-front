@@ -20,6 +20,15 @@
       }
     </div>
 
+    @if (course().rating && course().ratingCount) {
+      <span class="rating-badge" role="img"
+        [attr.aria-label]="'courses.ratingLabel' | transloco: { rating: (course().rating | number: '1.1-1'), count: course().ratingCount }">
+        <mat-icon>star</mat-icon>
+        <strong>{{ course().rating | number: '1.1-1' }}</strong>
+        <span>({{ course().ratingCount }})</span>
+      </span>
+    }
+
     @if (relation() === 'owner' && !preview()) {
       <span class="tag tag-relation"><mat-icon>edit</mat-icon>{{ 'courses.yourCourse' | transloco }}</span>
     } @else if (relation() === 'enrolled') {
@@ -34,11 +43,6 @@
     <div class="eyebrow-row">
       @if (course().category?.label) {
         <span class="category">{{ categoryKey() | transloco }}</span>
-      }
-      @if (course().rating) {
-        <span class="rating" [attr.aria-label]="'courses.ratingLabel' | transloco: { rating: (course().rating | number: '1.1-1') }">
-          <mat-icon>star</mat-icon>{{ course().rating | number: '1.1-1' }}
-        </span>
       }
     </div>
 

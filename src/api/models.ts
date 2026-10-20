@@ -35,6 +35,7 @@ export { QuestionDetailDto } from './models/question-detail-dto';
 export { QuestionDtoRequest } from './models/question-dto-request';
 export { QuestionDtoResponse } from './models/question-dto-response';
 export { RatingDto } from './models/rating-dto';
+export { RatingSummaryDto } from './models/rating-summary-dto';
 export { RepublishCourseRequest } from './models/republish-course-request';
 export { ResolveTicketDto } from './models/resolve-ticket-dto';
 export { SortObject } from './models/sort-object';

@@ -56,6 +56,21 @@
   strong
     color: var(--ink)
 
+  // The rating is the first thing people look for, so it gets a warm pill that links to the reviews.
+  &.rating
+    padding: 4px 12px 4px 8px
+    border-radius: 999px
+    background: var(--warning-soft)
+    color: var(--ink-2)
+    text-decoration: none
+    transition: background-color var(--dur) var(--ease)
+
+    &:hover
+      background: #F6E3C4
+
+    strong
+      font-size: 15px
+
 .media
   margin-top: 28px
   aspect-ratio: 16 / 8
@@ -93,14 +108,84 @@
   justify-content: space-between
   gap: 12px
 
-  .score
+// Average and star breakdown above the reviews
+.rating-summary
+  display: grid
+  grid-template-columns: auto 1fr
+  align-items: center
+  gap: 20px 36px
+  margin-bottom: 24px
+  padding: 20px 24px
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  background: var(--surface)
+
+  @media (max-width: 520px)
+    grid-template-columns: 1fr
+
+.rating-score
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  gap: 6px
+
+  strong
+    font-family: var(--font-display)
+    font-size: 52px
+    font-weight: 500
+    line-height: 1
+    color: var(--ink)
+
+  span:last-child
+    font-size: 14px
     color: var(--ink-2)
 
-    strong
-      font-family: var(--font-display)
-      font-size: 26px
-      font-weight: 500
-      color: var(--ink)
+.rating-bars
+  list-style: none
+  margin: 0
+  padding: 0
+  display: flex
+  flex-direction: column
+  gap: 7px
+
+  li
+    display: grid
+    grid-template-columns: 34px 1fr 28px
+    align-items: center
+    gap: 10px
+    font-size: 13.5px
+    font-weight: 600
+    color: var(--ink-2)
+
+  .bar-label
+    display: inline-flex
+    align-items: center
+    gap: 2px
+
+    .mat-icon
+      font-size: 15px
+      width: 15px
+      height: 15px
+      color: #C48A2C
+      font-variation-settings: 'FILL' 1
+
+  .bar
+    height: 8px
+    border-radius: 999px
+    background: var(--surface-2)
+    overflow: hidden
+
+    span
+      display: block
+      height: 100%
+      border-radius: inherit
+      background: linear-gradient(90deg, #D9A04A, #C48A2C)
+      transition: width 600ms var(--ease)
+
+  .bar-count
+    text-align: right
+    font-variant-numeric: tabular-nums
+    color: var(--ink-3)
 
 .prose
   font-size: 16.5px

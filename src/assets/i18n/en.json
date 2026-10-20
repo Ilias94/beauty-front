@@ -148,7 +148,7 @@
     "creatorEmptyText": "Create your first course: description, dates, price and seats. It takes a few minutes.",
     "browseCatalog": "Browse courses",
     "spotsLeftShort": "Seats left: {{count}}",
-    "ratingLabel": "Rated {{rating}} out of 5"
+    "ratingLabel": "Rated {{rating}} out of 5 by {{count}}"
   },
   "courseDetails": {
     "backToCourses": "Back to courses",
@@ -616,7 +616,16 @@
   "rating": {
     "readonlyLabel": "Rated {{value}} out of 5",
     "interactiveLabel": "Choose a rating",
-    "starLabel": "{{value}} out of 5"
+    "starLabel": "{{value}} out of 5",
+    "count": {
+      "one": "{{count}} rating",
+      "few": "{{count}} ratings",
+      "many": "{{count}} ratings",
+      "other": "{{count}} ratings"
+    },
+    "none": "No ratings yet",
+    "breakdown": "Rating breakdown",
+    "barLabel": "{{stars}} out of 5: {{count}}"
   },
   "myComments": {
     "title": "Reviews you've written",

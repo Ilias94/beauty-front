@@ -10,6 +10,11 @@
   display: inline-flex
   white-space: nowrap
 
+  // The gold row is cut to the rating's width; its stars must keep their size and be clipped,
+  // not squeezed to fit, or they drift off the grey ones underneath.
+  .mat-icon
+    flex-shrink: 0
+
 .fill
   position: absolute
   inset: 0 auto 0 0
