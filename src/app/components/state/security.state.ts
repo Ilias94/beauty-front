@@ -74,8 +74,13 @@ export class SecurityState {
 
     // Regular email/password login — token and date are in localStorage
     const currentDate = localStorage.getItem('currentDate');
-    if (!currentDate || moment().subtract(1, 'days').isAfter(moment(currentDate))) {
-      dispatch(new LogoutAction());
+    if (!currentDate) {
+      // Never signed in on this device: a guest browsing the public catalog.
+      return;
+    }
+    if (moment().subtract(1, 'days').isAfter(moment(currentDate))) {
+      // Expired session: clear it, but let the visitor stay on the page they opened.
+      dispatch(new LogoutAction(false));
       return;
     }
 
