@@ -15,7 +15,9 @@
       <span class="wordmark">Bellademy</span>
     </a>
 
-    <nav class="main-nav" [attr.aria-label]="'menu.mainNavigation' | transloco">
+    <nav class="main-nav" #mainNav [class.ready]="indicator().width > 0" [attr.aria-label]="'menu.mainNavigation' | transloco">
+      <!-- White pill that slides to the active link (position measured in MenuComponent). -->
+      <span class="nav-indicator" aria-hidden="true" [style.left.px]="indicator().left" [style.width.px]="indicator().width"></span>
       <a routerLink="/courses" routerLinkActive="active">{{ 'menu.browseCourses' | transloco }}</a>
       @if (token()) {
         <a routerLink="/student-courses" routerLinkActive="active">{{ 'menu.myCourses' | transloco }}</a>

@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID, signal, computed, HostListener, DestroyRef } from '@angular/core';
+import { Component, inject, PLATFORM_ID, signal, computed, HostListener, DestroyRef, ElementRef, ViewChild, afterNextRender } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
@@ -53,6 +53,10 @@ export class MenuComponent {
     return fileName ? S3_BASE + fileName : null;
   });
 
+  @ViewChild('mainNav') private mainNav?: ElementRef<HTMLElement>;
+  /** Where the sliding pill sits: under the active nav link, or hidden (width 0) when no link is active. */
+  indicator = signal({ left: 0, width: 0 });
+
   drawerOpen = signal(false);
   scrolled = signal(false);
   activeLang = signal(this.transloco.getActiveLang());
@@ -65,9 +69,30 @@ export class MenuComponent {
         this.setLang(saved);
       }
     }
+    const destroyRef = inject(DestroyRef);
     inject(Router).events
-      .pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(inject(DestroyRef)))
+      .pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed(destroyRef))
       .subscribe(() => this.drawerOpen.set(false));
+
+    // Follow routerLinkActive itself (it can apply the class after a view transition) and the nav's size
+    // (links appear after login and change width with the language).
+    afterNextRender(() => {
+      const nav = this.mainNav?.nativeElement;
+      if (!nav || typeof ResizeObserver === 'undefined') return;
+      const resize = new ResizeObserver(() => this.moveIndicator());
+      const classes = new MutationObserver(() => this.moveIndicator());
+      resize.observe(nav);
+      classes.observe(nav, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+      destroyRef.onDestroy(() => { resize.disconnect(); classes.disconnect(); });
+      this.moveIndicator();
+    });
+  }
+
+  private moveIndicator() {
+    const active = this.mainNav?.nativeElement.querySelector<HTMLElement>('a.active');
+    const next = active && active.offsetWidth ? { left: active.offsetLeft, width: active.offsetWidth } : { left: 0, width: 0 };
+    const current = this.indicator();
+    if (next.left !== current.left || next.width !== current.width) this.indicator.set(next);
   }
 
   @HostListener('window:scroll')
