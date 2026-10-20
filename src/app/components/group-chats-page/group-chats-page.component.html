@@ -46,52 +46,9 @@
           </div>
         </div>
 
-        <!-- Messages -->
-        <div class="gcp-messages">
-          @for (msg of messages(); track msg.id) {
-            <div class="gcp-msg-row" [class.gcp-msg-mine]="msg.senderId === currentUser()?.id">
-
-              @if (msg.senderId !== currentUser()?.id) {
-                <div class="gcp-avatar">
-                  @if (avatarUrl(msg.senderFileName); as url) {
-                    <img [src]="url" [alt]="msg.senderFirstName" class="gcp-avatar-img">
-                  } @else {
-                    <div class="gcp-avatar-initials">{{ initials(msg.senderFirstName, msg.senderLastName) }}</div>
-                  }
-                </div>
-              }
-
-              <div class="gcp-bubble-wrap">
-                @if (msg.senderId !== currentUser()?.id) {
-                  <span class="gcp-sender-name">{{ msg.senderFirstName }} {{ msg.senderLastName }}</span>
-                }
-                <div class="gcp-bubble">{{ msg.content }}</div>
-                <div class="gcp-time">{{ msg.sentAt | date:'d MMM, HH:mm' }}</div>
-              </div>
-            </div>
-          }
-
-          @if (messages().length === 0) {
-            <div class="gcp-empty">
-              <mat-icon>forum</mat-icon>
-              <p>{{ 'groupChat.empty' | transloco }}</p>
-            </div>
-          }
-
-          <div #messagesEnd></div>
-        </div>
-
-        <!-- Input -->
-        <div class="gcp-input-row">
-          <textarea class="gcp-input" rows="1"
-            [placeholder]="'groupChat.placeholder' | transloco"
-            [(ngModel)]="newMessage"
-            (keydown)="onKeydown($event)">
-          </textarea>
-          <button mat-icon-button class="gcp-send-btn" (click)="send()" [disabled]="!newMessage().trim()">
-            <mat-icon>send</mat-icon>
-          </button>
-        </div>
+        <app-message-thread [messages]="threadMessages()" [showAuthors]="true"
+                            emptyIcon="forum" [emptyText]="'groupChat.empty' | transloco" />
+        <app-message-composer [(value)]="newMessage" (send)="send($event)" [placeholder]="'groupChat.placeholder' | transloco" />
 
       }
     </div>

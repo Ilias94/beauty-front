@@ -28,7 +28,6 @@ export class WebSocketService {
     }
 
     const token = this.store.selectSnapshot(state => state.security.token);
-    console.log('🔑 WS token:', token);
 
     if (!token) {
       console.warn('❌ WS connect aborted: no token');
@@ -95,7 +94,8 @@ export class WebSocketService {
 
   subscribeToCourse(courseId: number): void {
     this.pendingCourseId = courseId;
-    if (this.client?.active) {
+    // While still connecting, onConnect subscribes to the pending course instead.
+    if (this.client?.connected) {
       this.doSubscribeToCourse(courseId);
     }
   }

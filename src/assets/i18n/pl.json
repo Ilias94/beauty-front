@@ -504,7 +504,16 @@
       "forbidden": "Nie możesz rozpocząć rozmowy z tą osobą.",
       "limit": "Osiągnięto dzienny limit nowych rozmów. Spróbuj jutro albo odpisz w istniejącej rozmowie.",
       "generic": "Nie udało się wysłać wiadomości. Spróbuj ponownie."
-    }
+    },
+    "subtitle": "Rozmowy z prowadzącymi i uczestnikami",
+    "privateConversation": "Rozmowa prywatna",
+    "today": "Dziś",
+    "yesterday": "Wczoraj",
+    "newMessages": "Nowe wiadomości",
+    "read": "Przeczytano",
+    "sent": "Wysłano",
+    "toLatest": "Przewiń do najnowszych",
+    "openDock": "Wiadomości i asystent"
   },
   "assistant": {
     "title": "Asystent AI",
@@ -517,7 +526,9 @@
     "disclaimer": "Asystent korzysta z AI i może się mylić.",
     "limitReached": "Dzienny limit pytań został wykorzystany. Wróć jutro albo napisz zgłoszenie do supportu.",
     "disabled": "Asystent jest chwilowo wyłączony.",
-    "error": "Coś poszło nie tak. Spróbuj ponownie za chwilę."
+    "error": "Coś poszło nie tak. Spróbuj ponownie za chwilę.",
+    "subtitle": "Odpowiada na pytania o kursy i Twoje konto",
+    "thinking": "Asystent pisze odpowiedź"
   },
   "calendar": {
     "today": "Dziś",

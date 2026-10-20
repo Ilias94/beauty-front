@@ -1,0 +1,36 @@
+@if (currentUser()) {
+  <div class="dock" [class.panel-open]="panels.anyOpen()">
+    @if (expanded()) {
+      <div class="actions" role="menu">
+        <button type="button" role="menuitem" class="action" style="--i: 0" (click)="pick('assistant')">
+          <span class="label">{{ 'assistant.title' | transloco }}</span>
+          <span class="icon assistant"><mat-icon>auto_awesome</mat-icon></span>
+        </button>
+        <button type="button" role="menuitem" class="action" style="--i: 1" (click)="pick('chat')">
+          <span class="label">
+            {{ 'chat.title' | transloco }}
+            @if (unread() > 0) { <span class="count">{{ unread() }}</span> }
+          </span>
+          <span class="icon"><mat-icon>chat</mat-icon></span>
+        </button>
+        @if (panels.groupChat(); as group) {
+          <button type="button" role="menuitem" class="action" style="--i: 2" (click)="pick('group')">
+            <span class="label">
+              {{ 'groupChat.title' | transloco }}
+              <small>{{ group.title }}</small>
+            </span>
+            <span class="icon group"><mat-icon>groups</mat-icon></span>
+          </button>
+        }
+      </div>
+    }
+
+    <button type="button" class="fab" (click)="main()"
+            [attr.aria-expanded]="expanded()" [attr.aria-label]="(panels.anyOpen() || expanded() ? 'common.close' : 'chat.openDock') | transloco">
+      <mat-icon class="fab-icon" [class.turned]="panels.anyOpen() || expanded()">{{ panels.anyOpen() || expanded() ? 'close' : 'forum' }}</mat-icon>
+      @if (!panels.anyOpen() && !expanded() && unread() > 0) {
+        <span class="badge">{{ unread() > 9 ? '9+' : unread() }}</span>
+      }
+    </button>
+  </div>
+}

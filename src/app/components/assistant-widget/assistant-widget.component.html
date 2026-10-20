@@ -1,62 +1,46 @@
-<!-- ── Floating button ──────────────────────────────── -->
-<!-- Hidden while the messages panel is open: it would sit on top of that panel's corner. -->
-@if (currentUser() && !chatOpen()) {
-<button class="assistant-fab" (click)="toggleOpen()" [matTooltip]="'assistant.title' | transloco">
-  <mat-icon>{{ open() ? 'close' : 'auto_awesome' }}</mat-icon>
-</button>
-
-<!-- ── Assistant panel ──────────────────────────────── -->
-@if (open()) {
-  <div class="assistant-panel">
-
-    <div class="panel-header">
-      <mat-icon class="header-icon">auto_awesome</mat-icon>
-      <div class="header-text">
-        <span class="panel-title">{{ 'assistant.title' | transloco }}</span>
-        @if (remainingToday() !== null) {
-          <span class="remaining">{{ 'assistant.remaining' | transloco: { count: remainingToday() } }}</span>
-        }
+@if (currentUser() && panels.assistantOpen()) {
+  <section class="float-panel" role="dialog" [attr.aria-label]="'assistant.title' | transloco">
+    <header class="float-panel-head">
+      <span class="head-icon assistant"><mat-icon>auto_awesome</mat-icon></span>
+      <div class="head-text">
+        <strong>{{ 'assistant.title' | transloco }}</strong>
+        <small>
+          @if (remainingToday() !== null) { {{ 'assistant.remaining' | transloco: { count: remainingToday() } }} }
+          @else { {{ 'assistant.subtitle' | transloco }} }
+        </small>
       </div>
-    </div>
+      <button mat-icon-button class="head-btn" (click)="panels.closeAll()" [attr.aria-label]="'common.close' | transloco">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
 
-    <div class="messages-area">
+    <div class="messages-area" role="log" aria-live="polite">
       @if (messages().length === 0) {
         <div class="intro">
+          <span class="intro-icon"><mat-icon>auto_awesome</mat-icon></span>
           <p>{{ 'assistant.intro' | transloco }}</p>
-          <ul>
-            <li>{{ 'assistant.example1' | transloco }}</li>
-            <li>{{ 'assistant.example2' | transloco }}</li>
-            <li>{{ 'assistant.example3' | transloco }}</li>
-          </ul>
+          <div class="examples">
+            @for (key of examples; track key) {
+              <button type="button" class="example" (click)="askExample(key)">{{ key | transloco }}</button>
+            }
+          </div>
         </div>
       }
       @for (msg of messages(); track $index) {
         <div class="msg-row" [class.msg-mine]="msg.role === 'user'">
-          <div class="bubble" [class.bubble-error]="msg.error">
-            {{ msg.error ? (msg.content | transloco) : msg.content }}
-          </div>
+          <div class="bubble" [class.bubble-error]="msg.error">{{ msg.error ? (msg.content | transloco) : msg.content }}</div>
         </div>
       }
       @if (sending()) {
         <div class="msg-row">
-          <div class="bubble typing"><span></span><span></span><span></span></div>
+          <div class="bubble typing" [attr.aria-label]="'assistant.thinking' | transloco"><span></span><span></span><span></span></div>
         </div>
       }
       <div #messagesEnd></div>
     </div>
 
-    <div class="input-row">
-      <textarea class="msg-input" rows="1" maxlength="1000"
-        [placeholder]="'assistant.placeholder' | transloco"
-        [(ngModel)]="newMessage"
-        (keydown)="onKeydown($event)">
-      </textarea>
-      <button mat-icon-button class="send-btn" (click)="send()" [disabled]="!newMessage().trim() || sending()">
-        <mat-icon>send</mat-icon>
-      </button>
-    </div>
-    <div class="disclaimer">{{ 'assistant.disclaimer' | transloco }}</div>
-
-  </div>
+    <app-message-composer [(value)]="newMessage" (send)="send($event)" [disabled]="sending()"
+                          [maxLength]="1000" [placeholder]="'assistant.placeholder' | transloco" />
+    <p class="disclaimer">{{ 'assistant.disclaimer' | transloco }}</p>
+  </section>
 }
-} <!-- end @if (currentUser()) -->

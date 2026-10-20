@@ -504,7 +504,16 @@
       "forbidden": "You can't start a conversation with this person.",
       "limit": "You've reached today's limit of new conversations. Try tomorrow or reply in an existing one.",
       "generic": "The message couldn't be sent. Please try again."
-    }
+    },
+    "subtitle": "Conversations with instructors and participants",
+    "privateConversation": "Private conversation",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "newMessages": "New messages",
+    "read": "Read",
+    "sent": "Sent",
+    "toLatest": "Jump to latest",
+    "openDock": "Messages and assistant"
   },
   "assistant": {
     "title": "AI assistant",
@@ -517,7 +526,9 @@
     "disclaimer": "The assistant uses AI and can make mistakes.",
     "limitReached": "You've used today's question limit. Come back tomorrow or open a support ticket.",
     "disabled": "The assistant is temporarily turned off.",
-    "error": "Something went wrong. Please try again in a moment."
+    "error": "Something went wrong. Please try again in a moment.",
+    "subtitle": "Answers questions about courses and your account",
+    "thinking": "The assistant is writing"
   },
   "calendar": {
     "today": "Today",

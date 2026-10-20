@@ -1,5 +1,4 @@
-import { Component, inject, signal, computed, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -7,44 +6,58 @@ import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule } from '@jsverse/transloco';
-import { ChatState } from '../state/chat.state';
 import {
-  BackToListAction, ChatContact, CloseChatAction, LoadMessagesAction,
+  BackToListAction, ChatContact, ChatConversation, ChatMessage, LoadMessagesAction,
   MarkConversationReadAction, OpenChatAction, SendMessageAction
 } from '../state/chat.actions';
 import { SecurityState } from '../state/security.state';
 import { ChatApiService } from '../../services/chat-api.service';
+import { FloatingPanelsService } from '../../shared/chat/floating-panels.service';
+import { MessageThreadComponent } from '../../shared/chat/message-thread.component';
+import { MessageComposerComponent } from '../../shared/chat/message-composer.component';
+import { ThreadMessage } from '../../shared/chat/thread';
+import { S3_BASE } from '../../app.const';
 
+/** Private messages: conversation list, contact picker and the conversation itself, in the corner panel. */
 @Component({
     selector: 'app-chat-widget',
-    imports: [CommonModule, FormsModule, RouterLink, MatIconModule, MatButtonModule, MatBadgeModule, MatTooltipModule, TranslocoModule],
+    imports: [FormsModule, RouterLink, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule,
+        MessageThreadComponent, MessageComposerComponent],
     templateUrl: './chat-widget.component.html',
     styleUrl: './chat-widget.component.sass'
 })
-export class ChatWidgetComponent implements AfterViewChecked {
-  @ViewChild('messagesEnd') private messagesEnd?: ElementRef;
-
+export class ChatWidgetComponent {
   private store = inject(Store);
   private api = inject(ChatApiService);
-  readonly s3Base = 'https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/';
+  panels = inject(FloatingPanelsService);
 
-  open        = toSignal(this.store.select(state => state.chat.open),              { initialValue: false });
-  conversations = toSignal(this.store.select(state => state.chat.conversations),   { initialValue: [] });
-  activeId    = toSignal(this.store.select(state => state.chat.activePartnerId),   { initialValue: null });
-  messages    = toSignal(this.store.select(state => state.chat.messages),          { initialValue: [] });
+  open          = toSignal(this.store.select(state => state.chat.open),            { initialValue: false });
+  conversations = toSignal(this.store.select(state => state.chat.conversations),   { initialValue: [] as ChatConversation[] });
+  activeId      = toSignal(this.store.select(state => state.chat.activePartnerId), { initialValue: null as number | null });
+  messages      = toSignal(this.store.select(state => state.chat.messages),        { initialValue: [] as ChatMessage[] });
   courseContext = toSignal(this.store.select(state => state.chat.courseContext),   { initialValue: null });
-  unreadTotal = toSignal(this.store.select(ChatState.unreadTotal),                 { initialValue: 0 });
-  currentUser = toSignal(this.store.select(SecurityState.getCurrentUser));
+  currentUser   = toSignal(this.store.select(SecurityState.getCurrentUser));
 
   activePartner = computed(() => this.conversations().find(c => c.partnerId === this.activeId()));
+
+  threadMessages = computed<ThreadMessage[]>(() => {
+    const me = this.currentUser()?.id;
+    return this.messages().map(m => ({
+      id: m.id,
+      mine: m.senderId === me,
+      authorId: m.senderId,
+      content: m.content,
+      sentAt: m.sentAt,
+      read: m.read,
+      course: m.courseId && m.courseTitle ? { id: m.courseId, title: m.courseTitle } : null,
+    }));
+  });
 
   newMessage = signal('');
   /** Why the last message couldn't be sent (translation key), shown above the input. */
   sendError = signal<string | null>(null);
-  private lastMessageCount = 0;
 
   // ── "New message": people the user is connected to through courses ──────
   picking = signal(false);
@@ -57,13 +70,9 @@ export class ChatWidgetComponent implements AfterViewChecked {
     return contacts.filter(c => `${c.firstName} ${c.lastName} ${c.courses.map(k => k.title).join(' ')}`.toLowerCase().includes(query));
   });
 
-  toggleOpen() {
-    if (this.open()) {
-      this.picking.set(false);
-      this.store.dispatch(new CloseChatAction());
-    } else {
-      this.store.dispatch(new OpenChatAction());
-    }
+  close() {
+    this.picking.set(false);
+    this.panels.closeAll();
   }
 
   startNew() {
@@ -82,7 +91,7 @@ export class ChatWidgetComponent implements AfterViewChecked {
     this.store.dispatch(new OpenChatAction(contact.id, contact.firstName, contact.lastName, contact.fileName));
   }
 
-  /** "Prowadzi: Stylizacja rzęs" / "Uczestniczka: Manicure +1". */
+  /** "Prowadzi: Stylizacja rzęs" / "Uczestniczy w: Manicure +1". */
   contactSubtitle(contact: ChatContact): { role: string; title: string; more: number } {
     const first = contact.courses[0];
     return { role: first.role, title: first.title, more: contact.courses.length - 1 };
@@ -102,12 +111,10 @@ export class ChatWidgetComponent implements AfterViewChecked {
     this.store.dispatch(new BackToListAction());
   }
 
-  send() {
-    const content = this.newMessage().trim();
+  send(content: string) {
     const partner = this.activeId();
-    if (!content || !partner) return;
+    if (!partner) return;
     this.sendError.set(null);
-    this.newMessage.set('');
     this.store.dispatch(new SendMessageAction(partner, content)).subscribe({
       error: (error: HttpErrorResponse) => {
         // Give the text back so nothing typed is lost.
@@ -120,26 +127,11 @@ export class ChatWidgetComponent implements AfterViewChecked {
     });
   }
 
-  onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      this.send();
-    }
-  }
-
-  avatarUrl(fileName?: string): string | null {
-    return fileName ? this.s3Base + fileName : null;
+  avatarUrl(fileName?: string | null): string | null {
+    return fileName ? S3_BASE + fileName : null;
   }
 
   initials(first: string, last: string): string {
-    return (first?.[0] ?? '') + (last?.[0] ?? '');
-  }
-
-  ngAfterViewChecked() {
-    const count = this.messages().length;
-    if (count !== this.lastMessageCount) {
-      this.lastMessageCount = count;
-      this.messagesEnd?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
-    }
+    return ((first?.[0] ?? '') + (last?.[0] ?? '')).toUpperCase();
   }
 }

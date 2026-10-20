@@ -1,0 +1,61 @@
+<div class="thread" #scroller (scroll)="onScroll()" role="log" aria-live="polite">
+  @if (!messages().length) {
+    <div class="thread-empty">
+      <span class="empty-icon"><mat-icon>{{ emptyIcon() }}</mat-icon></span>
+      <p>{{ emptyText() }}</p>
+    </div>
+  }
+
+  @for (item of items(); track item.key) {
+    @switch (item.kind) {
+      @case ('day') {
+        <div class="day"><span>{{ item.label }}</span></div>
+      }
+      @case ('unread') {
+        <div class="unread-divider"><span>{{ 'chat.newMessages' | transloco }}</span></div>
+      }
+      @case ('group') {
+        <div class="group" [class.mine]="item.mine">
+          @if (showAuthors() && !item.mine) {
+            @if (item.avatarUrl) {
+              <img class="avatar" [src]="item.avatarUrl" alt="">
+            } @else {
+              <span class="avatar initials" aria-hidden="true">{{ item.initials }}</span>
+            }
+          }
+          <div class="stack">
+            @if (showAuthors() && !item.mine) {
+              <span class="author">{{ item.authorName }}</span>
+            }
+            @for (m of item.messages; track m.id; let first = $first; let last = $last) {
+              @if (m.course) {
+                <a class="course-ref" [routerLink]="['/course', m.course.id]">
+                  <mat-icon>school</mat-icon>{{ 'chat.aboutCourse' | transloco: { title: m.course.title } }}
+                </a>
+              }
+              @if (m.emojiOnly) {
+                <div class="emoji" [attr.title]="m.sentAt | date:'d MMM, HH:mm'">{{ m.content }}</div>
+              } @else {
+                <!-- One line on purpose: the bubble keeps whitespace (pre-wrap), so template indentation would show. -->
+                <div class="bubble" [class.first]="first" [class.last]="last" [attr.title]="m.sentAt | date:'d MMM, HH:mm'">@for (part of m.parts; track $index) {@if (part.href) {<a [href]="part.href" target="_blank" rel="noopener noreferrer">{{ part.text }}</a>} @else {<span>{{ part.text }}</span>}}</div>
+              }
+            }
+            <div class="meta">
+              <time [attr.datetime]="item.messages[item.messages.length - 1].sentAt">{{ item.messages[item.messages.length - 1].sentAt | date:'HH:mm' }}</time>
+              @if (showReadStatus() && item.mine) {
+                <mat-icon class="ticks" [class.read]="item.read"
+                          [attr.aria-label]="(item.read ? 'chat.read' : 'chat.sent') | transloco">{{ item.read ? 'done_all' : 'done' }}</mat-icon>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    }
+  }
+</div>
+
+@if (awayFromBottom()) {
+  <button type="button" class="to-latest" (click)="scrollToBottom(true)" [attr.aria-label]="'chat.toLatest' | transloco">
+    <mat-icon>arrow_downward</mat-icon>
+  </button>
+}

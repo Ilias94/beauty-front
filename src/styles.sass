@@ -276,12 +276,106 @@ img
 
 /* Pages with a fixed bottom action bar on phones lift the floating widgets above it. */
 @media (max-width: 640px)
-  body.has-bottom-bar
-    .chat-fab, .assistant-fab
-      transform: translateY(-76px)
+  body.has-bottom-bar app-fab-dock .dock
+    transform: translateY(-76px)
 
-    .chat-panel, .assistant-panel
-      margin-bottom: 76px
+/* ── Floating chat panels: messages, AI assistant, course group chat ─────
+   One shape for all three, opened from the corner button (FabDockComponent);
+   full screen on phones. */
+.float-panel
+  position: fixed
+  right: 24px
+  bottom: 96px
+  z-index: 1001
+  width: 380px
+  height: min(620px, calc(100dvh - var(--header-h) - 120px))
+  display: flex
+  flex-direction: column
+  overflow: hidden
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: 22px
+  box-shadow: var(--shadow-3)
+  transform-origin: bottom right
+  animation: float-panel-in 260ms var(--ease)
+
+.float-panel-head
+  display: flex
+  align-items: center
+  gap: 10px
+  min-height: 62px
+  padding: 10px 8px 10px 14px
+  border-bottom: 1px solid var(--line)
+  background: var(--surface)
+  flex-shrink: 0
+
+  .head-icon, .head-avatar
+    width: 38px
+    height: 38px
+    flex-shrink: 0
+    border-radius: 50%
+    display: grid
+    place-items: center
+    object-fit: cover
+    background: var(--accent-soft)
+    color: var(--accent)
+    font: 700 13px var(--font-ui)
+
+    .mat-icon
+      font-size: 20px
+      width: 20px
+      height: 20px
+
+    &.assistant
+      background: var(--ink)
+      color: #F2C77D
+
+    &.group
+      background: var(--info-soft)
+      color: var(--info)
+
+  .head-text
+    flex: 1
+    min-width: 0
+    display: flex
+    flex-direction: column
+
+    strong
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+      font: 700 15px var(--font-ui)
+      color: var(--ink)
+
+    small
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+      font: 600 12px var(--font-ui)
+      color: var(--ink-3)
+
+  .head-btn
+    color: var(--ink-2)
+
+@keyframes float-panel-in
+  from
+    opacity: 0
+    transform: translateY(12px) scale(0.97)
+
+@keyframes float-panel-up
+  from
+    transform: translateY(32px)
+    opacity: 0
+
+@media (max-width: 640px)
+  .float-panel
+    inset: 0
+    width: 100%
+    height: 100dvh
+    border: 0
+    border-radius: 0
+    z-index: 1150
+    animation-name: float-panel-up
 
 /* ── Icons: Material Symbols Rounded, set as the default font set in AppComponent ── */
 .material-symbols-rounded

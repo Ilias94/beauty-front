@@ -1,272 +1,139 @@
-// ── Floating button ──────────────────────────────────────────
-.chat-fab
-  position: fixed
-  bottom: 1.5rem
-  right: 1.5rem
-  width: 52px
-  height: 52px
-  border-radius: 50%
-  background: var(--accent)
-  color: #fff
-  border: none
-  cursor: pointer
+// Panel shape and header come from .float-panel / .float-panel-head in styles.sass.
+
+// ── Conversation and contact rows ────────────────────────────
+.list
+  flex: 1
+  min-height: 0
+  overflow-y: auto
+  padding: 6px
+
+.row
+  width: 100%
   display: flex
   align-items: center
-  justify-content: center
-  box-shadow: 0 8px 20px -6px rgba(140, 47, 75, 0.55)
-  transition: transform 180ms var(--ease), box-shadow 180ms var(--ease), background 180ms var(--ease)
-  z-index: 1000
-  animation: fab-in 360ms var(--ease) backwards
+  gap: 12px
+  padding: 10px
+  border: 0
+  border-radius: 14px
+  background: transparent
+  font-family: var(--font-ui)
+  text-align: left
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease)
 
   &:hover
-    transform: translateY(-2px)
-    box-shadow: 0 12px 26px -8px rgba(140, 47, 75, 0.6)
+    background: var(--bg)
 
-  &:active
-    transform: scale(0.95)
+    .chev
+      color: var(--accent)
+      transform: translateX(2px)
 
   &:focus-visible
     outline: 2px solid var(--accent)
-    outline-offset: 3px
+    outline-offset: -2px
 
-  mat-icon
-    font-size: 24px
-    width: 24px
-    height: 24px
+  &.unread
+    .row-body strong
+      color: var(--ink)
 
-@keyframes fab-in
-  from
-    opacity: 0
-    transform: scale(0.8)
+    .row-sub
+      color: var(--ink)
+      font-weight: 600
 
-// ── Chat panel ───────────────────────────────────────────────
-.chat-panel
-  position: fixed
-  bottom: 5rem
-  right: 1.5rem
-  width: 360px
-  max-height: 520px
-  background: #fff
-  border-radius: 16px
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18)
+.avatar
+  width: 42px
+  height: 42px
+  flex-shrink: 0
+  border-radius: 50%
+  display: grid
+  place-items: center
+  object-fit: cover
+  background: var(--accent-soft)
+  color: var(--accent)
+  font: 700 14px var(--font-ui)
+
+.row-body
+  flex: 1
+  min-width: 0
   display: flex
   flex-direction: column
-  overflow: hidden
-  z-index: 999
-  animation: slideUp 0.2s ease
+  gap: 1px
 
-@keyframes slideUp
-  from
-    opacity: 0
-    transform: translateY(12px)
-  to
-    opacity: 1
-    transform: translateY(0)
+  strong
+    font-size: 14.5px
+    color: var(--ink)
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
 
-// ── Header ───────────────────────────────────────────────────
-.panel-header
-  display: flex
-  align-items: center
-  gap: 0.6rem
-  padding: 0.9rem 1rem
-  background: var(--accent)
-  color: #fff
-  flex-shrink: 0
-
-.panel-title
-  font-family: var(--font-display)
-  font-size: 1rem
-  font-weight: 600
-
-.partner-info
-  display: flex
-  align-items: center
-  gap: 0.5rem
-
-.partner-name
-  font-family: var(--font-ui)
-  font-size: 0.9rem
-  font-weight: 600
-
-.back-btn
-  color: #fff !important
-
-// ── Avatars ──────────────────────────────────────────────────
-.avatar
-  width: 38px
-  height: 38px
-  border-radius: 50%
-  object-fit: cover
-  flex-shrink: 0
-
-.avatar-sm
-  width: 32px
-  height: 32px
-  border-radius: 50%
-  object-fit: cover
-  flex-shrink: 0
-
-.avatar-initials
-  background: rgba(255,255,255,0.25)
-  color: var(--accent)
-  display: flex
-  align-items: center
-  justify-content: center
-  font-family: var(--font-ui)
-  font-size: 0.75rem
-  font-weight: 700
-
-  &.avatar-sm
-    background: var(--accent-soft-2)
-    color: #fff
-
-// ── Conversations ─────────────────────────────────────────────
-.conversations-list
-  flex: 1
-  overflow-y: auto
-  padding: 0.25rem 0
-
-.conv-item
-  display: flex
-  align-items: center
-  gap: 0.75rem
-  padding: 0.75rem 1rem
-  cursor: pointer
-  transition: background 0.15s
-  border-bottom: 1px solid var(--accent-soft)
-
-  &:hover
-    background: var(--accent-soft)
-
-.conv-body
-  flex: 1
-  overflow: hidden
-
-.conv-name
-  font-family: var(--font-ui)
-  font-size: 0.88rem
-  font-weight: 600
-  color: var(--ink)
-
-.conv-last
-  font-family: var(--font-ui)
-  font-size: 0.78rem
+.row-sub
+  font-size: 13px
   color: var(--ink-3)
-  white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
+  white-space: nowrap
+
+  .role
+    font-weight: 700
+    color: var(--accent)
+
+  .more
+    margin-left: 2px
+    font-weight: 700
 
 .unread-badge
+  min-width: 22px
+  height: 22px
+  padding: 0 7px
+  border-radius: var(--radius-pill)
+  display: grid
+  place-items: center
   background: var(--accent)
   color: #fff
-  border-radius: 10px
-  padding: 2px 7px
-  font-size: 0.72rem
-  font-weight: 700
-  font-family: var(--font-ui)
-  flex-shrink: 0
+  font: 800 11.5px var(--font-ui)
 
-.empty-chat
+.chev
+  color: var(--line-strong)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
+
+.list-empty
   display: flex
   flex-direction: column
   align-items: center
-  justify-content: center
-  padding: 3rem 1rem
-  color: var(--line-strong)
+  gap: 10px
+  padding: 40px 20px
+  text-align: center
+  font: 500 13.5px/1.45 var(--font-ui)
+  color: var(--ink-3)
 
-  mat-icon
-    font-size: 48px
-    width: 48px
-    height: 48px
-    margin-bottom: 0.5rem
+  .empty-icon
+    width: 52px
+    height: 52px
+    border-radius: 50%
+    display: grid
+    place-items: center
+    background: var(--surface-2)
 
   p
-    font-family: var(--font-ui)
-    font-size: 0.85rem
+    max-width: 30ch
 
-// ── Messages ─────────────────────────────────────────────────
-.messages-area
-  flex: 1
-  overflow-y: auto
-  padding: 0.75rem 1rem
-  display: flex
-  flex-direction: column
-  gap: 0.5rem
-  background: var(--bg)
+  .text-link
+    font-weight: 700
 
-.msg-row
-  display: flex
-  flex-direction: column
-  align-items: flex-start
+.row-sk
+  height: 56px
+  margin: 6px 4px
+  border-radius: 14px
 
-  &.msg-mine
-    align-items: flex-end
-
-    .bubble
-      background: var(--accent)
-      color: #fff
-      border-radius: 16px 16px 4px 16px
-
-.bubble
-  max-width: 75%
-  padding: 0.5rem 0.8rem
-  background: #fff
-  border-radius: 16px 16px 16px 4px
-  font-family: var(--font-ui)
-  font-size: 0.88rem
-  line-height: 1.4
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08)
-  word-break: break-word
-
-.msg-time
-  font-size: 0.7rem
+.hint, .no-match
+  padding: 12px 12px 4px
+  font: 500 12.5px/1.45 var(--font-ui)
   color: var(--ink-3)
-  margin-top: 2px
-  padding: 0 4px
 
-// ── Input ─────────────────────────────────────────────────────
-.input-row
-  display: flex
-  align-items: flex-end
-  gap: 0.25rem
-  padding: 0.6rem 0.75rem
-  border-top: 1px solid var(--line)
-  background: #fff
-  flex-shrink: 0
+.no-match
+  text-align: center
 
-.msg-input
-  flex: 1
-  border: 1.5px solid var(--line-strong)
-  border-radius: 12px
-  padding: 0.5rem 0.75rem
-  font-family: var(--font-ui)
-  font-size: 0.88rem
-  resize: none
-  outline: none
-  max-height: 80px
-  overflow-y: auto
-  transition: border-color 0.2s
-
-  &:focus
-    border-color: var(--accent)
-
-.send-btn
-  color: var(--accent) !important
-  flex-shrink: 0
-
-  &:disabled
-    color: var(--line-strong) !important
-
-// ── New message: contact picker ──────────────────────────────
-.header-action
-  margin-left: auto
-  color: #fff !important
-
-  .mat-icon
-    font-size: 20px
-    width: 20px
-    height: 20px
-
+// ── Contact picker ───────────────────────────────────────────
 .contacts
   flex: 1
   min-height: 0
@@ -277,10 +144,10 @@
   display: flex
   align-items: center
   gap: 8px
-  margin: 12px 12px 4px
+  margin: 12px 12px 2px
   padding: 0 12px
-  height: 40px
-  border: 1px solid var(--line-strong)
+  height: 42px
+  border: 1.5px solid var(--line-strong)
   border-radius: var(--radius-pill)
   background: var(--bg)
   color: var(--ink-3)
@@ -303,85 +170,7 @@
     font: 500 14px var(--font-ui)
     color: var(--ink)
 
-.contact-list
-  flex: 1
-  overflow-y: auto
-  padding: 4px 0 8px
-
-.contact-sk
-  height: 52px
-  margin: 8px 12px
-
-button.conv-item
-  width: 100%
-  border: 0
-  border-bottom: 1px solid var(--accent-soft)
-  background: transparent
-  text-align: left
-  font-family: var(--font-ui)
-
-.contact
-  .role
-    font-weight: 700
-    color: var(--accent)
-
-  .more
-    margin-left: 2px
-    font-weight: 700
-    color: var(--ink-3)
-
-  .chev
-    color: var(--line-strong)
-    transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
-
-  &:hover .chev
-    color: var(--accent)
-    transform: translateX(2px)
-
-.contacts-hint, .no-match
-  padding: 12px 16px 4px
-  font: 500 12.5px var(--font-ui)
-  line-height: 1.45
-  color: var(--ink-3)
-
-.no-match
-  text-align: center
-
-.empty-chat
-  gap: 8px
-  text-align: center
-
-  p
-    color: var(--ink-3)
-    max-width: 30ch
-
-  .text-link
-    font: 700 13.5px var(--font-ui)
-
-// ── Thread extras ────────────────────────────────────────────
-.thread-empty
-  margin: auto 0
-  padding: 24px 8px
-  text-align: center
-  font: 500 13px var(--font-ui)
-  color: var(--ink-3)
-
-.course-ref
-  display: inline-flex
-  align-items: center
-  gap: 4px
-  margin-bottom: 4px
-  padding: 3px 9px
-  border-radius: var(--radius-pill)
-  background: var(--accent-soft)
-  font: 700 11.5px var(--font-ui)
-  color: var(--accent)
-
-  .mat-icon
-    font-size: 14px
-    width: 14px
-    height: 14px
-
+// ── Conversation extras ──────────────────────────────────────
 .context-bar, .send-error
   display: flex
   align-items: center

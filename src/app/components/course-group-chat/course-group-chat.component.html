@@ -1,69 +1,18 @@
-<!-- FAB button -->
-<button class="gc-fab" (click)="toggle()"
-  [matTooltip]="'groupChat.title' | transloco"
-  matTooltipPosition="left">
-  <mat-icon>{{ open() ? 'close' : 'groups' }}</mat-icon>
-</button>
-
-<!-- Panel -->
-@if (open()) {
-  <div class="gc-panel">
-
-    <!-- Header -->
-    <div class="gc-header">
-      <mat-icon class="gc-header-icon">groups</mat-icon>
-      <div class="gc-header-text">
-        <span class="gc-header-title">{{ 'groupChat.title' | transloco }}</span>
-        <span class="gc-header-sub">{{ courseTitle }}</span>
+@if (panels.groupChatOpen()) {
+  <section class="float-panel" role="dialog" [attr.aria-label]="'groupChat.title' | transloco">
+    <header class="float-panel-head">
+      <span class="head-icon group"><mat-icon>groups</mat-icon></span>
+      <div class="head-text">
+        <strong>{{ 'groupChat.title' | transloco }}</strong>
+        <small>{{ courseTitle }}</small>
       </div>
-    </div>
-
-    <!-- Messages -->
-    <div class="gc-messages">
-      @for (msg of messages(); track msg.id) {
-        <div class="gc-msg-row" [class.gc-msg-mine]="msg.senderId === currentUser()?.id">
-
-          @if (msg.senderId !== currentUser()?.id) {
-            <div class="gc-avatar">
-              @if (avatarUrl(msg.senderFileName); as url) {
-                <img [src]="url" [alt]="msg.senderFirstName" class="gc-avatar-img">
-              } @else {
-                <div class="gc-avatar-initials">{{ initials(msg.senderFirstName, msg.senderLastName) }}</div>
-              }
-            </div>
-          }
-
-          <div class="gc-bubble-wrap">
-            @if (msg.senderId !== currentUser()?.id) {
-              <span class="gc-sender-name">{{ msg.senderFirstName }} {{ msg.senderLastName }}</span>
-            }
-            <div class="gc-bubble">{{ msg.content }}</div>
-            <div class="gc-time">{{ msg.sentAt | date:'HH:mm' }}</div>
-          </div>
-        </div>
-      }
-
-      @if (messages().length === 0) {
-        <div class="gc-empty">
-          <mat-icon>forum</mat-icon>
-          <p>{{ 'groupChat.empty' | transloco }}</p>
-        </div>
-      }
-
-      <div #messagesEnd></div>
-    </div>
-
-    <!-- Input -->
-    <div class="gc-input-row">
-      <textarea class="gc-input" rows="1"
-        [placeholder]="'groupChat.placeholder' | transloco"
-        [(ngModel)]="newMessage"
-        (keydown)="onKeydown($event)">
-      </textarea>
-      <button mat-icon-button class="gc-send-btn" (click)="send()" [disabled]="!newMessage().trim()">
-        <mat-icon>send</mat-icon>
+      <button mat-icon-button class="head-btn" (click)="panels.closeAll()" [attr.aria-label]="'common.close' | transloco">
+        <mat-icon>close</mat-icon>
       </button>
-    </div>
+    </header>
 
-  </div>
+    <app-message-thread [messages]="threadMessages()" [showAuthors]="true"
+                        emptyIcon="forum" [emptyText]="'groupChat.empty' | transloco" />
+    <app-message-composer [(value)]="newMessage" (send)="send($event)" [placeholder]="'groupChat.placeholder' | transloco" />
+  </section>
 }

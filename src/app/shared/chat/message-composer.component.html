@@ -1,0 +1,9 @@
+<div class="composer" [class.ready]="value().trim() && !disabled()">
+  <textarea #box rows="1"
+            [value]="value()" (input)="onInput(box.value)" (keydown)="onKeydown($event)"
+            [placeholder]="placeholder()" [attr.maxlength]="maxLength()" [attr.aria-label]="placeholder()"></textarea>
+  <button type="button" class="send" (click)="submit()" [disabled]="!value().trim() || disabled()"
+          [attr.aria-label]="'chat.send' | transloco">
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+</div>

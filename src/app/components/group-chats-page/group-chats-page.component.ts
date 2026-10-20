@@ -1,9 +1,4 @@
-import {
-  Component, OnInit, OnDestroy, inject, signal,
-  ViewChild, ElementRef, AfterViewChecked
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, OnDestroy, computed, inject, signal } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,33 +7,33 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { WebSocketService } from '../../core/websocket/websocket.service';
 import {
-  ClearCourseMessagesAction, CourseSummary,
+  ClearCourseMessagesAction, CourseMessage, CourseSummary,
   LoadCourseMessagesAction, LoadMyChatCoursesAction, SendCourseMessageAction
 } from '../state/group-chat.actions';
 import { SecurityState } from '../state/security.state';
+import { MessageThreadComponent } from '../../shared/chat/message-thread.component';
+import { MessageComposerComponent } from '../../shared/chat/message-composer.component';
+import { groupMessagesToThread } from '../../shared/chat/thread';
+import { S3_BASE } from '../../app.const';
 
 @Component({
     selector: 'app-group-chats-page',
-    imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, TranslocoModule, RouterModule],
+    imports: [MatIconModule, MatButtonModule, TranslocoModule, RouterModule, MessageThreadComponent, MessageComposerComponent],
     templateUrl: './group-chats-page.component.html',
     styleUrl: './group-chats-page.component.sass'
 })
-export class GroupChatsPageComponent implements OnInit, OnDestroy, AfterViewChecked {
-  @ViewChild('messagesEnd') private messagesEnd?: ElementRef;
-
+export class GroupChatsPageComponent implements OnInit, OnDestroy {
   private store      = inject(Store);
   private wsService  = inject(WebSocketService);
   private route      = inject(ActivatedRoute);
 
-  readonly s3Base = 'https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/';
-
   myChatCourses = toSignal(this.store.select(state => state.groupChat.myChatCourses), { initialValue: [] as CourseSummary[] });
-  messages      = toSignal(this.store.select(state => state.groupChat.messages),      { initialValue: [] });
+  messages      = toSignal(this.store.select(state => state.groupChat.messages),      { initialValue: [] as CourseMessage[] });
   currentUser   = toSignal(this.store.select(SecurityState.getCurrentUser));
 
   selectedCourse = signal<CourseSummary | null>(null);
   newMessage     = signal('');
-  private lastCount = 0;
+  threadMessages = computed(() => groupMessagesToThread(this.messages(), this.currentUser()?.id, S3_BASE));
 
   ngOnInit(): void {
     // ?course=<id> (e.g. from the calendar) opens that course's chat straight away.
@@ -59,39 +54,12 @@ export class GroupChatsPageComponent implements OnInit, OnDestroy, AfterViewChec
     this.wsService.unsubscribeFromCourse();
     this.store.dispatch(new ClearCourseMessagesAction());
     this.selectedCourse.set(course);
-    this.lastCount = 0;
     this.store.dispatch(new LoadCourseMessagesAction(course.id));
     this.wsService.subscribeToCourse(course.id);
   }
 
-  send(): void {
-    const content = this.newMessage().trim();
-    const course  = this.selectedCourse();
-    if (!content || !course) return;
-    this.store.dispatch(new SendCourseMessageAction(course.id, content));
-    this.newMessage.set('');
-  }
-
-  onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      this.send();
-    }
-  }
-
-  avatarUrl(fileName?: string): string | null {
-    return fileName ? this.s3Base + fileName : null;
-  }
-
-  initials(first: string, last: string): string {
-    return (first?.[0] ?? '') + (last?.[0] ?? '');
-  }
-
-  ngAfterViewChecked(): void {
-    const count = this.messages().length;
-    if (count !== this.lastCount) {
-      this.lastCount = count;
-      this.messagesEnd?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
-    }
+  send(content: string): void {
+    const course = this.selectedCourse();
+    if (course) this.store.dispatch(new SendCourseMessageAction(course.id, content));
   }
 }

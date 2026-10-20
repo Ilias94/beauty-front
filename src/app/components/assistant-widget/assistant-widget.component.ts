@@ -1,17 +1,15 @@
 import { Component, inject, signal, effect, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AssistantControllerService } from '../../../api/services';
 import { Turn } from '../../../api/models';
-import { CloseChatAction } from '../state/chat.actions';
 import { SecurityState } from '../state/security.state';
+import { FloatingPanelsService } from '../../shared/chat/floating-panels.service';
+import { MessageComposerComponent } from '../../shared/chat/message-composer.component';
 
 // The backend accepts at most 10 earlier turns per question.
 const MAX_HISTORY = 10;
@@ -22,9 +20,10 @@ interface AssistantMessage {
   error?: boolean;
 }
 
+/** The read-only AI assistant, in the corner panel; opens from the corner button's menu. */
 @Component({
     selector: 'app-assistant-widget',
-    imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule],
+    imports: [MatIconModule, MatButtonModule, TranslocoModule, MessageComposerComponent],
     templateUrl: './assistant-widget.component.html',
     styleUrl: './assistant-widget.component.sass'
 })
@@ -33,26 +32,21 @@ export class AssistantWidgetComponent implements AfterViewChecked {
 
   private store = inject(Store);
   private assistantService = inject(AssistantControllerService);
+  private transloco = inject(TranslocoService);
+  panels = inject(FloatingPanelsService);
 
   currentUser = toSignal(this.store.select(SecurityState.getCurrentUser));
-  chatOpen = toSignal(this.store.select(state => state.chat.open), { initialValue: false });
 
-  open = signal(false);
   messages = signal<AssistantMessage[]>([]);
   newMessage = signal('');
   sending = signal(false);
   remainingToday = signal<number | null>(null);
+  readonly examples = ['assistant.example1', 'assistant.example2', 'assistant.example3'];
 
   private lastMessageCount = 0;
   private lastUserId?: number;
 
   constructor() {
-    // Both widgets share the bottom-right corner, so only one panel is open at a time.
-    effect(() => {
-      if (this.chatOpen()) {
-        this.open.set(false);
-      }
-    });
     // Another account must not see the previous user's conversation.
     effect(() => {
       const userId = this.currentUser()?.id;
@@ -60,20 +54,17 @@ export class AssistantWidgetComponent implements AfterViewChecked {
         this.lastUserId = userId;
         this.messages.set([]);
         this.remainingToday.set(null);
-        this.open.set(false);
+        this.panels.assistantOpen.set(false);
       }
     });
   }
 
-  toggleOpen() {
-    if (!this.open()) {
-      this.store.dispatch(new CloseChatAction());
-    }
-    this.open.update(open => !open);
+  /** The example questions are buttons: one tap asks it. */
+  askExample(key: string) {
+    this.send(this.transloco.translate(key).replace(/^[„"]|[”"]$/g, ''));
   }
 
-  send() {
-    const content = this.newMessage().trim();
+  send(content: string) {
     if (!content || this.sending()) return;
 
     const history: Turn[] = this.messages()
@@ -82,7 +73,6 @@ export class AssistantWidgetComponent implements AfterViewChecked {
       .map(m => ({ role: m.role, content: m.content }));
 
     this.messages.update(messages => [...messages, { role: 'user', content }]);
-    this.newMessage.set('');
     this.sending.set(true);
 
     this.assistantService.ask({ body: { message: content, history } }).subscribe({
@@ -99,13 +89,6 @@ export class AssistantWidgetComponent implements AfterViewChecked {
         this.sending.set(false);
       }
     });
-  }
-
-  onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      this.send();
-    }
   }
 
   private errorKey(error: HttpErrorResponse): string {
