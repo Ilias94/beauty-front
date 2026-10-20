@@ -1,174 +1,612 @@
 :host
   display: block
-  // The app shell adds no padding; each page sets its own like .page in styles.sass.
-  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+  padding: clamp(20px, 3vw, 40px) var(--gutter) 48px
 
-// ViewEncapsulation.None — all selectors prefixed with cf- to avoid global conflicts
-
-.cf-page
-  max-width: 860px
+.wizard
+  max-width: 1160px
   margin: 0 auto
-  padding-bottom: 48px
 
-  // formly custom elements default to display:inline — force block so padding/background work correctly
-  formly-group,
-  formly-field
-    display: block
+// ── Header & draft banner ──────────────────────────────────
+.wz-head
+  margin-bottom: 20px
 
-// ── Header ──────────────────────────────────────────────────────────────
-
-.cf-header
-  display: flex
-  align-items: flex-start
-  gap: 12px
-  margin-bottom: 8px
-
-.cf-back-btn
-  margin-top: 6px
-  flex-shrink: 0
-
-.cf-header-text
-  h1
-    font-size: clamp(30px, 4vw, 40px)
-    margin: 4px 0 6px
-
-  p
+  .back
+    display: inline-flex
+    align-items: center
+    gap: 6px
+    font-weight: 600
+    font-size: 14px
     color: var(--ink-2)
-    max-width: 60ch
+    margin-bottom: 8px
 
-// ── Section headers ─────────────────────────────────────────────────────
+    &:hover
+      color: var(--ink)
 
-.cf-section-header
+    .mat-icon
+      font-size: 18px
+      width: 18px
+      height: 18px
+
+.draft-banner
   display: flex
   align-items: center
-  gap: 14px
-  margin: 28px 0 10px
-  padding: 0 2px
-
-.cf-section-icon
-  width: 40px
-  height: 40px
-  border-radius: 12px
-  background: var(--surface-2)
-  color: var(--ink-2)
-  display: flex
-  align-items: center
-  justify-content: center
-  font-size: 20px
-  flex-shrink: 0
-
-.cf-section-title
-  font-size: 1rem
-  font-weight: 600
-  margin: 0 0 2px
-  color: var(--ink)
-
-.cf-section-desc
-  font-size: 0.8rem
-  color: rgba(0,0,0,0.48)
-  margin: 0
-
-// ── Cards ───────────────────────────────────────────────────────────────
-
-.cf-card
-  display: block
-  background: var(--surface)
+  gap: 12px
+  flex-wrap: wrap
+  padding: 12px 16px
+  margin-bottom: 20px
   border-radius: var(--radius)
-  padding: 24px 24px 8px
-  border: 1px solid var(--line)
+  background: var(--info-soft)
+  color: var(--info)
+  font-weight: 600
+  animation: rise 360ms var(--ease) backwards
 
-  .mat-mdc-form-field
+  span
+    flex: 1
+    min-width: 200px
+
+// ── Progress ───────────────────────────────────────────────
+.wz-progress
+  position: relative
+  margin-bottom: 28px
+
+  ol
+    list-style: none
+    padding: 0
+    margin: 0
+    display: grid
+    grid-template-columns: repeat(5, 1fr)
+    gap: 8px
+
+  button
+    width: 100%
+    display: flex
+    align-items: center
+    gap: 10px
+    padding: 8px 4px
+    border: 0
+    background: transparent
+    font: 600 14px var(--font-ui)
+    color: var(--ink-3)
+    cursor: pointer
+    text-align: left
+
+    &:disabled
+      cursor: default
+
+  .dot
+    width: 30px
+    height: 30px
+    flex-shrink: 0
+    border-radius: 50%
+    display: grid
+    place-items: center
+    font-size: 13px
+    font-weight: 700
+    background: var(--surface)
+    border: 1.5px solid var(--line-strong)
+    transition: all 240ms var(--ease)
+
+    .mat-icon
+      font-size: 17px
+      width: 17px
+      height: 17px
+
+  .current button
+    color: var(--ink)
+
+    .dot
+      background: var(--accent)
+      border-color: var(--accent)
+      color: #fff
+      box-shadow: 0 0 0 5px var(--accent-soft)
+
+  .done button
+    color: var(--ink-2)
+
+    .dot
+      background: var(--success-soft)
+      border-color: var(--success)
+      color: var(--success)
+
+  .bar
+    height: 3px
+    border-radius: 3px
+    margin-top: 10px
+    background: var(--surface-3)
+    overflow: hidden
+
+    span
+      display: block
+      height: 100%
+      background: var(--accent)
+      border-radius: 3px
+      transition: width 420ms var(--ease)
+
+// ── Layout ─────────────────────────────────────────────────
+.layout
+  display: grid
+  grid-template-columns: minmax(0, 1fr) 340px
+  gap: 40px
+  align-items: start
+
+.steps
+  min-width: 0
+
+.step
+  padding: clamp(20px, 3vw, 32px)
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  animation: step-in 320ms var(--ease) backwards
+
+  &.from-back
+    animation-name: step-in-back
+
+  h2
+    font-size: clamp(24px, 3vw, 30px)
+
+@keyframes step-in
+  from
+    opacity: 0
+    transform: translateX(24px)
+
+@keyframes step-in-back
+  from
+    opacity: 0
+    transform: translateX(-24px)
+
+.step-lead
+  color: var(--ink-2)
+  margin: 6px 0 24px
+
+.field-label
+  font-weight: 700
+  font-size: 14px
+  margin: 6px 0 10px
+
+.full
+  width: 100%
+
+.grid-2, .grid-3
+  display: grid
+  gap: 0 14px
+
+  mat-form-field
     width: 100%
 
-// ── Grid layouts ────────────────────────────────────────────────────────
-
-// Scoped under .cf-page so it beats the formly-group display: block reset above.
-.cf-page .cf-grid-2
-  display: grid
+.grid-2
   grid-template-columns: 1fr 1fr
-  gap: 0 20px
 
-  @media (max-width: 600px)
-    grid-template-columns: 1fr
+.grid-3
+  grid-template-columns: 1fr 1fr 1fr
 
-.cf-half
-  .mat-mdc-form-field
-    max-width: 50%
+.span-2
+  grid-column: span 2
 
-  @media (max-width: 600px)
-    .mat-mdc-form-field
-      max-width: 100%
+.top-gap
+  margin-top: 20px
 
-// ── Radio group (no mat-form-field wrapper) ─────────────────────────────
-
-.cf-radio-label
-  font-size: 13px
-  font-weight: 600 !important
-  color: var(--ink-2)
-  margin: 0 0 8px
-  font-weight: 400
-
-.cf-required
+.error
   color: var(--danger)
+  font-size: 13px
+  font-weight: 600
+  margin-top: 8px
 
-formly-field:has(.mat-mdc-radio-group)
-  display: block
-  margin-bottom: 8px
+// ── Tiles (course type, category) ──────────────────────────
+.type-tiles
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 12px
+  margin-bottom: 24px
 
-.mat-mdc-radio-group
+.tile
   display: flex
   flex-direction: column
-  gap: 8px
+  align-items: flex-start
+  gap: 6px
+  padding: 16px
+  text-align: left
+  border: 1.5px solid var(--line-strong)
+  border-radius: var(--radius)
+  background: var(--surface)
+  font-family: var(--font-ui)
+  color: var(--ink-2)
+  cursor: pointer
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform 120ms var(--ease)
 
-// ── AI hint ─────────────────────────────────────────────────────────────
+  .mat-icon
+    color: var(--ink-3)
+    margin-bottom: 4px
+    transition: color var(--dur) var(--ease)
 
-.cf-ai-hint
+  strong
+    font-size: 15px
+    color: var(--ink)
+
+  span
+    font-size: 13px
+    line-height: 1.4
+
+  &:hover
+    border-color: var(--ink-3)
+
+  &:active
+    transform: scale(0.98)
+
+  &.on
+    border-color: var(--accent)
+    box-shadow: 0 0 0 1px var(--accent), 0 8px 20px -14px rgba(140, 47, 75, 0.6)
+
+    .mat-icon
+      color: var(--accent)
+
+.cat-tiles
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))
+  gap: 10px
+
+.cat
+  display: flex
+  align-items: center
+  gap: 10px
+  padding: 10px 12px
+  border: 1.5px solid var(--line)
+  border-radius: var(--radius-sm)
+  background: var(--surface)
+  font: 600 13.5px var(--font-ui)
+  color: var(--ink)
+  text-align: left
+  cursor: pointer
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform 120ms var(--ease)
+
+  &:hover
+    border-color: var(--line-strong)
+
+  &:active
+    transform: scale(0.98)
+
+  &.on
+    border-color: var(--ink)
+    background: var(--tint)
+
+.cat-icon
+  width: 32px
+  height: 32px
+  flex-shrink: 0
+  border-radius: 9px
+  display: grid
+  place-items: center
+  background: var(--tint)
+  color: var(--ink)
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+    color: var(--ink)
+    opacity: 0.75
+
+// ── Step 2: AI ─────────────────────────────────────────────
+.ai-row
+  display: flex
+  align-items: center
+  gap: 10px
+  flex-wrap: wrap
+  margin-bottom: 16px
+
+  .hint
+    font-size: 13px
+    color: var(--ink-3)
+
+.ai-btn
+  border-color: var(--accent-soft-2) !important
+
+  .mat-icon
+    color: #C48A2C
+
+  mat-spinner
+    display: inline-block
+    margin-right: 8px
+
+// Soft shimmer on the field while the suggestion is being written.
+.ai-writing ::ng-deep .mat-mdc-text-field-wrapper
+  background: linear-gradient(100deg, var(--surface) 30%, var(--accent-soft) 50%, var(--surface) 70%)
+  background-size: 300% 100%
+  animation: writing 1.6s linear infinite
+
+@keyframes writing
+  from
+    background-position: 100% 0
+  to
+    background-position: 0 0
+
+// ── Step 3 ─────────────────────────────────────────────────
+.note
+  display: flex
+  align-items: center
+  gap: 10px
+  padding: 14px 16px
+  border-radius: var(--radius-sm)
+  background: var(--info-soft)
+  color: var(--info)
+  font-weight: 600
+
+.address
+  animation: rise 320ms var(--ease) backwards
+
+// ── Step 4 ─────────────────────────────────────────────────
+.seats .field-label
+  margin-top: 0
+
+.stepper
   display: inline-flex
   align-items: center
-  gap: 6px
-  font-size: 0.78rem
+  gap: 4px
+  padding: 4px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+
+  input
+    width: 56px
+    border: 0
+    outline: 0
+    text-align: center
+    font: 700 18px var(--font-ui)
+    color: var(--ink)
+    background: transparent
+    -moz-appearance: textfield
+
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+      -webkit-appearance: none
+
+.segmented
+  display: inline-flex
+  flex-wrap: wrap
+  padding: 4px
+  border-radius: var(--radius-pill)
+  background: var(--surface-2)
+
+  button
+    border: 0
+    background: transparent
+    font: 600 14px var(--font-ui)
+    color: var(--ink-2)
+    padding: 9px 16px
+    border-radius: var(--radius-pill)
+    cursor: pointer
+    transition: all var(--dur) var(--ease)
+
+    &.on
+      background: var(--surface)
+      color: var(--ink)
+      box-shadow: var(--shadow-1)
+
+.toggle-box
+  display: flex
+  flex-direction: column
+  gap: 4px
+  padding-top: 12px
+
+  span
+    font-size: 13px
+    color: var(--ink-3)
+    padding-left: 50px
+
+// ── Step 5: summary ────────────────────────────────────────
+.summary
+  display: flex
+  flex-direction: column
+  gap: 12px
+
+.sum-block
+  padding: 16px 18px
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--bg)
+
+.sum-head
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 8px
+
+  h3
+    font-size: 18px
+
+dl
+  margin: 0
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))
+  gap: 10px 20px
+
+  dt
+    font-size: 12px
+    font-weight: 700
+    letter-spacing: 0.06em
+    text-transform: uppercase
+    color: var(--ink-3)
+
+  dd
+    margin: 2px 0 0
+    font-weight: 600
+
+.sum-text
+  white-space: pre-line
   color: var(--ink-2)
-  background: var(--accent-soft)
-  padding: 5px 12px
-  border-radius: 20px
-  margin: -4px 0 14px
+  display: -webkit-box
+  -webkit-line-clamp: 4
+  -webkit-box-orient: vertical
+  overflow: hidden
 
-  .material-symbols-rounded
-    font-size: 15px
+.sum-list
+  list-style: none
+  padding: 0
+  margin: 10px 0 0
+  display: flex
+  flex-wrap: wrap
+  gap: 6px 16px
 
-// ── Actions ─────────────────────────────────────────────────────────────
+  li
+    display: flex
+    align-items: center
+    gap: 4px
+    font-size: 14px
 
-.cf-actions
+  .mat-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+    color: var(--success)
+
+// ── Actions ────────────────────────────────────────────────
+.actions
   position: sticky
   bottom: 16px
   z-index: 5
   display: flex
-  justify-content: flex-end
   align-items: center
   gap: 10px
-  margin-top: 32px
-  padding: 14px 16px
+  margin-top: 16px
+  padding: 12px
   background: rgba(255, 255, 255, 0.92)
   backdrop-filter: blur(10px)
   border: 1px solid var(--line)
-  border-radius: var(--radius-lg)
+  border-radius: var(--radius-pill)
   box-shadow: var(--shadow-2)
-
   white-space: nowrap
 
-  // Leave room for the floating chat/assistant buttons on the right.
-  @media (min-width: 641px) and (max-width: 1100px)
-    margin-right: 76px
+  .spacer
+    flex: 1
 
-  // Phones: the back arrow replaces Cancel and the floating buttons move above the bar (styles.sass).
-  @media (max-width: 640px)
+  mat-spinner
+    display: inline-block
+    margin-right: 8px
+
+// ── Preview ────────────────────────────────────────────────
+.preview
+  position: sticky
+  top: calc(var(--header-h) + 24px)
+
+  .eyebrow
+    margin-bottom: 12px
+
+.preview-hint
+  font-size: 13px
+  color: var(--ink-3)
+  margin-top: 12px
+
+.preview-toggle
+  display: none
+
+// ── Responsive ─────────────────────────────────────────────
+@media (max-width: 1100px)
+  .layout
+    grid-template-columns: minmax(0, 1fr) 300px
+    gap: 28px
+
+  .actions
+    margin-right: 0
+
+@media (max-width: 900px)
+  .layout
+    grid-template-columns: 1fr
+
+  .wz-progress .label
+    display: none
+
+  .wz-progress ol
+    display: flex
+    justify-content: space-between
+
+  .wz-progress button
+    width: auto
+
+  // Preview becomes a bottom sheet opened by a floating pill.
+  .preview
+    position: fixed
+    left: 0
+    right: 0
     bottom: 0
-    margin: 32px calc(-1 * var(--gutter)) 0
+    top: auto
+    z-index: 1001
+    max-height: 85vh
+    overflow-y: auto
+    padding: 20px var(--gutter) 88px
+    background: var(--bg)
+    border-top: 1px solid var(--line)
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0
+    box-shadow: var(--shadow-3)
+    transform: translateY(105%)
+    transition: transform 320ms var(--ease)
+
+    &.open
+      transform: none
+
+  .preview-inner
+    max-width: 360px
+    margin: 0 auto
+
+  .preview-toggle
+    position: fixed
+    left: 50%
+    bottom: 96px
+    transform: translateX(-50%)
+    z-index: 1002
+    transition: bottom 320ms var(--ease)
+    display: inline-flex
+    align-items: center
+    gap: 6px
+    padding: 10px 16px
+    border: 0
+    border-radius: var(--radius-pill)
+    background: var(--ink)
+    color: #fff
+    font: 700 13.5px var(--font-ui)
+    box-shadow: var(--shadow-3)
+    cursor: pointer
+
+    // Open: the pill becomes the close button at the bottom of the sheet.
+    &.open
+      bottom: 24px
+
+    .mat-icon
+      font-size: 18px
+      width: 18px
+      height: 18px
+
+@media (max-width: 640px)
+  .type-tiles, .grid-2
+    grid-template-columns: 1fr
+
+  .type-tiles
+    gap: 8px
+
+  // Compact tiles: icon on the left, name and description stacked beside it.
+  .tile
+    display: grid
+    grid-template-columns: auto 1fr
+    column-gap: 12px
+    row-gap: 2px
+    padding: 12px 14px
+
+    .mat-icon
+      grid-row: span 2
+      align-self: center
+      margin: 0
+
+  .grid-3
+    grid-template-columns: 1fr 1fr
+
+  .span-2
+    grid-column: span 2
+
+  .actions
+    position: sticky
+    bottom: 0
+    margin: 16px calc(-1 * var(--gutter)) 0
     border-radius: 0
     border-width: 1px 0 0
 
-    .cf-cancel
+    .draft-btn
       display: none
-
-    button
-      flex: 1

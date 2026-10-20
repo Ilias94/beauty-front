@@ -20,11 +20,11 @@
       }
     </div>
 
-    @if (relation() === 'owner') {
+    @if (relation() === 'owner' && !preview()) {
       <span class="tag tag-relation"><mat-icon>edit</mat-icon>{{ 'courses.yourCourse' | transloco }}</span>
     } @else if (relation() === 'enrolled') {
       <span class="tag tag-relation tag-enrolled"><mat-icon>check</mat-icon>{{ 'courses.enrolled' | transloco }}</span>
-    } @else if (status() !== 'upcoming') {
+    } @else if (status() !== 'upcoming' && !preview()) {
       <span class="tag tag-relation">{{ ('status.' + status()) | transloco }}</span>
     }
   </div>
@@ -32,7 +32,9 @@
   <!-- Body -->
   <div class="body">
     <div class="eyebrow-row">
-      <span class="category">{{ categoryKey() | transloco }}</span>
+      @if (course().category?.label) {
+        <span class="category">{{ categoryKey() | transloco }}</span>
+      }
       @if (course().rating) {
         <span class="rating" [attr.aria-label]="'courses.ratingLabel' | transloco: { rating: (course().rating | number: '1.1-1') }">
           <mat-icon>star</mat-icon>{{ course().rating | number: '1.1-1' }}
@@ -40,7 +42,13 @@
       }
     </div>
 
-    <h3 class="title"><a class="card-link" [routerLink]="['/course', course().id]">{{ course().title }}</a></h3>
+    <h3 class="title">
+      @if (preview()) {
+        {{ course().title }}
+      } @else {
+        <a class="card-link" [routerLink]="['/course', course().id]">{{ course().title }}</a>
+      }
+    </h3>
 
     <p class="date">
       <mat-icon>calendar_month</mat-icon>

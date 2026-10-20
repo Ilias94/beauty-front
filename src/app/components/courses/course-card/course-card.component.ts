@@ -22,6 +22,8 @@ export type CourseRelation = 'owner' | 'enrolled' | null;
 export class CourseCardComponent {
   course = input.required<CourseDtoResponse>();
   relation = input<CourseRelation>(null);
+  /** Live preview (course wizard): no link and no owner tools. */
+  preview = input(false);
 
   downloadExcel = output<number>();
   downloadCsv = output<number>();
