@@ -13,6 +13,7 @@ import { TranslocoService, TranslocoModule } from '@jsverse/transloco';
 import { LogoutAction } from '../../state/security.actions';
 import { NotificationBellComponent } from '../../common/notification-bell/notification-bell.component';
 import { S3_BASE } from '../../../app.const';
+import { ProgressBarComponent } from '../../../core/loading/progress-bar.component';
 
 /** App shell: sticky top bar, account menu, mobile drawer and footer around the routed page. */
 @Component({
@@ -30,6 +31,7 @@ import { S3_BASE } from '../../../app.const';
         RouterLinkActive,
         NotificationBellComponent,
         TranslocoModule,
+        ProgressBarComponent,
     ]
 })
 export class MenuComponent {

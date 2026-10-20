@@ -10,7 +10,7 @@
   <!-- ── Header ───────────────────────────────────────── -->
   <div class="eq-header">
     <h1 class="eq-title">{{ 'quiz.editQuizTitle' | transloco }}</h1>
-    <button mat-raised-button color="primary" class="eq-save-btn" (click)="submit()" [disabled]="questions.length === 0">
+    <button mat-flat-button color="primary" class="eq-save-btn" (click)="submit()" [disabled]="questions.length === 0">
       <mat-icon>save</mat-icon> {{ 'quiz.saveQuestions' | transloco }}
     </button>
   </div>

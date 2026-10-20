@@ -1,5 +1,5 @@
 import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, isDevMode, PLATFORM_ID } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
 import { routes } from './app.routes';
@@ -77,7 +77,10 @@ export const appConfig: ApplicationConfig = {
       deps: [Store, PLATFORM_ID],
       multi: true,
     },
-    provideRouter(routes),
+    // View transitions cross-fade pages (see styles.sass); new pages start at the top, #anchors scroll.
+    provideRouter(routes,
+      withViewTransitions({ skipInitialTransition: true }),
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })),
     provideClientHydration(),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([tokenInterceptor])),

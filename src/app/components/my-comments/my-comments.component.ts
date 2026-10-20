@@ -4,10 +4,11 @@ import { GetCurrentUserCommentsAction } from '../state/comment.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommentsComponent } from '../comments/comments.component';
 import { CommentDtoResponse } from '../../../api/models';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-my-comments',
-    imports: [CommentsComponent],
+    imports: [CommentsComponent, TranslocoModule],
     templateUrl: './my-comments.component.html',
     styleUrl: './my-comments.component.sass'
 })

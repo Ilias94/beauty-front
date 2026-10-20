@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, effect, Signal, inject } from '@angular/core';
+import { Component, DestroyRef, ViewEncapsulation, effect, Signal, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
@@ -7,13 +7,15 @@ import { Store } from '@ngxs/store';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { SaveCourseAction } from '../../state/course.actions';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { GetAiPromptAction } from '../../state/ai.actions';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslocoModule } from '@jsverse/transloco';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { categoryKey } from '../../../shared/category-visual';
 
 function toLocalIsoString(date: Date): string {
   const pad = (n: number) => n.toString().padStart(2, '0');
@@ -43,7 +45,7 @@ const CATEGORY_OPTIONS = [
 function sectionHeader(icon: string, title: string, desc: string): FormlyFieldConfig {
   return {
     template: `<div class="cf-section-header">
-      <span class="material-icons cf-section-icon">${icon}</span>
+      <span class="material-symbols-rounded cf-section-icon">${icon}</span>
       <div>
         <h3 class="cf-section-title">${title}</h3>
         <p class="cf-section-desc">${desc}</p>
@@ -67,18 +69,26 @@ export class CourseFormComponent {
   searchInput$ = new Subject<string>();
   prompt: Signal<string> = toSignal(this.store.select((s: any) => s.ai.prompt));
   private router = inject(Router);
+  private transloco = inject(TranslocoService);
+  private destroyRef = inject(DestroyRef);
 
   form = new FormGroup({});
 
-  fields: FormlyFieldConfig[] = [
+  model: Record<string, unknown> = {};
+  fields: FormlyFieldConfig[] = [];
+
+  /** Built per language; the shared model keeps typed values when the language changes. */
+  private buildFields(): FormlyFieldConfig[] {
+    const t = (key: string) => this.transloco.translate('courseForm.' + key);
+    return [
 
     // ── Course Type ─────────────────────────────────────────────────────
-    sectionHeader('tune', 'Course Format', 'How will this course be delivered'),
+    sectionHeader('tune', t('courseFormatSection'), t('courseFormatDesc')),
     {
       fieldGroupClassName: 'cf-card',
       fieldGroup: [
         {
-          template: '<p class="cf-radio-label">Delivery Format <span class="cf-required">*</span></p>'
+          template: '<p class="cf-radio-label">' + t('deliveryFormat') + ' <span class="cf-required">*</span></p>'
         },
         {
           key: 'courseType',
@@ -88,9 +98,9 @@ export class CourseFormComponent {
           props: {
             required: true,
             options: [
-              { value: 'IN_PERSON', label: '🏢 In-Person — students attend at a physical location' },
-              { value: 'ONLINE',    label: '💻 Online — fully remote, video-based course' },
-              { value: 'HYBRID',    label: '🔀 Hybrid — mix of in-person and online content' },
+              { value: 'IN_PERSON', label: t('inPerson') },
+              { value: 'ONLINE',    label: t('onlineOption') },
+              { value: 'HYBRID',    label: t('hybridOption') },
             ],
           }
         }
@@ -98,7 +108,7 @@ export class CourseFormComponent {
     },
 
     // ── Course Information ──────────────────────────────────────────────
-    sectionHeader('menu_book', 'Course Information', 'Title, description and pricing'),
+    sectionHeader('menu_book', t('courseInfoSection'), t('courseInfoDesc')),
     {
       fieldGroupClassName: 'cf-card',
       fieldGroup: [
@@ -106,8 +116,8 @@ export class CourseFormComponent {
           key: 'title',
           type: 'input',
           props: {
-            label: 'Course Title',
-            placeholder: 'e.g. Advanced Makeup Artistry',
+            label: t('courseTitleLabel'),
+            placeholder: t('courseTitlePlaceholder'),
             required: true,
             minLength: 5,
             appearance: 'outline',
@@ -116,16 +126,16 @@ export class CourseFormComponent {
         },
         {
           template: `<div class="cf-ai-hint">
-            <span class="material-icons">auto_awesome</span>
-            AI is generating a description suggestion based on your title
+            <span class="material-symbols-rounded">auto_awesome</span>
+            ${t('aiHint')}
           </div>`
         },
         {
           key: 'description',
           type: 'textarea',
           props: {
-            label: 'Description',
-            placeholder: 'Describe what students will learn in this course...',
+            label: t('descriptionLabel'),
+            placeholder: t('descriptionPlaceholder'),
             rows: 5,
             required: true,
             appearance: 'outline',
@@ -138,7 +148,7 @@ export class CourseFormComponent {
               key: 'price',
               type: 'input',
               props: {
-                label: 'Price (PLN)',
+                label: t('pricePln'),
                 placeholder: '150',
                 type: 'number',
                 min: 0,
@@ -150,7 +160,7 @@ export class CourseFormComponent {
               key: 'maxParticipants',
               type: 'input',
               props: {
-                label: 'Max Participants',
+                label: t('maxParticipants'),
                 placeholder: '10',
                 type: 'number',
                 required: true,
@@ -163,7 +173,7 @@ export class CourseFormComponent {
     },
 
     // ── Level, Language & Certificate ───────────────────────────────────
-    sectionHeader('school', 'Course Details', 'Level, language and certificate'),
+    sectionHeader('school', t('detailsSection'), t('detailsDesc')),
     {
       fieldGroupClassName: 'cf-card',
       fieldGroup: [
@@ -175,13 +185,13 @@ export class CourseFormComponent {
               type: 'select',
               defaultValue: 'BEGINNER',
               props: {
-                label: 'Difficulty Level',
+                label: t('difficultyLevel'),
                 required: true,
                 appearance: 'outline',
                 options: [
-                  { value: 'BEGINNER',     label: '🟢 Beginner — no prior experience needed' },
-                  { value: 'INTERMEDIATE', label: '🟡 Intermediate — some experience recommended' },
-                  { value: 'ADVANCED',     label: '🔴 Advanced — professional-level content' },
+                  { value: 'BEGINNER',     label: t('beginner') },
+                  { value: 'INTERMEDIATE', label: t('intermediate') },
+                  { value: 'ADVANCED',     label: t('advanced') },
                 ]
               }
             },
@@ -190,19 +200,19 @@ export class CourseFormComponent {
               type: 'select',
               defaultValue: 'pl',
               props: {
-                label: 'Course Language',
+                label: t('courseLanguage'),
                 required: true,
                 appearance: 'outline',
                 options: [
-                  { value: 'pl', label: '🇵🇱 Polish' },
-                  { value: 'en', label: '🇬🇧 English' },
+                  { value: 'pl', label: t('languagePl') },
+                  { value: 'en', label: t('languageEn') },
                 ]
               }
             }
           ]
         },
         {
-          template: '<p class="cf-radio-label" style="margin-top:8px">Certificate</p>'
+          template: '<p class="cf-radio-label" style="margin-top:8px">' + t('certificate') + '</p>'
         },
         {
           key: 'certificate',
@@ -211,8 +221,8 @@ export class CourseFormComponent {
           wrappers: [],
           props: {
             options: [
-              { value: true,  label: '🎓 Yes — students receive a completion certificate' },
-              { value: false, label: '❌ No — no certificate issued' },
+              { value: true,  label: t('certificateYes') },
+              { value: false, label: t('certificateNo') },
             ]
           }
         }
@@ -220,7 +230,7 @@ export class CourseFormComponent {
     },
 
     // ── What you'll learn ───────────────────────────────────────────────
-    sectionHeader('lightbulb', 'What You\'ll Learn', 'Learning outcomes and prerequisites'),
+    sectionHeader('lightbulb', t('learningSection'), t('learningDesc')),
     {
       fieldGroupClassName: 'cf-card',
       fieldGroup: [
@@ -228,8 +238,8 @@ export class CourseFormComponent {
           key: 'learningOutcomes',
           type: 'textarea',
           props: {
-            label: 'Learning Outcomes',
-            placeholder: '• Master blending techniques\n• Create professional makeup looks\n• Work with various skin tones',
+            label: t('learningOutcomes'),
+            placeholder: t('learningOutcomesPlaceholder'),
             rows: 4,
             appearance: 'outline',
           }
@@ -238,8 +248,8 @@ export class CourseFormComponent {
           key: 'prerequisites',
           type: 'textarea',
           props: {
-            label: 'Prerequisites',
-            placeholder: 'What should students know or bring before attending...',
+            label: t('prerequisites'),
+            placeholder: t('prerequisitesPlaceholder'),
             rows: 3,
             appearance: 'outline',
           }
@@ -248,7 +258,7 @@ export class CourseFormComponent {
     },
 
     // ── Schedule ────────────────────────────────────────────────────────
-    sectionHeader('schedule', 'Schedule', 'When does the course take place'),
+    sectionHeader('schedule', t('scheduleSection'), t('scheduleDesc')),
     {
       fieldGroupClassName: 'cf-card',
       fieldGroup: [
@@ -259,8 +269,8 @@ export class CourseFormComponent {
               key: 'startDate',
               type: 'datepicker',
               props: {
-                label: 'Start Date',
-                placeholder: 'Select start date',
+                label: t('startDate'),
+                placeholder: t('startDatePlaceholder'),
                 required: true,
                 appearance: 'outline',
               }
@@ -269,8 +279,8 @@ export class CourseFormComponent {
               key: 'endDate',
               type: 'datepicker',
               props: {
-                label: 'End Date',
-                placeholder: 'Select end date',
+                label: t('endDate'),
+                placeholder: t('endDatePlaceholder'),
                 required: true,
                 appearance: 'outline',
               }
@@ -284,8 +294,8 @@ export class CourseFormComponent {
               key: 'timePicker',
               type: 'time-picker',
               props: {
-                label: 'Start Time',
-                placeholder: 'Select time',
+                label: t('startTime'),
+                placeholder: t('startTimePlaceholder'),
                 required: true,
               }
             },
@@ -293,8 +303,8 @@ export class CourseFormComponent {
               key: 'endTimePicker',
               type: 'time-picker',
               props: {
-                label: 'End Time',
-                placeholder: 'Select time',
+                label: t('endTime'),
+                placeholder: t('startTimePlaceholder'),
                 required: false,
               }
             }
@@ -306,7 +316,7 @@ export class CourseFormComponent {
     // ── Location (hidden for ONLINE) ─────────────────────────────────────
     {
       hideExpression: 'model.courseType === "ONLINE"',
-      template: `<div class="cf-section-header"><span class="material-icons cf-section-icon">location_on</span><div><h3 class="cf-section-title">Location</h3><p class="cf-section-desc">Where will the course be held</p></div></div>`
+      template: `<div class="cf-section-header"><span class="material-symbols-rounded cf-section-icon">location_on</span><div><h3 class="cf-section-title">${t('locationSection')}</h3><p class="cf-section-desc">${t('locationDesc')}</p></div></div>`
     },
     {
       hideExpression: 'model.courseType === "ONLINE"',
@@ -318,12 +328,12 @@ export class CourseFormComponent {
             {
               key: 'city',
               type: 'input',
-              props: { label: 'City', placeholder: 'e.g. Warsaw', required: true, appearance: 'outline' }
+              props: { label: t('city'), placeholder: t('cityPlaceholder'), required: true, appearance: 'outline' }
             },
             {
               key: 'postalCode',
               type: 'input',
-              props: { label: 'Postal Code', placeholder: '00-000', required: true, appearance: 'outline' }
+              props: { label: t('postalCode'), placeholder: '00-000', required: true, appearance: 'outline' }
             }
           ]
         },
@@ -333,12 +343,12 @@ export class CourseFormComponent {
             {
               key: 'street',
               type: 'input',
-              props: { label: 'Street', placeholder: 'Street name', required: true, appearance: 'outline' }
+              props: { label: t('street'), placeholder: t('streetPlaceholder'), required: true, appearance: 'outline' }
             },
             {
               key: 'streetNumber',
               type: 'input',
-              props: { label: 'Street No.', placeholder: '1A', required: true, appearance: 'outline' }
+              props: { label: t('streetNo'), placeholder: '1A', required: true, appearance: 'outline' }
             }
           ]
         },
@@ -348,12 +358,12 @@ export class CourseFormComponent {
             {
               key: 'district',
               type: 'input',
-              props: { label: 'District', placeholder: 'District (optional)', required: false, appearance: 'outline' }
+              props: { label: t('district'), placeholder: t('districtPlaceholder'), required: false, appearance: 'outline' }
             },
             {
               key: 'apartmentNumber',
               type: 'input',
-              props: { label: 'Apartment No.', placeholder: 'Optional', required: false, appearance: 'outline' }
+              props: { label: t('apartmentNo'), placeholder: t('apartmentPlaceholder'), required: false, appearance: 'outline' }
             }
           ]
         }
@@ -361,7 +371,7 @@ export class CourseFormComponent {
     },
 
     // ── Category ────────────────────────────────────────────────────────
-    sectionHeader('category', 'Category', 'What type of beauty course is this'),
+    sectionHeader('category', t('categorySection'), t('categoryDesc')),
     {
       fieldGroupClassName: 'cf-card',
       fieldGroup: [
@@ -369,18 +379,26 @@ export class CourseFormComponent {
           key: 'category',
           type: 'select',
           props: {
-            label: 'Course Category',
-            placeholder: 'Select a category',
+            label: t('courseCategory'),
+            placeholder: t('categoryPlaceholder'),
             required: true,
             appearance: 'outline',
-            options: CATEGORY_OPTIONS,
+            options: CATEGORY_OPTIONS.map(o => ({ value: o.value, label: this.transloco.translate(categoryKey(o.value)) })),
           }
         }
       ]
     }
-  ];
+    ];
+  }
 
   constructor(private store: Store) {
+    // The sticky action bar sits at the bottom on phones; lift the floating chat buttons above it.
+    const body = inject(DOCUMENT).body;
+    body.classList.add('has-bottom-bar');
+    this.destroyRef.onDestroy(() => body.classList.remove('has-bottom-bar'));
+
+    this.transloco.selectTranslation().pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.fields = this.buildFields());
     effect(() => {
       if (this.prompt()) {
         this.form.patchValue({ description: this.prompt() });

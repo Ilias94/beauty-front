@@ -21,9 +21,6 @@
         }
       }
     </div>
-    @if (mode() === 'creator') {
-      <a mat-flat-button color="primary" routerLink="/course"><mat-icon>add</mat-icon>{{ 'courses.createCourse' | transloco }}</a>
-    }
   </header>
 
   <!-- ─── Search & filters ───────────────────────────────── -->
@@ -130,7 +127,7 @@
   } @else if (pageCourses()?.content?.length) {
     <div class="grid" [class.is-loading]="loading">
       @for (course of pageCourses()?.content; track course.id) {
-        <app-course-card [course]="course" [relation]="relationOf(course.id)"
+        <app-course-card class="rise" [style.--i]="$index" [course]="course" [relation]="relationOf(course.id)"
           (downloadExcel)="downloadExcelFile($event)" (downloadCsv)="downloadCsvFile($event)" />
       }
     </div>

@@ -15,6 +15,8 @@ export class CommentsComponent implements OnDestroy {
   store = inject(Store);
 
   comments = input.required<CommentDtoResponse[]>();
+  /** Translation key shown when there are no comments (differs on the course page and in "my reviews"). */
+  emptyKey = input('comments.noComments');
 
   initials(name?: string): string {
     return (name ?? '').split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || '·';

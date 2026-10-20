@@ -40,7 +40,7 @@
     <nav class="shortcuts" [attr.aria-label]="'account.shortcuts' | transloco">
       @for (s of shortcuts; track s.route) {
         @if (!s.teacherOnly || user.teacher) {
-          <a [routerLink]="s.route" class="shortcut">
+          <a [routerLink]="s.route" class="shortcut rise" [style.--i]="$index">
             <span class="icon"><mat-icon>{{ s.icon }}</mat-icon></span>
             <span class="text">
               <strong>{{ s.titleKey | transloco }}</strong>

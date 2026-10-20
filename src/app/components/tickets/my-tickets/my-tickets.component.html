@@ -13,7 +13,7 @@
   @if (tickets()?.length) {
     <ul class="list">
       @for (t of tickets(); track t.id) {
-        <li>
+        <li class="rise" [style.--i]="$index">
           <a class="item" [routerLink]="['/my-tickets', t.id]">
             <div class="item-main">
               <span class="item-title">{{ t.title }}</span>

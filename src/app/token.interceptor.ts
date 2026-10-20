@@ -3,8 +3,9 @@ import { inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngxs/store';
 import { TranslocoService } from '@jsverse/transloco';
-import { catchError, tap, throwError } from 'rxjs';
+import { catchError, finalize, tap, throwError } from 'rxjs';
 import { LogoutAction } from './components/state/security.actions';
+import { LoadingService } from './core/loading/loading.service';
 
 // Requests that should never show a toast — the UI already provides visual feedback.
 const SILENT_PATTERNS: RegExp[] = [
@@ -16,8 +17,8 @@ const SILENT_PATTERNS: RegExp[] = [
   /\/api\/oauth2/,                     // OAuth redirects
 ];
 
-const SUCCESS_CONFIG = { duration: 3000, panelClass: 'snack-success', verticalPosition: 'bottom' as const };
-const ERROR_CONFIG   = { duration: 5000, panelClass: 'snack-error',   verticalPosition: 'bottom' as const };
+const SUCCESS_CONFIG = { duration: 3000, panelClass: 'snack-success', verticalPosition: 'bottom' as const, horizontalPosition: 'start' as const };
+const ERROR_CONFIG   = { duration: 5000, panelClass: 'snack-error',   verticalPosition: 'bottom' as const, horizontalPosition: 'start' as const };
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const snackBar = inject(MatSnackBar);
@@ -30,8 +31,12 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const isSilent = SILENT_PATTERNS.some(p => p.test(req.url));
+  // Background requests (chat, ratings, assistant) have their own feedback; don't run the top bar for them.
+  const loading = inject(LoadingService);
+  if (!isSilent) loading.start();
 
   return next(req).pipe(
+    finalize(() => { if (!isSilent) loading.stop(); }),
     tap((response: HttpResponse<any>) => {
       if (isSilent || !(response instanceof HttpResponse)) return;
       const s = response.status;
@@ -49,7 +54,8 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401 && token) {
         // The token expired or was signed with a key the backend no longer trusts.
         snackBar.open(transloco.translate('http.sessionExpired'), '✕', ERROR_CONFIG);
-        store.dispatch(new LogoutAction());
+        // Stay on the page: public pages keep working, protected ones are handled by authGuard.
+        store.dispatch(new LogoutAction(false));
       } else if (!isSilent && error.status >= 400) {
         const msg = error.error?.message ?? transloco.translate('http.errorOccurred');
         snackBar.open(msg, '✕', ERROR_CONFIG);

@@ -37,7 +37,7 @@
 
     <!-- ── Actions ───────────────────────────────────── -->
     <div class="qr-actions">
-      <a mat-raised-button color="primary" class="qr-start-btn"
+      <a mat-flat-button color="primary" class="qr-start-btn"
          [routerLink]="['/resolve-questions', courseId]">
         <mat-icon>play_arrow</mat-icon> {{ 'quiz.startQuiz' | transloco }}
       </a>
@@ -73,7 +73,7 @@
       @if (isOwner()) {
         <h3>{{ 'quiz.noQuestionsYet' | transloco }}</h3>
         <p>{{ 'quiz.addQuestionsHint' | transloco }}</p>
-        <a mat-raised-button color="primary" [routerLink]="['/edit-questions', courseId]">
+        <a mat-flat-button color="primary" [routerLink]="['/edit-questions', courseId]">
           <mat-icon>add</mat-icon> {{ 'quiz.createQuiz' | transloco }}
         </a>
       } @else {

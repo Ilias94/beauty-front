@@ -104,7 +104,7 @@ export class SecurityState {
   }
 
   @Action(LogoutAction)
-  logout({ patchState, dispatch }: StateContext<SecurityStateModel>) {
+  logout({ patchState, dispatch }: StateContext<SecurityStateModel>, { redirectToLogin }: LogoutAction) {
     if (isPlatformBrowser(this.platformId)) {
       this.webSocketService.disconnect();
       localStorage.removeItem('token');
@@ -113,7 +113,9 @@ export class SecurityState {
       this.coockieService.delete('token', '/');
     }
     patchState({ token: null, currentUser: null });
-    dispatch(new Navigate(['/login']));
+    if (redirectToLogin) {
+      dispatch(new Navigate(['/login']));
+    }
   }
 
 

@@ -3,36 +3,49 @@
 // ── Floating button ──────────────────────────────────────────
 .assistant-fab
   position: fixed
-  bottom: calc(1.5rem + 56px + 0.75rem)
+  bottom: calc(1.5rem + 52px + 12px)
   right: 1.5rem
-  width: 56px
-  height: 56px
+  width: 52px
+  height: 52px
   border-radius: 50%
-  background: var(--accent)
-  color: #fff
+  background: var(--ink)
+  color: #F2D59B
   border: none
   cursor: pointer
   display: flex
   align-items: center
   justify-content: center
-  box-shadow: 0 4px 16px rgba(140, 47, 75, 0.35)
-  transition: transform 0.2s, box-shadow 0.2s
+  box-shadow: 0 8px 20px -6px rgba(31, 26, 23, 0.45)
+  transition: transform 180ms var(--ease), box-shadow 180ms var(--ease), background 180ms var(--ease)
   z-index: 1000
+  animation: fab-in-2 360ms var(--ease) backwards
 
   &:hover
-    transform: scale(1.08)
-    box-shadow: 0 6px 20px rgba(140, 47, 75, 0.45)
+    transform: translateY(-2px)
+    box-shadow: 0 12px 26px -8px rgba(31, 26, 23, 0.5)
+
+  &:active
+    transform: scale(0.95)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 3px
 
   mat-icon
-    font-size: 26px
-    width: 26px
-    height: 26px
+    font-size: 24px
+    width: 24px
+    height: 24px
+
+@keyframes fab-in-2
+  from
+    opacity: 0
+    transform: scale(0.8)
 
 // ── Panel ────────────────────────────────────────────────────
 .assistant-panel
   position: fixed
   bottom: 5rem
-  right: calc(1.5rem + 56px + 1rem)
+  right: calc(1.5rem + 52px + 1rem)
   width: 380px
   max-width: calc(100vw - 2rem)
   height: 540px
@@ -48,7 +61,7 @@
 
   @media (max-width: 600px)
     right: 1rem
-    bottom: calc(1.5rem + 2 * 56px + 1.5rem)
+    bottom: calc(1.5rem + 2 * 52px + 1.5rem)
 
 @keyframes slideUp
   from
@@ -64,9 +77,12 @@
   align-items: center
   gap: 0.6rem
   padding: 0.9rem 1rem
-  background: var(--accent)
+  background: var(--ink)
   color: #fff
   flex-shrink: 0
+
+.header-icon
+  color: #F2D59B
 
 .header-text
   display: flex

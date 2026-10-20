@@ -11,15 +11,15 @@
   </div>
 
   <form [formGroup]="form">
-    <formly-form [form]="form" [fields]="fields"></formly-form>
+    <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
 
     <div class="cf-actions">
-      <a mat-stroked-button routerLink="/creator-courses">{{ 'courseForm.cancel' | transloco }}</a>
-      <button mat-stroked-button class="cf-draft-btn" (click)="saveDraft()">
+      <a mat-stroked-button routerLink="/creator-courses" class="cf-cancel">{{ 'courseForm.cancel' | transloco }}</a>
+      <button mat-stroked-button type="button" class="cf-draft-btn" (click)="saveDraft()">
         <mat-icon>save</mat-icon>
         {{ 'courseForm.saveDraft' | transloco }}
       </button>
-      <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="submit()">
+      <button mat-flat-button color="primary" type="button" [disabled]="!form.valid" (click)="submit()">
         <mat-icon>publish</mat-icon>
         {{ 'courseForm.publishCourse' | transloco }}
       </button>

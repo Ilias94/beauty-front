@@ -3,8 +3,8 @@
   position: fixed
   bottom: 1.5rem
   right: 1.5rem
-  width: 56px
-  height: 56px
+  width: 52px
+  height: 52px
   border-radius: 50%
   background: var(--accent)
   color: #fff
@@ -13,18 +13,31 @@
   display: flex
   align-items: center
   justify-content: center
-  box-shadow: 0 4px 16px rgba(140, 47, 75, 0.4)
-  transition: transform 0.2s, box-shadow 0.2s
+  box-shadow: 0 8px 20px -6px rgba(140, 47, 75, 0.55)
+  transition: transform 180ms var(--ease), box-shadow 180ms var(--ease), background 180ms var(--ease)
   z-index: 1000
+  animation: fab-in 360ms var(--ease) backwards
 
   &:hover
-    transform: scale(1.08)
-    box-shadow: 0 6px 20px rgba(140, 47, 75, 0.5)
+    transform: translateY(-2px)
+    box-shadow: 0 12px 26px -8px rgba(140, 47, 75, 0.6)
+
+  &:active
+    transform: scale(0.95)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 3px
 
   mat-icon
-    font-size: 26px
-    width: 26px
-    height: 26px
+    font-size: 24px
+    width: 24px
+    height: 24px
+
+@keyframes fab-in
+  from
+    opacity: 0
+    transform: scale(0.8)
 
 // ── Chat panel ───────────────────────────────────────────────
 .chat-panel
