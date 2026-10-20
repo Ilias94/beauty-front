@@ -72,9 +72,11 @@ export class CoursesComponent implements OnInit {
   showPast = false;
   selectedCity: string | null = null;
   selectedCourseType: CourseType | null = null;
+  /** What is in the search box; appliedTitle is what the list was last loaded with. */
   searchTitle = '';
+  private appliedTitle = '';
   loading = true;
-  private autocompleteSubject = new Subject<string>();
+  private searchInput = new Subject<string>();
 
   readonly courseTypes: { value: CourseType | null; key: string }[] = [
     { value: null, key: 'courses.typeAll' },
@@ -105,9 +107,15 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch([new GetCategoriesAction(), new GetDistinctCitiesAction()]);
     this.refresh();
-    this.autocompleteSubject.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe(text => {
-      if (text.trim().length >= 2) {
-        this.store.dispatch(new GetAutocompleteTitleAction(text));
+    // Search as you type: suggestions and the list follow the box once typing pauses.
+    // A single letter would match almost everything, so the list waits for two (or an empty box).
+    this.searchInput.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe(text => {
+      const title = text.trim();
+      if (title.length >= 2) {
+        this.store.dispatch(new GetAutocompleteTitleAction(title));
+      }
+      if (title.length !== 1) {
+        this.applyTitle(title);
       }
     });
   }
@@ -132,16 +140,22 @@ export class CoursesComponent implements OnInit {
 
   onSearchInput(value: string): void {
     this.searchTitle = value;
-    this.autocompleteSubject.next(value);
+    this.searchInput.next(value);
   }
 
   search(title: string = this.searchTitle): void {
     this.searchTitle = title.trim();
-    this.resetAndRefresh();
+    this.applyTitle(this.searchTitle);
   }
 
   clearSearch(): void {
     this.searchTitle = '';
+    this.applyTitle('');
+  }
+
+  private applyTitle(title: string): void {
+    if (title === this.appliedTitle) return;
+    this.appliedTitle = title;
     this.resetAndRefresh();
   }
 
@@ -178,6 +192,7 @@ export class CoursesComponent implements OnInit {
 
   clearAllFilters(): void {
     this.searchTitle = '';
+    this.appliedTitle = '';
     this.selectedCategoryId = null;
     this.selectedCity = null;
     this.selectedCourseType = null;
@@ -213,7 +228,7 @@ export class CoursesComponent implements OnInit {
   private refresh(): void {
     this.loading = true;
     this.store.dispatch(new GetPageCoursesAction(
-      this.page, this.size, this.selectedCategoryId, this.searchTitle || null,
+      this.page, this.size, this.selectedCategoryId, this.appliedTitle || null,
       this.sortBy, this.direction,
       this.isCurrentCreator(), this.isCurrentStudent(), this.computeHidePast(),
       this.selectedCity, this.selectedCourseType

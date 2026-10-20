@@ -33,7 +33,8 @@ const defaults = {
 export class CourseState {
   constructor(private courseControllerService: CourseControllerService) { }
 
-  @Action(GetPageCoursesAction)
+  // The catalog searches as you type: a newer query cancels the one still in flight.
+  @Action(GetPageCoursesAction, { cancelUncompleted: true })
   getCourses({ patchState }: StateContext<CourseStateModel>, { page, size, categoryId, title, sortBy, sortDirection, isCurrentCreator, isCurrentStudent, hidePast, city, courseType }: GetPageCoursesAction) {
     return this.courseControllerService.getCourses({ page, size, categoryId, title, city, courseType, sortBy, sortDirection, isCurrentCreator, isCurrentStudent, hidePast }).pipe(tap(response => {
       patchState({ pageCourses: response })
