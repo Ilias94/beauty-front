@@ -735,7 +735,8 @@ img
 
 /* ── Hover effects ──────────────────────────────────────────── */
 
-// Spotlight (SpotlightDirective): a soft glow that follows the mouse.
+// Spotlight (SpotlightDirective): a thin light that runs along the border under the mouse.
+// The gradient is masked down to a 2px ring, so the content itself stays untinted.
 .spotlight
   position: relative
 
@@ -743,10 +744,14 @@ img
     content: ''
     position: absolute
     inset: 0
-    z-index: 1
+    z-index: 3
+    padding: 2px
     border-radius: inherit
     pointer-events: none
-    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(140, 47, 75, 0.09), transparent 70%)
+    background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), rgba(140, 47, 75, 0.75), rgba(196, 138, 44, 0.35) 45%, transparent 75%)
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)
+    -webkit-mask-composite: xor
+    mask-composite: exclude
     opacity: 0
     transition: opacity 320ms var(--ease)
 
