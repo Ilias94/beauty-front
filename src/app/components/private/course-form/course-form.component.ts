@@ -25,6 +25,7 @@ import { categoryKey, categoryVisual } from '../../../shared/category-visual';
 import { DateRangePipe, PricePipe } from '../../../shared/format.pipes';
 import { NotificationService } from '../../../core/notification/notification.service';
 import { provideDayFirstDateAdapter } from '../../../shared/day-first-date-adapter';
+import { SpotlightDirective } from '../../../shared/spotlight.directive';
 
 type CourseType = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
 type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
@@ -56,7 +57,7 @@ function toLocalIso(date: Date, time?: string | null): string {
     selector: 'app-course-form',
     // Errors only after a field is touched: the form is "submitted" on every Next, which would flag later steps early.
     providers: [provideDayFirstDateAdapter(), { provide: ErrorStateMatcher, useValue: { isErrorState: (c: AbstractControl | null) => !!(c?.invalid && c.touched) } }],
-    imports: [
+    imports: [SpotlightDirective, 
         ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
         MatSelectModule, MatDatepickerModule, MatChipsModule, MatSlideToggleModule, MatProgressSpinnerModule,
         TranslocoModule, CourseCardComponent, DateRangePipe, PricePipe,

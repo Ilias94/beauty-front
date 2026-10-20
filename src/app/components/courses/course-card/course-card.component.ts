@@ -9,13 +9,14 @@ import { CourseDtoResponse } from '../../../../api/models';
 import { DateRangePipe, PricePipe } from '../../../shared/format.pipes';
 import { categoryKey, categoryVisual } from '../../../shared/category-visual';
 import { S3_BASE } from '../../../app.const';
+import { SpotlightDirective } from '../../../shared/spotlight.directive';
 
 export type CourseRelation = 'owner' | 'enrolled' | null;
 
 /** One course in a grid. The whole card links to the course page; owner tools sit in the footer. */
 @Component({
   selector: 'app-course-card',
-  imports: [RouterLink, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule, DecimalPipe, PricePipe, DateRangePipe],
+  imports: [SpotlightDirective, RouterLink, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule, DecimalPipe, PricePipe, DateRangePipe],
   templateUrl: './course-card.component.html',
   styleUrl: './course-card.component.sass'
 })

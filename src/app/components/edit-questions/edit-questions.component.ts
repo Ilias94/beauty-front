@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule } from '@jsverse/transloco';
 
@@ -28,7 +27,7 @@ type AnswerForm = FormGroup<{
     imports: [
         CommonModule, ReactiveFormsModule, RouterModule,
         MatFormFieldModule, MatInputModule, MatButtonModule,
-        MatIconModule, MatCheckboxModule, MatTooltipModule, TranslocoModule,
+        MatIconModule, MatTooltipModule, TranslocoModule,
     ],
     templateUrl: './edit-questions.component.html',
     styleUrl: './edit-questions.component.sass'

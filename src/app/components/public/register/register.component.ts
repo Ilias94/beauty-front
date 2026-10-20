@@ -14,6 +14,7 @@ import { UserDtoRequest } from '../../../../api/models';
 import { environment } from '../../../../environments/enfironment';
 import { TranslocoModule } from '@jsverse/transloco';
 import { AuthAsideComponent } from '../auth-aside/auth-aside.component';
+import { SpotlightDirective } from '../../../shared/spotlight.directive';
 
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const password = group.get('password')?.value;
@@ -29,7 +30,7 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
 
 @Component({
     selector: 'app-register',
-    imports: [
+    imports: [SpotlightDirective, 
         ReactiveFormsModule,
         MatButtonModule,
         MatIconModule,

@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
 import { NotificationState, AppNotification } from '../../state/notification.state';
@@ -22,7 +21,6 @@ import { TranslocoModule } from '@jsverse/transloco';
         MatButtonModule,
         MatBadgeModule,
         MatMenuModule,
-        MatDividerModule,
         MatTooltipModule,
         DatePipe,
         TranslocoModule,

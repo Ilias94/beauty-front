@@ -15,15 +15,18 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import plLocale from '@fullcalendar/core/locales/pl';
 import { CourseDtoResponse } from '../../../api/models';
 
-const STATUS_COLORS: Record<string, { bg: string; border: string }> = {
-  upcoming: { bg: '#8C2F4B', border: '#74263E' },
-  ongoing:  { bg: '#3E7B57', border: '#2F6145' },
-  past:     { bg: '#B9A994', border: '#9C8A72' },
+// Soft tint + strong text per state; the strong colour also draws the event's left edge.
+// Same hex values as the tokens in styles.sass (FullCalendar needs literal colours).
+type EventColor = { bg: string; text: string };
+
+const STATUS_COLORS: Record<string, EventColor> = {
+  upcoming: { bg: '#F6E8EC', text: '#8C2F4B' },
+  ongoing:  { bg: '#E5F1E9', text: '#3E7B57' },
+  past:     { bg: '#F4EEE7', text: '#8F857D' },
 };
 
-// Same hex values as the --accent / --success / --info tokens in styles.sass (FullCalendar needs literal colours).
-const OWNER_COLOR    = { bg: '#5E554E', border: '#3E3732' };
-const ENROLLED_COLOR = { bg: '#3D5A80', border: '#2E4562' };
+const OWNER_COLOR: EventColor    = { bg: '#EDE5DB', text: '#3E3732' };
+const ENROLLED_COLOR: EventColor = { bg: '#E6EDF5', text: '#3D5A80' };
 
 function getCourseStatus(startDate: string, endDate: string): 'upcoming' | 'ongoing' | 'past' {
   const now = new Date();
@@ -66,7 +69,7 @@ export class CalendarComponent {
 
     return this.coursesByDate().map(course => {
       const id = course.id!;
-      let color: { bg: string; border: string };
+      let color: EventColor;
       let relation: 'owner' | 'enrolled' | 'other';
 
       if (ownedIds.includes(id)) {
@@ -87,7 +90,8 @@ export class CalendarComponent {
         start: course.startDate,
         end: course.endDate,
         backgroundColor: color.bg,
-        borderColor: color.border,
+        borderColor: color.text,
+        textColor: color.text,
         extendedProps: { relation },
       };
     });
@@ -100,6 +104,8 @@ export class CalendarComponent {
     firstDay: 1,
     events: this.calendarEvents(),
     height: 'auto',
+
+    dayMaxEvents: 3,
 
     headerToolbar: {
       left: 'prev,next today',

@@ -52,7 +52,7 @@
             <p class="field-label">{{ 'courseWizard.typeLabel' | transloco }}</p>
             <div class="type-tiles" role="radiogroup">
               @for (t of courseTypes; track t.value) {
-                <button type="button" class="tile" role="radio" [attr.aria-checked]="v.basics.courseType === t.value"
+                <button type="button" class="tile" appSpotlight role="radio" [attr.aria-checked]="v.basics.courseType === t.value"
                   [class.on]="v.basics.courseType === t.value" (click)="setType(t.value)">
                   <mat-icon>{{ t.icon }}</mat-icon>
                   <strong>{{ ('courseWizard.types.' + t.value) | transloco }}</strong>
@@ -71,7 +71,7 @@
             <p class="field-label">{{ 'courseWizard.categoryLabel' | transloco }}</p>
             <div class="cat-tiles" role="radiogroup">
               @for (c of categories; track c.label) {
-                <button type="button" class="cat" role="radio" [attr.aria-checked]="v.basics.category === c.label"
+                <button type="button" class="cat" appSpotlight role="radio" [attr.aria-checked]="v.basics.category === c.label"
                   [class.on]="v.basics.category === c.label" (click)="setCategory(c.label)"
                   [style.--tint]="c.visual.tint" [style.--ink]="c.visual.ink">
                   <span class="cat-icon"><mat-icon>{{ c.visual.icon }}</mat-icon></span>
@@ -311,7 +311,7 @@
       <!-- ── Actions ────────────────────────────────────── -->
       <div class="actions">
         @if (step() > 0) {
-          <button mat-button type="button" (click)="back()"><mat-icon>arrow_back</mat-icon>{{ 'courseWizard.back' | transloco }}</button>
+          <button mat-button type="button" class="back-link" (click)="back()"><mat-icon>arrow_back</mat-icon>{{ 'courseWizard.back' | transloco }}</button>
         }
         <span class="spacer"></span>
         <button mat-stroked-button type="button" class="draft-btn" (click)="save('DRAFT')" [disabled]="!!submitting() || !v.basics.title.trim()">

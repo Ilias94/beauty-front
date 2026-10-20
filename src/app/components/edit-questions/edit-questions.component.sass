@@ -1,110 +1,185 @@
 .eq-page
-  max-width: 760px
+  max-width: 800px
   margin: 0 auto
-  padding: 24px 20px 60px
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
 
 .eq-nav
-  margin-bottom: 20px
+  margin-bottom: 12px
+  margin-left: -12px
 
 .eq-header
   display: flex
   align-items: center
   justify-content: space-between
-  margin-bottom: 32px
+  margin-bottom: 28px
   flex-wrap: wrap
   gap: 12px
 
 .eq-title
   font-family: var(--font-display)
-  font-size: 2rem
-  font-weight: 700
+  font-size: clamp(30px, 4vw, 40px)
+  font-weight: 500
   color: var(--ink)
   margin: 0
 
-.eq-save-btn
-  height: 44px
-  font-weight: 600
+.empty-state
+  border-radius: var(--radius-lg)
 
+  .empty-icon .mat-icon
+    color: var(--accent)
+
+  button
+    margin-top: 8px
+
+// ── Question card ──────────────────────────────────────────
 .eq-question-card
-  background: white
-  border-radius: 18px
-  padding: 24px 28px
-  margin-bottom: 20px
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06)
-  border: 1px solid var(--accent-soft)
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  box-shadow: var(--shadow-1)
+  padding: clamp(18px, 3vw, 28px)
+  margin-bottom: 16px
+  animation: rise 360ms var(--ease) backwards
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease)
+
+  &:focus-within
+    border-color: var(--line-strong)
+    box-shadow: var(--shadow-2)
 
 .eq-question-header
   display: flex
   align-items: center
   justify-content: space-between
-  margin-bottom: 16px
+  margin-bottom: 12px
 
 .eq-question-label
-  font-size: 0.75rem
-  font-weight: 800
+  font-size: 12px
+  font-weight: 700
   text-transform: uppercase
-  letter-spacing: 1.2px
+  letter-spacing: 0.12em
   color: var(--accent)
 
 .eq-question-field
   width: 100%
-  margin-bottom: 8px
+  margin-bottom: 4px
 
 .eq-answers-label
-  font-size: 0.82rem
-  font-weight: 600
-  color: var(--ink-2)
-  margin-bottom: 12px
+  font-size: 14px
+  font-weight: 700
+  color: var(--ink)
+  margin-bottom: 10px
 
 .eq-answers-hint
-  font-weight: 400
+  margin-left: 6px
+  font-weight: 500
   color: var(--ink-3)
 
 .eq-answers-list
   display: flex
   flex-direction: column
-  gap: 8px
+  gap: 6px
   margin-bottom: 12px
 
+// One answer: letter badge, text, "correct" pill, remove.
 .eq-answer-row
   display: flex
   align-items: center
   gap: 10px
+  padding: 4px 4px 4px 8px
+  border-radius: var(--radius)
+  transition: background-color var(--dur) var(--ease)
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper
+    display: none
+
+  &.correct
+    background: var(--success-soft)
+
+    .eq-answer-letter
+      background: var(--success)
+      color: #fff
 
 .eq-answer-letter
   width: 30px
   height: 30px
   border-radius: 50%
-  background: var(--accent)
-  color: white
-  font-size: 0.78rem
+  background: var(--surface-2)
+  color: var(--ink-2)
+  font-size: 13px
   font-weight: 800
-  display: flex
-  align-items: center
-  justify-content: center
+  display: grid
+  place-items: center
   flex-shrink: 0
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease)
 
 .eq-answer-field
   flex: 1
 
-.eq-correct-check
+.eq-correct
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  height: 34px
+  padding: 0 12px 0 8px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  font: 700 13px var(--font-ui)
+  color: var(--ink-3)
   white-space: nowrap
-  font-size: 0.82rem
+  cursor: pointer
+  transition: all var(--dur) var(--ease)
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+
+  &:hover
+    border-color: var(--success)
+    color: var(--success)
+
+  &:active
+    transform: scale(0.96)
+
+  &[aria-checked="true"]
+    border-color: var(--success)
+    background: var(--success)
+    color: #fff
 
 .eq-add-answer-btn
-  font-size: 0.85rem
-  color: var(--accent)
-  border-color: var(--accent-soft)
+  margin-left: 8px
 
 .eq-add-question-btn
   width: 100%
-  height: 56px
-  border: 2px dashed var(--accent-soft-2)
-  border-radius: 16px
-  font-size: 1rem
-  color: var(--accent)
-  margin-top: 8px
+  height: 64px
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 8px
+  margin-top: 4px
+  border: 1.5px dashed var(--line-strong)
+  border-radius: var(--radius-lg)
+  background: transparent
+  font: 700 15px var(--font-ui)
+  color: var(--ink-2)
+  cursor: pointer
+  transition: all var(--dur) var(--ease)
 
   &:hover
     border-color: var(--accent)
     background: var(--accent-soft)
+    color: var(--accent)
+
+  &:active
+    transform: scale(0.99)
+
+@media (max-width: 640px)
+  .eq-answer-row
+    flex-wrap: wrap
+
+  .eq-answer-field
+    flex-basis: calc(100% - 50px)
+
+  .eq-correct
+    margin-left: 40px

@@ -1,6 +1,6 @@
 <button mat-icon-button [matMenuTriggerFor]="notifMenu" (menuOpened)="onMenuOpen()"
   [matBadge]="unreadCount() > 0 ? unreadCount() : null" matBadgeColor="warn" matBadgeSize="small"
-  aria-label="Notifications">
+  [attr.aria-label]="'notifications.title' | transloco">
   <mat-icon>notifications</mat-icon>
 </button>
 
@@ -14,17 +14,22 @@
         </button>
       }
     </div>
-    <mat-divider />
     @if (notifications().length === 0) {
-      <p class="notif-empty">{{ 'notifications.empty' | transloco }}</p>
+      <div class="notif-empty">
+        <span class="empty-icon" aria-hidden="true"><mat-icon>notifications_none</mat-icon></span>
+        {{ 'notifications.empty' | transloco }}
+      </div>
     } @else {
       @for (n of notifications(); track $index) {
         <div class="notif-item">
-          @if (n.title) {
-            <div class="notif-title">{{ n.title }}</div>
-          }
-          <div class="notif-msg">{{ n.message }}</div>
-          <div class="notif-time">{{ n.timestamp | date:'HH:mm, d MMM' }}</div>
+          <span class="notif-dot" aria-hidden="true"></span>
+          <div>
+            @if (n.title) {
+              <div class="notif-title">{{ n.title }}</div>
+            }
+            <div class="notif-msg">{{ n.message }}</div>
+            <div class="notif-time">{{ n.timestamp | date:'HH:mm, d MMM' }}</div>
+          </div>
         </div>
       }
     }

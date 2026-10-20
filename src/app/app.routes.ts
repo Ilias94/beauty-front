@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/public/login/login.component';
 import { RegisterComponent } from './components/public/register/register.component';
 import { CourseFormComponent } from './components/private/course-form/course-form.component';
-import { authGuard } from './auth.guard';
+import { authGuard, guestGuard } from './auth.guard';
 import { ForbiddenComponent } from './components/public/forbidden/forbidden.component';
 import { NotFoundComponent } from './components/public/not-found/not-found.component';
 import { CoursesComponent } from './components/courses/courses.component';
@@ -26,8 +26,8 @@ import { GroupChatsPageComponent } from './components/group-chats-page/group-cha
 
 export const routes: Routes = [
     { path: '', redirectTo: 'courses', pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
-    { path: 'registry', component: RegisterComponent },
+    { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+    { path: 'registry', component: RegisterComponent, canActivate: [guestGuard] },
     { path: 'forbidden', component: ForbiddenComponent },
     { path: 'courses', component: CoursesComponent },
     { path: 'course/:id', component: CourseDetailsComponent },

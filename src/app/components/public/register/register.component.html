@@ -22,7 +22,7 @@
         <fieldset class="types">
           <legend>{{ 'auth.iWantToBe' | transloco }}</legend>
           <div class="types-grid">
-          <label class="type" [class.on]="!isTeacher()">
+          <label class="type" appSpotlight [class.on]="!isTeacher()">
             <input type="radio" name="accountType" [checked]="!isTeacher()" (change)="isTeacher.set(false)">
             <mat-icon>school</mat-icon>
             <span class="type-text">
@@ -30,7 +30,7 @@
               <span>{{ 'auth.studentDesc' | transloco }}</span>
             </span>
           </label>
-          <label class="type" [class.on]="isTeacher()">
+          <label class="type" appSpotlight [class.on]="isTeacher()">
             <input type="radio" name="accountType" [checked]="isTeacher()" (change)="isTeacher.set(true)">
             <mat-icon>co_present</mat-icon>
             <span class="type-text">

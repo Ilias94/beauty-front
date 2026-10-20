@@ -2,7 +2,7 @@
 
   <!-- ── Nav ──────────────────────────────────────────── -->
   <div class="eq-nav">
-    <a mat-button [routerLink]="['/questions', courseId]">
+    <a mat-button class="back-link" [routerLink]="['/questions', courseId]">
       <mat-icon>arrow_back</mat-icon> {{ 'quiz.backToQuiz' | transloco }}
     </a>
   </div>
@@ -14,6 +14,17 @@
       <mat-icon>save</mat-icon> {{ 'quiz.saveQuestions' | transloco }}
     </button>
   </div>
+
+  @if (questions.length === 0) {
+    <div class="empty-state surface">
+      <span class="empty-icon"><mat-icon>quiz</mat-icon></span>
+      <h3>{{ 'quiz.noQuestionsYet' | transloco }}</h3>
+      <p>{{ 'quiz.addQuestionsHint' | transloco }}</p>
+      <button mat-flat-button color="primary" type="button" (click)="addQuestion()">
+        <mat-icon>add</mat-icon>{{ 'quiz.addQuestion' | transloco }}
+      </button>
+    </div>
+  }
 
   <form [formGroup]="form">
     <div formArrayName="questions">
@@ -36,14 +47,15 @@
           <div class="eq-answers-label">{{ 'quiz.answerOptions' | transloco }} <span class="eq-answers-hint">{{ 'quiz.checkCorrect' | transloco }}</span></div>
           <div formArrayName="answers" class="eq-answers-list">
             @for (answer of getAnswersArray(question).controls; let j = $index; track answer) {
-              <div class="eq-answer-row" [formGroupName]="j">
+              <div class="eq-answer-row" [formGroupName]="j" [class.correct]="answer.value.isCorrect">
                 <span class="eq-answer-letter">{{ 'ABCDE'[j] }}</span>
                 <mat-form-field appearance="outline" class="eq-answer-field">
                   <input matInput formControlName="answer" [placeholder]="'quiz.answerPlaceholder' | transloco:{num: j + 1}" />
                 </mat-form-field>
-                <mat-checkbox formControlName="isCorrect" color="primary" class="eq-correct-check">
-                  {{ 'quiz.correct' | transloco }}
-                </mat-checkbox>
+                <button type="button" class="eq-correct" role="switch" [attr.aria-checked]="!!answer.value.isCorrect"
+                        (click)="answer.get('isCorrect')?.setValue(!answer.value.isCorrect)">
+                  <mat-icon>check</mat-icon>{{ 'quiz.correct' | transloco }}
+                </button>
                 <button mat-icon-button type="button" color="warn" (click)="removeAnswer(i, j)" [matTooltip]="'quiz.delete' | transloco">
                   <mat-icon>close</mat-icon>
                 </button>
@@ -62,8 +74,10 @@
   </form>
 
   <!-- ── Add question ───────────────────────────────── -->
-  <button mat-stroked-button class="eq-add-question-btn" type="button" (click)="addQuestion()">
-    <mat-icon>add_circle_outline</mat-icon> {{ 'quiz.addQuestion' | transloco }}
-  </button>
+  @if (questions.length > 0) {
+    <button type="button" class="eq-add-question-btn" (click)="addQuestion()">
+      <mat-icon>add_circle_outline</mat-icon> {{ 'quiz.addQuestion' | transloco }}
+    </button>
+  }
 
 </div>

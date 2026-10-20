@@ -423,30 +423,247 @@ img
       .mdc-list-item__primary-text
         color: var(--accent) !important
 
+// Checkbox: softly rounded box, accent when checked.
 .mat-mdc-checkbox
   --mdc-checkbox-selected-icon-color: var(--accent)
   --mdc-checkbox-selected-focus-icon-color: var(--accent)
   --mdc-checkbox-selected-hover-icon-color: var(--accent)
+  --mdc-checkbox-selected-pressed-icon-color: var(--accent)
+  --mdc-checkbox-selected-checkmark-color: #fff
   --mdc-checkbox-unselected-icon-color: var(--line-strong)
+  --mdc-checkbox-unselected-hover-icon-color: var(--ink-3)
+  --mdc-checkbox-unselected-focus-icon-color: var(--ink-3)
+  --mat-checkbox-label-text-font: var(--font-ui)
+  --mat-checkbox-label-text-weight: 600
+  --mat-checkbox-label-text-color: var(--ink-2)
+
+  .mdc-checkbox__background
+    border-radius: 6px
+    border-width: 1.5px
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease), transform 160ms var(--ease) !important
+
+  .mdc-checkbox:active .mdc-checkbox__background
+    transform: scale(0.9)
+
+.mat-mdc-radio-button
+  --mdc-radio-selected-icon-color: var(--accent)
+  --mdc-radio-selected-focus-icon-color: var(--accent)
+  --mdc-radio-selected-hover-icon-color: var(--accent)
+  --mdc-radio-selected-pressed-icon-color: var(--accent)
+  --mat-radio-checked-ripple-color: var(--accent)
+  --mdc-radio-unselected-icon-color: var(--line-strong)
+  --mat-radio-label-text-font: var(--font-ui)
+
+// Switch: accent track and handle instead of the theme's sand accent.
+.mat-mdc-slide-toggle
+  --mdc-switch-selected-handle-color: var(--accent)
+  --mdc-switch-selected-hover-handle-color: var(--accent-hover)
+  --mdc-switch-selected-focus-handle-color: var(--accent-hover)
+  --mdc-switch-selected-pressed-handle-color: var(--accent-hover)
+  --mdc-switch-selected-track-color: var(--accent-soft-2)
+  --mdc-switch-selected-hover-track-color: var(--accent-soft-2)
+  --mdc-switch-selected-focus-track-color: var(--accent-soft-2)
+  --mdc-switch-selected-pressed-track-color: var(--accent-soft-2)
+  --mdc-switch-selected-icon-color: #fff
+  --mdc-switch-unselected-track-color: var(--surface-3)
+  --mdc-switch-unselected-hover-track-color: var(--surface-3)
+  --mdc-switch-unselected-focus-track-color: var(--surface-3)
+  --mdc-switch-unselected-handle-color: var(--ink-3)
+  --mdc-switch-unselected-hover-handle-color: var(--ink-2)
+  --mat-switch-label-text-font: var(--font-ui)
+  --mat-switch-label-text-weight: 600
 
 .mat-mdc-chip
   --mdc-chip-container-shape-radius: var(--radius-pill)
   font-family: var(--font-ui) !important
 
+// Menus: inset, rounded rows with a warm hover.
 .mat-mdc-menu-panel
   border-radius: var(--radius) !important
   border: 1px solid var(--line)
   box-shadow: var(--shadow-3) !important
 
+  .mat-mdc-menu-content
+    padding: 6px !important
+
+  .mat-mdc-menu-item
+    min-height: 42px
+    border-radius: 8px
+    font-family: var(--font-ui)
+    font-weight: 600
+    color: var(--ink-2)
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+    .mat-icon
+      color: var(--ink-3)
+      transition: color var(--dur) var(--ease), transform var(--dur) var(--ease)
+
+    &:hover:not([disabled])
+      background: var(--surface-2)
+      color: var(--ink)
+
+      .mat-icon
+        color: var(--accent)
+        transform: translateX(1px)
+
+// Notification list is wider than Material's 280px menu limit.
+.mat-mdc-menu-panel.notification-panel
+  max-width: min(400px, calc(100vw - 24px))
+
+  .notif-wrapper
+    min-width: 0
+    width: min(360px, calc(100vw - 40px))
+
 .mat-mdc-dialog-container
   --mdc-dialog-container-shape: var(--radius-lg)
+  --mdc-dialog-subhead-font: var(--font-display)
+  --mdc-dialog-supporting-text-font: var(--font-ui)
+  --mdc-dialog-supporting-text-color: var(--ink-2)
+
+.cdk-overlay-dark-backdrop
+  background: rgba(31, 26, 23, 0.4)
+  backdrop-filter: blur(3px)
 
 .mat-mdc-tooltip
   --mdc-plain-tooltip-container-color: var(--ink)
+  --mdc-plain-tooltip-container-shape: 8px
   --mdc-plain-tooltip-supporting-text-font: var(--font-ui)
+  --mdc-plain-tooltip-supporting-text-size: 12.5px
+  --mdc-plain-tooltip-supporting-text-weight: 600
 
-.mat-mdc-tab-group, .mat-mdc-tab
+// Tabs: bold labels, a short rounded accent indicator.
+.mat-mdc-tab-group, .mat-mdc-tab-nav-bar
+  --mdc-tab-indicator-active-indicator-color: var(--accent)
+  --mdc-tab-indicator-active-indicator-height: 3px
+  --mdc-tab-indicator-active-indicator-shape: 3px 3px 0 0
+  --mat-tab-header-active-label-text-color: var(--ink)
+  --mat-tab-header-active-focus-label-text-color: var(--ink)
+  --mat-tab-header-active-hover-label-text-color: var(--ink)
+  --mat-tab-header-inactive-label-text-color: var(--ink-3)
+  --mat-tab-header-active-ripple-color: var(--accent)
+  --mat-tab-header-inactive-ripple-color: var(--ink)
+  --mat-tab-header-label-text-font: var(--font-ui)
+  --mat-tab-header-label-text-weight: 700
+  --mat-tab-header-label-text-tracking: 0
+  --mat-tab-header-divider-color: var(--line)
   font-family: var(--font-ui) !important
+
+// Tables: quiet uppercase header, row hover.
+.mat-mdc-table
+  --mat-table-background-color: var(--surface)
+  --mat-table-header-headline-font: var(--font-ui)
+  --mat-table-header-headline-size: 11.5px
+  --mat-table-header-headline-weight: 700
+  --mat-table-header-headline-color: var(--ink-3)
+  --mat-table-header-headline-tracking: 0.08em
+  --mat-table-row-item-label-text-font: var(--font-ui)
+  --mat-table-row-item-label-text-color: var(--ink)
+  --mat-table-row-item-outline-color: var(--line)
+
+  .mat-mdc-header-cell
+    text-transform: uppercase
+
+  .mat-mdc-row
+    transition: background-color var(--dur) var(--ease)
+
+    &:hover
+      background: var(--bg)
+
+// Paginator: round page buttons, readable labels.
+.mat-mdc-paginator
+  --mat-paginator-container-text-font: var(--font-ui)
+  --mat-paginator-container-text-color: var(--ink-2)
+  --mat-paginator-container-text-weight: 600
+  --mat-paginator-enabled-icon-color: var(--ink)
+  --mat-paginator-disabled-icon-color: var(--line-strong)
+
+  .mat-mdc-icon-button:not([disabled])
+    border: 1px solid var(--line-strong)
+    margin: 0 3px
+    transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease), transform 120ms var(--ease)
+
+    &:hover
+      border-color: var(--ink-3)
+      background: var(--surface)
+
+// Date picker popup (every datepicker and date range picker in the app).
+.mat-datepicker-content
+  --mat-datepicker-calendar-container-shape: var(--radius)
+  --mat-datepicker-calendar-container-elevation-shadow: var(--shadow-3)
+  --mat-datepicker-calendar-text-font: var(--font-ui)
+  --mat-datepicker-calendar-header-text-weight: 700
+  --mat-datepicker-calendar-header-text-color: var(--ink-3)
+  --mat-datepicker-calendar-date-selected-state-background-color: var(--accent)
+  --mat-datepicker-calendar-date-today-outline-color: var(--accent)
+  --mat-datepicker-calendar-date-hover-state-background-color: var(--accent-soft)
+  --mat-datepicker-calendar-date-in-range-state-background-color: var(--accent-soft)
+  --mat-datepicker-calendar-period-button-text-weight: 700
+  border: 1px solid var(--line)
+
+.mat-calendar-body-cell-content
+  font-weight: 600
+
+// Default snackbar (NotificationService): dark, rounded, bold.
+.mat-mdc-snack-bar-container
+  --mdc-snackbar-container-color: var(--ink)
+  --mdc-snackbar-container-shape: var(--radius-sm)
+  --mdc-snackbar-supporting-text-font: var(--font-ui)
+  --mdc-snackbar-supporting-text-weight: 600
+  --mat-snack-bar-button-color: rgba(255, 255, 255, 0.8)
+
+/* ── Hover effects ──────────────────────────────────────────── */
+
+// Spotlight (SpotlightDirective): a soft glow that follows the mouse.
+.spotlight
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 1
+    border-radius: inherit
+    pointer-events: none
+    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(140, 47, 75, 0.09), transparent 70%)
+    opacity: 0
+    transition: opacity 320ms var(--ease)
+
+  &:hover::before
+    opacity: 1
+
+@media (hover: none)
+  .spotlight::before
+    display: none
+
+// Primary buttons: a light sheen sweeps across on hover.
+.mat-mdc-unelevated-button.mat-primary:not([disabled])
+  overflow: hidden
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    pointer-events: none
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%)
+    transform: translateX(-110%)
+
+  &:hover::after
+    transform: translateX(110%)
+    transition: transform 700ms var(--ease)
+
+// Buttons with a trailing icon ("Next →"): the icon nudges forward on hover.
+.mat-mdc-button-base .mat-icon[iconPositionEnd]
+  transition: transform var(--dur) var(--ease) !important
+
+.mat-mdc-button-base:hover:not([disabled]) .mat-icon[iconPositionEnd]
+  transform: translateX(3px)
+
+// Quiet "back" links (← Previous page): the arrow nudges back.
+a.back .mat-icon, .back-link .mat-icon
+  transition: transform var(--dur) var(--ease)
+
+a.back:hover .mat-icon, .back-link:hover .mat-icon
+  transform: translateX(-3px)
 
 /* ── Snackbar variants ──────────────────────────────────────── */
 .snack-success .mat-mdc-snackbar-surface

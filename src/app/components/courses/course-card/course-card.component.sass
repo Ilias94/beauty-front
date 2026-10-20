@@ -22,6 +22,10 @@
     .media img
       transform: scale(1.03)
 
+    .media-icon
+      opacity: 0.75
+      transform: scale(1.08) rotate(-4deg)
+
   &.is-past
     .media
       filter: grayscale(0.6)
@@ -47,6 +51,7 @@
   height: 64px
   opacity: 0.55
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48
+  transition: transform 420ms var(--ease), opacity 420ms var(--ease)
 
 .media-tags
   position: absolute

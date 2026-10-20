@@ -30,3 +30,9 @@ export const authGuard: CanActivateFn = (route, state) => {
     })
   );
 };
+
+/** Login and sign-up are pointless once signed in: send the user to the catalog instead. */
+export const guestGuard: CanActivateFn = () => {
+  const store = inject(Store);
+  return store.selectSnapshot(s => s.security.token) ? inject(Router).createUrlTree(['/courses']) : true;
+};

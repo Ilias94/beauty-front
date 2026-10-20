@@ -16,5 +16,8 @@
     }
   </ul>
 } @else {
-  <p class="empty">{{ emptyKey() | transloco }}</p>
+  <div class="empty">
+    <span class="empty-icon" aria-hidden="true"><mat-icon>rate_review</mat-icon></span>
+    <p>{{ emptyKey() | transloco }}</p>
+  </div>
 }

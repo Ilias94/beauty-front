@@ -7,6 +7,7 @@ import { Store } from '@ngxs/store';
 import { UserDtoResponse } from '../../../api/models';
 import { TranslocoModule } from '@jsverse/transloco';
 import { S3_BASE } from '../../app.const';
+import { SpotlightDirective } from '../../shared/spotlight.directive';
 
 interface Shortcut {
   icon: string;
@@ -19,7 +20,7 @@ interface Shortcut {
 /** Profile dashboard: who you are and shortcuts to everything account-related. */
 @Component({
     selector: 'app-my-account',
-    imports: [MatButtonModule, MatIconModule, RouterModule, TranslocoModule],
+    imports: [SpotlightDirective, MatButtonModule, MatIconModule, RouterModule, TranslocoModule],
     templateUrl: './my-account.component.html',
     styleUrl: './my-account.component.sass'
 })

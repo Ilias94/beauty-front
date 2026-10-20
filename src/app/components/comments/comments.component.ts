@@ -3,11 +3,12 @@ import { Store } from '@ngxs/store';
 import { ClearCommentsAction } from '../state/comment.actions';
 import { CommentDtoResponse } from '../../../api/models';
 import { TranslocoModule } from '@jsverse/transloco';
+import { MatIconModule } from '@angular/material/icon';
 import { DateRangePipe } from '../../shared/format.pipes';
 
 @Component({
     selector: 'app-comments',
-    imports: [TranslocoModule, DateRangePipe],
+    imports: [TranslocoModule, DateRangePipe, MatIconModule],
     templateUrl: './comments.component.html',
     styleUrl: './comments.component.sass'
 })
