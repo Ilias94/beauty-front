@@ -64,7 +64,8 @@ export class CoursesComponent implements OnInit {
     this.isCurrentCreator() ? 'creator' : this.isCurrentStudent() ? 'student' : 'catalog');
 
   page = 0;
-  size = 12;
+  readonly pageSizeOptions = [12, 24, 48];
+  size = this.pageSizeOptions[0];
   sortBy: string | null = null;
   direction: 'ASC' | 'DESC' | null = null;
   selectedCategoryId: number | null = null;

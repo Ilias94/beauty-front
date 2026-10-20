@@ -727,5 +727,13 @@
     "editDescription": "Edit description",
     "delete": "Delete video",
     "confirmDelete": "Click again to delete"
+  },
+  "paginator": {
+    "itemsPerPage": "Courses per page:",
+    "range": "{{from}}–{{to}} of {{total}}",
+    "next": "Next page",
+    "previous": "Previous page",
+    "first": "First page",
+    "last": "Last page"
   }
 }

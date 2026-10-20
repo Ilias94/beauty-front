@@ -31,6 +31,8 @@ import { TicketState } from './components/state/ticket.state';
 import { ChatState } from './components/state/chat.state';
 import { GroupChatState } from './components/state/group-chat.state';
 import { provideTransloco, TranslocoLoader } from '@jsverse/transloco';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { TranslatedPaginatorIntl } from './shared/paginator-intl';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { LoginFromLocalStorageAction } from './components/state/security.actions';
@@ -94,6 +96,7 @@ export const appConfig: ApplicationConfig = {
       },
       loader: TranslocoHttpLoader,
     }),
+    { provide: MatPaginatorIntl, useClass: TranslatedPaginatorIntl },
     importProvidersFrom(MatSnackBarModule,
       NgxsModule.forRoot([SecurityState,
         CourseState,

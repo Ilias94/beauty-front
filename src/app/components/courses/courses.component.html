@@ -157,9 +157,10 @@
   }
 
   <!-- ─── Pagination ─────────────────────────────────────── -->
-  @if ((pageCourses()?.totalElements ?? 0) > size) {
+  <!-- Shown while there is more than the smallest page, so a larger page size can be changed back. -->
+  @if ((pageCourses()?.totalElements ?? 0) > pageSizeOptions[0]) {
     <mat-paginator class="paginator"
-      [pageSizeOptions]="[12, 24, 48]"
+      [pageSizeOptions]="pageSizeOptions"
       [length]="pageCourses()?.totalElements"
       [pageSize]="size"
       [pageIndex]="page"

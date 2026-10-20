@@ -727,5 +727,13 @@
     "editDescription": "Edytuj opis",
     "delete": "Usuń film",
     "confirmDelete": "Kliknij ponownie, aby usunąć"
+  },
+  "paginator": {
+    "itemsPerPage": "Kursów na stronie:",
+    "range": "{{from}}–{{to}} z {{total}}",
+    "next": "Następna strona",
+    "previous": "Poprzednia strona",
+    "first": "Pierwsza strona",
+    "last": "Ostatnia strona"
   }
 }
