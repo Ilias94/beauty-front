@@ -30,6 +30,7 @@
     "@fullcalendar/daygrid": "^6.1.19",
     "@fullcalendar/interaction": "^6.1.19",
     "@fullcalendar/list": "^6.1.20",
+    "@fullcalendar/timegrid": "^6.1.20",
     "@jsverse/transloco": "^8.3.0",
     "@ngx-formly/core": "^7.1.0",
     "@ngx-formly/material": "^7.1.0",

@@ -9,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslocoModule } from '@jsverse/transloco';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { WebSocketService } from '../../core/websocket/websocket.service';
 import {
   ClearCourseMessagesAction, CourseSummary,
@@ -28,6 +28,7 @@ export class GroupChatsPageComponent implements OnInit, OnDestroy, AfterViewChec
 
   private store      = inject(Store);
   private wsService  = inject(WebSocketService);
+  private route      = inject(ActivatedRoute);
 
   readonly s3Base = 'https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/';
 
@@ -40,7 +41,12 @@ export class GroupChatsPageComponent implements OnInit, OnDestroy, AfterViewChec
   private lastCount = 0;
 
   ngOnInit(): void {
-    this.store.dispatch(new LoadMyChatCoursesAction());
+    // ?course=<id> (e.g. from the calendar) opens that course's chat straight away.
+    const wanted = Number(this.route.snapshot.queryParamMap.get('course'));
+    this.store.dispatch(new LoadMyChatCoursesAction()).subscribe(() => {
+      const course = wanted ? this.myChatCourses().find(c => c.id === wanted) : undefined;
+      if (course) this.selectCourse(course);
+    });
   }
 
   ngOnDestroy(): void {

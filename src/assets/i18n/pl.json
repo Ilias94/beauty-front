@@ -505,7 +505,51 @@
     "legendOwner": "Twój kurs",
     "legendEnrolled": "Zapisany",
     "eyebrow": "Twoje terminy",
-    "subtitle": "Zajęcia, na które masz miejsce, i kursy, które prowadzisz."
+    "subtitle": "Twój plan zajęć: kursy, które prowadzisz, i te, na które masz miejsce.",
+    "filtersLabel": "Pokaż",
+    "filters": {
+      "owner": "Prowadzę",
+      "enrolled": "Moje zapisy",
+      "catalog": "Inne kursy"
+    },
+    "statusHint": "Zakończone kursy są wyblakłe, trwające mają zieloną kropkę.",
+    "catalogHint": "Inne kursy z katalogu pojawiają się w widoku miesiąca i tygodnia.",
+    "previous": "Poprzedni okres",
+    "next": "Następny okres",
+    "views": {
+      "plan": "Mój plan",
+      "month": "Miesiąc",
+      "week": "Tydzień"
+    },
+    "plan": {
+      "title": "Najbliższe zajęcia",
+      "today": "Dziś",
+      "tomorrow": "Jutro",
+      "emptyTitle": "Nie masz jeszcze zaplanowanych kursów",
+      "emptyText": "Zapisz się na kurs albo utwórz własny, a pojawi się tutaj razem z terminem i miejscem.",
+      "browse": "Przeglądaj kursy",
+      "nothingAhead": "Nie masz nadchodzących zajęć.",
+      "showPast": "Pokaż zakończone ({{count}})",
+      "hidePast": "Ukryj zakończone"
+    },
+    "emptyRange": "W tym okresie nie ma Twoich kursów.",
+    "nextCourse": "Najbliższy kurs: {{date}}",
+    "showCatalog": "Pokaż inne kursy z katalogu",
+    "relation": {
+      "owner": "Prowadzisz",
+      "enrolled": "Masz miejsce",
+      "catalog": "Kurs z katalogu"
+    },
+    "booked": "Zapisanych: {{count}} z {{max}}",
+    "seatsLeft": "Wolne miejsca: {{left}} z {{max}}",
+    "details": {
+      "openCourse": "Otwórz stronę kursu",
+      "seeAndEnroll": "Zobacz i zapisz się",
+      "addToCalendar": "Dodaj do mojego kalendarza",
+      "groupChat": "Czat grupy",
+      "videos": "Materiały wideo",
+      "participants": "Lista uczestników (CSV)"
+    }
   },
   "status": {
     "upcoming": "Nadchodzący",

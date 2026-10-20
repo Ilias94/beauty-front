@@ -6,36 +6,184 @@
   </div>
 </header>
 
-<div class="calendar-card">
-  <div class="calendar-wrapper">
-    <full-calendar [options]="calendarOptions()"></full-calendar>
-    @if (isLoading()) {
-      <div class="loading-overlay">
-        <mat-spinner diameter="48" color="accent"></mat-spinner>
-      </div>
-    }
-  </div>
+<div class="cal-layout">
+  <!-- ── Side: filters and mini calendar ─────────────────── -->
+  <aside class="side">
+    <div class="filters" role="group" [attr.aria-label]="'calendar.filtersLabel' | transloco">
+      <p class="side-label">{{ 'calendar.filtersLabel' | transloco }}</p>
+      @for (r of relations; track r) {
+        <button type="button" class="filter rel-{{ r }}" [class.on]="filters()[r]" [attr.aria-pressed]="filters()[r]" (click)="toggle(r)">
+          <span class="check"><mat-icon>check</mat-icon></span>
+          <span class="filter-label">{{ ('calendar.filters.' + r) | transloco }}</span>
+          <span class="count">{{ counts()[r] }}</span>
+        </button>
+      }
+      <p class="hint">
+        @if (filters().catalog) { {{ 'calendar.catalogHint' | transloco }} }
+        @else { {{ 'calendar.statusHint' | transloco }} }
+      </p>
+    </div>
 
-  <div class="calendar-legend">
-    <div class="legend-item">
-      <span class="legend-dot owner"></span>
-      {{ 'calendar.legendOwner' | transloco }}
+    <div class="mini">
+      <mat-calendar [selected]="focusDate()" [dateClass]="dateClass()" (selectedChange)="goTo($event!)" />
     </div>
-    <div class="legend-item">
-      <span class="legend-dot enrolled"></span>
-      {{ 'calendar.legendEnrolled' | transloco }}
+  </aside>
+
+  <!-- ── Main view ───────────────────────────────────────── -->
+  <section class="main">
+    <div class="toolbar">
+      @if (view() === 'plan') {
+        <h2 class="range-title">{{ 'calendar.plan.title' | transloco }}</h2>
+      } @else {
+        <div class="nav">
+          <button type="button" class="round" (click)="prev()" [attr.aria-label]="'calendar.previous' | transloco"><mat-icon>chevron_left</mat-icon></button>
+          <button type="button" class="round" (click)="next()" [attr.aria-label]="'calendar.next' | transloco"><mat-icon>chevron_right</mat-icon></button>
+          <button type="button" class="pill" (click)="today()">{{ 'calendar.today' | transloco }}</button>
+        </div>
+        <h2 class="range-title">{{ rangeTitle() }}</h2>
+      }
+      <div class="views" role="tablist">
+        @for (v of views; track v.key) {
+          <button type="button" role="tab" [class.on]="view() === v.key" [attr.aria-selected]="view() === v.key" (click)="setView(v.key)">
+            <mat-icon>{{ v.icon }}</mat-icon><span>{{ ('calendar.views.' + v.key) | transloco }}</span>
+          </button>
+        }
+      </div>
     </div>
-    <div class="legend-item">
-      <span class="legend-dot upcoming"></span>
-      {{ 'status.upcoming' | transloco }}
-    </div>
-    <div class="legend-item">
-      <span class="legend-dot ongoing"></span>
-      {{ 'status.ongoing' | transloco }}
-    </div>
-    <div class="legend-item">
-      <span class="legend-dot past"></span>
-      {{ 'status.past' | transloco }}
-    </div>
-  </div>
+
+    @switch (view()) {
+      @case ('plan') {
+        <div class="plan">
+          @if (mineLoading()) {
+            @for (i of [0, 1, 2]; track i) { <div class="skeleton plan-sk"></div> }
+          } @else if (!upcomingDays().length && !pastCourses().length) {
+            <div class="empty-state">
+              <span class="empty-icon"><mat-icon>event_available</mat-icon></span>
+              <h3>{{ 'calendar.plan.emptyTitle' | transloco }}</h3>
+              <p>{{ 'calendar.plan.emptyText' | transloco }}</p>
+              <a mat-flat-button color="primary" routerLink="/courses"><mat-icon>search</mat-icon>{{ 'calendar.plan.browse' | transloco }}</a>
+            </div>
+          } @else {
+            @if (!upcomingDays().length) {
+              <p class="nothing-ahead"><mat-icon>event_busy</mat-icon>{{ 'calendar.plan.nothingAhead' | transloco }}</p>
+            }
+            @for (day of upcomingDays(); track day.key; let i = $index) {
+              <section class="day rise" [style.--i]="i">
+                <h3 class="day-label">{{ day.label }}</h3>
+                @for (c of day.courses; track c.id) {
+                  <ng-container *ngTemplateOutlet="planItem; context: { $implicit: c }" />
+                }
+              </section>
+            }
+            @if (pastCourses().length) {
+              <button type="button" class="past-toggle" (click)="showPast.set(!showPast())" [attr.aria-expanded]="showPast()">
+                <mat-icon>{{ showPast() ? 'expand_less' : 'history' }}</mat-icon>
+                {{ (showPast() ? 'calendar.plan.hidePast' : 'calendar.plan.showPast') | transloco: { count: pastCourses().length } }}
+              </button>
+              @if (showPast()) {
+                <section class="day past">
+                  @for (c of pastCourses(); track c.id) {
+                    <ng-container *ngTemplateOutlet="planItem; context: { $implicit: c }" />
+                  }
+                </section>
+              }
+            }
+          }
+        </div>
+      }
+      @default {
+        <div class="grid-wrap" [class.week]="view() === 'week'">
+          @if (view() === 'month') {
+            <full-calendar [options]="calendarOptions()" />
+          } @else {
+            <full-calendar [options]="calendarOptions()" />
+          }
+          @if (rangeIsEmpty()) {
+            <div class="range-empty">
+              <span class="empty-icon"><mat-icon>event_busy</mat-icon></span>
+              <p>{{ 'calendar.emptyRange' | transloco }}</p>
+              @if (nextAfterRange(); as nextCourse) {
+                <button mat-flat-button color="primary" type="button" (click)="goToCourse(nextCourse)">
+                  <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+                  {{ 'calendar.nextCourse' | transloco: { date: (nextCourse.startDate | dateRange) } }}
+                </button>
+              } @else if (!filters().catalog) {
+                <button mat-stroked-button type="button" (click)="toggle('catalog')">{{ 'calendar.showCatalog' | transloco }}</button>
+              }
+            </div>
+          }
+        </div>
+      }
+    }
+  </section>
 </div>
+
+<!-- One row of "My plan" -->
+<ng-template #planItem let-c>
+  @let rel = relationOf(c);
+  @let status = statusOf(c);
+  <button type="button" class="plan-item rel-{{ rel }}" [class.is-past]="status === 'past'" (click)="selected.set(c)">
+    <span class="time">
+      <strong>{{ timeRange(c) }}</strong>
+      @if (c.endDate && c.endDate.slice(0, 10) !== c.startDate.slice(0, 10)) {
+        <small>{{ c.startDate | dateRange: c.endDate }}</small>
+      }
+    </span>
+    <span class="info">
+      <strong class="title">{{ c.title }}</strong>
+      <span class="meta">
+        <mat-icon>{{ c.courseType === 'ONLINE' ? 'videocam' : 'location_on' }}</mat-icon>{{ where(c) || ('courseDetails.onlineWhere' | transloco) }}
+        <span class="sep">·</span>
+        <span class="rel-label">{{ ('calendar.relation.' + rel) | transloco }}</span>
+        @if (rel === 'owner') {
+          <span class="sep">·</span>{{ 'calendar.booked' | transloco: { count: c.participantCount ?? 0, max: c.maxParticipants } }}
+        }
+      </span>
+    </span>
+    @if (status === 'ongoing') {
+      <span class="live">{{ 'status.ongoing' | transloco }}</span>
+    }
+    <mat-icon class="chev">chevron_right</mat-icon>
+  </button>
+</ng-template>
+
+<!-- ── Details panel ─────────────────────────────────────── -->
+@if (selected(); as c) {
+  @let rel = relationOf(c);
+  <div class="backdrop" (click)="selected.set(null)"></div>
+  <aside class="details" role="dialog" aria-modal="true" [attr.aria-label]="c.title">
+    <div class="details-head">
+      <span class="tag rel-tag rel-{{ rel }}">{{ ('calendar.relation.' + rel) | transloco }}</span>
+      <button mat-icon-button type="button" (click)="selected.set(null)" [attr.aria-label]="'common.close' | transloco"><mat-icon>close</mat-icon></button>
+    </div>
+
+    @if (c.category?.label) {
+      <p class="eyebrow">{{ categoryKey(c.category?.label) | transloco }}</p>
+    }
+    <h2>{{ c.title }}</h2>
+    <span class="tag status-tag" [class.tag-success]="statusOf(c) === 'ongoing'">{{ ('status.' + statusOf(c)) | transloco }}</span>
+
+    <ul class="facts">
+      <li><mat-icon>calendar_month</mat-icon><span>{{ c.startDate | dateRange: c.endDate }}</span></li>
+      <li><mat-icon>schedule</mat-icon><span>{{ timeRange(c) }}</span></li>
+      <li><mat-icon>{{ c.courseType === 'ONLINE' ? 'videocam' : 'location_on' }}</mat-icon><span>{{ where(c) || ('courseDetails.onlineWhere' | transloco) }}</span></li>
+      <li><mat-icon>group</mat-icon><span>{{ (rel === 'owner' ? 'calendar.booked' : 'calendar.seatsLeft') | transloco: { count: c.participantCount ?? 0, max: c.maxParticipants, left: (c.maxParticipants ?? 0) - (c.participantCount ?? 0) } }}</span></li>
+    </ul>
+
+    <div class="details-actions">
+      <a mat-flat-button color="primary" [routerLink]="['/course', c.id]">
+        <mat-icon iconPositionEnd>arrow_forward</mat-icon>{{ (rel === 'catalog' ? 'calendar.details.seeAndEnroll' : 'calendar.details.openCourse') | transloco }}
+      </a>
+      <button mat-stroked-button type="button" (click)="addToCalendar(c)"><mat-icon>event_available</mat-icon>{{ 'calendar.details.addToCalendar' | transloco }}</button>
+      @if (rel !== 'catalog') {
+        <a mat-stroked-button routerLink="/group-chats" [queryParams]="{ course: c.id }"><mat-icon>forum</mat-icon>{{ 'calendar.details.groupChat' | transloco }}</a>
+      }
+      @if (hasVideos(c)) {
+        <button mat-stroked-button type="button" (click)="openVideos(c)"><mat-icon>play_circle</mat-icon>{{ 'calendar.details.videos' | transloco }}</button>
+      }
+      @if (rel === 'owner') {
+        <button mat-stroked-button type="button" (click)="downloadParticipants(c)"><mat-icon>download</mat-icon>{{ 'calendar.details.participants' | transloco }}</button>
+      }
+    </div>
+  </aside>
+}

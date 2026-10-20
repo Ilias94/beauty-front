@@ -505,7 +505,51 @@
     "legendOwner": "Your course",
     "legendEnrolled": "Enrolled",
     "eyebrow": "Your dates",
-    "subtitle": "Classes you have a seat on and courses you teach."
+    "subtitle": "Your schedule: the courses you teach and the ones you have a seat on.",
+    "filtersLabel": "Show",
+    "filters": {
+      "owner": "I teach",
+      "enrolled": "My bookings",
+      "catalog": "Other courses"
+    },
+    "statusHint": "Finished courses are faded, ongoing ones have a green dot.",
+    "catalogHint": "Other catalog courses appear in the month and week views.",
+    "previous": "Previous period",
+    "next": "Next period",
+    "views": {
+      "plan": "My plan",
+      "month": "Month",
+      "week": "Week"
+    },
+    "plan": {
+      "title": "Coming up",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "emptyTitle": "No courses planned yet",
+      "emptyText": "Book a course or create your own and it will show up here with its date and place.",
+      "browse": "Browse courses",
+      "nothingAhead": "You have nothing coming up.",
+      "showPast": "Show finished ({{count}})",
+      "hidePast": "Hide finished"
+    },
+    "emptyRange": "None of your courses fall in this period.",
+    "nextCourse": "Next course: {{date}}",
+    "showCatalog": "Show other catalog courses",
+    "relation": {
+      "owner": "You teach",
+      "enrolled": "You're booked",
+      "catalog": "Catalog course"
+    },
+    "booked": "Booked: {{count}} of {{max}}",
+    "seatsLeft": "Seats left: {{left}} of {{max}}",
+    "details": {
+      "openCourse": "Open course page",
+      "seeAndEnroll": "See and book",
+      "addToCalendar": "Add to my calendar",
+      "groupChat": "Group chat",
+      "videos": "Video lessons",
+      "participants": "Participant list (CSV)"
+    }
   },
   "status": {
     "upcoming": "Upcoming",
