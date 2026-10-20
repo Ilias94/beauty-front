@@ -59,15 +59,16 @@
 .brand
   display: flex
   align-items: center
-  gap: 10px
+  gap: 8px
   color: var(--ink)
   flex-shrink: 0
 
   &:hover
     color: var(--ink)
 
+// The arched-mirror mark brings its own shape; don't round or clip it.
 .brand-mark
-  border-radius: 9px
+  display: block
 
 .wordmark
   font-family: var(--font-display)
