@@ -11,15 +11,15 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { create1 } from '../fn/faq-controller/create-1';
 import { Create1$Params } from '../fn/faq-controller/create-1';
-import { delete1 } from '../fn/faq-controller/delete-1';
-import { Delete1$Params } from '../fn/faq-controller/delete-1';
+import { deleteFaq } from '../fn/faq-controller/delete-faq';
+import { DeleteFaq$Params } from '../fn/faq-controller/delete-faq';
 import { FaqDtoResponse } from '../models/faq-dto-response';
 import { getAll } from '../fn/faq-controller/get-all';
 import { GetAll$Params } from '../fn/faq-controller/get-all';
-import { getById1 } from '../fn/faq-controller/get-by-id-1';
-import { GetById1$Params } from '../fn/faq-controller/get-by-id-1';
 import { getByQuestion } from '../fn/faq-controller/get-by-question';
 import { GetByQuestion$Params } from '../fn/faq-controller/get-by-question';
+import { getFaq } from '../fn/faq-controller/get-faq';
+import { GetFaq$Params } from '../fn/faq-controller/get-faq';
 import { reindexAll } from '../fn/faq-controller/reindex-all';
 import { ReindexAll$Params } from '../fn/faq-controller/reindex-all';
 import { update } from '../fn/faq-controller/update';
@@ -31,27 +31,27 @@ export class FaqControllerService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getById1()` */
-  static readonly GetById1Path = '/api/v1/faq/{id}';
+  /** Path part for operation `getFaq()` */
+  static readonly GetFaqPath = '/api/v1/faq/{id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getById1()` instead.
+   * To access only the response body, use `getFaq()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getById1$Response(params: GetById1$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqDtoResponse>> {
-    return getById1(this.http, this.rootUrl, params, context);
+  getFaq$Response(params: GetFaq$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqDtoResponse>> {
+    return getFaq(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getById1$Response()` instead.
+   * To access the full response (for headers, for example), `getFaq$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getById1(params: GetById1$Params, context?: HttpContext): Observable<FaqDtoResponse> {
-    return this.getById1$Response(params, context).pipe(
+  getFaq(params: GetFaq$Params, context?: HttpContext): Observable<FaqDtoResponse> {
+    return this.getFaq$Response(params, context).pipe(
       map((r: StrictHttpResponse<FaqDtoResponse>): FaqDtoResponse => r.body)
     );
   }
@@ -81,27 +81,27 @@ export class FaqControllerService extends BaseService {
     );
   }
 
-  /** Path part for operation `delete1()` */
-  static readonly Delete1Path = '/api/v1/faq/{id}';
+  /** Path part for operation `deleteFaq()` */
+  static readonly DeleteFaqPath = '/api/v1/faq/{id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `delete1()` instead.
+   * To access only the response body, use `deleteFaq()` instead.
    *
    * This method doesn't expect any request body.
    */
-  delete1$Response(params: Delete1$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return delete1(this.http, this.rootUrl, params, context);
+  deleteFaq$Response(params: DeleteFaq$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteFaq(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `delete1$Response()` instead.
+   * To access the full response (for headers, for example), `deleteFaq$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  delete1(params: Delete1$Params, context?: HttpContext): Observable<void> {
-    return this.delete1$Response(params, context).pipe(
+  deleteFaq(params: DeleteFaq$Params, context?: HttpContext): Observable<void> {
+    return this.deleteFaq$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

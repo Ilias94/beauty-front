@@ -7,7 +7,7 @@ export interface UserDtoRequest {
   firstName: string;
   isTeacher?: boolean;
   lastName: string;
-  password: string;
+  password?: string;
   revisionNumber?: number;
   revisionType?: 'UNKNOWN' | 'INSERT' | 'UPDATE' | 'DELETE';
   roles?: Array<string>;

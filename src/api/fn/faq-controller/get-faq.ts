@@ -6,25 +6,26 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { FaqDtoResponse } from '../../models/faq-dto-response';
 
-export interface Delete1$Params {
+export interface GetFaq$Params {
   id: string;
 }
 
-export function delete1(http: HttpClient, rootUrl: string, params: Delete1$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-  const rb = new RequestBuilder(rootUrl, delete1.PATH, 'delete');
+export function getFaq(http: HttpClient, rootUrl: string, params: GetFaq$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqDtoResponse>> {
+  const rb = new RequestBuilder(rootUrl, getFaq.PATH, 'get');
   if (params) {
     rb.path('id', params.id, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<FaqDtoResponse>;
     })
   );
 }
 
-delete1.PATH = '/api/v1/faq/{id}';
+getFaq.PATH = '/api/v1/faq/{id}';

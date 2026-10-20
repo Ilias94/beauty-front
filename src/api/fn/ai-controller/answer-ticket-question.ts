@@ -8,12 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { AiTicketResponseDto } from '../../models/ai-ticket-response-dto';
 
-export interface Query1$Params {
+export interface AnswerTicketQuestion$Params {
   question: string;
 }
 
-export function query1(http: HttpClient, rootUrl: string, params: Query1$Params, context?: HttpContext): Observable<StrictHttpResponse<AiTicketResponseDto>> {
-  const rb = new RequestBuilder(rootUrl, query1.PATH, 'get');
+export function answerTicketQuestion(http: HttpClient, rootUrl: string, params: AnswerTicketQuestion$Params, context?: HttpContext): Observable<StrictHttpResponse<AiTicketResponseDto>> {
+  const rb = new RequestBuilder(rootUrl, answerTicketQuestion.PATH, 'get');
   if (params) {
     rb.query('question', params.question, {});
   }
@@ -28,4 +28,4 @@ export function query1(http: HttpClient, rootUrl: string, params: Query1$Params,
   );
 }
 
-query1.PATH = '/api/v1/ai';
+answerTicketQuestion.PATH = '/api/v1/ai';

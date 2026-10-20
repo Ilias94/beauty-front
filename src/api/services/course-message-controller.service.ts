@@ -10,8 +10,8 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { CourseMessageDtoResponse } from '../models/course-message-dto-response';
-import { getMessages1 } from '../fn/course-message-controller/get-messages-1';
-import { GetMessages1$Params } from '../fn/course-message-controller/get-messages-1';
+import { getCourseMessages } from '../fn/course-message-controller/get-course-messages';
+import { GetCourseMessages$Params } from '../fn/course-message-controller/get-course-messages';
 import { send1 } from '../fn/course-message-controller/send-1';
 import { Send1$Params } from '../fn/course-message-controller/send-1';
 
@@ -21,27 +21,27 @@ export class CourseMessageControllerService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getMessages1()` */
-  static readonly GetMessages1Path = '/api/v1/courses/{courseId}/messages';
+  /** Path part for operation `getCourseMessages()` */
+  static readonly GetCourseMessagesPath = '/api/v1/courses/{courseId}/messages';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getMessages1()` instead.
+   * To access only the response body, use `getCourseMessages()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getMessages1$Response(params: GetMessages1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CourseMessageDtoResponse>>> {
-    return getMessages1(this.http, this.rootUrl, params, context);
+  getCourseMessages$Response(params: GetCourseMessages$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CourseMessageDtoResponse>>> {
+    return getCourseMessages(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getMessages1$Response()` instead.
+   * To access the full response (for headers, for example), `getCourseMessages$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getMessages1(params: GetMessages1$Params, context?: HttpContext): Observable<Array<CourseMessageDtoResponse>> {
-    return this.getMessages1$Response(params, context).pipe(
+  getCourseMessages(params: GetCourseMessages$Params, context?: HttpContext): Observable<Array<CourseMessageDtoResponse>> {
+    return this.getCourseMessages$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<CourseMessageDtoResponse>>): Array<CourseMessageDtoResponse> => r.body)
     );
   }

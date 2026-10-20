@@ -8,12 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { CourseMessageDtoResponse } from '../../models/course-message-dto-response';
 
-export interface GetMessages1$Params {
+export interface GetCourseMessages$Params {
   courseId: number;
 }
 
-export function getMessages1(http: HttpClient, rootUrl: string, params: GetMessages1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CourseMessageDtoResponse>>> {
-  const rb = new RequestBuilder(rootUrl, getMessages1.PATH, 'get');
+export function getCourseMessages(http: HttpClient, rootUrl: string, params: GetCourseMessages$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CourseMessageDtoResponse>>> {
+  const rb = new RequestBuilder(rootUrl, getCourseMessages.PATH, 'get');
   if (params) {
     rb.path('courseId', params.courseId, {});
   }
@@ -28,4 +28,4 @@ export function getMessages1(http: HttpClient, rootUrl: string, params: GetMessa
   );
 }
 
-getMessages1.PATH = '/api/v1/courses/{courseId}/messages';
+getCourseMessages.PATH = '/api/v1/courses/{courseId}/messages';
