@@ -543,3 +543,39 @@
   .mobile-price
     font-family: var(--font-display)
     font-size: 22px
+
+// ── Participants (owner) ───────────────────────────────────
+.people
+  list-style: none
+  margin: 0
+  padding: 0
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  overflow: hidden
+
+  li
+    display: flex
+    align-items: center
+    gap: 12px
+    padding: 10px 14px
+
+    & + li
+      border-top: 1px solid var(--line)
+
+.person-avatar
+  width: 36px
+  height: 36px
+  flex-shrink: 0
+  border-radius: 50%
+  display: grid
+  place-items: center
+  background: var(--accent-soft)
+  color: var(--accent)
+  font-size: 13px
+  font-weight: 700
+
+.person-name
+  flex: 1
+  min-width: 0
+  font-weight: 600

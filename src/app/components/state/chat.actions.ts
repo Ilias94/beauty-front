@@ -29,6 +29,8 @@ export class OpenChatAction {
     public partnerFirstName?: string,
     public partnerLastName?: string,
     public partnerFileName?: string,
+    /** The course the conversation starts from (e.g. "Napisz do instruktorki" on its page). */
+    public course?: ChatCourseContext,
   ) {}
 }
 
@@ -48,6 +50,22 @@ export interface ChatMessage {
   content: string;
   sentAt: string;
   read: boolean;
+  courseId?: number;
+  courseTitle?: string;
+}
+
+export interface ChatCourseContext {
+  id: number;
+  title: string;
+}
+
+/** Someone the user can start a conversation with, and the courses that connect them. */
+export interface ChatContact {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fileName?: string;
+  courses: { courseId: number; title: string; role: 'INSTRUCTOR' | 'PARTICIPANT' }[];
 }
 
 export interface ChatConversation {

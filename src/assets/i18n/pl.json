@@ -211,7 +211,10 @@
     "showLess": "Zwiń opis",
     "addVideosHint": "Wgraj nagrania z zajęć",
     "manageVideosHint": "Przeglądaj i usuwaj filmy",
-    "quizHint": "Pytania sprawdzające dla uczestników"
+    "quizHint": "Pytania sprawdzające dla uczestników",
+    "participantsTitle": "Uczestnicy",
+    "noParticipants": "Nikt jeszcze nie zapisał się na ten kurs.",
+    "writeTo": "Napisz"
   },
   "courseForm": {
     "createTitle": "Nowy kurs",
@@ -482,7 +485,26 @@
     "title": "Wiadomości",
     "noConversations": "Brak rozmów",
     "placeholder": "Napisz wiadomość… (Enter aby wysłać)",
-    "messageInstructor": "Napisz do instruktora"
+    "messageInstructor": "Napisz do instruktora",
+    "newMessage": "Nowa wiadomość",
+    "back": "Wróć",
+    "send": "Wyślij",
+    "searchContacts": "Szukaj osoby albo kursu",
+    "noContacts": "Nie masz jeszcze kontaktów. Pojawią się tu prowadzące Twoich kursów i uczestnicy kursów, które prowadzisz.",
+    "browseCourses": "Przeglądaj kursy",
+    "noMatches": "Nikt nie pasuje do wyszukiwania.",
+    "contactsHint": "Do prowadzących innych kursów napiszesz z ich strony kursu (przycisk „Napisz do instruktorki”).",
+    "role": {
+      "INSTRUCTOR": "Prowadzi:",
+      "PARTICIPANT": "Uczestniczy w:"
+    },
+    "firstMessageHint": "Napisz pierwszą wiadomość. Odpowiedź przyjdzie tutaj i jako powiadomienie.",
+    "aboutCourse": "Dotyczy kursu: {{title}}",
+    "errors": {
+      "forbidden": "Nie możesz rozpocząć rozmowy z tą osobą.",
+      "limit": "Osiągnięto dzienny limit nowych rozmów. Spróbuj jutro albo odpisz w istniejącej rozmowie.",
+      "generic": "Nie udało się wysłać wiadomości. Spróbuj ponownie."
+    }
   },
   "assistant": {
     "title": "Asystent AI",

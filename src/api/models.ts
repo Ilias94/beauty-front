@@ -12,6 +12,8 @@ export { CategoryDtoResponse } from './models/category-dto-response';
 export { ChangePasswordDtoRequest } from './models/change-password-dto-request';
 export { CommentDtoRequest } from './models/comment-dto-request';
 export { CommentDtoResponse } from './models/comment-dto-response';
+export { ContactCourse } from './models/contact-course';
+export { ContactDtoResponse } from './models/contact-dto-response';
 export { ConversationDtoResponse } from './models/conversation-dto-response';
 export { CourseDtoRequest } from './models/course-dto-request';
 export { CourseDtoResponse } from './models/course-dto-response';

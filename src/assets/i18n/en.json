@@ -211,7 +211,10 @@
     "showLess": "Show less",
     "addVideosHint": "Upload class recordings",
     "manageVideosHint": "Browse and remove videos",
-    "quizHint": "Check-up questions for participants"
+    "quizHint": "Check-up questions for participants",
+    "participantsTitle": "Participants",
+    "noParticipants": "Nobody has booked this course yet.",
+    "writeTo": "Message"
   },
   "courseForm": {
     "createTitle": "New course",
@@ -482,7 +485,26 @@
     "title": "Messages",
     "noConversations": "No conversations yet",
     "placeholder": "Write a message… (Enter to send)",
-    "messageInstructor": "Message Instructor"
+    "messageInstructor": "Message Instructor",
+    "newMessage": "New message",
+    "back": "Back",
+    "send": "Send",
+    "searchContacts": "Search people or courses",
+    "noContacts": "No contacts yet. Instructors of your courses and participants of the courses you teach will show up here.",
+    "browseCourses": "Browse courses",
+    "noMatches": "Nobody matches your search.",
+    "contactsHint": "To ask instructors of other courses, use \"Message the instructor\" on their course page.",
+    "role": {
+      "INSTRUCTOR": "Teaches:",
+      "PARTICIPANT": "Attends:"
+    },
+    "firstMessageHint": "Write the first message. The reply will arrive here and as a notification.",
+    "aboutCourse": "About the course: {{title}}",
+    "errors": {
+      "forbidden": "You can't start a conversation with this person.",
+      "limit": "You've reached today's limit of new conversations. Try tomorrow or reply in an existing one.",
+      "generic": "The message couldn't be sent. Please try again."
+    }
   },
   "assistant": {
     "title": "AI assistant",

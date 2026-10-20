@@ -256,3 +256,151 @@
 
   &:disabled
     color: var(--line-strong) !important
+
+// ── New message: contact picker ──────────────────────────────
+.header-action
+  margin-left: auto
+  color: #fff !important
+
+  .mat-icon
+    font-size: 20px
+    width: 20px
+    height: 20px
+
+.contacts
+  flex: 1
+  min-height: 0
+  display: flex
+  flex-direction: column
+
+.search
+  display: flex
+  align-items: center
+  gap: 8px
+  margin: 12px 12px 4px
+  padding: 0 12px
+  height: 40px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--bg)
+  color: var(--ink-3)
+  transition: border-color var(--dur) var(--ease)
+
+  &:focus-within
+    border-color: var(--accent)
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+
+  input
+    flex: 1
+    min-width: 0
+    border: 0
+    outline: 0
+    background: transparent
+    font: 500 14px var(--font-ui)
+    color: var(--ink)
+
+.contact-list
+  flex: 1
+  overflow-y: auto
+  padding: 4px 0 8px
+
+.contact-sk
+  height: 52px
+  margin: 8px 12px
+
+button.conv-item
+  width: 100%
+  border: 0
+  border-bottom: 1px solid var(--accent-soft)
+  background: transparent
+  text-align: left
+  font-family: var(--font-ui)
+
+.contact
+  .role
+    font-weight: 700
+    color: var(--accent)
+
+  .more
+    margin-left: 2px
+    font-weight: 700
+    color: var(--ink-3)
+
+  .chev
+    color: var(--line-strong)
+    transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
+
+  &:hover .chev
+    color: var(--accent)
+    transform: translateX(2px)
+
+.contacts-hint, .no-match
+  padding: 12px 16px 4px
+  font: 500 12.5px var(--font-ui)
+  line-height: 1.45
+  color: var(--ink-3)
+
+.no-match
+  text-align: center
+
+.empty-chat
+  gap: 8px
+  text-align: center
+
+  p
+    color: var(--ink-3)
+    max-width: 30ch
+
+  .text-link
+    font: 700 13.5px var(--font-ui)
+
+// ── Thread extras ────────────────────────────────────────────
+.thread-empty
+  margin: auto 0
+  padding: 24px 8px
+  text-align: center
+  font: 500 13px var(--font-ui)
+  color: var(--ink-3)
+
+.course-ref
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  margin-bottom: 4px
+  padding: 3px 9px
+  border-radius: var(--radius-pill)
+  background: var(--accent-soft)
+  font: 700 11.5px var(--font-ui)
+  color: var(--accent)
+
+  .mat-icon
+    font-size: 14px
+    width: 14px
+    height: 14px
+
+.context-bar, .send-error
+  display: flex
+  align-items: center
+  gap: 6px
+  margin: 0
+  padding: 8px 14px
+  font: 600 12.5px var(--font-ui)
+  flex-shrink: 0
+
+  .mat-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+
+.context-bar
+  border-top: 1px solid var(--line)
+  background: var(--accent-soft)
+  color: var(--accent)
+
+.send-error
+  background: var(--danger-soft)
+  color: var(--danger)

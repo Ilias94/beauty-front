@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/enfironment';
-import { ChatConversation, ChatMessage } from '../components/state/chat.actions';
+import { ChatContact, ChatConversation, ChatMessage } from '../components/state/chat.actions';
 
 @Injectable({ providedIn: 'root' })
 export class ChatApiService {
@@ -17,8 +17,12 @@ export class ChatApiService {
     return this.http.get<ChatMessage[]>(`${this.base}/${partnerId}`);
   }
 
-  send(recipientId: number, content: string): Observable<ChatMessage> {
-    return this.http.post<ChatMessage>(this.base, { recipientId, content });
+  getContacts(): Observable<ChatContact[]> {
+    return this.http.get<ChatContact[]>(`${this.base}/contacts`);
+  }
+
+  send(recipientId: number, content: string, courseId?: number): Observable<ChatMessage> {
+    return this.http.post<ChatMessage>(this.base, { recipientId, content, courseId });
   }
 
   markAsRead(partnerId: number): Observable<void> {

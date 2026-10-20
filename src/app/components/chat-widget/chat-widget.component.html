@@ -14,7 +14,7 @@
     <!-- Panel header -->
     <div class="panel-header">
       @if (activeId()) {
-        <button mat-icon-button class="back-btn" (click)="backToList()">
+        <button mat-icon-button class="back-btn" (click)="backToList()" [attr.aria-label]="'chat.back' | transloco">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <div class="partner-info">
@@ -27,18 +27,75 @@
             <span class="partner-name">{{ activePartner()!.partnerFirstName }} {{ activePartner()!.partnerLastName }}</span>
           }
         </div>
+      } @else if (picking()) {
+        <button mat-icon-button class="back-btn" (click)="picking.set(false)" [attr.aria-label]="'chat.back' | transloco">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="panel-title">{{ 'chat.newMessage' | transloco }}</span>
       } @else {
         <span class="panel-title">{{ 'chat.title' | transloco }}</span>
+        <button mat-icon-button class="header-action" (click)="startNew()"
+                [matTooltip]="'chat.newMessage' | transloco" [attr.aria-label]="'chat.newMessage' | transloco">
+          <mat-icon>edit_square</mat-icon>
+        </button>
       }
     </div>
 
+    <!-- New message: pick a contact -->
+    @if (!activeId() && picking()) {
+      <div class="contacts">
+        <label class="search">
+          <mat-icon>search</mat-icon>
+          <input type="search" [ngModel]="contactQuery()" (ngModelChange)="contactQuery.set($event)"
+                 [placeholder]="'chat.searchContacts' | transloco" autofocus>
+        </label>
+        <div class="contact-list">
+          @if (contacts() === null) {
+            @for (i of [0, 1, 2]; track i) { <div class="skeleton contact-sk"></div> }
+          } @else if (!contacts()!.length) {
+            <div class="empty-chat">
+              <mat-icon>group_add</mat-icon>
+              <p>{{ 'chat.noContacts' | transloco }}</p>
+              <a class="text-link" routerLink="/courses" (click)="toggleOpen()">{{ 'chat.browseCourses' | transloco }}</a>
+            </div>
+          } @else if (!filteredContacts().length) {
+            <p class="no-match">{{ 'chat.noMatches' | transloco }}</p>
+          }
+          @for (contact of filteredContacts(); track contact.id) {
+            @let sub = contactSubtitle(contact);
+            <button type="button" class="conv-item contact" (click)="pick(contact)">
+              @if (avatarUrl(contact.fileName); as url) {
+                <img class="avatar" [src]="url" [alt]="contact.firstName">
+              } @else {
+                <div class="avatar avatar-initials">{{ initials(contact.firstName, contact.lastName) }}</div>
+              }
+              <div class="conv-body">
+                <div class="conv-name">{{ contact.firstName }} {{ contact.lastName }}</div>
+                <div class="conv-last">
+                  <span class="role">{{ ('chat.role.' + sub.role) | transloco }}</span> {{ sub.title }}
+                  @if (sub.more > 0) { <span class="more">+{{ sub.more }}</span> }
+                </div>
+              </div>
+              <mat-icon class="chev">chevron_right</mat-icon>
+            </button>
+          }
+          @if (contacts()?.length) {
+            <p class="contacts-hint">{{ 'chat.contactsHint' | transloco }}</p>
+          }
+        </div>
+      </div>
+    }
+
     <!-- Conversations list -->
-    @if (!activeId()) {
+    @if (!activeId() && !picking()) {
       <div class="conversations-list">
         @if (conversations().length === 0) {
           <div class="empty-chat">
             <mat-icon>chat_bubble_outline</mat-icon>
             <p>{{ 'chat.noConversations' | transloco }}</p>
+            <button mat-flat-button color="primary" type="button" class="btn-sm" (click)="startNew()">
+              <mat-icon>edit_square</mat-icon>{{ 'chat.newMessage' | transloco }}
+            </button>
           </div>
         }
         @for (conv of conversations(); track conv.partnerId) {
@@ -63,8 +120,16 @@
     <!-- Message thread -->
     @if (activeId()) {
       <div class="messages-area">
+        @if (!messages().length) {
+          <p class="thread-empty">{{ 'chat.firstMessageHint' | transloco }}</p>
+        }
         @for (msg of messages(); track msg.id) {
           <div class="msg-row" [class.msg-mine]="msg.senderId === currentUser()?.id">
+            @if (msg.courseTitle) {
+              <a class="course-ref" [routerLink]="['/course', msg.courseId]">
+                <mat-icon>school</mat-icon>{{ 'chat.aboutCourse' | transloco: { title: msg.courseTitle } }}
+              </a>
+            }
             <div class="bubble">{{ msg.content }}</div>
             <div class="msg-time">{{ msg.sentAt | date:'HH:mm' }}</div>
           </div>
@@ -72,13 +137,23 @@
         <div #messagesEnd></div>
       </div>
 
+      @if (courseContext(); as course) {
+        <div class="context-bar">
+          <mat-icon>school</mat-icon>
+          <span>{{ 'chat.aboutCourse' | transloco: { title: course.title } }}</span>
+        </div>
+      }
+      @if (sendError(); as error) {
+        <p class="send-error" role="alert"><mat-icon>error_outline</mat-icon>{{ error | transloco }}</p>
+      }
+
       <div class="input-row">
         <textarea class="msg-input" rows="1"
           [placeholder]="'chat.placeholder' | transloco"
-          [(ngModel)]="newMessage"
+          [ngModel]="newMessage()" (ngModelChange)="newMessage.set($event)"
           (keydown)="onKeydown($event)">
         </textarea>
-        <button mat-icon-button class="send-btn" (click)="send()" [disabled]="!newMessage().trim()">
+        <button mat-icon-button class="send-btn" (click)="send()" [disabled]="!newMessage().trim()" [attr.aria-label]="'chat.send' | transloco">
           <mat-icon>send</mat-icon>
         </button>
       </div>

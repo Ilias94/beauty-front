@@ -152,6 +152,35 @@
           </section>
         }
 
+        <!-- Participants (owner only) -->
+        @if (isOwner()) {
+          <section class="section">
+            <div class="section-head">
+              <h2>{{ 'courseDetails.participantsTitle' | transloco }}</h2>
+              @if (participants(); as list) {
+                <span class="score"><strong>{{ list.length }}</strong> / {{ c.maxParticipants }}</span>
+              }
+            </div>
+            @if (participants() === null) {
+              <div class="skeleton" style="height: 56px; border-radius: var(--radius)"></div>
+            } @else if (!participants()!.length) {
+              <p class="muted">{{ 'courseDetails.noParticipants' | transloco }}</p>
+            } @else {
+              <ul class="people">
+                @for (p of participants(); track p.id) {
+                  <li>
+                    <span class="person-avatar">{{ p.firstName?.[0] }}{{ p.lastName?.[0] }}</span>
+                    <span class="person-name">{{ p.firstName }} {{ p.lastName }}</span>
+                    <button mat-stroked-button type="button" class="btn-sm" (click)="messageParticipant(p)">
+                      <mat-icon>chat</mat-icon>{{ 'courseDetails.writeTo' | transloco }}
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </section>
+        }
+
         <!-- Reviews -->
         <section class="section" id="reviews">
           <div class="section-head">

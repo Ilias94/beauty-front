@@ -3,7 +3,7 @@ import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { tap } from 'rxjs';
 import { ChatApiService } from '../../services/chat-api.service';
 import {
-  BackToListAction, ChatConversation, ChatMessage,
+  BackToListAction, ChatConversation, ChatCourseContext, ChatMessage,
   CloseChatAction, LoadConversationsAction, LoadMessagesAction,
   MarkConversationReadAction, OpenChatAction, ReceiveMessageAction, SendMessageAction
 } from './chat.actions';
@@ -13,6 +13,8 @@ export interface ChatStateModel {
   conversations: ChatConversation[];
   activePartnerId: number | null;
   messages: ChatMessage[];
+  /** Course the next message is about (set when the chat is opened from a course page). */
+  courseContext: ChatCourseContext | null;
 }
 
 const defaults: ChatStateModel = {
@@ -20,6 +22,7 @@ const defaults: ChatStateModel = {
   conversations: [],
   activePartnerId: null,
   messages: [],
+  courseContext: null,
 };
 
 @State<ChatStateModel>({ name: 'chat', defaults })
@@ -50,10 +53,11 @@ export class ChatState {
 
   @Action(SendMessageAction)
   send({ getState, patchState }: StateContext<ChatStateModel>, { recipientId, content }: SendMessageAction) {
-    return this.api.send(recipientId, content).pipe(
+    return this.api.send(recipientId, content, getState().courseContext?.id).pipe(
       tap(message => {
         const state = getState();
-        patchState({ messages: [...state.messages, message] });
+        // Only the first message after opening from a course page carries that course.
+        patchState({ messages: [...state.messages, message], courseContext: null });
         const exists = state.conversations.some(c => c.partnerId === recipientId);
         if (exists) {
           patchState({
@@ -110,7 +114,7 @@ export class ChatState {
 
   @Action(OpenChatAction)
   open({ getState, patchState, dispatch }: StateContext<ChatStateModel>, action: OpenChatAction) {
-    patchState({ open: true });
+    patchState({ open: true, courseContext: action.course ?? null });
     if (action.partnerId != null) {
       // Insert a placeholder so the header renders immediately if this is a new conversation
       const state = getState();
@@ -140,12 +144,12 @@ export class ChatState {
 
   @Action(BackToListAction)
   backToList({ patchState, dispatch }: StateContext<ChatStateModel>) {
-    patchState({ activePartnerId: null, messages: [] });
+    patchState({ activePartnerId: null, messages: [], courseContext: null });
     return dispatch(new LoadConversationsAction());
   }
 
   @Action(CloseChatAction)
   close({ patchState }: StateContext<ChatStateModel>) {
-    patchState({ open: false, activePartnerId: null, messages: [] });
+    patchState({ open: false, activePartnerId: null, messages: [], courseContext: null });
   }
 }

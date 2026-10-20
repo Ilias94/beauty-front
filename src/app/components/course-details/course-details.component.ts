@@ -20,7 +20,8 @@ import { AddVideoAction } from '../state/video.actions';
 import { SecurityState } from '../state/security.state';
 import { CreatePaymentAction } from '../state/payment.actions';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { OpenChatAction } from '../state/chat.actions';
+import { ChatContact, OpenChatAction } from '../state/chat.actions';
+import { ChatApiService } from '../../services/chat-api.service';
 import { CourseGroupChatComponent } from '../course-group-chat/course-group-chat.component';
 import { StarRatingComponent } from '../../shared/star-rating/star-rating.component';
 import { DateRangePipe, PricePipe } from '../../shared/format.pipes';
@@ -44,6 +45,10 @@ export class CourseDetailsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private transloco = inject(TranslocoService);
   private destroyRef = inject(DestroyRef);
+  private chatApi = inject(ChatApiService);
+
+  /** Owner only: this course's participants (from the messaging contacts), each with a "Write" button. */
+  participants = signal<ChatContact[] | null>(null);
 
   course: Signal<CourseDtoResponse | undefined> = toSignal(this.store.select(state => state.course.course));
   comments: Signal<CommentDtoResponse[]> = toSignal(this.store.select(state => state.comment.comments), { initialValue: [] });
@@ -119,6 +124,14 @@ export class CourseDetailsComponent implements OnInit {
   instructorRatingPreview = signal<number | null>(null);
 
   constructor() {
+    effect(() => {
+      if (!this.loaded() || !this.isOwner()) return;
+      const id = this.course()!.id;
+      this.chatApi.getContacts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+        next: contacts => this.participants.set(contacts.filter(c => c.courses.some(k => k.courseId === id && k.role === 'PARTICIPANT'))),
+        error: () => this.participants.set([]),
+      });
+    });
     // The floating chat/assistant buttons move up while the mobile booking bar is shown (see styles.sass).
     const body = inject(DOCUMENT).body;
     effect(() => body.classList.toggle('has-bottom-bar', this.showMobileBar()));
@@ -185,10 +198,16 @@ export class CourseDetailsComponent implements OnInit {
     this.fileInput.nativeElement.click();
   }
 
+  messageParticipant(person: ChatContact): void {
+    const course = this.course()!;
+    this.store.dispatch(new OpenChatAction(person.id, person.firstName, person.lastName, person.fileName, { id: course.id!, title: course.title! }));
+  }
+
   messageInstructor(): void {
     const c = this.course()?.creator;
     if (c) {
-      this.store.dispatch(new OpenChatAction(c.id, c.firstName, c.lastName, c.fileName));
+      const course = this.course()!;
+      this.store.dispatch(new OpenChatAction(c.id, c.firstName, c.lastName, c.fileName, { id: course.id!, title: course.title! }));
     }
   }
 }

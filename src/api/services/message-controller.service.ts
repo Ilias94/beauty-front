@@ -9,7 +9,10 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { ContactDtoResponse } from '../models/contact-dto-response';
 import { ConversationDtoResponse } from '../models/conversation-dto-response';
+import { getContacts } from '../fn/message-controller/get-contacts';
+import { GetContacts$Params } from '../fn/message-controller/get-contacts';
 import { getConversations } from '../fn/message-controller/get-conversations';
 import { GetConversations$Params } from '../fn/message-controller/get-conversations';
 import { getMessages } from '../fn/message-controller/get-messages';
@@ -123,6 +126,31 @@ export class MessageControllerService extends BaseService {
   getConversations(params?: GetConversations$Params, context?: HttpContext): Observable<Array<ConversationDtoResponse>> {
     return this.getConversations$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<ConversationDtoResponse>>): Array<ConversationDtoResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `getContacts()` */
+  static readonly GetContactsPath = '/api/v1/messages/contacts';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getContacts()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getContacts$Response(params?: GetContacts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ContactDtoResponse>>> {
+    return getContacts(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getContacts$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getContacts(params?: GetContacts$Params, context?: HttpContext): Observable<Array<ContactDtoResponse>> {
+    return this.getContacts$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<ContactDtoResponse>>): Array<ContactDtoResponse> => r.body)
     );
   }
 
