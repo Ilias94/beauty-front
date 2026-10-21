@@ -6,18 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { PaymentStatusDtoResponse } from '../../models/payment-status-dto-response';
 
-export interface Notify$Params {
-  status: 'IN_PROGRESS' | 'FAILED' | 'SUCCESS';
-  corelationKey: string;
+export interface GetPaymentStatus$Params {
+  orderId: string;
 }
 
-export function notify(http: HttpClient, rootUrl: string, params: Notify$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
-  const rb = new RequestBuilder(rootUrl, notify.PATH, 'get');
+export function getPaymentStatus(http: HttpClient, rootUrl: string, params: GetPaymentStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<PaymentStatusDtoResponse>> {
+  const rb = new RequestBuilder(rootUrl, getPaymentStatus.PATH, 'get');
   if (params) {
-    rb.query('status', params.status, {});
-    rb.query('corelationKey', params.corelationKey, {});
+    rb.path('orderId', params.orderId, {});
   }
 
   return http.request(
@@ -25,10 +23,9 @@ export function notify(http: HttpClient, rootUrl: string, params: Notify$Params,
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<{
-      }>;
+      return r as StrictHttpResponse<PaymentStatusDtoResponse>;
     })
   );
 }
 
-notify.PATH = '/api/v1/payment/notify';
+getPaymentStatus.PATH = '/api/v1/payment/{orderId}';

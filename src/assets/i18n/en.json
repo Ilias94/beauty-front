@@ -490,6 +490,8 @@
     "successText": "You have a seat on the course. Find the details and lessons in My courses and the dates in your calendar.",
     "failedTitle": "The payment didn't go through",
     "failedText": "Nothing was charged. You can try again, or write to us if it keeps happening.",
+    "cancelledTitle": "Payment cancelled",
+    "cancelledText": "Nothing was charged. You can go back to the course and try again whenever you like.",
     "pendingTitle": "Checking your payment",
     "pendingText": "This usually takes a moment. The course will appear in My courses as soon as the payment is confirmed.",
     "goToMyCourses": "Go to my courses",

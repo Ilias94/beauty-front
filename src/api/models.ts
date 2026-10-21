@@ -30,6 +30,7 @@ export { MessageDtoResponse } from './models/message-dto-response';
 export { PageableObject } from './models/pageable-object';
 export { PageCourseDtoResponse } from './models/page-course-dto-response';
 export { PageUserDtoResponse } from './models/page-user-dto-response';
+export { PaymentStatusDtoResponse } from './models/payment-status-dto-response';
 export { PromptResponseDto } from './models/prompt-response-dto';
 export { QuestionDetail } from './models/question-detail';
 export { QuestionDetailDto } from './models/question-detail-dto';
