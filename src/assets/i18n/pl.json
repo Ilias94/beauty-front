@@ -490,6 +490,8 @@
     "successText": "Masz miejsce na kursie. Szczegóły i materiały znajdziesz w zakładce Moje kursy, a termin w kalendarzu.",
     "failedTitle": "Płatność nie doszła do skutku",
     "failedText": "Nic nie zostało pobrane. Możesz spróbować ponownie albo napisać do nas, jeśli problem się powtarza.",
+    "cancelledTitle": "Płatność anulowana",
+    "cancelledText": "Nic nie zostało pobrane. Możesz wrócić do kursu i spróbować ponownie, kiedy zechcesz.",
     "pendingTitle": "Sprawdzamy płatność",
     "pendingText": "To zwykle trwa chwilę. Kurs pojawi się w zakładce Moje kursy, gdy tylko płatność zostanie potwierdzona.",
     "goToMyCourses": "Przejdź do moich kursów",

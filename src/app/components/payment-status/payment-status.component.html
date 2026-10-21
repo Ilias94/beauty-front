@@ -13,6 +13,9 @@
         <a mat-flat-button color="primary" routerLink="/courses">{{ 'payment.backToCourses' | transloco }}</a>
         <a mat-stroked-button routerLink="/my-tickets/new">{{ 'payment.contactSupport' | transloco }}</a>
       }
+      @case ('cancelled') {
+        <a mat-flat-button color="primary" routerLink="/courses">{{ 'payment.backToCourses' | transloco }}</a>
+      }
       @default {
         <a mat-stroked-button routerLink="/student-courses">{{ 'payment.goToMyCourses' | transloco }}</a>
       }
