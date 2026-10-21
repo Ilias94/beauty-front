@@ -84,6 +84,7 @@
       <span>{{ 'menu.enrolledCourses' | transloco }}</span>
       @if (enrolledCount()) { <span class="menu-count">{{ enrolledCount() }}</span> }
     </a>
+    <a mat-menu-item routerLink="/payouts"><mat-icon>account_balance</mat-icon>{{ 'menu.payouts' | transloco }}</a>
   }
   <a mat-menu-item routerLink="/my-account"><mat-icon>person</mat-icon>{{ 'menu.myAccount' | transloco }}</a>
   <a mat-menu-item routerLink="/account"><mat-icon>tune</mat-icon>{{ 'menu.accountSettings' | transloco }}</a>
@@ -108,6 +109,7 @@
           @if (ownedCount()) { <span class="studio-count">{{ ownedCount() }}</span> }
         </a>
         <a routerLink="/course" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><mat-icon>add_circle</mat-icon>{{ 'menu.createCourse' | transloco }}</a>
+        <a routerLink="/payouts" routerLinkActive="active"><mat-icon>account_balance</mat-icon>{{ 'menu.payouts' | transloco }}</a>
         <p class="drawer-label">{{ 'menu.sectionBrowse' | transloco }}</p>
       }
       <a routerLink="/courses" routerLinkActive="active"><mat-icon>explore</mat-icon>{{ 'menu.browseCourses' | transloco }}</a>

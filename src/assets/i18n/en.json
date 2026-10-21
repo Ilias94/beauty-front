@@ -23,7 +23,25 @@
     "accountMenu": "Account menu",
     "footerTagline": "Beauty courses taught by working professionals.",
     "enrolledCourses": "Enrolled courses",
-    "sectionBrowse": "Browse"
+    "sectionBrowse": "Browse",
+    "payouts": "Payouts"
+  },
+  "payouts": {
+    "title": "Payouts",
+    "lead": "Money for your courses reaches your bank account through Stripe, our payment provider.",
+    "notConnectedTitle": "Your payout account isn't connected yet",
+    "notConnectedText": "Give Stripe your details and bank account. It takes a few minutes, and then you can sell paid courses.",
+    "unfinishedTitle": "Setup isn't finished",
+    "unfinishedText": "Stripe still needs a few details. Pick the form up where you left off.",
+    "inReviewTitle": "Stripe is checking your details",
+    "inReviewText": "This usually takes from a few minutes to two days. If Stripe needs anything else, it will email you.",
+    "readyTitle": "All set, you can take payments",
+    "readyText": "Money from your courses goes to your Stripe account and from there to your bank automatically.",
+    "errorText": "We couldn't reach Stripe. Refresh the page or try again in a moment.",
+    "connect": "Connect a payout account",
+    "continue": "Finish setup",
+    "openDashboard": "Open Stripe dashboard",
+    "finePrint": "You give your bank details and documents to Stripe directly. Bellademy never sees or stores them."
   },
   "auth": {
     "brandSubtitle": "Welcome back — sign in to continue",

@@ -13,6 +13,7 @@ import { CreatorCoursesComponent } from './components/creator-courses/creator-co
 import { StudentCoursesComponent } from './components/student-courses/student-courses.component';
 import { MyCommentsComponent } from './components/my-comments/my-comments.component';
 import { PaymentStatusComponent } from './components/payment-status/payment-status.component';
+import { PayoutsComponent } from './components/payouts/payouts.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { QuestionResultsComponent } from './components/question-results/question-results.component';
 import { EditQuestionsComponent } from './components/edit-questions/edit-questions.component';
@@ -61,6 +62,12 @@ export const routes: Routes = [
         path: 'my-comments',
         component: MyCommentsComponent,
         canActivate: [authGuard]
+    },
+    {
+        path: 'payouts',
+        component: PayoutsComponent,
+        canActivate: [authGuard],
+        data: { roles: ['TEACHER'] }
     },
     {
         path: 'payment-status',
