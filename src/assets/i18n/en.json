@@ -21,7 +21,9 @@
     "mainNavigation": "Main navigation",
     "language": "Language",
     "accountMenu": "Account menu",
-    "footerTagline": "Beauty courses taught by working professionals."
+    "footerTagline": "Beauty courses taught by working professionals.",
+    "enrolledCourses": "Enrolled courses",
+    "sectionBrowse": "Browse"
   },
   "auth": {
     "brandSubtitle": "Welcome back — sign in to continue",

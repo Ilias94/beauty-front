@@ -44,6 +44,8 @@ export class MenuComponent {
 
   isTeacher = computed(() => !!this.currentUser()?.teacher);
   isSupport = computed(() => !!this.currentUser()?.roles?.includes('SUPPORT'));
+  ownedCount = computed<number>(() => this.currentUser()?.ownedCourseIds?.length ?? 0);
+  enrolledCount = computed<number>(() => this.currentUser()?.enrolledCourseIds?.length ?? 0);
   initials = computed(() => {
     const user = this.currentUser();
     return ((user?.firstName?.[0] ?? '') + (user?.lastName?.[0] ?? '')).toUpperCase() || '·';

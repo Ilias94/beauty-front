@@ -127,6 +127,62 @@
   .ready > &
     opacity: 1
 
+// Instructors' studio: their own courses, set apart from the shared links in the brand's wine.
+// Quiet tint at rest, filled wine on its pages, with the number of courses they run.
+.studio-link
+  flex-shrink: 0
+  display: inline-flex
+  align-items: center
+  gap: 7px
+  height: 42px
+  margin-right: -14px
+  padding: 0 14px 0 12px
+  border-radius: var(--radius-pill)
+  background: var(--accent-soft)
+  box-shadow: inset 0 0 0 1px var(--accent-soft-2)
+  color: var(--accent)
+  font: 700 14px var(--font-ui)
+  white-space: nowrap
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform 120ms var(--ease)
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+
+  &:hover
+    color: var(--accent-hover)
+    background: var(--accent-soft-2)
+
+  &:active
+    transform: scale(0.98)
+
+  &.active
+    background: var(--accent)
+    box-shadow: 0 6px 16px -8px rgba(140, 47, 75, 0.6)
+    color: var(--on-accent)
+
+    .studio-count
+      background: rgba(255, 255, 255, 0.22)
+      color: var(--on-accent)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+.studio-count
+  min-width: 20px
+  height: 20px
+  padding: 0 6px
+  display: inline-grid
+  place-items: center
+  border-radius: var(--radius-pill)
+  background: var(--accent)
+  color: var(--on-accent)
+  font-size: 11.5px
+  font-weight: 800
+  font-variant-numeric: tabular-nums
+
 .header-actions
   margin-left: auto
   display: flex
@@ -229,6 +285,26 @@
     .mat-icon
       color: var(--ink-2)
 
+  // "Enrolled courses" for instructors, with how many there are.
+  .menu-with-count .mat-mdc-menu-item-text
+    display: flex
+    align-items: center
+    gap: 8px
+    width: 100%
+
+  .menu-count
+    margin-left: auto
+    min-width: 22px
+    height: 22px
+    padding: 0 7px
+    display: inline-grid
+    place-items: center
+    border-radius: var(--radius-pill)
+    background: var(--surface-2)
+    font-size: 12px
+    font-weight: 700
+    color: var(--ink-2)
+
 // ── Mobile drawer ──────────────────────────────────────────
 .drawer-backdrop
   position: fixed
@@ -287,6 +363,27 @@
 
     .mat-icon
       color: var(--danger)
+
+// The studio link in the drawer carries the same wine tint as in the header.
+.drawer-nav .drawer-studio
+  background: var(--accent-soft)
+  color: var(--accent)
+
+  .mat-icon
+    color: var(--accent)
+
+  .studio-count
+    margin-left: auto
+
+  &.active
+    background: var(--accent)
+    color: var(--on-accent)
+
+    .mat-icon
+      color: var(--on-accent)
+
+    .studio-count
+      background: rgba(255, 255, 255, 0.22)
 
 .drawer-label
   margin: 18px 14px 6px
@@ -355,8 +452,16 @@
   .main-nav a:nth-child(n+4)
     display: none
 
+  // Links hidden above are still one tap away in the drawer.
+  .icon-btn
+    display: grid
+
+  // Narrower: the studio keeps its icon and count (its name stays in aria-label and title).
+  .studio-link > span:not(.studio-count)
+    display: none
+
 @media (max-width: 900px)
-  .main-nav, .create-btn
+  .main-nav, .create-btn, .studio-link
     display: none
 
   .icon-btn

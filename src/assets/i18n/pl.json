@@ -21,7 +21,9 @@
     "mainNavigation": "Nawigacja główna",
     "language": "Język",
     "accountMenu": "Menu konta",
-    "footerTagline": "Kursy kosmetyczne prowadzone przez ludzi, którzy pracują w zawodzie."
+    "footerTagline": "Kursy kosmetyczne prowadzone przez ludzi, którzy pracują w zawodzie.",
+    "enrolledCourses": "Zapisane kursy",
+    "sectionBrowse": "Przeglądaj"
   },
   "auth": {
     "brandSubtitle": "Witaj z powrotem — zaloguj się, aby kontynuować",

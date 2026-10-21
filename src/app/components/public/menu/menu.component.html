@@ -15,17 +15,30 @@
       <span class="wordmark">Bellademy</span>
     </a>
 
+    <!-- Instructors: their own courses are their workplace, so the link stands apart in wine. -->
+    @if (token() && isTeacher()) {
+      <a routerLink="/creator-courses" routerLinkActive="active" class="studio-link"
+        [attr.title]="'menu.myTeaching' | transloco"
+        [attr.aria-label]="('menu.myTeaching' | transloco) + (ownedCount() ? ' (' + ownedCount() + ')' : '')">
+        <mat-icon>school</mat-icon>
+        <span>{{ 'menu.myTeaching' | transloco }}</span>
+        @if (ownedCount()) {
+          <span class="studio-count" aria-hidden="true">{{ ownedCount() }}</span>
+        }
+      </a>
+    }
+
     <nav class="main-nav" #mainNav [class.ready]="indicator().width > 0" [attr.aria-label]="'menu.mainNavigation' | transloco">
       <!-- White pill that slides to the active link (position measured in MenuComponent). -->
       <span class="nav-indicator" aria-hidden="true" [style.left.px]="indicator().left" [style.width.px]="indicator().width"></span>
       <a routerLink="/courses" routerLinkActive="active">{{ 'menu.browseCourses' | transloco }}</a>
       @if (token()) {
-        <a routerLink="/student-courses" routerLinkActive="active">{{ 'menu.myCourses' | transloco }}</a>
+        <!-- Enrolled courses: the learner's main place; an instructor finds them in the account menu. -->
+        @if (!isTeacher()) {
+          <a routerLink="/student-courses" routerLinkActive="active">{{ 'menu.myCourses' | transloco }}</a>
+        }
         <a routerLink="/calendar" routerLinkActive="active">{{ 'menu.calendar' | transloco }}</a>
         <a routerLink="/group-chats" routerLinkActive="active">{{ 'menu.groupChats' | transloco }}</a>
-        @if (isTeacher()) {
-          <a routerLink="/creator-courses" routerLinkActive="active">{{ 'menu.myTeaching' | transloco }}</a>
-        }
       }
     </nav>
 
@@ -65,6 +78,13 @@
     <div class="account-email">{{ currentUser()?.email }}</div>
   </div>
   <mat-divider />
+  @if (isTeacher()) {
+    <a mat-menu-item routerLink="/student-courses" class="menu-with-count">
+      <mat-icon>bookmark</mat-icon>
+      <span>{{ 'menu.enrolledCourses' | transloco }}</span>
+      @if (enrolledCount()) { <span class="menu-count">{{ enrolledCount() }}</span> }
+    </a>
+  }
   <a mat-menu-item routerLink="/my-account"><mat-icon>person</mat-icon>{{ 'menu.myAccount' | transloco }}</a>
   <a mat-menu-item routerLink="/account"><mat-icon>tune</mat-icon>{{ 'menu.accountSettings' | transloco }}</a>
   <a mat-menu-item routerLink="/my-tickets"><mat-icon>support_agent</mat-icon>{{ 'menu.myTickets' | transloco }}</a>
@@ -80,17 +100,27 @@
   <div class="drawer-backdrop" (click)="drawerOpen.set(false)"></div>
   <aside class="drawer" [attr.aria-label]="'menu.mainNavigation' | transloco">
     <nav class="drawer-nav">
+      @if (token() && isTeacher()) {
+        <!-- Instructors: their studio comes first. -->
+        <p class="drawer-label">{{ 'menu.sectionTeaching' | transloco }}</p>
+        <a routerLink="/creator-courses" routerLinkActive="active" class="drawer-studio">
+          <mat-icon>school</mat-icon>{{ 'menu.myTeaching' | transloco }}
+          @if (ownedCount()) { <span class="studio-count">{{ ownedCount() }}</span> }
+        </a>
+        <a routerLink="/course" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><mat-icon>add_circle</mat-icon>{{ 'menu.createCourse' | transloco }}</a>
+        <p class="drawer-label">{{ 'menu.sectionBrowse' | transloco }}</p>
+      }
       <a routerLink="/courses" routerLinkActive="active"><mat-icon>explore</mat-icon>{{ 'menu.browseCourses' | transloco }}</a>
       @if (token()) {
-        <a routerLink="/student-courses" routerLinkActive="active"><mat-icon>auto_stories</mat-icon>{{ 'menu.myCourses' | transloco }}</a>
+        @if (!isTeacher()) {
+          <a routerLink="/student-courses" routerLinkActive="active"><mat-icon>auto_stories</mat-icon>{{ 'menu.myCourses' | transloco }}</a>
+        }
         <a routerLink="/calendar" routerLinkActive="active"><mat-icon>calendar_month</mat-icon>{{ 'menu.calendar' | transloco }}</a>
         <a routerLink="/group-chats" routerLinkActive="active"><mat-icon>forum</mat-icon>{{ 'menu.groupChats' | transloco }}</a>
-        @if (isTeacher()) {
-          <p class="drawer-label">{{ 'menu.sectionTeaching' | transloco }}</p>
-          <a routerLink="/creator-courses" routerLinkActive="active"><mat-icon>school</mat-icon>{{ 'menu.myTeaching' | transloco }}</a>
-          <a routerLink="/course" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><mat-icon>add_circle</mat-icon>{{ 'menu.createCourse' | transloco }}</a>
-        }
         <p class="drawer-label">{{ 'menu.sectionAccount' | transloco }}</p>
+        @if (isTeacher()) {
+          <a routerLink="/student-courses" routerLinkActive="active"><mat-icon>bookmark</mat-icon>{{ 'menu.enrolledCourses' | transloco }}</a>
+        }
         <a routerLink="/my-account" routerLinkActive="active"><mat-icon>person</mat-icon>{{ 'menu.myAccount' | transloco }}</a>
         <a routerLink="/account" routerLinkActive="active"><mat-icon>tune</mat-icon>{{ 'menu.accountSettings' | transloco }}</a>
         <a routerLink="/my-tickets" routerLinkActive="active"><mat-icon>support_agent</mat-icon>{{ 'menu.myTickets' | transloco }}</a>
