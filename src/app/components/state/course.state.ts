@@ -49,8 +49,9 @@ export class CourseState {
   }
 
   @Action(SaveCourseAction)
-  saveCourse({ }: StateContext<CourseStateModel>, { course }: SaveCourseAction) {
-    return this.courseControllerService.createCourse({ body: course })
+  saveCourse({ patchState }: StateContext<CourseStateModel>, { course }: SaveCourseAction) {
+    // Kept as the current course, so the wizard knows the new id (it uploads the photos next).
+    return this.courseControllerService.createCourse({ body: course }).pipe(tap(created => patchState({ course: created })));
   }
 
   @Action(GetCourseByIdAction)

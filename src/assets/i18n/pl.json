@@ -270,7 +270,9 @@
     "quizHint": "Pytania sprawdzające dla uczestników",
     "participantsTitle": "Uczestnicy",
     "noParticipants": "Nikt jeszcze nie zapisał się na ten kurs.",
-    "writeTo": "Napisz"
+    "writeTo": "Napisz",
+    "photos": "Zdjęcia kursu",
+    "photosHint": "Okładka i galeria · {{count}} z 8"
   },
   "courseForm": {
     "createTitle": "Nowy kurs",
@@ -696,7 +698,8 @@
       "details": "Opis",
       "schedule": "Termin i miejsce",
       "pricing": "Cena i grupa",
-      "review": "Podsumowanie"
+      "review": "Podsumowanie",
+      "photos": "Zdjęcia"
     },
     "draftFound": "Masz niedokończony kurs zapisany {{date}}.",
     "draftRestore": "Kontynuuj",
@@ -767,7 +770,13 @@
     "previewTitle": "Tytuł Twojego kursu",
     "showPreview": "Podgląd",
     "closePreview": "Zamknij podgląd",
-    "aiUnavailable": "Nie udało się teraz przygotować propozycji. Spróbuj za chwilę albo napisz opis samodzielnie."
+    "aiUnavailable": "Nie udało się teraz przygotować propozycji. Spróbuj za chwilę albo napisz opis samodzielnie.",
+    "photosTitle": "Zdjęcia kursu",
+    "photosLead": "Pokaż salę, efekty prac i siebie przy pracy. Pierwsze zdjęcie będzie okładką w katalogu. Ten krok możesz pominąć.",
+    "photoTip1": "Efekty prac w dobrym świetle mówią więcej niż opis.",
+    "photoTip2": "Fotografuj przy dziennym świetle, bez lampy błyskowej.",
+    "photoTip3": "Zdjęcie osoby prowadzącej buduje zaufanie.",
+    "photosFailed": "Kurs zapisano, ale zdjęć nie udało się wysłać. Dodaj je na stronie kursu."
   },
   "videos": {
     "eyebrow": "Materiały wideo",
@@ -791,5 +800,39 @@
     "previous": "Poprzednia strona",
     "first": "Pierwsza strona",
     "last": "Ostatnia strona"
+  },
+  "gallery": {
+    "dropTitle": "Dodaj zdjęcia kursu",
+    "dropHint": "Przeciągnij je tutaj, wklej albo wybierz z dysku. Do {{max}} zdjęć; zmniejszymy je automatycznie.",
+    "choose": "Wybierz zdjęcia",
+    "cover": "Okładka",
+    "add": "Dodaj",
+    "count": "{{count}} z {{max}} zdjęć",
+    "orderHint": "Pierwsze zdjęcie jest okładką. Przeciągnij, żeby zmienić kolejność.",
+    "makeCover": "Ustaw jako okładkę",
+    "moveEarlier": "Przesuń wcześniej",
+    "moveLater": "Przesuń dalej",
+    "remove": "Usuń zdjęcie",
+    "preparing": "Przygotowuję zdjęcie",
+    "uploading": "Wysyłam zdjęcie",
+    "addCourse": "Dodaj zdjęcia kursu",
+    "addCourseHint": "Kursy ze zdjęciami wybiera się chętniej",
+    "edit": "Edytuj zdjęcia",
+    "showAll": "Pokaż wszystkie ({{count}})",
+    "openPhoto": "Zdjęcie {{n}} z {{total}}",
+    "viewerLabel": "Zdjęcia kursu {{title}}",
+    "previous": "Poprzednie zdjęcie",
+    "next": "Następne zdjęcie",
+    "errors": {
+      "full": "Kurs ma już {{max}} zdjęć. Usuń któreś, żeby dodać nowe.",
+      "tooMany": "Dodano tylko tyle zdjęć, ile się zmieściło (najwyżej {{max}}).",
+      "not-image": "Ten plik nie jest zdjęciem. Wybierz JPG, PNG, WebP lub HEIC.",
+      "too-large": "Zdjęcie ma ponad 25 MB. Wybierz mniejsze.",
+      "unreadable": "Nie udało się odczytać zdjęcia. Spróbuj innego pliku.",
+      "upload": "Nie udało się wysłać zdjęć. Sprawdź połączenie i spróbuj ponownie.",
+      "save": "Nie udało się zapisać zmiany. Spróbuj ponownie."
+    },
+    "dialogTitle": "Zdjęcia kursu",
+    "done": "Gotowe"
   }
 }

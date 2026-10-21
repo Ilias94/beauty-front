@@ -7,6 +7,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 import { UserControllerService } from './services/user-controller.service';
 import { FaqControllerService } from './services/faq-controller.service';
 import { CourseControllerService } from './services/course-controller.service';
+import { CourseImageControllerService } from './services/course-image-controller.service';
 import { CategoryControllerService } from './services/category-controller.service';
 import { TemplateControllerService } from './services/template-controller.service';
 import { VideoControllerService } from './services/video-controller.service';
@@ -36,6 +37,7 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
     UserControllerService,
     FaqControllerService,
     CourseControllerService,
+    CourseImageControllerService,
     CategoryControllerService,
     TemplateControllerService,
     VideoControllerService,

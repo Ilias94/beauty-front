@@ -270,7 +270,9 @@
     "quizHint": "Check-up questions for participants",
     "participantsTitle": "Participants",
     "noParticipants": "Nobody has booked this course yet.",
-    "writeTo": "Message"
+    "writeTo": "Message",
+    "photos": "Course photos",
+    "photosHint": "Cover and gallery · {{count}} of 8"
   },
   "courseForm": {
     "createTitle": "New course",
@@ -696,7 +698,8 @@
       "details": "Description",
       "schedule": "Dates & place",
       "pricing": "Price & group",
-      "review": "Review"
+      "review": "Review",
+      "photos": "Photos"
     },
     "draftFound": "You have an unfinished course saved {{date}}.",
     "draftRestore": "Continue",
@@ -767,7 +770,13 @@
     "previewTitle": "Your course title",
     "showPreview": "Preview",
     "closePreview": "Close preview",
-    "aiUnavailable": "Couldn't prepare a suggestion right now. Try again in a moment or write the description yourself."
+    "aiUnavailable": "Couldn't prepare a suggestion right now. Try again in a moment or write the description yourself.",
+    "photosTitle": "Course photos",
+    "photosLead": "Show the room, finished work and yourself at work. The first photo becomes the catalog cover. You can skip this step.",
+    "photoTip1": "Finished work in good light says more than a description.",
+    "photoTip2": "Shoot in daylight, without flash.",
+    "photoTip3": "A photo of the instructor builds trust.",
+    "photosFailed": "The course was saved, but its photos couldn't be uploaded. Add them on the course page."
   },
   "videos": {
     "eyebrow": "Video lessons",
@@ -791,5 +800,39 @@
     "previous": "Previous page",
     "first": "First page",
     "last": "Last page"
+  },
+  "gallery": {
+    "dropTitle": "Add course photos",
+    "dropHint": "Drag them here, paste or pick from your device. Up to {{max}} photos; we resize them for you.",
+    "choose": "Choose photos",
+    "cover": "Cover",
+    "add": "Add",
+    "count": "{{count}} of {{max}} photos",
+    "orderHint": "The first photo is the cover. Drag to change the order.",
+    "makeCover": "Make cover",
+    "moveEarlier": "Move earlier",
+    "moveLater": "Move later",
+    "remove": "Remove photo",
+    "preparing": "Preparing photo",
+    "uploading": "Uploading photo",
+    "addCourse": "Add course photos",
+    "addCourseHint": "Courses with photos get chosen more often",
+    "edit": "Edit photos",
+    "showAll": "Show all ({{count}})",
+    "openPhoto": "Photo {{n}} of {{total}}",
+    "viewerLabel": "Photos of {{title}}",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "errors": {
+      "full": "The course already has {{max}} photos. Remove one to add another.",
+      "tooMany": "Only the photos that fit were added (up to {{max}}).",
+      "not-image": "This file isn't a photo. Choose JPG, PNG, WebP or HEIC.",
+      "too-large": "The photo is over 25 MB. Choose a smaller one.",
+      "unreadable": "The photo couldn't be read. Try another file.",
+      "upload": "The photos couldn't be uploaded. Check your connection and try again.",
+      "save": "The change couldn't be saved. Try again."
+    },
+    "dialogTitle": "Course photos",
+    "done": "Done"
   }
 }

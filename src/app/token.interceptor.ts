@@ -12,6 +12,7 @@ const SILENT_PATTERNS: RegExp[] = [
   /\/api\/v1\/messages$/,              // POST  — sending a chat message (bubble appears)
   /\/api\/v1\/messages\/\d+\/read/,    // PATCH — mark conversation as read (background op)
   /\/courses\/\d+\/messages$/,         // POST  — sending a group chat message (bubble appears)
+  /\/courses\/\d+\/images/,            // course photos: the gallery editor shows progress and its own errors
   /\/api\/v1\/rating\b/,               // POST  — star rating (stars and the summary update visually)
   /\/api\/v1\/assistant/,              // POST  — assistant answers and errors show in the chat panel
   /\/api\/v1\/login/,                  // POST  — the login form shows its own error

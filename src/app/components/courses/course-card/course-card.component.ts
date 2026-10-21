@@ -37,7 +37,8 @@ export class CourseCardComponent {
   imageSrc = computed(() => {
     const url = this.course().imageUrl;
     if (!url) return null;
-    return url.startsWith('http') ? url : S3_BASE + url;
+    // A full address, or (wizard preview) a photo still in the browser; otherwise a bucket key.
+    return /^(https?:|blob:|data:)/.test(url) ? url : S3_BASE + url;
   });
 
   creatorAvatar = computed(() => {

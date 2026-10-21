@@ -1,0 +1,301 @@
+:host
+  display: block
+
+// ── No photos: the category's tint and icon ────────────────────────
+.empty
+  aspect-ratio: 16 / 8
+  max-width: 100%
+  border-radius: var(--radius-lg)
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 10px
+
+.empty-icon
+  font-size: 96px
+  width: 96px
+  height: 96px
+  opacity: 0.5
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48
+
+.add-btn
+  display: inline-flex
+  align-items: center
+  gap: 8px
+  height: 42px
+  padding: 0 18px 0 14px
+  border: 0
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  box-shadow: var(--shadow-2)
+  font: 700 14px var(--font-ui)
+  color: var(--ink)
+  cursor: pointer
+  transition: transform 200ms var(--ease), box-shadow var(--dur) var(--ease)
+
+  .mat-icon
+    color: var(--accent)
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: var(--shadow-3)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+.add-hint
+  font-size: 13px
+  font-weight: 600
+  color: inherit
+  opacity: 0.85
+
+// ── Mosaic: one large photo, up to four beside it ───────────────────
+.mosaic
+  position: relative
+  display: grid
+  gap: 8px
+  aspect-ratio: 16 / 8
+  max-width: 100%
+  border-radius: var(--radius-lg)
+  overflow: hidden
+
+  &[data-count='1']
+    grid-template-columns: 1fr
+
+  &[data-count='2']
+    grid-template-columns: 2fr 1fr
+
+  &[data-count='3']
+    grid-template-columns: 2fr 1fr
+    grid-template-rows: 1fr 1fr
+
+  &[data-count='4']
+    grid-template-columns: 2fr 1fr 1fr
+    grid-template-rows: 1fr 1fr
+
+    .shot:nth-child(4)
+      grid-column: 2 / span 2
+
+  &[data-count='5']
+    grid-template-columns: 2fr 1fr 1fr
+    grid-template-rows: 1fr 1fr
+
+  &:not([data-count='1']):not([data-count='2']) .main
+    grid-row: span 2
+
+.shot
+  position: relative
+  min-width: 0
+  min-height: 0
+  padding: 0
+  border: 0
+  overflow: hidden
+  background: var(--surface-2)
+  cursor: zoom-in
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    display: block
+    transition: transform 600ms var(--ease), filter var(--dur) var(--ease)
+
+  &:hover img
+    transform: scale(1.04)
+    filter: brightness(1.04)
+
+  &:focus-visible
+    outline: 3px solid var(--accent)
+    outline-offset: -3px
+
+.more
+  position: absolute
+  inset: 0
+  display: grid
+  place-items: center
+  background: rgba(31, 26, 23, 0.45)
+  font: 500 28px var(--font-display)
+  color: #fff
+
+.mosaic-actions
+  position: absolute
+  right: 14px
+  bottom: 14px
+  display: flex
+  gap: 8px
+
+.pill-btn
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  height: 36px
+  padding: 0 14px 0 11px
+  border: 0
+  border-radius: var(--radius-pill)
+  background: rgba(255, 255, 255, 0.94)
+  backdrop-filter: blur(6px)
+  box-shadow: var(--shadow-2)
+  font: 700 13px var(--font-ui)
+  color: var(--ink)
+  cursor: pointer
+  transition: transform 200ms var(--ease)
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+
+  &:hover
+    transform: translateY(-1px)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+// ── Viewer ──────────────────────────────────────────────────────────
+.viewer
+  position: fixed
+  inset: 0
+  z-index: 1300
+  display: grid
+  grid-template-rows: auto 1fr auto
+  background: rgba(20, 16, 14, 0.94)
+  backdrop-filter: blur(8px)
+  color: #fff
+  animation: viewer-in 220ms var(--ease)
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px)
+  touch-action: pan-y
+
+@keyframes viewer-in
+  from
+    opacity: 0
+
+.viewer-top
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 14px 18px
+
+.counter
+  font: 700 14px var(--font-ui)
+  font-variant-numeric: tabular-nums
+  opacity: 0.85
+
+// The photo is centred by absolute positioning and capped on both axes, so it always fits the
+// space between the top bar and the thumbnails, whatever its proportions.
+.stage
+  position: relative
+  min-height: 0
+  overflow: hidden
+
+.stage-img
+  position: absolute
+  inset: 0
+  margin: auto
+  max-width: calc(100% - 144px)
+  max-height: calc(100% - 8px)
+  object-fit: contain
+  border-radius: var(--radius-sm)
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6)
+  user-select: none
+  animation: photo-in 260ms var(--ease)
+
+@keyframes photo-in
+  from
+    opacity: 0
+    transform: scale(0.985)
+
+.v-btn
+  width: 44px
+  height: 44px
+  display: grid
+  place-items: center
+  border: 0
+  border-radius: 50%
+  background: rgba(255, 255, 255, 0.12)
+  color: #fff
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease), transform 120ms var(--ease)
+
+  &:hover
+    background: rgba(255, 255, 255, 0.22)
+
+  &:active
+    transform: scale(0.94)
+
+  &:focus-visible
+    outline: 2px solid #fff
+    outline-offset: 2px
+
+.nav
+  position: absolute
+  top: 50%
+  translate: 0 -50%
+
+  &.prev
+    left: 16px
+
+  &.next
+    right: 16px
+
+.strip
+  display: flex
+  justify-content: center
+  gap: 8px
+  padding: 14px 18px 18px
+  overflow-x: auto
+  scrollbar-width: none
+
+  &::-webkit-scrollbar
+    display: none
+
+.thumb
+  flex-shrink: 0
+  width: 64px
+  height: 48px
+  padding: 0
+  border: 2px solid transparent
+  border-radius: 8px
+  overflow: hidden
+  background: rgba(255, 255, 255, 0.08)
+  opacity: 0.55
+  cursor: pointer
+  transition: opacity var(--dur) var(--ease), border-color var(--dur) var(--ease)
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    display: block
+
+  &:hover
+    opacity: 0.85
+
+  &.on
+    opacity: 1
+    border-color: #fff
+
+  &:focus-visible
+    outline: 2px solid #fff
+    outline-offset: 2px
+
+@media (max-width: 640px)
+  // Phones: a single photo with a counter on it; the viewer shows the rest.
+  .mosaic
+    aspect-ratio: 4 / 3
+    grid-template-columns: 1fr !important
+    grid-template-rows: 1fr !important
+
+    .shot:not(.main)
+      display: none
+
+    .main
+      grid-row: auto !important
+
+  .stage-img
+    max-width: calc(100% - 16px)
+
+  .nav
+    display: none

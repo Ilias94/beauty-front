@@ -138,7 +138,21 @@
           </section>
         }
 
-        <!-- 3. Schedule & place -->
+        <!-- 3. Photos: kept in the browser until the course is created, then uploaded. -->
+        @case ('photos') {
+          <section class="step" [class.from-back]="direction() === 'back'">
+            <h2>{{ 'courseWizard.photosTitle' | transloco }}</h2>
+            <p class="step-lead">{{ 'courseWizard.photosLead' | transloco }}</p>
+            <app-gallery-editor [initialPhotos]="photos()" (photosChange)="photos.set($event)" (coverChange)="coverPreview.set($event)" />
+            <ul class="photo-tips">
+              <li><mat-icon>photo_camera</mat-icon>{{ 'courseWizard.photoTip1' | transloco }}</li>
+              <li><mat-icon>wb_sunny</mat-icon>{{ 'courseWizard.photoTip2' | transloco }}</li>
+              <li><mat-icon>face</mat-icon>{{ 'courseWizard.photoTip3' | transloco }}</li>
+            </ul>
+          </section>
+        }
+
+        <!-- 4. Schedule & place -->
         @case ('schedule') {
           <section class="step" [class.from-back]="direction() === 'back'" formGroupName="schedule">
             <h2>{{ 'courseWizard.scheduleTitle' | transloco }}</h2>
@@ -211,7 +225,7 @@
           </section>
         }
 
-        <!-- 4. Price & group -->
+        <!-- 5. Price & group -->
         @case ('pricing') {
           <section class="step" [class.from-back]="direction() === 'back'" formGroupName="pricing">
             <h2>{{ 'courseWizard.pricingTitle' | transloco }}</h2>
@@ -262,7 +276,7 @@
           </section>
         }
 
-        <!-- 5. Review -->
+        <!-- 6. Review -->
         @case ('review') {
           <section class="step" [class.from-back]="direction() === 'back'">
             <h2>{{ 'courseWizard.reviewTitle' | transloco }}</h2>

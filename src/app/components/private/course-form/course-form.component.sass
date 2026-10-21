@@ -610,3 +610,33 @@ dl
 
     .draft-btn
       display: none
+
+// Photos step: three short tips under the gallery on what makes a course look good.
+.photo-tips
+  display: grid
+  grid-template-columns: repeat(3, minmax(0, 1fr))
+  gap: 10px
+  margin: 18px 0 0
+  padding: 0
+  list-style: none
+
+  li
+    display: flex
+    align-items: flex-start
+    gap: 8px
+    padding: 12px
+    border-radius: var(--radius-sm)
+    background: var(--surface-2)
+    font-size: 13px
+    line-height: 1.45
+    color: var(--ink-2)
+
+  .mat-icon
+    flex-shrink: 0
+    font-size: 19px
+    width: 19px
+    height: 19px
+    color: var(--accent)
+
+  @media (max-width: 640px)
+    grid-template-columns: 1fr

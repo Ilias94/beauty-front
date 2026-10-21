@@ -50,13 +50,8 @@
           </div>
         </header>
 
-        <div class="media" [style.background]="visual().tint" [style.color]="visual().ink">
-          @if (imageSrc(); as src) {
-            <img [src]="src" [alt]="c.title">
-          } @else {
-            <mat-icon class="media-icon">{{ visual().icon }}</mat-icon>
-          }
-        </div>
+        <app-course-gallery class="media" [photos]="photos()" [title]="c.title ?? ''" [visual]="visual()"
+          [canEdit]="isOwner()" (edit)="editPhotos()" />
 
         <!-- About -->
         <section class="section">
@@ -291,6 +286,11 @@
                 <button type="button" class="tool" (click)="onUpload()">
                   <span class="tool-icon"><mat-icon>upload</mat-icon></span>
                   <span class="tool-text"><strong>{{ 'courseDetails.addVideos' | transloco }}</strong>{{ 'courseDetails.addVideosHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </button>
+                <button type="button" class="tool" (click)="editPhotos()">
+                  <span class="tool-icon"><mat-icon>photo_library</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.photos' | transloco }}</strong>{{ 'courseDetails.photosHint' | transloco: { count: photos().length } }}</span>
                   <mat-icon class="chev">chevron_right</mat-icon>
                 </button>
                 <button type="button" class="tool" (click)="openVideos()">

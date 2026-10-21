@@ -11,7 +11,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GetCommentsAction, SaveCommentAction } from '../state/comment.actions';
 import { CommentsComponent } from '../comments/comments.component';
 import { GetCurrentUserRatingByCourseIdAction, GetRatingSummaryAction, SaveRatingAction } from '../state/rating.actions';
-import { CommentDtoResponse, CourseDtoResponse, RatingDto, UserDtoResponse } from '../../../api/models';
+import { CommentDtoResponse, CourseDtoResponse, CourseImageDto, RatingDto, UserDtoResponse } from '../../../api/models';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { DOCUMENT, DecimalPipe } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -28,6 +28,9 @@ import { DateRangePipe, PricePipe } from '../../shared/format.pipes';
 import { PluralPipe } from '../../shared/plural.pipe';
 import { categoryKey, categoryVisual } from '../../shared/category-visual';
 import { S3_BASE } from '../../app.const';
+import { CourseGalleryComponent } from '../../shared/course-gallery/course-gallery.component';
+import { GalleryEditDialogComponent } from '../../shared/gallery-editor/gallery-edit-dialog.component';
+import { CourseImagesApiService } from '../../services/course-images-api.service';
 
 @Component({
     selector: 'app-course-details',
@@ -35,6 +38,7 @@ import { S3_BASE } from '../../app.const';
         MatButtonModule, MatIconModule, MatDialogModule, MatFormFieldModule, MatInputModule,
         RouterModule, ReactiveFormsModule, CommentsComponent, GoogleMapsModule, DecimalPipe,
         TranslocoModule, CourseGroupChatComponent, StarRatingComponent, PricePipe, DateRangePipe, PluralPipe,
+        CourseGalleryComponent,
     ],
     templateUrl: './course-details.component.html',
     styleUrl: './course-details.component.sass'
@@ -56,6 +60,15 @@ export class CourseDetailsComponent implements OnInit {
   currentUserRating: Signal<RatingDto | undefined> = toSignal(this.store.select(state => state.rating.currentUserRating));
   currentUser: Signal<UserDtoResponse | undefined> = toSignal(this.store.select(SecurityState.getCurrentUser));
   private ratingSummary = toSignal(this.store.select(state => state.rating.summary));
+  private imagesApi = inject(CourseImagesApiService);
+  private gallery = signal<CourseImageDto[] | null>(null);
+  /** Photo addresses for the gallery; a course with a cover but no gallery entries shows just the cover. */
+  photos = computed(() => {
+    const images = this.gallery();
+    if (images?.length) return images.map(img => S3_BASE + img.fileName);
+    const cover = this.imageSrc();
+    return cover ? [cover] : [];
+  });
 
   courseId!: number;
   /** The store keeps the previously opened course until the new one arrives. */
@@ -175,6 +188,24 @@ export class CourseDetailsComponent implements OnInit {
       if (this.store.selectSnapshot(state => state.security.token)) {
         this.store.dispatch(new GetCurrentUserRatingByCourseIdAction(this.courseId));
       }
+      this.gallery.set(null);
+      this.loadPhotos();
+    });
+  }
+
+  private loadPhotos(): void {
+    this.imagesApi.list(this.courseId).subscribe({ next: images => this.gallery.set(images), error: () => this.gallery.set([]) });
+  }
+
+  /** Owner: edit the photos in a dialog; afterwards the gallery and the course (its cover) reload. */
+  editPhotos(): void {
+    this.dialog.open(GalleryEditDialogComponent, {
+      width: '760px',
+      maxWidth: '96vw',
+      data: { courseId: Number(this.courseId), courseTitle: this.course()?.title },
+    }).afterClosed().subscribe(() => {
+      this.loadPhotos();
+      this.store.dispatch(new GetCourseByIdAction(this.courseId));
     });
   }
 

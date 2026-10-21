@@ -3,7 +3,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
-import { debounceTime, map, startWith } from 'rxjs';
+import { catchError, debounceTime, last, map, of, startWith, switchMap } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { DateAdapter, ErrorStateMatcher } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,10 +26,12 @@ import { DateRangePipe, PricePipe } from '../../../shared/format.pipes';
 import { NotificationService } from '../../../core/notification/notification.service';
 import { provideDayFirstDateAdapter } from '../../../shared/day-first-date-adapter';
 import { SpotlightDirective } from '../../../shared/spotlight.directive';
+import { GalleryEditorComponent } from '../../../shared/gallery-editor/gallery-editor.component';
+import { CourseImagesApiService } from '../../../services/course-images-api.service';
 
 type CourseType = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
 type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
-type StepKey = 'basics' | 'details' | 'schedule' | 'pricing' | 'review';
+type StepKey = 'basics' | 'details' | 'photos' | 'schedule' | 'pricing' | 'review';
 
 /** Backend category labels; shown translated with their catalog visual. */
 const CATEGORIES = [
@@ -50,7 +52,7 @@ function toLocalIso(date: Date, time?: string | null): string {
 }
 
 /**
- * Five-step course creation wizard with a live catalog-card preview, a local draft that survives
+ * Six-step course creation wizard with a live catalog-card preview, a local draft that survives
  * reloads, and an on-demand AI description (instead of generating on every title keystroke).
  */
 @Component({
@@ -60,7 +62,7 @@ function toLocalIso(date: Date, time?: string | null): string {
     imports: [SpotlightDirective, 
         ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
         MatSelectModule, MatDatepickerModule, MatChipsModule, MatSlideToggleModule, MatProgressSpinnerModule,
-        TranslocoModule, CourseCardComponent, DateRangePipe, PricePipe,
+        TranslocoModule, CourseCardComponent, DateRangePipe, PricePipe, GalleryEditorComponent,
     ],
     templateUrl: './course-form.component.html',
     styleUrl: './course-form.component.sass'
@@ -70,11 +72,12 @@ export class CourseFormComponent {
   private router = inject(Router);
   private transloco = inject(TranslocoService);
   private notifications = inject(NotificationService);
+  private imagesApi = inject(CourseImagesApiService);
   private destroyRef = inject(DestroyRef);
   private host = inject(ElementRef<HTMLElement>);
   private browser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  readonly steps: StepKey[] = ['basics', 'details', 'schedule', 'pricing', 'review'];
+  readonly steps: StepKey[] = ['basics', 'details', 'photos', 'schedule', 'pricing', 'review'];
   readonly categories = CATEGORIES.map(label => ({ label, key: categoryKey(label), visual: categoryVisual(label) }));
   readonly courseTypes: { value: CourseType; icon: string }[] = [
     { value: 'IN_PERSON', icon: 'storefront' },
@@ -127,6 +130,9 @@ export class CourseFormComponent {
   draftFound = signal<{ savedAt: string } | null>(null);
   aiLoading = signal(false);
   previousDescription = signal<string | null>(null);
+  /** Photos prepared in the browser; they go up once the course exists. The first is the cover. */
+  photos = signal<Blob[]>([]);
+  coverPreview = signal<string | null>(null);
 
   private value = toSignal(this.form.valueChanges.pipe(startWith(null), map(() => this.form.getRawValue())), { requireSync: true });
   private currentUser = toSignal(this.store.select(SecurityState.getCurrentUser));
@@ -152,6 +158,7 @@ export class CourseFormComponent {
       maxParticipants: v.pricing.maxParticipants,
       participantCount: 0,
       creator: this.currentUser(),
+      imageUrl: this.coverPreview() ?? undefined,
     };
   });
 
@@ -179,7 +186,7 @@ export class CourseFormComponent {
   // ── Navigation ─────────────────────────────────────────────
 
   private groupFor(key: StepKey): AbstractControl | null {
-    return key === 'review' ? null : this.form.controls[key];
+    return key === 'review' || key === 'photos' ? null : this.form.controls[key];
   }
 
   stepValid(index: number): boolean {
@@ -368,10 +375,19 @@ export class CourseFormComponent {
       return;
     }
     this.submitting.set(status);
-    this.store.dispatch(new SaveCourseAction(this.buildPayload(status))).subscribe({
-      next: () => {
+    this.store.dispatch(new SaveCourseAction(this.buildPayload(status))).pipe(
+      // The course exists now: send its photos. A failed upload doesn't undo the course;
+      // the photos can be added again from the course page.
+      switchMap(() => {
+        const courseId = this.store.selectSnapshot(state => state.course.course)?.id;
+        if (!this.photos().length || courseId == null) return of(true);
+        return this.imagesApi.upload(courseId, this.photos()).pipe(last(), map(() => true), catchError(() => of(false)));
+      }),
+    ).subscribe({
+      next: photosSaved => {
         this.clearDraft();
         this.submitting.set(null);
+        if (!photosSaved) this.notifications.show(this.transloco.translate('courseWizard.photosFailed'));
         this.router.navigate(['/creator-courses']);
       },
       error: () => this.submitting.set(null),

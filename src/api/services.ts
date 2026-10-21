@@ -1,6 +1,7 @@
 export { UserControllerService } from './services/user-controller.service';
 export { FaqControllerService } from './services/faq-controller.service';
 export { CourseControllerService } from './services/course-controller.service';
+export { CourseImageControllerService } from './services/course-image-controller.service';
 export { CategoryControllerService } from './services/category-controller.service';
 export { TemplateControllerService } from './services/template-controller.service';
 export { VideoControllerService } from './services/video-controller.service';

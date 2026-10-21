@@ -17,6 +17,7 @@ export { ContactDtoResponse } from './models/contact-dto-response';
 export { ConversationDtoResponse } from './models/conversation-dto-response';
 export { CourseDtoRequest } from './models/course-dto-request';
 export { CourseDtoResponse } from './models/course-dto-response';
+export { CourseImageDto } from './models/course-image-dto';
 export { CourseMessageDtoRequest } from './models/course-message-dto-request';
 export { CourseMessageDtoResponse } from './models/course-message-dto-response';
 export { CreatePaymentDtoRequest } from './models/create-payment-dto-request';
