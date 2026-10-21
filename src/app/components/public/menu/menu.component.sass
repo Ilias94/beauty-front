@@ -77,7 +77,9 @@
   letter-spacing: -0.02em
   font-variation-settings: 'opsz' 96, 'SOFT' 100
 
-// Links sit in a warm capsule; a white pill slides under the active one.
+// Links sit in a warm capsule with a hairline edge, so it holds its shape on the white header;
+// the active one is an ink pill (as the chosen filter in the catalogue) that slides between them.
+// Wine stays for the instructor's studio link beside it.
 .main-nav
   position: relative
   display: flex
@@ -87,12 +89,15 @@
   padding: 4px
   border-radius: var(--radius-pill)
   background: var(--surface-2)
-  box-shadow: inset 0 0 0 1px rgba(31, 26, 23, 0.04)
+  box-shadow: inset 0 0 0 1px var(--line), inset 0 1px 2px rgba(31, 26, 23, 0.05)
 
   a
     position: relative
     z-index: 1
-    padding: 7px 14px
+    display: inline-flex
+    align-items: center
+    gap: 6px
+    padding: 7px 14px 7px 11px
     border-radius: var(--radius-pill)
     color: var(--ink-2)
     font-weight: 600
@@ -100,27 +105,43 @@
     white-space: nowrap
     transition: color var(--dur) var(--ease), background var(--dur) var(--ease)
 
+    .mat-icon
+      font-size: 18px
+      width: 18px
+      height: 18px
+      color: var(--ink-3)
+      transition: color var(--dur) var(--ease), transform 260ms var(--ease)
+
     &:hover
       color: var(--ink)
-      background: rgba(255, 255, 255, 0.55)
+      background: rgba(255, 255, 255, 0.8)
+
+      .mat-icon
+        color: var(--accent)
+        transform: translateY(-1px)
 
     &.active
-      color: var(--ink)
-      background: var(--surface)
-      box-shadow: var(--shadow-1)
+      color: #fff
+      background: var(--ink)
+
+      .mat-icon
+        color: var(--gold-bright)
+
+    &:focus-visible
+      outline: 2px solid var(--accent)
+      outline-offset: 2px
 
   // Once the indicator is measured it takes over the active look and animates between links.
   &.ready a.active
     background: transparent
-    box-shadow: none
 
 .nav-indicator
   position: absolute
   top: 4px
   bottom: 4px
   border-radius: var(--radius-pill)
-  background: var(--surface)
-  box-shadow: 0 1px 2px rgba(31, 26, 23, 0.08), 0 4px 12px -6px rgba(140, 47, 75, 0.35)
+  background: var(--ink)
+  box-shadow: 0 6px 14px -8px rgba(31, 26, 23, 0.55)
   opacity: 0
   transition: left 340ms var(--ease), width 340ms var(--ease), opacity 200ms var(--ease)
 
@@ -448,6 +469,23 @@
   font-size: 13px
 
 // ── Responsive ─────────────────────────────────────────────
+// Mid-size screens: the shared links drop their icons and the header tightens its gaps first,
+// so the instructor's studio keeps its full name.
+@media (max-width: 1200px)
+  .header-inner
+    gap: 18px
+
+  .main-nav a
+    padding: 7px 12px
+
+    .mat-icon
+      display: none
+
+// Narrower: the studio keeps its icon and count (its name stays in aria-label and title).
+@media (max-width: 1090px)
+  .studio-link > span:not(.studio-count)
+    display: none
+
 @media (max-width: 1060px)
   .main-nav a:nth-child(n+4)
     display: none
@@ -456,9 +494,6 @@
   .icon-btn
     display: grid
 
-  // Narrower: the studio keeps its icon and count (its name stays in aria-label and title).
-  .studio-link > span:not(.studio-count)
-    display: none
 
 @media (max-width: 900px)
   .main-nav, .create-btn, .studio-link

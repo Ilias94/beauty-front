@@ -29,16 +29,16 @@
     }
 
     <nav class="main-nav" #mainNav [class.ready]="indicator().width > 0" [attr.aria-label]="'menu.mainNavigation' | transloco">
-      <!-- White pill that slides to the active link (position measured in MenuComponent). -->
+      <!-- Ink pill that slides to the active link (position measured in MenuComponent). -->
       <span class="nav-indicator" aria-hidden="true" [style.left.px]="indicator().left" [style.width.px]="indicator().width"></span>
-      <a routerLink="/courses" routerLinkActive="active">{{ 'menu.browseCourses' | transloco }}</a>
+      <a routerLink="/courses" routerLinkActive="active"><mat-icon>explore</mat-icon>{{ 'menu.browseCourses' | transloco }}</a>
       @if (token()) {
         <!-- Enrolled courses: the learner's main place; an instructor finds them in the account menu. -->
         @if (!isTeacher()) {
-          <a routerLink="/student-courses" routerLinkActive="active">{{ 'menu.myCourses' | transloco }}</a>
+          <a routerLink="/student-courses" routerLinkActive="active"><mat-icon>auto_stories</mat-icon>{{ 'menu.myCourses' | transloco }}</a>
         }
-        <a routerLink="/calendar" routerLinkActive="active">{{ 'menu.calendar' | transloco }}</a>
-        <a routerLink="/group-chats" routerLinkActive="active">{{ 'menu.groupChats' | transloco }}</a>
+        <a routerLink="/calendar" routerLinkActive="active"><mat-icon>calendar_month</mat-icon>{{ 'menu.calendar' | transloco }}</a>
+        <a routerLink="/group-chats" routerLinkActive="active"><mat-icon>forum</mat-icon>{{ 'menu.groupChats' | transloco }}</a>
       }
     </nav>
 
