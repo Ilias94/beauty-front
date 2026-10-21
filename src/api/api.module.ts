@@ -19,6 +19,7 @@ import { MessageControllerService } from './services/message-controller.service'
 import { LoginControllerService } from './services/login-controller.service';
 import { GeoLocationControllerService } from './services/geo-location-controller.service';
 import { CourseMessageControllerService } from './services/course-message-controller.service';
+import { ConnectControllerService } from './services/connect-controller.service';
 import { CommentControllerService } from './services/comment-controller.service';
 import { AssistantControllerService } from './services/assistant-controller.service';
 import { AiControllerService } from './services/ai-controller.service';
@@ -49,6 +50,7 @@ import { Oauth2ControllerService } from './services/oauth-2-controller.service';
     LoginControllerService,
     GeoLocationControllerService,
     CourseMessageControllerService,
+    ConnectControllerService,
     CommentControllerService,
     AssistantControllerService,
     AiControllerService,

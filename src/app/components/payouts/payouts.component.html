@@ -1,0 +1,44 @@
+@let s = step();
+<section class="payouts-card" [class]="'step-' + s">
+  <header>
+    <div class="payouts-icon"><mat-icon>account_balance</mat-icon></div>
+    <h1>{{ 'payouts.title' | transloco }}</h1>
+    <p class="lead">{{ 'payouts.lead' | transloco }}</p>
+  </header>
+
+  @switch (s) {
+    @case ('loading') {
+      <mat-spinner diameter="36" />
+    }
+    @case ('error') {
+      <div class="state state-danger" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <p>{{ 'payouts.errorText' | transloco }}</p>
+      </div>
+    }
+    @default {
+      <div class="state" [class.state-success]="s === 'ready'" [class.state-pending]="s === 'inReview'" role="status">
+        <mat-icon>{{ s === 'ready' ? 'check_circle' : s === 'inReview' ? 'schedule' : 'info' }}</mat-icon>
+        <div>
+          <strong>{{ ('payouts.' + s + 'Title') | transloco }}</strong>
+          <p>{{ ('payouts.' + s + 'Text') | transloco }}</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        @if (s === 'notConnected' || s === 'unfinished') {
+          <button mat-flat-button color="primary" [disabled]="redirecting()" (click)="continueOnboarding()">
+            {{ (s === 'notConnected' ? 'payouts.connect' : 'payouts.continue') | transloco }}
+          </button>
+        }
+        @if (s === 'inReview' || s === 'ready') {
+          <button mat-stroked-button (click)="openDashboard()">
+            <mat-icon>open_in_new</mat-icon>{{ 'payouts.openDashboard' | transloco }}
+          </button>
+        }
+      </div>
+    }
+  }
+
+  <p class="fine-print">{{ 'payouts.finePrint' | transloco }}</p>
+</section>

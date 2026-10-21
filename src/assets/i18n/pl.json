@@ -23,7 +23,25 @@
     "accountMenu": "Menu konta",
     "footerTagline": "Kursy kosmetyczne prowadzone przez ludzi, którzy pracują w zawodzie.",
     "enrolledCourses": "Zapisane kursy",
-    "sectionBrowse": "Przeglądaj"
+    "sectionBrowse": "Przeglądaj",
+    "payouts": "Wypłaty"
+  },
+  "payouts": {
+    "title": "Wypłaty",
+    "lead": "Pieniądze za Twoje kursy trafiają na Twoje konto bankowe przez Stripe, naszego operatora płatności.",
+    "notConnectedTitle": "Konto do wypłat nie jest jeszcze podłączone",
+    "notConnectedText": "Podaj w Stripe swoje dane i numer konta. Zajmie to kilka minut, a potem możesz sprzedawać płatne kursy.",
+    "unfinishedTitle": "Konfiguracja nie jest dokończona",
+    "unfinishedText": "Stripe potrzebuje jeszcze kilku informacji. Dokończ formularz, to co już podano, zostało zapisane.",
+    "inReviewTitle": "Stripe sprawdza Twoje dane",
+    "inReviewText": "Zwykle trwa to od kilku minut do dwóch dni. Jeśli Stripe będzie potrzebował czegoś jeszcze, napisze do Ciebie mailem.",
+    "readyTitle": "Gotowe, możesz przyjmować płatności",
+    "readyText": "Pieniądze z kursów trafiają na Twoje konto Stripe, a stamtąd automatycznie na konto bankowe.",
+    "errorText": "Nie udało się połączyć ze Stripe. Odśwież stronę albo spróbuj za chwilę.",
+    "connect": "Podłącz konto do wypłat",
+    "continue": "Dokończ konfigurację",
+    "openDashboard": "Otwórz panel Stripe",
+    "finePrint": "Twoje dane bankowe i dokumenty podajesz bezpośrednio w Stripe. Bellademy ich nie widzi ani nie przechowuje."
   },
   "auth": {
     "brandSubtitle": "Witaj z powrotem — zaloguj się, aby kontynuować",

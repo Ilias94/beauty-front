@@ -13,6 +13,7 @@ export { MessageControllerService } from './services/message-controller.service'
 export { LoginControllerService } from './services/login-controller.service';
 export { GeoLocationControllerService } from './services/geo-location-controller.service';
 export { CourseMessageControllerService } from './services/course-message-controller.service';
+export { ConnectControllerService } from './services/connect-controller.service';
 export { CommentControllerService } from './services/comment-controller.service';
 export { AssistantControllerService } from './services/assistant-controller.service';
 export { AiControllerService } from './services/ai-controller.service';
