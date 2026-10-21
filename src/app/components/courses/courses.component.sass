@@ -15,6 +15,8 @@
   position: relative
   min-height: 250px
   align-items: flex-end
+  // Room between the figures and the search panel; the mirror wall below reaches down through it.
+  margin-bottom: 48px
 
   .head-copy
     position: relative
@@ -59,7 +61,7 @@
   display: flex
   flex-wrap: wrap
   gap: 12px 28px
-  margin: 22px 0 0
+  margin: 26px 0 0
 
   > div
     display: flex
@@ -90,9 +92,10 @@
 .hero-art
   position: absolute
   right: 0
-  bottom: -40px
+  // Header margin (48px) plus 12px, so the mirrors' feet stay hidden behind the search panel.
+  bottom: -60px
   width: 470px
-  height: 300px
+  height: 320px
   overflow: hidden
   pointer-events: none
 
@@ -228,6 +231,7 @@
 
   .catalog-head.hero
     min-height: 0
+    margin-bottom: 32px
 
 // ── Filters ────────────────────────────────────────────────
 .filters
@@ -235,8 +239,8 @@
   z-index: 1
   display: flex
   flex-direction: column
-  gap: 16px
-  margin-bottom: 22px
+  gap: 22px
+  margin-bottom: 28px
 
 // Search panel: one raised card split into segments by hairlines; each segment has a small
 // heading over its value and lights up on hover, the whole card rings when something has focus.
@@ -510,7 +514,7 @@
 .cat-tiles
   display: grid
   grid-template-columns: repeat(4, minmax(0, 1fr))
-  gap: 10px
+  gap: 12px
 
   @media (min-width: 1280px)
     grid-template-columns: repeat(6, minmax(0, 1fr))
@@ -519,8 +523,8 @@
   display: flex
   align-items: center
   gap: 12px
-  min-height: 62px
-  padding: 10px 14px 10px 10px
+  min-height: 64px
+  padding: 11px 14px 11px 11px
   border: 1px solid var(--line)
   border-radius: var(--radius)
   background: var(--surface)
@@ -599,7 +603,7 @@
   flex-wrap: wrap
   gap: 8px 10px
   min-height: 32px
-  margin-bottom: 16px
+  margin-bottom: 20px
 
   .count
     font-weight: 700
