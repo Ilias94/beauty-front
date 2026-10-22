@@ -373,7 +373,7 @@
     width: 20px
     height: 20px
 
-// Street | no. and postal code | city keep their pairing on phones too; only the optional pair stacks.
+// Required fields first, optional last; each row keeps its pairing on phones too.
 .addr-row
   display: grid
   grid-template-columns: 1fr 1fr
@@ -388,8 +388,6 @@
   @media (max-width: 600px)
     gap: 16px 10px
 
-    &.optional-row
-      grid-template-columns: 1fr
 
 .sched-summary
   justify-self: start
@@ -413,9 +411,6 @@
     width: 18px
     height: 18px
 
-.optional
-  font-weight: 400
-  color: var(--ink-3)
 
 // ── Step 4 ─────────────────────────────────────────────────
 .seats .field-label

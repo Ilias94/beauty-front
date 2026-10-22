@@ -131,7 +131,8 @@ export class CourseFormComponent {
       endTime: new FormControl<Date | null>(atTime(17)),
       address: new FormGroup({
         city: new FormControl('', { nonNullable: true, validators: Validators.required }),
-        postalCode: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d{2}-\d{3}$/)] }),
+        // Optional: only shown on the course page; street, number and city are enough to find the place on the map.
+        postalCode: new FormControl('', { nonNullable: true, validators: Validators.pattern(/^\d{2}-\d{3}$/) }),
         street: new FormControl('', { nonNullable: true, validators: Validators.required }),
         streetNumber: new FormControl('', { nonNullable: true, validators: Validators.required }),
         apartmentNumber: new FormControl('', { nonNullable: true }),
@@ -481,7 +482,7 @@ export class CourseFormComponent {
       endDate: v.schedule.endDate ? toLocalIso(v.schedule.endDate, v.schedule.endTime) : null,
       address: online ? null : {
         city: v.schedule.address.city.trim(),
-        postalCode: v.schedule.address.postalCode.trim(),
+        postalCode: v.schedule.address.postalCode.trim() || null,
         street: v.schedule.address.street.trim(),
         streetNumber: v.schedule.address.streetNumber.trim(),
         apartmentNumber: v.schedule.address.apartmentNumber.trim() || null,

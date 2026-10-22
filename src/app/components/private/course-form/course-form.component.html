@@ -220,13 +220,7 @@
                     <mat-error>{{ 'auth.required' | transloco }}</mat-error>
                   </mat-form-field>
                 </div>
-                <div class="addr-row wide-last">
-                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                    <mat-label>{{ 'courseForm.postalCode' | transloco }}</mat-label>
-                    <input matInput formControlName="postalCode" placeholder="00-000" autocomplete="postal-code"
-                      inputmode="numeric" maxlength="6" (input)="formatPostalCode()">
-                    <mat-error>{{ 'courseWizard.postalCodeError' | transloco }}</mat-error>
-                  </mat-form-field>
+                <div class="addr-row wide-first">
                   <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label>{{ 'courseForm.city' | transloco }}</mat-label>
                     <input matInput formControlName="city" autocomplete="address-level2" [matAutocomplete]="cityAuto">
@@ -237,15 +231,21 @@
                     </mat-autocomplete>
                     <mat-error>{{ 'auth.required' | transloco }}</mat-error>
                   </mat-form-field>
-                </div>
-                <div class="addr-row optional-row">
                   <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                    <mat-label>{{ 'courseForm.district' | transloco }} <span class="optional">{{ 'courseWizard.optional' | transloco }}</span></mat-label>
-                    <input matInput formControlName="district">
+                    <mat-label>{{ 'courseForm.apartmentNo' | transloco }}</mat-label>
+                    <input matInput formControlName="apartmentNumber" autocomplete="address-line2">
+                  </mat-form-field>
+                </div>
+                <div class="addr-row wide-last">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.postalCode' | transloco }}</mat-label>
+                    <input matInput formControlName="postalCode" placeholder="00-000" autocomplete="postal-code"
+                      inputmode="numeric" maxlength="6" (input)="formatPostalCode()">
+                    <mat-error>{{ 'courseWizard.postalCodeError' | transloco }}</mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" subscriptSizing="dynamic">
-                    <mat-label>{{ 'courseForm.apartmentNo' | transloco }} <span class="optional">{{ 'courseWizard.optional' | transloco }}</span></mat-label>
-                    <input matInput formControlName="apartmentNumber" autocomplete="address-line2">
+                    <mat-label>{{ 'courseForm.district' | transloco }}</mat-label>
+                    <input matInput formControlName="district">
                   </mat-form-field>
                 </div>
               </div>
@@ -332,7 +332,7 @@
                   <div><dt>{{ 'courseWizard.datesLabel' | transloco }}</dt><dd>{{ previewCourse().startDate | dateRange: previewCourse().endDate }}, {{ v.schedule.startTime | date: 'HH:mm' }}@if (v.schedule.endTime) {–{{ v.schedule.endTime | date: 'HH:mm' }}}</dd></div>
                   <div><dt>{{ 'courseDetails.where' | transloco }}</dt><dd>
                     @if (isOnline()) { {{ 'courseDetails.onlineWhere' | transloco }} }
-                    @else { {{ v.schedule.address.street }} {{ v.schedule.address.streetNumber }}, {{ v.schedule.address.postalCode }} {{ v.schedule.address.city }} }
+                    @else { {{ v.schedule.address.street }} {{ v.schedule.address.streetNumber }}@if (v.schedule.address.apartmentNumber) {/{{ v.schedule.address.apartmentNumber }}}, @if (v.schedule.address.postalCode) {{{ v.schedule.address.postalCode }} }{{ v.schedule.address.city }} }
                   </dd></div>
                 </dl>
               </div>
