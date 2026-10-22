@@ -44,7 +44,8 @@ export class SpotlightDirective implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    cancelAnimationFrame(this.frame);
+    // A frame is only ever requested in the browser; the server has no cancelAnimationFrame.
+    if (this.frame) cancelAnimationFrame(this.frame);
     this.el.removeEventListener('pointermove', this.onMove);
     this.el.removeEventListener('pointerleave', this.onLeave);
   }
