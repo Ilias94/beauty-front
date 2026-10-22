@@ -420,19 +420,19 @@ img
    One system for every Material button: pill shape, 44px, bold label,
    18px icons, a clear hover, a small press and a visible focus ring. */
 .mat-mdc-button, .mat-mdc-unelevated-button, .mat-mdc-outlined-button, .mat-mdc-raised-button
-  --mdc-text-button-container-shape: var(--radius-pill)
-  --mdc-filled-button-container-shape: var(--radius-pill)
-  --mdc-outlined-button-container-shape: var(--radius-pill)
-  --mdc-protected-button-container-shape: var(--radius-pill)
-  --mdc-text-button-container-height: 40px
-  --mdc-filled-button-container-height: 44px
-  --mdc-outlined-button-container-height: 44px
-  --mdc-protected-button-container-height: 44px
-  --mdc-outlined-button-outline-color: var(--line-strong)
-  --mdc-protected-button-container-elevation-shadow: none
-  --mdc-protected-button-hover-container-elevation-shadow: none
-  --mdc-protected-button-pressed-container-elevation-shadow: none
-  --mdc-protected-button-focus-container-elevation-shadow: none
+  --mat-button-text-container-shape: var(--radius-pill)
+  --mat-button-filled-container-shape: var(--radius-pill)
+  --mat-button-outlined-container-shape: var(--radius-pill)
+  --mat-button-protected-container-shape: var(--radius-pill)
+  --mat-button-text-container-height: 40px
+  --mat-button-filled-container-height: 44px
+  --mat-button-outlined-container-height: 44px
+  --mat-button-protected-container-height: 44px
+  --mat-button-outlined-outline-color: var(--line-strong)
+  --mat-button-protected-container-elevation-shadow: none
+  --mat-button-protected-hover-container-elevation-shadow: none
+  --mat-button-protected-pressed-container-elevation-shadow: none
+  --mat-button-protected-focus-container-elevation-shadow: none
   --mat-text-button-horizontal-padding: 14px
   --mat-filled-button-horizontal-padding: 22px
   --mat-outlined-button-horizontal-padding: 20px
@@ -489,7 +489,7 @@ img
 
 // Icon buttons: round, quiet hover.
 .mat-mdc-icon-button
-  --mdc-icon-button-state-layer-size: 40px
+  --mat-icon-button-state-layer-size: 40px
   --mat-icon-button-state-layer-color: var(--ink)
   --mat-icon-button-hover-state-layer-opacity: 0.06
   transition: transform 120ms var(--ease)
@@ -499,32 +499,32 @@ img
 
 // Shared "small" variant for dense toolbars and table rows.
 .btn-sm.mat-mdc-unelevated-button, .btn-sm.mat-mdc-outlined-button
-  --mdc-filled-button-container-height: 36px
-  --mdc-outlined-button-container-height: 36px
+  --mat-button-filled-container-height: 36px
+  --mat-button-outlined-container-height: 36px
   --mat-filled-button-horizontal-padding: 16px
   --mat-outlined-button-horizontal-padding: 14px
   font-size: 13.5px !important
 
 .mat-mdc-card
-  --mdc-elevated-card-container-shape: var(--radius)
-  --mdc-outlined-card-container-shape: var(--radius)
+  --mat-card-elevated-container-shape: var(--radius)
+  --mat-card-outlined-container-shape: var(--radius)
   border: 1px solid var(--line)
   box-shadow: var(--shadow-1) !important
   background: var(--surface) !important
 
 .mat-mdc-form-field
-  --mdc-outlined-text-field-container-shape: var(--radius-sm)
-  --mdc-outlined-text-field-outline-color: var(--line-strong)
-  --mdc-outlined-text-field-hover-outline-color: var(--ink-3)
-  --mdc-outlined-text-field-focus-outline-color: var(--accent)
-  --mdc-outlined-text-field-focus-outline-width: 1.5px
-  --mdc-outlined-text-field-label-text-color: var(--ink-3)
-  --mdc-outlined-text-field-focus-label-text-color: var(--accent)
-  --mdc-outlined-text-field-input-text-color: var(--ink)
-  --mdc-outlined-text-field-caret-color: var(--accent)
-  --mdc-filled-text-field-container-color: var(--surface-2)
+  --mat-form-field-outlined-container-shape: var(--radius-sm)
+  --mat-form-field-outlined-outline-color: var(--line-strong)
+  --mat-form-field-outlined-hover-outline-color: var(--ink-3)
+  --mat-form-field-outlined-focus-outline-color: var(--accent)
+  --mat-form-field-outlined-focus-outline-width: 1.5px
+  --mat-form-field-outlined-label-text-color: var(--ink-3)
+  --mat-form-field-outlined-focus-label-text-color: var(--accent)
+  --mat-form-field-outlined-input-text-color: var(--ink)
+  --mat-form-field-outlined-caret-color: var(--accent)
+  --mat-form-field-filled-container-color: var(--surface-2)
   --mat-form-field-container-text-font: var(--font-ui)
-  --mdc-outlined-text-field-label-text-font: var(--font-ui)
+  --mat-form-field-outlined-label-text-font: var(--font-ui)
   font-family: var(--font-ui)
 
   .mat-mdc-text-field-wrapper
@@ -556,14 +556,13 @@ img
 
 // Checkbox: softly rounded box, accent when checked.
 .mat-mdc-checkbox
-  --mdc-checkbox-selected-icon-color: var(--accent)
-  --mdc-checkbox-selected-focus-icon-color: var(--accent)
-  --mdc-checkbox-selected-hover-icon-color: var(--accent)
-  --mdc-checkbox-selected-pressed-icon-color: var(--accent)
-  --mdc-checkbox-selected-checkmark-color: #fff
-  --mdc-checkbox-unselected-icon-color: var(--line-strong)
-  --mdc-checkbox-unselected-hover-icon-color: var(--ink-3)
-  --mdc-checkbox-unselected-focus-icon-color: var(--ink-3)
+  --mat-checkbox-selected-icon-color: var(--accent)
+  --mat-checkbox-selected-focus-icon-color: var(--accent)
+  --mat-checkbox-selected-hover-icon-color: var(--accent)
+  --mat-checkbox-selected-checkmark-color: #fff
+  --mat-checkbox-unselected-icon-color: var(--line-strong)
+  --mat-checkbox-unselected-hover-icon-color: var(--ink-3)
+  --mat-checkbox-unselected-focus-icon-color: var(--ink-3)
   --mat-checkbox-label-text-font: var(--font-ui)
   --mat-checkbox-label-text-weight: 600
   --mat-checkbox-label-text-color: var(--ink-2)
@@ -577,35 +576,35 @@ img
     transform: scale(0.9)
 
 .mat-mdc-radio-button
-  --mdc-radio-selected-icon-color: var(--accent)
-  --mdc-radio-selected-focus-icon-color: var(--accent)
-  --mdc-radio-selected-hover-icon-color: var(--accent)
-  --mdc-radio-selected-pressed-icon-color: var(--accent)
+  --mat-radio-selected-icon-color: var(--accent)
+  --mat-radio-selected-focus-icon-color: var(--accent)
+  --mat-radio-selected-hover-icon-color: var(--accent)
+  --mat-radio-selected-pressed-icon-color: var(--accent)
   --mat-radio-checked-ripple-color: var(--accent)
-  --mdc-radio-unselected-icon-color: var(--line-strong)
+  --mat-radio-unselected-icon-color: var(--line-strong)
   --mat-radio-label-text-font: var(--font-ui)
 
 // Switch: accent track and handle instead of the theme's sand accent.
 .mat-mdc-slide-toggle
-  --mdc-switch-selected-handle-color: var(--accent)
-  --mdc-switch-selected-hover-handle-color: var(--accent-hover)
-  --mdc-switch-selected-focus-handle-color: var(--accent-hover)
-  --mdc-switch-selected-pressed-handle-color: var(--accent-hover)
-  --mdc-switch-selected-track-color: var(--accent-soft-2)
-  --mdc-switch-selected-hover-track-color: var(--accent-soft-2)
-  --mdc-switch-selected-focus-track-color: var(--accent-soft-2)
-  --mdc-switch-selected-pressed-track-color: var(--accent-soft-2)
-  --mdc-switch-selected-icon-color: #fff
-  --mdc-switch-unselected-track-color: var(--surface-3)
-  --mdc-switch-unselected-hover-track-color: var(--surface-3)
-  --mdc-switch-unselected-focus-track-color: var(--surface-3)
-  --mdc-switch-unselected-handle-color: var(--ink-3)
-  --mdc-switch-unselected-hover-handle-color: var(--ink-2)
+  --mat-slide-toggle-selected-handle-color: var(--accent)
+  --mat-slide-toggle-selected-hover-handle-color: var(--accent-hover)
+  --mat-slide-toggle-selected-focus-handle-color: var(--accent-hover)
+  --mat-slide-toggle-selected-pressed-handle-color: var(--accent-hover)
+  --mat-slide-toggle-selected-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-hover-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-focus-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-pressed-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-icon-color: #fff
+  --mat-slide-toggle-unselected-track-color: var(--surface-3)
+  --mat-slide-toggle-unselected-hover-track-color: var(--surface-3)
+  --mat-slide-toggle-unselected-focus-track-color: var(--surface-3)
+  --mat-slide-toggle-unselected-handle-color: var(--ink-3)
+  --mat-slide-toggle-unselected-hover-handle-color: var(--ink-2)
   --mat-switch-label-text-font: var(--font-ui)
   --mat-switch-label-text-weight: 600
 
 .mat-mdc-chip
-  --mdc-chip-container-shape-radius: var(--radius-pill)
+  --mat-chip-container-shape-radius: var(--radius-pill)
   font-family: var(--font-ui) !important
 
 // Menus: inset, rounded rows with a warm hover.
@@ -646,27 +645,27 @@ img
     width: min(360px, calc(100vw - 40px))
 
 .mat-mdc-dialog-container
-  --mdc-dialog-container-shape: var(--radius-lg)
-  --mdc-dialog-subhead-font: var(--font-display)
-  --mdc-dialog-supporting-text-font: var(--font-ui)
-  --mdc-dialog-supporting-text-color: var(--ink-2)
+  --mat-dialog-container-shape: var(--radius-lg)
+  --mat-dialog-subhead-font: var(--font-display)
+  --mat-dialog-supporting-text-font: var(--font-ui)
+  --mat-dialog-supporting-text-color: var(--ink-2)
 
 .cdk-overlay-dark-backdrop
   background: rgba(31, 26, 23, 0.4)
   backdrop-filter: blur(3px)
 
 .mat-mdc-tooltip
-  --mdc-plain-tooltip-container-color: var(--ink)
-  --mdc-plain-tooltip-container-shape: 8px
-  --mdc-plain-tooltip-supporting-text-font: var(--font-ui)
-  --mdc-plain-tooltip-supporting-text-size: 12.5px
-  --mdc-plain-tooltip-supporting-text-weight: 600
+  --mat-tooltip-container-color: var(--ink)
+  --mat-tooltip-container-shape: 8px
+  --mat-tooltip-supporting-text-font: var(--font-ui)
+  --mat-tooltip-supporting-text-size: 12.5px
+  --mat-tooltip-supporting-text-weight: 600
 
 // Tabs: bold labels, a short rounded accent indicator.
 .mat-mdc-tab-group, .mat-mdc-tab-nav-bar
-  --mdc-tab-indicator-active-indicator-color: var(--accent)
-  --mdc-tab-indicator-active-indicator-height: 3px
-  --mdc-tab-indicator-active-indicator-shape: 3px 3px 0 0
+  --mat-tab-active-indicator-color: var(--accent)
+  --mat-tab-active-indicator-height: 3px
+  --mat-tab-active-indicator-shape: 3px 3px 0 0
   --mat-tab-header-active-label-text-color: var(--ink)
   --mat-tab-header-active-focus-label-text-color: var(--ink)
   --mat-tab-header-active-hover-label-text-color: var(--ink)
@@ -736,10 +735,10 @@ img
 
 // Default snackbar (NotificationService): dark, rounded, bold.
 .mat-mdc-snack-bar-container
-  --mdc-snackbar-container-color: var(--ink)
-  --mdc-snackbar-container-shape: var(--radius-sm)
-  --mdc-snackbar-supporting-text-font: var(--font-ui)
-  --mdc-snackbar-supporting-text-weight: 600
+  --mat-snack-bar-container-color: var(--ink)
+  --mat-snack-bar-container-shape: var(--radius-sm)
+  --mat-snack-bar-supporting-text-font: var(--font-ui)
+  --mat-snack-bar-supporting-text-weight: 600
   --mat-snack-bar-button-color: rgba(255, 255, 255, 0.8)
 
 /* ── Hover effects ──────────────────────────────────────────── */

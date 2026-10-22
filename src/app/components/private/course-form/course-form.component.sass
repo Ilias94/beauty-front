@@ -167,6 +167,10 @@
 .full
   width: 100%
 
+  // A hint fills the space under the field, so the next row's floating label would touch it.
+  &:has(mat-hint)
+    margin-bottom: 10px
+
 .grid-2, .grid-3
   display: grid
   gap: 0 14px
