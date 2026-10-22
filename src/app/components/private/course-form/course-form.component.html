@@ -208,6 +208,17 @@
             } @else {
               <div formGroupName="address" class="sched-block address">
                 <h3 class="block-title"><mat-icon>place</mat-icon>{{ 'courseWizard.addressLabel' | transloco }}</h3>
+                @if (addressSuggestions().length) {
+                  <div class="recent-addresses">
+                    <span class="recent-label">{{ 'courseWizard.recentAddresses' | transloco }}</span>
+                    @for (a of addressSuggestions(); track $index) {
+                      <button type="button" class="recent-address" (click)="useAddress(a)">
+                        <mat-icon>history</mat-icon>
+                        <span>{{ a.street }} {{ a.streetNumber }}@if (a.apartmentNumber) {/{{ a.apartmentNumber }}}, {{ a.city }}</span>
+                      </button>
+                    }
+                  </div>
+                }
                 <div class="addr-row wide-first">
                   <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label>{{ 'courseForm.street' | transloco }}</mat-label>

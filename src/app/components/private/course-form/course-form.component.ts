@@ -21,7 +21,8 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { GetDistinctCitiesAction, SaveCourseAction } from '../../state/course.actions';
 import { GetAiPromptAction } from '../../state/ai.actions';
 import { SecurityState } from '../../state/security.state';
-import { CourseDtoResponse } from '../../../../api/models';
+import { AddressDtoResponse, CourseDtoResponse } from '../../../../api/models';
+import { CourseControllerService } from '../../../../api/services';
 import { CourseCardComponent } from '../../courses/course-card/course-card.component';
 import { categoryKey, categoryVisual } from '../../../shared/category-visual';
 import { DateRangePipe, PricePipe } from '../../../shared/format.pipes';
@@ -70,6 +71,21 @@ function minutesOf(time: Date): number {
   return time.getHours() * 60 + time.getMinutes();
 }
 
+/** Identifies a place regardless of letter case, so the same salon is suggested once. */
+function addressKey(a: AddressDtoResponse): string {
+  return [a.street, a.streetNumber, a.apartmentNumber, a.city].map(part => (part ?? '').trim().toLocaleLowerCase()).join('|');
+}
+
+/** The distinct street addresses of the given courses, in their order, at most three. */
+function recentAddressesOf(courses: CourseDtoResponse[]): AddressDtoResponse[] {
+  const seen = new Set<string>();
+  return courses
+    .map(course => course.address)
+    .filter((a): a is AddressDtoResponse => !!a?.street && !!a.city)
+    .filter(a => !seen.has(addressKey(a)) && !!seen.add(addressKey(a)))
+    .slice(0, 3);
+}
+
 /** "2027-06-10T09:00:00" in local time, the format the backend expects. */
 function toLocalIso(date: Date, time?: Date | null): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(time?.getHours() ?? 0)}:${pad(time?.getMinutes() ?? 0)}:00`;
@@ -98,6 +114,7 @@ export class CourseFormComponent {
   private transloco = inject(TranslocoService);
   private notifications = inject(NotificationService);
   private imagesApi = inject(CourseImagesApiService);
+  private coursesApi = inject(CourseControllerService);
   private destroyRef = inject(DestroyRef);
   private host = inject(ElementRef<HTMLElement>);
   private browser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -166,6 +183,8 @@ export class CourseFormComponent {
   private placeholderTitle = toSignal(this.transloco.selectTranslate('courseWizard.previewTitle'), { initialValue: '' });
 
   private cities = toSignal(this.store.select(state => state.course.distinctCities as string[]), { initialValue: [] });
+  /** Places this instructor already taught at, from their most recent courses. */
+  private recentAddresses = signal<AddressDtoResponse[]>([]);
 
   stepKey = computed(() => this.steps[this.step()]);
   isOnline = computed(() => this.value().basics.courseType === 'ONLINE');
@@ -176,6 +195,12 @@ export class CourseFormComponent {
     return this.cities()
       .filter(city => city.toLocaleLowerCase().includes(typed) && city.toLocaleLowerCase() !== typed)
       .slice(0, 6);
+  });
+
+  /** Earlier addresses offered as one-click fills, leaving out the one already in the form. */
+  addressSuggestions = computed(() => {
+    const current = addressKey(this.value().schedule.address);
+    return this.recentAddresses().filter(a => addressKey(a) !== current);
   });
 
   /** Days and daily hours for the summary under the schedule, once dates and a valid time range are set. */
@@ -237,6 +262,10 @@ export class CourseFormComponent {
 
     if (this.browser) {
       if (!this.cities().length) this.store.dispatch(new GetDistinctCitiesAction());
+      // Instructors usually teach at the same salon; their latest courses supply the address suggestions.
+      this.coursesApi.getCourses({ isCurrentCreator: true, hidePast: false, size: 50, sortBy: 'startDate', sortDirection: 'DESC' })
+        .pipe(catchError(() => of(null)), takeUntilDestroyed())
+        .subscribe(page => this.recentAddresses.set(recentAddressesOf(page?.content ?? [])));
       this.checkDraft();
       this.form.valueChanges.pipe(debounceTime(600), takeUntilDestroyed()).subscribe(() => this.saveDraftLocally());
     }
@@ -287,6 +316,15 @@ export class CourseFormComponent {
   // ── Step 1 & 4 helpers ─────────────────────────────────────
 
   /** Digits only, with the dash added after the first two: "00950" becomes "00-950". */
+  useAddress(a: AddressDtoResponse): void {
+    const address = this.form.controls.schedule.controls.address;
+    address.patchValue({
+      street: a.street ?? '', streetNumber: a.streetNumber ?? '', apartmentNumber: a.apartmentNumber ?? '',
+      city: a.city ?? '', postalCode: a.postalCode ?? '', district: a.district ?? '',
+    });
+    address.markAsDirty();
+  }
+
   formatPostalCode(): void {
     const control = this.form.controls.schedule.controls.address.controls.postalCode;
     const digits = control.value.replace(/\D/g, '').slice(0, 5);
