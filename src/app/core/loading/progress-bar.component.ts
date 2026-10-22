@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { LoadingService } from './loading.service';
@@ -10,6 +10,7 @@ import { LoadingService } from './loading.service';
 @Component({
   selector: 'app-progress-bar',
   template: `<div class="bar" [class.on]="visible()" role="progressbar" aria-hidden="true"><span></span></div>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './progress-bar.component.sass'
 })
 export class ProgressBarComponent {

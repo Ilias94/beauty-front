@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +25,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
         TranslocoModule,
     ],
     templateUrl: './account-form.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './account-form.component.sass'
 })
 export class AccountFormComponent implements OnInit {

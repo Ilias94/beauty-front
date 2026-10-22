@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, PLATFORM_ID, computed, inject, signal, DOCUMENT } from '@angular/core';
+import { Component, DestroyRef, ElementRef, PLATFORM_ID, computed, inject, signal, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -65,6 +65,7 @@ function toLocalIso(date: Date, time?: string | null): string {
         TranslocoModule, CourseCardComponent, DateRangePipe, PricePipe, GalleryEditorComponent,
     ],
     templateUrl: './course-form.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './course-form.component.sass'
 })
 export class CourseFormComponent {

@@ -208,7 +208,7 @@
               <div class="rate-row">
                 <div>
                   <p class="rate-label">{{ 'courseDetails.yourRating' | transloco }}</p>
-                  <app-star-rating [readonly]="false" [value]="currentUserRating()?.value" size="lg"
+                  <app-star-rating [readonly]="false" [value]="$safeNavigationMigration(currentUserRating()?.value)" size="lg"
                     [label]="'courseDetails.yourRating' | transloco" (rate)="handleRating($event)" />
                 </div>
                 <div>

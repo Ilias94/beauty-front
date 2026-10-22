@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoModule } from '@jsverse/transloco';
 
@@ -31,6 +31,7 @@ import { TranslocoModule } from '@jsverse/transloco';
       </span>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './star-rating.component.sass'
 })
 export class StarRatingComponent {

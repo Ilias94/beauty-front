@@ -158,7 +158,7 @@
     </div>
 
     @if (c.category?.label) {
-      <p class="eyebrow">{{ categoryKey(c.category?.label) | transloco }}</p>
+      <p class="eyebrow">{{ categoryKey($safeNavigationMigration(c.category?.label)) | transloco }}</p>
     }
     <h2>{{ c.title }}</h2>
     <span class="tag status-tag" [class.tag-success]="statusOf(c) === 'ongoing'">{{ ('status.' + statusOf(c)) | transloco }}</span>

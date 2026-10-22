@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -20,6 +20,7 @@ export type CourseRelation = 'owner' | 'enrolled' | null;
   selector: 'app-course-card',
   imports: [SpotlightDirective, RouterLink, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule, DecimalPipe, PricePipe, DateRangePipe, PluralPipe],
   templateUrl: './course-card.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './course-card.component.sass'
 })
 export class CourseCardComponent {

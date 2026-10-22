@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -14,6 +14,7 @@ import { ticketStatusTag } from '../ticket-ui';
     selector: 'app-my-tickets',
     imports: [MatButtonModule, MatIconModule, RouterLink, TranslocoModule, DateRangePipe],
     templateUrl: './my-tickets.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './my-tickets.component.sass'
 })
 export class MyTicketsComponent implements OnInit {

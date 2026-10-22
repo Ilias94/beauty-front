@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoModule } from '@jsverse/transloco';
 
@@ -19,6 +19,7 @@ import { TranslocoModule } from '@jsverse/transloco';
       </div>
     </aside>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './auth-aside.component.sass'
 })
 export class AuthAsideComponent {}

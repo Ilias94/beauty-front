@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, OnInit, ViewChild, computed, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnInit, ViewChild, computed, inject, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
 import { CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +29,7 @@ interface Photo {
   selector: 'app-gallery-editor',
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, MatIconModule, TranslocoModule],
   templateUrl: './gallery-editor.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './gallery-editor.component.sass'
 })
 export class GalleryEditorComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { Component, PLATFORM_ID, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +18,7 @@ type Step = 'loading' | 'notConnected' | 'unfinished' | 'inReview' | 'ready' | '
     selector: 'app-payouts',
     imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule, TranslocoModule],
     templateUrl: './payouts.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './payouts.component.sass'
 })
 export class PayoutsComponent {

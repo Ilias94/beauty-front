@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -16,6 +16,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     selector: 'app-notification-bell',
     templateUrl: './notification-bell.component.html',
     styleUrl: './notification-bell.component.sass',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatIconModule,
         MatButtonModule,

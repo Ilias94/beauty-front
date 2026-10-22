@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, ElementRef, ViewChild, computed, effect, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,6 +15,7 @@ import { ThreadMessage, buildThread } from './thread';
     selector: 'app-message-thread',
     imports: [DatePipe, RouterLink, MatIconModule, TranslocoModule],
     templateUrl: './message-thread.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './message-thread.component.sass'
 })
 export class MessageThreadComponent {

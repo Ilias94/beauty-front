@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild, computed, effect, inject, input, output, signal, DOCUMENT } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, computed, effect, inject, input, output, signal, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
 
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -13,6 +13,7 @@ import { CategoryVisual } from '../category-visual';
   selector: 'app-course-gallery',
   imports: [MatIconModule, TranslocoModule],
   templateUrl: './course-gallery.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './course-gallery.component.sass'
 })
 export class CourseGalleryComponent {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, computed, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +20,7 @@ import { S3_BASE } from '../../app.const';
 @Component({
     selector: 'app-course-group-chat',
     imports: [MatIconModule, MatButtonModule, TranslocoModule, MessageThreadComponent, MessageComposerComponent],
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './course-group-chat.component.html',
 })
 export class CourseGroupChatComponent implements OnInit, OnDestroy {

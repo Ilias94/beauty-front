@@ -1,4 +1,4 @@
-import { Component, OnInit, Signal, computed, inject } from '@angular/core';
+import { Component, OnInit, Signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -15,6 +15,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     selector: 'app-question-results',
     imports: [RouterModule, MatButtonModule, MatIconModule, MatTooltipModule, TranslocoModule],
     templateUrl: './question-results.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './question-results.component.sass'
 })
 export class QuestionResultsComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID, signal, computed, HostListener, DestroyRef, ElementRef, ViewChild, afterNextRender } from '@angular/core';
+import { Component, inject, PLATFORM_ID, signal, computed, HostListener, DestroyRef, ElementRef, ViewChild, afterNextRender, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
@@ -20,6 +20,7 @@ import { ProgressBarComponent } from '../../../core/loading/progress-bar.compone
     selector: 'app-menu',
     templateUrl: './menu.component.html',
     styleUrl: './menu.component.sass',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MatButtonModule,
         MatIconModule,

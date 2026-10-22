@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
       <a mat-flat-button color="primary" routerLink="/courses">{{ 'notFound.home' | transloco }}</a>
     </div>
   `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [`
     .nf
       min-height: 60vh

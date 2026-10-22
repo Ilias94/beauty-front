@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { Component, PLATFORM_ID, ViewChild, computed, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -53,6 +53,7 @@ const COLORS: Record<Relation, { bg: string; text: string }> = {
     providers: [provideDayFirstDateAdapter()],
     templateUrl: './calendar.component.html',
     styleUrl: './calendar.component.sass',
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: { '(document:keydown.escape)': 'selected.set(null)' }
 })
 export class CalendarComponent {

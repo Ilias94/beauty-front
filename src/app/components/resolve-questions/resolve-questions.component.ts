@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -14,6 +14,7 @@ type Phase = 'quiz' | 'results';
     selector: 'app-resolve-questions',
     imports: [RouterModule, MatButtonModule, MatIconModule, TranslocoModule],
     templateUrl: './resolve-questions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './resolve-questions.component.sass'
 })
 export class ResolveQuestionsComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +16,7 @@ import { FloatingPanel, FloatingPanelsService } from './floating-panels.service'
     selector: 'app-fab-dock',
     imports: [MatIconModule, TranslocoModule],
     templateUrl: './fab-dock.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './fab-dock.component.sass'
 })
 export class FabDockComponent {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { GetCurrentUserCommentsAction } from '../state/comment.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -10,6 +10,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     selector: 'app-my-comments',
     imports: [CommentsComponent, TranslocoModule],
     templateUrl: './my-comments.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './my-comments.component.sass'
 })
 export class MyCommentsComponent implements OnInit {

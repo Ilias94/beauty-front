@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -26,6 +26,7 @@ import { S3_BASE } from '../../app.const';
     imports: [FormsModule, RouterLink, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule,
         MessageThreadComponent, MessageComposerComponent],
     templateUrl: './chat-widget.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './chat-widget.component.sass'
 })
 export class ChatWidgetComponent {

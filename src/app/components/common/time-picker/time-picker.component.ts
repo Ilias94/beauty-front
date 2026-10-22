@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     selector: 'app-time-picker',
     imports: [NgxMaterialTimepickerModule, MatInputModule, FormlyModule, ReactiveFormsModule, MatFormFieldModule],
     templateUrl: './time-picker.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './time-picker.component.sass'
 })
 export class TimePickerComponent extends FieldType<FieldTypeConfig> {

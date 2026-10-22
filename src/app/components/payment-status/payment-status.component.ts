@@ -1,4 +1,4 @@
-import { Component, DestroyRef, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, PLATFORM_ID, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -22,6 +22,7 @@ const POLL_ATTEMPTS = 30;
     selector: 'app-payment-status',
     imports: [MatButtonModule, MatIconModule, RouterLink, TranslocoModule],
     templateUrl: './payment-status.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './payment-status.component.sass'
 })
 export class PaymentStatusComponent {

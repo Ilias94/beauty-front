@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, inject, signal, effect, ViewChild, ElementRef, AfterViewChecked, ChangeDetectionStrategy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -25,6 +25,7 @@ interface AssistantMessage {
     selector: 'app-assistant-widget',
     imports: [MatIconModule, MatButtonModule, TranslocoModule, MessageComposerComponent],
     templateUrl: './assistant-widget.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './assistant-widget.component.sass'
 })
 export class AssistantWidgetComponent implements AfterViewChecked {

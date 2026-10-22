@@ -222,7 +222,7 @@
   @if ((pageCourses()?.totalElements ?? 0) > pageSizeOptions[0]) {
     <mat-paginator class="paginator"
       [pageSizeOptions]="pageSizeOptions"
-      [length]="pageCourses()?.totalElements"
+      [length]="$safeNavigationMigration(pageCourses()?.totalElements)"
       [pageSize]="size"
       [pageIndex]="page"
       (page)="changePage($event)">

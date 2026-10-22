@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +20,7 @@ import { S3_BASE } from '../../app.const';
     selector: 'app-group-chats-page',
     imports: [MatIconModule, MatButtonModule, TranslocoModule, RouterModule, MessageThreadComponent, MessageComposerComponent],
     templateUrl: './group-chats-page.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './group-chats-page.component.sass'
 })
 export class GroupChatsPageComponent implements OnInit, OnDestroy {

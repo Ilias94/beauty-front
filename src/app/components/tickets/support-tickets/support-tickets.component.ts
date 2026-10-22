@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ type TicketStatus = NonNullable<TicketDto['status']>;
     selector: 'app-support-tickets',
     imports: [MatTableModule, MatIconModule, MatSelectModule, DatePipe, TranslocoModule],
     templateUrl: './support-tickets.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './support-tickets.component.sass'
 })
 export class SupportTicketsComponent implements OnInit {

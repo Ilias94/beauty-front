@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +17,7 @@ type TicketType = NonNullable<TicketCreateDto['type']>;
     selector: 'app-ticket-create',
     imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, RouterLink, TranslocoModule, SpotlightDirective],
     templateUrl: './ticket-create.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './ticket-create.component.sass'
 })
 export class TicketCreateComponent {

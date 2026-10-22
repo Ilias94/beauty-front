@@ -3,11 +3,11 @@ import { provideRouter, withInMemoryScrolling, withViewTransitions } from '@angu
 import { isPlatformBrowser } from '@angular/common';
 
 import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NgxsModule } from '@ngxs/store';
 import { SecurityState } from './components/state/security.state';
-import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, HttpClient, withXhr } from '@angular/common/http';
 import { AbstractControl } from '@angular/forms';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { tokenInterceptor } from './token.interceptor';
@@ -83,9 +83,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes,
       withViewTransitions({ skipInitialTransition: true }),
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })),
-    provideClientHydration(),
+    provideClientHydration(withNoIncrementalHydration()),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([tokenInterceptor])),
+    provideHttpClient(withXhr(), withInterceptors([tokenInterceptor])),
     provideTransloco({
       config: {
         availableLangs: ['pl', 'en'],

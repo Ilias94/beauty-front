@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, OnInit, Signal, ViewChild, computed, effect, inject, signal, DOCUMENT } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnInit, Signal, ViewChild, computed, effect, inject, signal, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
@@ -41,6 +41,7 @@ import { CourseImagesApiService } from '../../services/course-images-api.service
         CourseGalleryComponent,
     ],
     templateUrl: './course-details.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './course-details.component.sass'
 })
 export class CourseDetailsComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, Signal, computed, signal } from '@angular/core';
+import { Component, Inject, OnInit, Signal, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,7 @@ export interface CourseOnlineData {
     selector: 'app-course-online',
     imports: [MatDialogModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, TranslocoModule],
     templateUrl: './course-online.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./course-online.component.sass']
 })
 export class CourseOnlineComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, inject, input, OnDestroy } from '@angular/core';
+import { Component, inject, input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ClearCommentsAction } from '../state/comment.actions';
 import { CommentDtoResponse } from '../../../api/models';
@@ -10,6 +10,7 @@ import { DateRangePipe } from '../../shared/format.pipes';
     selector: 'app-comments',
     imports: [TranslocoModule, DateRangePipe, MatIconModule],
     templateUrl: './comments.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './comments.component.sass'
 })
 export class CommentsComponent implements OnDestroy {

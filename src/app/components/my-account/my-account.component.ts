@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,6 +22,7 @@ interface Shortcut {
     selector: 'app-my-account',
     imports: [SpotlightDirective, MatButtonModule, MatIconModule, RouterModule, TranslocoModule],
     templateUrl: './my-account.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './my-account.component.sass'
 })
 export class MyAccountComponent {

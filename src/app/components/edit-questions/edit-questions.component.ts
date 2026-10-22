@@ -1,5 +1,5 @@
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { CreateQuestionAction } from '../state/question.actions';
@@ -35,6 +35,7 @@ type AnswerForm = FormGroup<{
     TranslocoModule
 ],
     templateUrl: './edit-questions.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './edit-questions.component.sass'
 })
 export class EditQuestionsComponent implements OnInit {

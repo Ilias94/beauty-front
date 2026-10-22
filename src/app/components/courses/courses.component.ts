@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, Signal, computed, inject, input } from '@angular/core';
+import { Component, DestroyRef, OnInit, Signal, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { GetAutocompleteTitleAction, GetDistinctCitiesAction, GetPageCoursesAction } from '../state/course.actions';
@@ -43,6 +43,7 @@ type CourseType = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
     PluralPipe
 ],
     templateUrl: './courses.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './courses.component.sass'
 })
 export class CoursesComponent implements OnInit {

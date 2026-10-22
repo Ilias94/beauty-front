@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -19,6 +19,7 @@ import { ticketStatusTag } from '../ticket-ui';
     imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatIconModule, MatFormFieldModule,
         MatInputModule, DatePipe, TranslocoModule],
     templateUrl: './ticket-detail.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './ticket-detail.component.sass'
 })
 export class TicketDetailComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, effect, input, model, output } from '@angular/core';
+import { Component, ElementRef, ViewChild, effect, input, model, output, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoModule } from '@jsverse/transloco';
 
@@ -11,6 +11,7 @@ import { TranslocoModule } from '@jsverse/transloco';
     selector: 'app-message-composer',
     imports: [MatIconModule, TranslocoModule],
     templateUrl: './message-composer.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './message-composer.component.sass'
 })
 export class MessageComposerComponent {

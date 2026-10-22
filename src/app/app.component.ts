@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MenuComponent } from './components/public/menu/menu.component';
 import { ChatWidgetComponent } from './components/chat-widget/chat-widget.component';
@@ -12,6 +12,7 @@ import { environment } from '../environments/enfironment';
     selector: 'app-root',
     imports: [MenuComponent, ChatWidgetComponent, AssistantWidgetComponent, FabDockComponent],
     templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './app.component.sass'
 })
 
