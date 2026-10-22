@@ -531,7 +531,7 @@ img
     background: var(--surface)
     border-radius: var(--radius-sm)
 
-.mat-mdc-select-panel, .mat-mdc-autocomplete-panel
+.mat-mdc-select-panel, .mat-mdc-autocomplete-panel, .mat-timepicker-panel
   border-radius: var(--radius-sm) !important
   padding: 6px !important
   box-shadow: var(--shadow-3) !important
@@ -548,6 +548,9 @@ img
 
       .mdc-list-item__primary-text
         color: var(--accent) !important
+
+      .mat-pseudo-checkbox
+        --mat-pseudo-checkbox-minimal-selected-checkmark-color: var(--accent)
 
 // Selects opened from the catalog's search panel: at least as wide as a segment, a step below it.
 .console-panel

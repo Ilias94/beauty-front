@@ -373,15 +373,33 @@
     width: 20px
     height: 20px
 
+// Street | no. and postal code | city keep their pairing on phones too; only the optional pair stacks.
+.addr-row
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 16px 14px
+
+  &.wide-first
+    grid-template-columns: 2fr 1fr
+
+  &.wide-last
+    grid-template-columns: minmax(136px, 1fr) 2fr
+
+  @media (max-width: 600px)
+    gap: 16px 10px
+
+    &.optional-row
+      grid-template-columns: 1fr
+
 .sched-summary
   justify-self: start
-  display: inline-flex
-  align-items: center
-  flex-wrap: wrap
-  gap: 6px
+  display: flex
+  align-items: flex-start
+  gap: 8px
   margin: 0
-  padding: 8px 14px
-  border-radius: var(--radius-pill)
+  padding: 9px 16px 9px 12px
+  border-radius: var(--radius-sm)
+  line-height: 20px
   background: var(--accent-soft)
   color: var(--accent)
   font-size: 14px
@@ -389,12 +407,13 @@
   animation: rise 320ms var(--ease) backwards
 
   .mat-icon
+    flex: none
+    margin-top: 1px
     font-size: 18px
     width: 18px
     height: 18px
 
 .optional
-  margin-left: 4px
   font-weight: 400
   color: var(--ink-3)
 

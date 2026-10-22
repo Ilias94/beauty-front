@@ -772,7 +772,7 @@
     "endTimeError": "Zakończenie musi być po rozpoczęciu",
     "whenTitle": "Termin",
     "perDay": "dziennie",
-    "optional": "opcjonalnie",
+    "optional": "(opcjonalnie)",
     "onlineNote": "Kurs online nie potrzebuje adresu. Materiały wideo dodasz po utworzeniu kursu.",
     "addressLabel": "Adres zajęć",
     "postalCodeError": "Kod w formacie 00-000",
