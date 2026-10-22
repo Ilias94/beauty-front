@@ -108,12 +108,19 @@
                 </p>
                 <p class="muted">{{ c.address.postalCode }} {{ c.address.city }}@if (c.address.district) { · {{ c.address.district }} }</p>
               </div>
+              @if (directionsUrl(); as url) {
+                <a mat-stroked-button class="directions" [href]="url" target="_blank" rel="noopener">
+                  <mat-icon>directions</mat-icon>{{ 'courseDetails.directions' | transloco }}
+                </a>
+              }
             </div>
             @if (position(); as pos) {
               <div class="map">
-                <google-map height="300px" width="100%" [zoom]="zoom" [center]="pos" [options]="mapOptions">
-                  <map-advanced-marker [position]="pos" />
-                </google-map>
+                @if (mapReady()) {
+                  <google-map height="300px" width="100%" [zoom]="zoom" [center]="pos" [options]="mapOptions">
+                    <map-advanced-marker [position]="pos" [content]="pin()" />
+                  </google-map>
+                }
               </div>
             }
           </section>

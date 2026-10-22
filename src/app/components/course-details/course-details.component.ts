@@ -31,6 +31,18 @@ import { S3_BASE } from '../../app.const';
 import { CourseGalleryComponent } from '../../shared/course-gallery/course-gallery.component';
 import { GalleryEditDialogComponent } from '../../shared/gallery-editor/gallery-edit-dialog.component';
 import { CourseImagesApiService } from '../../services/course-images-api.service';
+import { GoogleMapsLoader } from '../../core/maps/google-maps-loader.service';
+
+/** The map marker's content: a round wine pin with the category icon (styled by .map-pin in styles.sass). */
+function mapPin(icon: string): HTMLElement {
+  const pin = document.createElement('div');
+  pin.className = 'map-pin';
+  const glyph = document.createElement('span');
+  glyph.className = 'map-pin-head material-symbols-rounded';
+  glyph.textContent = icon;
+  pin.appendChild(glyph);
+  return pin;
+}
 
 @Component({
     selector: 'app-course-details',
@@ -76,8 +88,26 @@ export class CourseDetailsComponent implements OnInit {
   loaded = computed(() => this.course()?.id != null && String(this.course()!.id) === String(this.courseId));
 
   zoom = 15;
-  mapOptions: google.maps.MapOptions = { mapId: '3f141cd4fa2bff29fb6f46f8', disableDefaultUI: true, zoomControl: true };
+  // Cooperative gestures: on phones one finger scrolls the page past the map instead of panning it.
+  // Shops and cafés on the map stay visible but don't open their own popups over the course's pin.
+  mapOptions: google.maps.MapOptions = {
+    mapId: '3f141cd4fa2bff29fb6f46f8', disableDefaultUI: true, zoomControl: true,
+    gestureHandling: 'cooperative', clickableIcons: false,
+  };
   position = signal<google.maps.LatLngLiteral | null>(null);
+  private mapsLoader = inject(GoogleMapsLoader);
+  /** The map is drawn once the Google Maps script has loaded; until then its space is kept. */
+  mapReady = signal(false);
+  /** The course's pin: a wine-coloured marker with the category's icon, like the catalog cards. */
+  pin = computed(() => this.mapReady() ? mapPin(this.visual().icon) : null);
+
+  /** Opens Google Maps (the app on phones) with directions to the course's address. */
+  directionsUrl = computed(() => {
+    const a = this.course()?.address;
+    if (!a?.street || !a.city) return null;
+    const destination = `${a.street} ${a.streetNumber ?? ''}, ${a.postalCode ?? ''} ${a.city}`.replace(/\s+/g, ' ').trim();
+    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+  });
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
@@ -175,6 +205,11 @@ export class CourseDetailsComponent implements OnInit {
       // Addresses that were never geocoded come back as 0,0 (in the Atlantic), so treat that as "no position".
       const known = address?.lat != null && address?.lng != null && !(address.lat === 0 && address.lng === 0);
       this.position.set(known ? { lat: address!.lat!, lng: address!.lng! } : null);
+      // Only a page with a place to show pays for loading Google Maps. Without it the address and
+      // the directions link still show.
+      if (known && !this.mapReady()) {
+        this.mapsLoader.load().then(() => this.mapReady.set(true), () => {});
+      }
     });
   }
 

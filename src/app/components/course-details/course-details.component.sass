@@ -271,19 +271,31 @@
 
 .place
   display: flex
+  flex-wrap: wrap
+  align-items: flex-start
   gap: 12px
 
   > .mat-icon
     color: var(--accent)
 
+// Beside the address on wide screens, under it on phones.
+.directions
+  margin-left: auto
+
+  @media (max-width: 600px)
+    margin-left: 36px
+
 .place-line
   font-weight: 700
 
+// Keeps the map's 300px while Google Maps loads, so the page below doesn't jump.
 .map
+  height: 300px
   margin-top: 18px
   border-radius: var(--radius)
   overflow: hidden
   border: 1px solid var(--line)
+  background: var(--surface-2)
 
 .instructor
   display: flex
