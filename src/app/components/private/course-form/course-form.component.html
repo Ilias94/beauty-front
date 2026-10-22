@@ -164,8 +164,8 @@
               <mat-form-field appearance="outline" subscriptSizing="dynamic">
                 <mat-label>{{ 'courseWizard.datesLabel' | transloco }}</mat-label>
                 <mat-date-range-input [rangePicker]="picker" [min]="today">
-                  <input matStartDate formControlName="startDate" [placeholder]="'courseWizard.from' | transloco">
-                  <input matEndDate formControlName="endDate" [placeholder]="'courseWizard.to' | transloco">
+                  <input matStartDate formControlName="startDate" [placeholder]="'courseWizard.from' | transloco" (click)="picker.open()">
+                  <input matEndDate formControlName="endDate" [placeholder]="'courseWizard.to' | transloco" (click)="picker.open()">
                 </mat-date-range-input>
                 <mat-datepicker-toggle matIconSuffix [for]="picker" />
                 <mat-date-range-picker #picker />
@@ -193,7 +193,8 @@
               @if (scheduleSummary(); as s) {
                 <p class="sched-summary">
                   <mat-icon>schedule</mat-icon>
-                  {{ s.days | plural: 'courses.durationDays' | transloco: { count: s.days } }}
+                  {{ previewCourse().startDate | dateRange: previewCourse().endDate }}
+                  · {{ s.days | plural: 'courses.durationDays' | transloco: { count: s.days } }}
                   · {{ v.schedule.startTime | date: 'HH:mm' }}–{{ v.schedule.endTime | date: 'HH:mm' }}
                   · {{ s.perDay }} {{ 'courseWizard.perDay' | transloco }}
                 </p>
@@ -218,12 +219,18 @@
                   </mat-form-field>
                   <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label>{{ 'courseForm.postalCode' | transloco }}</mat-label>
-                    <input matInput formControlName="postalCode" placeholder="00-000" autocomplete="postal-code">
+                    <input matInput formControlName="postalCode" placeholder="00-000" autocomplete="postal-code"
+                      inputmode="numeric" maxlength="6" (input)="formatPostalCode()">
                     <mat-error>{{ 'courseWizard.postalCodeError' | transloco }}</mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" subscriptSizing="dynamic" class="span-2">
                     <mat-label>{{ 'courseForm.city' | transloco }}</mat-label>
-                    <input matInput formControlName="city" autocomplete="address-level2">
+                    <input matInput formControlName="city" autocomplete="address-level2" [matAutocomplete]="cityAuto">
+                    <mat-autocomplete #cityAuto>
+                      @for (city of citySuggestions(); track city) {
+                        <mat-option [value]="city">{{ city }}</mat-option>
+                      }
+                    </mat-autocomplete>
                     <mat-error>{{ 'auth.required' | transloco }}</mat-error>
                   </mat-form-field>
                 </div>

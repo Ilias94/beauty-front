@@ -3,7 +3,7 @@ import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
-import { catchError, debounceTime, last, map, of, startWith, switchMap } from 'rxjs';
+import { catchError, debounceTime, last, map, of, pairwise, startWith, switchMap } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { DateAdapter, ErrorStateMatcher } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,11 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { SaveCourseAction } from '../../state/course.actions';
+import { GetDistinctCitiesAction, SaveCourseAction } from '../../state/course.actions';
 import { GetAiPromptAction } from '../../state/ai.actions';
 import { SecurityState } from '../../state/security.state';
 import { CourseDtoResponse } from '../../../../api/models';
@@ -65,6 +66,10 @@ function isValidTime(time: Date | null): time is Date {
   return !!time && !isNaN(time.getTime());
 }
 
+function minutesOf(time: Date): number {
+  return time.getHours() * 60 + time.getMinutes();
+}
+
 /** "2027-06-10T09:00:00" in local time, the format the backend expects. */
 function toLocalIso(date: Date, time?: Date | null): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(time?.getHours() ?? 0)}:${pad(time?.getMinutes() ?? 0)}:00`;
@@ -80,7 +85,7 @@ function toLocalIso(date: Date, time?: Date | null): string {
     providers: [provideDayFirstDateAdapter(), { provide: ErrorStateMatcher, useValue: { isErrorState: (c: AbstractControl | null) => !!(c?.invalid && c.touched) } }],
     imports: [SpotlightDirective, 
         ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
-        MatSelectModule, MatDatepickerModule, MatTimepickerModule, MatChipsModule, MatSlideToggleModule, MatProgressSpinnerModule,
+        MatSelectModule, MatDatepickerModule, MatTimepickerModule, MatAutocompleteModule, MatChipsModule, MatSlideToggleModule, MatProgressSpinnerModule,
         TranslocoModule, CourseCardComponent, DatePipe, DateRangePipe, PricePipe, PluralPipe, GalleryEditorComponent,
     ],
     templateUrl: './course-form.component.html',
@@ -159,14 +164,24 @@ export class CourseFormComponent {
   /** Reactive, so the placeholder title appears once translations load and follows language changes. */
   private placeholderTitle = toSignal(this.transloco.selectTranslate('courseWizard.previewTitle'), { initialValue: '' });
 
+  private cities = toSignal(this.store.select(state => state.course.distinctCities as string[]), { initialValue: [] });
+
   stepKey = computed(() => this.steps[this.step()]);
   isOnline = computed(() => this.value().basics.courseType === 'ONLINE');
+
+  /** Cities other courses already run in, matching what is typed, for the address autocomplete. */
+  citySuggestions = computed(() => {
+    const typed = this.value().schedule.address.city.trim().toLocaleLowerCase();
+    return this.cities()
+      .filter(city => city.toLocaleLowerCase().includes(typed) && city.toLocaleLowerCase() !== typed)
+      .slice(0, 6);
+  });
 
   /** Days and daily hours for the summary under the schedule, once dates and a valid time range are set. */
   scheduleSummary = computed(() => {
     const { startDate, endDate, startTime, endTime } = this.value().schedule;
     if (!startDate || !endDate || !isValidTime(startTime) || !isValidTime(endTime)) return null;
-    const minutes = endTime.getHours() * 60 + endTime.getMinutes() - (startTime.getHours() * 60 + startTime.getMinutes());
+    const minutes = minutesOf(endTime) - minutesOf(startTime);
     if (minutes <= 0) return null;
     const hours = Math.floor(minutes / 60), rest = minutes % 60;
     return {
@@ -210,7 +225,17 @@ export class CourseFormComponent {
     this.form.controls.basics.controls.courseType.valueChanges.pipe(startWith('IN_PERSON' as CourseType), takeUntilDestroyed())
       .subscribe(type => type === 'ONLINE' ? address.disable({ emitEvent: false }) : address.enable({ emitEvent: false }));
 
+    // Moving the start time moves the end with it, keeping the length of the classes, as calendars do.
+    const { startTime, endTime } = this.form.controls.schedule.controls;
+    startTime.valueChanges.pipe(startWith(startTime.value), pairwise(), takeUntilDestroyed()).subscribe(([before, after]) => {
+      const end = endTime.value;
+      if (!isValidTime(before) || !isValidTime(after) || !isValidTime(end)) return;
+      const moved = minutesOf(end) + minutesOf(after) - minutesOf(before);
+      if (moved > minutesOf(after) && moved < 24 * 60) endTime.setValue(atTime(Math.floor(moved / 60), moved % 60));
+    });
+
     if (this.browser) {
+      if (!this.cities().length) this.store.dispatch(new GetDistinctCitiesAction());
       this.checkDraft();
       this.form.valueChanges.pipe(debounceTime(600), takeUntilDestroyed()).subscribe(() => this.saveDraftLocally());
     }
@@ -259,6 +284,14 @@ export class CourseFormComponent {
   }
 
   // ── Step 1 & 4 helpers ─────────────────────────────────────
+
+  /** Digits only, with the dash added after the first two: "00950" becomes "00-950". */
+  formatPostalCode(): void {
+    const control = this.form.controls.schedule.controls.address.controls.postalCode;
+    const digits = control.value.replace(/\D/g, '').slice(0, 5);
+    const formatted = digits.length > 2 ? `${digits.slice(0, 2)}-${digits.slice(2)}` : digits;
+    if (formatted !== control.value) control.setValue(formatted);
+  }
 
   setType(type: CourseType): void {
     this.form.controls.basics.controls.courseType.setValue(type);
