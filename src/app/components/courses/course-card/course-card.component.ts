@@ -4,6 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { CourseDtoResponse } from '../../../../api/models';
@@ -18,7 +19,7 @@ export type CourseRelation = 'owner' | 'enrolled' | null;
 /** One course in a grid. The whole card links to the course page; owner tools sit in the footer. */
 @Component({
   selector: 'app-course-card',
-  imports: [SpotlightDirective, RouterLink, MatIconModule, MatButtonModule, MatTooltipModule, TranslocoModule, DecimalPipe, PricePipe, DateRangePipe, PluralPipe],
+  imports: [SpotlightDirective, RouterLink, MatIconModule, MatButtonModule, MatMenuModule, MatTooltipModule, TranslocoModule, DecimalPipe, PricePipe, DateRangePipe, PluralPipe],
   templateUrl: './course-card.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './course-card.component.sass'
@@ -28,6 +29,8 @@ export class CourseCardComponent {
   relation = input<CourseRelation>(null);
   /** Live preview (course wizard): no link and no owner tools. */
   preview = input(false);
+  /** "Your course" on the instructor's own cards; off in their panel, where every card is theirs. */
+  ownerTag = input(true);
 
   downloadExcel = output<number>();
   downloadCsv = output<number>();

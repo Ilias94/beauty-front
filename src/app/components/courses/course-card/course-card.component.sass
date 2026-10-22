@@ -83,6 +83,16 @@
   bottom: 12px
   display: flex
   gap: 6px
+  max-width: calc(100% - 24px)
+
+// City with its district; a long district name gives way to an ellipsis.
+.tag-place
+  min-width: 0
+
+  span
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
 
 .tag-on-media, .tag-relation
   background: rgba(255, 255, 255, 0.92)

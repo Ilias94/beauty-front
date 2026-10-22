@@ -14,7 +14,7 @@
         @case ('HYBRID') { <span class="tag tag-on-media"><mat-icon>devices</mat-icon>{{ 'courses.hybrid' | transloco }}</span> }
         @default {
           @if (course().address?.city) {
-            <span class="tag tag-on-media"><mat-icon>location_on</mat-icon>{{ course().address?.city }}</span>
+            <span class="tag tag-on-media tag-place"><mat-icon>location_on</mat-icon><span>{{ course().address?.city }}@if (course().address?.district) { · {{ course().address?.district }}}</span></span>
           }
         }
       }
@@ -38,8 +38,9 @@
       </span>
     }
 
-    @if (relation() === 'owner' && !preview()) {
-      <span class="tag tag-relation"><mat-icon>edit</mat-icon>{{ 'courses.yourCourse' | transloco }}</span>
+    <!-- In the catalog an instructor spots their own course; in their own panel every card is theirs, so it shows its status. -->
+    @if (relation() === 'owner' && ownerTag() && !preview()) {
+      <span class="tag tag-relation"><mat-icon>person</mat-icon>{{ 'courses.yourCourse' | transloco }}</span>
     } @else if (relation() === 'enrolled') {
       <span class="tag tag-relation tag-enrolled"><mat-icon>check</mat-icon>{{ 'courses.enrolled' | transloco }}</span>
     } @else if (status() !== 'upcoming' && !preview()) {
@@ -110,16 +111,23 @@
       <span class="enrolled-count" [matTooltip]="'courses.enrolledTooltip' | transloco">
         <mat-icon>group</mat-icon>{{ course().participantCount ?? 0 }}/{{ course().maxParticipants ?? 0 }}
       </span>
+      <!-- One labelled menu instead of three bare icons, which phones show without their tooltips. -->
       <div class="tools">
-        <a mat-icon-button [routerLink]="['/questions', course().id]" [matTooltip]="'tooltip.quiz' | transloco">
-          <mat-icon>quiz</mat-icon>
-        </a>
-        <button mat-icon-button type="button" (click)="onTool($event, 'excel')" [matTooltip]="'tooltip.excelReport' | transloco">
-          <mat-icon>table_view</mat-icon>
+        <button mat-icon-button type="button" [matMenuTriggerFor]="toolsMenu" (click)="$event.stopPropagation()"
+          [attr.aria-label]="'courses.courseTools' | transloco" [matTooltip]="'courses.courseTools' | transloco">
+          <mat-icon>more_horiz</mat-icon>
         </button>
-        <button mat-icon-button type="button" (click)="onTool($event, 'csv')" [matTooltip]="'tooltip.csvReport' | transloco">
-          <mat-icon>download</mat-icon>
-        </button>
+        <mat-menu #toolsMenu xPosition="before" class="card-tools-menu">
+          <a mat-menu-item [routerLink]="['/questions', course().id]">
+            <mat-icon>quiz</mat-icon>{{ 'courses.toolQuiz' | transloco }}
+          </a>
+          <button mat-menu-item type="button" (click)="onTool($event, 'excel')">
+            <mat-icon>table_view</mat-icon>{{ 'courses.toolExcel' | transloco }}
+          </button>
+          <button mat-menu-item type="button" (click)="onTool($event, 'csv')">
+            <mat-icon>download</mat-icon>{{ 'courses.toolCsv' | transloco }}
+          </button>
+        </mat-menu>
       </div>
     } @else {
       @if (status() !== 'past') {
