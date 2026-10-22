@@ -173,11 +173,17 @@
             <div class="grid-2">
               <mat-form-field appearance="outline">
                 <mat-label>{{ 'courseWizard.startTime' | transloco }}</mat-label>
-                <input matInput type="time" formControlName="startTime">
+                <input matInput [matTimepicker]="startPicker" formControlName="startTime">
+                <mat-timepicker-toggle matIconSuffix [for]="startPicker" />
+                <mat-timepicker #startPicker interval="15min" />
+                <mat-error>{{ 'courseWizard.timeError' | transloco }}</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>{{ 'courseWizard.endTime' | transloco }}</mat-label>
-                <input matInput type="time" formControlName="endTime">
+                <input matInput [matTimepicker]="endPicker" [matTimepickerMin]="form.controls.schedule.controls.startTime.value" formControlName="endTime">
+                <mat-timepicker-toggle matIconSuffix [for]="endPicker" />
+                <mat-timepicker #endPicker interval="15min" />
+                <mat-error>{{ 'courseWizard.endTimeError' | transloco }}</mat-error>
               </mat-form-field>
             </div>
 
@@ -301,7 +307,7 @@
               <div class="sum-block">
                 <div class="sum-head"><h3>{{ 'courseWizard.steps.schedule' | transloco }}</h3><button mat-button type="button" class="btn-sm" (click)="goTo(2)">{{ 'courseWizard.edit' | transloco }}</button></div>
                 <dl>
-                  <div><dt>{{ 'courseWizard.datesLabel' | transloco }}</dt><dd>{{ previewCourse().startDate | dateRange: previewCourse().endDate }}, {{ v.schedule.startTime }}@if (v.schedule.endTime) {–{{ v.schedule.endTime }}}</dd></div>
+                  <div><dt>{{ 'courseWizard.datesLabel' | transloco }}</dt><dd>{{ previewCourse().startDate | dateRange: previewCourse().endDate }}, {{ v.schedule.startTime | date: 'HH:mm' }}@if (v.schedule.endTime) {–{{ v.schedule.endTime | date: 'HH:mm' }}}</dd></div>
                   <div><dt>{{ 'courseDetails.where' | transloco }}</dt><dd>
                     @if (isOnline()) { {{ 'courseDetails.onlineWhere' | transloco }} }
                     @else { {{ v.schedule.address.street }} {{ v.schedule.address.streetNumber }}, {{ v.schedule.address.postalCode }} {{ v.schedule.address.city }} }

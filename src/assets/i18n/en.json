@@ -768,6 +768,8 @@
     "datesError": "Choose a start and end date",
     "startTime": "Start time",
     "endTime": "End time",
+    "timeError": "Enter a time, e.g. 09:30",
+    "endTimeError": "Must be after the start time",
     "onlineNote": "Online courses don't need an address. You'll add video lessons after creating the course.",
     "addressLabel": "Venue address",
     "postalCodeError": "Use the 00-000 format",

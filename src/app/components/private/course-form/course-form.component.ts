@@ -1,5 +1,5 @@
 import { Component, DestroyRef, ElementRef, PLATFORM_ID, computed, inject, signal, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -45,10 +46,23 @@ function pad(n: number): string {
   return n.toString().padStart(2, '0');
 }
 
+/** A Date carrying only a time of day, the value the Material timepicker works with. */
+function atTime(hours: number, minutes = 0): Date {
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+}
+
+/** A time from a saved draft: an ISO date, or "HH:mm" from drafts saved before the timepicker. */
+function draftTime(value: string | null | undefined): Date | null {
+  if (!value) return null;
+  const hhmm = value.match(/^(\d{1,2}):(\d{2})$/);
+  return hhmm ? atTime(+hhmm[1], +hhmm[2]) : new Date(value);
+}
+
 /** "2027-06-10T09:00:00" in local time, the format the backend expects. */
-function toLocalIso(date: Date, time?: string | null): string {
-  const [h, m] = (time || '00:00').split(':').map(Number);
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(h)}:${pad(m)}:00`;
+function toLocalIso(date: Date, time?: Date | null): string {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(time?.getHours() ?? 0)}:${pad(time?.getMinutes() ?? 0)}:00`;
 }
 
 /**
@@ -61,8 +75,8 @@ function toLocalIso(date: Date, time?: string | null): string {
     providers: [provideDayFirstDateAdapter(), { provide: ErrorStateMatcher, useValue: { isErrorState: (c: AbstractControl | null) => !!(c?.invalid && c.touched) } }],
     imports: [SpotlightDirective, 
         ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
-        MatSelectModule, MatDatepickerModule, MatChipsModule, MatSlideToggleModule, MatProgressSpinnerModule,
-        TranslocoModule, CourseCardComponent, DateRangePipe, PricePipe, GalleryEditorComponent,
+        MatSelectModule, MatDatepickerModule, MatTimepickerModule, MatChipsModule, MatSlideToggleModule, MatProgressSpinnerModule,
+        TranslocoModule, CourseCardComponent, DatePipe, DateRangePipe, PricePipe, GalleryEditorComponent,
     ],
     templateUrl: './course-form.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -103,8 +117,8 @@ export class CourseFormComponent {
     schedule: new FormGroup({
       startDate: new FormControl<Date | null>(null, Validators.required),
       endDate: new FormControl<Date | null>(null, Validators.required),
-      startTime: new FormControl('10:00', { nonNullable: true, validators: Validators.required }),
-      endTime: new FormControl('17:00', { nonNullable: true }),
+      startTime: new FormControl<Date | null>(atTime(10), Validators.required),
+      endTime: new FormControl<Date | null>(atTime(17)),
       address: new FormGroup({
         city: new FormControl('', { nonNullable: true, validators: Validators.required }),
         postalCode: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\d{2}-\d{3}$/)] }),
@@ -348,6 +362,8 @@ export class CourseFormComponent {
         const v = draft.value;
         v.schedule.startDate = v.schedule.startDate ? new Date(v.schedule.startDate) : null;
         v.schedule.endDate = v.schedule.endDate ? new Date(v.schedule.endDate) : null;
+        v.schedule.startTime = draftTime(v.schedule.startTime);
+        v.schedule.endTime = draftTime(v.schedule.endTime);
         this.form.patchValue(v);
         this.form.markAsDirty();
         this.maxReached.set(Math.min(draft.step ?? 0, this.steps.length - 1));
@@ -411,7 +427,7 @@ export class CourseFormComponent {
       prerequisites: v.details.prerequisites.trim() || null,
       status,
       startDate: v.schedule.startDate ? toLocalIso(v.schedule.startDate, v.schedule.startTime) : null,
-      endDate: v.schedule.endDate ? toLocalIso(v.schedule.endDate, v.schedule.endTime || '00:00') : null,
+      endDate: v.schedule.endDate ? toLocalIso(v.schedule.endDate, v.schedule.endTime) : null,
       address: online ? null : {
         city: v.schedule.address.city.trim(),
         postalCode: v.schedule.address.postalCode.trim(),

@@ -167,9 +167,9 @@
 .full
   width: 100%
 
-  // A hint fills the space under the field, so the next row's floating label would touch it.
-  &:has(mat-hint)
-    margin-bottom: 10px
+// A hint or error fills the line under a field, where the next row's floating label pokes up.
+.step mat-form-field
+  margin-bottom: 10px
 
 .grid-2, .grid-3
   display: grid

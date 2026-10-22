@@ -768,6 +768,8 @@
     "datesError": "Wybierz datę rozpoczęcia i zakończenia",
     "startTime": "Godzina rozpoczęcia",
     "endTime": "Godzina zakończenia",
+    "timeError": "Wpisz godzinę, np. 09:30",
+    "endTimeError": "Zakończenie musi być po rozpoczęciu",
     "onlineNote": "Kurs online nie potrzebuje adresu. Materiały wideo dodasz po utworzeniu kursu.",
     "addressLabel": "Adres zajęć",
     "postalCodeError": "Kod w formacie 00-000",
