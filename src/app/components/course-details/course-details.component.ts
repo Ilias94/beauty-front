@@ -29,6 +29,7 @@ import { PluralPipe } from '../../shared/plural.pipe';
 import { categoryKey, categoryVisual } from '../../shared/category-visual';
 import { S3_BASE } from '../../app.const';
 import { CourseGalleryComponent } from '../../shared/course-gallery/course-gallery.component';
+import { SpotlightDirective } from '../../shared/spotlight.directive';
 import { GalleryEditDialogComponent } from '../../shared/gallery-editor/gallery-edit-dialog.component';
 import { CourseImagesApiService } from '../../services/course-images-api.service';
 import { GoogleMapsLoader } from '../../core/maps/google-maps-loader.service';
@@ -69,7 +70,7 @@ function mapPin(icon: string): HTMLElement {
         MatButtonModule, MatIconModule, MatDialogModule, MatFormFieldModule, MatInputModule,
         RouterModule, ReactiveFormsModule, CommentsComponent, GoogleMapsModule, DecimalPipe,
         TranslocoModule, CourseGroupChatComponent, StarRatingComponent, PricePipe, DateRangePipe, PluralPipe,
-        CourseGalleryComponent,
+        CourseGalleryComponent, SpotlightDirective,
     ],
     templateUrl: './course-details.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,

@@ -235,6 +235,8 @@
     "aboutCourse": "O kursie",
     "location": "Miejsce",
     "directions": "Wyznacz trasę",
+    "certificateYes": "W cenie kursu",
+    "certificateNo": "Bez certyfikatu",
     "newCourse": "Nowy kurs",
     "share": "Udostępnij",
     "linkCopied": "Skopiowano link do kursu",

@@ -73,15 +73,45 @@
               <mat-icon>{{ descriptionOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
             </button>
           }
+          <!-- Key facts as tiles, each in its own colour; they rise in one after another. -->
           <dl class="facts">
             @if (c.courseLevel) {
-              <div><dt>{{ 'courseDetails.level' | transloco }}</dt><dd>{{ ('courseDetails.levels.' + c.courseLevel) | transloco }}</dd></div>
+              <div class="fact fact-level rise" style="--i: 0" appSpotlight>
+                <span class="fact-icon" aria-hidden="true">
+                  <span class="level-bars" [attr.data-level]="c.courseLevel"><i></i><i></i><i></i></span>
+                </span>
+                <div class="fact-text">
+                  <dt>{{ 'courseDetails.level' | transloco }}</dt>
+                  <dd>
+                    <span class="long">{{ ('courseDetails.levels.' + c.courseLevel) | transloco }}</span>
+                    <span class="short">{{ ('courses.levelShort.' + c.courseLevel) | transloco }}</span>
+                  </dd>
+                </div>
+              </div>
             }
             @if (c.language) {
-              <div><dt>{{ 'courseDetails.language' | transloco }}</dt><dd>{{ languageName(c.language) }}</dd></div>
+              <div class="fact fact-language rise" style="--i: 1" appSpotlight>
+                <span class="fact-icon" aria-hidden="true"><mat-icon>translate</mat-icon></span>
+                <div class="fact-text">
+                  <dt>{{ 'courseDetails.language' | transloco }}</dt>
+                  <dd>{{ languageName(c.language) }}</dd>
+                </div>
+              </div>
             }
-            <div><dt>{{ 'courseDetails.certificate' | transloco }}</dt><dd>{{ (c.certificate ? 'common.yes' : 'common.no') | transloco }}</dd></div>
-            <div><dt>{{ 'courseDetails.groupSize' | transloco }}</dt><dd>{{ 'courseDetails.groupSizeValue' | transloco: { max: c.maxParticipants } }}</dd></div>
+            <div class="fact fact-certificate rise" style="--i: 2" appSpotlight [class.off]="!c.certificate">
+              <span class="fact-icon" aria-hidden="true"><mat-icon>{{ c.certificate ? 'workspace_premium' : 'do_not_disturb_on' }}</mat-icon></span>
+              <div class="fact-text">
+                <dt>{{ 'courseDetails.certificate' | transloco }}</dt>
+                <dd>{{ (c.certificate ? 'courseDetails.certificateYes' : 'courseDetails.certificateNo') | transloco }}</dd>
+              </div>
+            </div>
+            <div class="fact fact-group rise" style="--i: 3" appSpotlight>
+              <span class="fact-icon" aria-hidden="true"><mat-icon>groups</mat-icon></span>
+              <div class="fact-text">
+                <dt>{{ 'courseDetails.groupSize' | transloco }}</dt>
+                <dd>{{ 'courseDetails.groupSizeValue' | transloco: { max: c.maxParticipants } }}</dd>
+              </div>
+            </div>
           </dl>
         </section>
 

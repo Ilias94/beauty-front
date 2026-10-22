@@ -235,6 +235,8 @@
     "aboutCourse": "About the course",
     "location": "Location",
     "directions": "Get directions",
+    "certificateYes": "Included",
+    "certificateNo": "Not included",
     "newCourse": "New course",
     "share": "Share",
     "linkCopied": "Course link copied",
