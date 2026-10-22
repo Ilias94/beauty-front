@@ -54,10 +54,12 @@
   </header>
 
   <!-- ─── Search & filters ───────────────────────────────── -->
-  <!-- "My courses" lists are short; filters only appear once there is something to filter. -->
-  @if (mode() === 'catalog' || (pageCourses()?.totalElements ?? 0) > 0 || hasActiveFilters()) {
+  <!-- "My courses" lists are short; filters only appear once there is something to filter:
+       search and sort past a couple of rows, categories when the courses span more than one. -->
+  @if (mode() === 'catalog' || ((pageCourses()?.totalElements ?? 0) > 0 || hasActiveFilters()) && (showSearch() || showCategories())) {
   <section class="filters" [attr.aria-label]="'courses.filtersLabel' | transloco">
     <!-- One search panel: what, where and in which order, each segment with its own heading. -->
+    @if (showSearch()) {
     <div class="console">
       <label class="seg seg-search">
         <mat-icon class="seg-icon">search</mat-icon>
@@ -113,6 +115,7 @@
         <mat-icon class="seg-caret" aria-hidden="true">expand_more</mat-icon>
       </div>
     </div>
+    }
 
     @if (mode() === 'catalog') {
       <div class="filter-row">
@@ -135,6 +138,7 @@
       </div>
     }
 
+    @if (showCategories()) {
     <div class="cat-tiles" role="radiogroup" [attr.aria-label]="'courses.categoryLabel' | transloco">
       <button type="button" class="cat-tile cat-all" appSpotlight role="radio" [attr.aria-checked]="selectedCategoryId === null"
         [class.on]="selectedCategoryId === null" (click)="onCategorySelect(null)">
@@ -142,7 +146,7 @@
         <span class="cat-name">{{ 'courses.allCategories' | transloco }}</span>
         <mat-icon class="cat-check" aria-hidden="true">check_circle</mat-icon>
       </button>
-      @for (cat of categories(); track cat.id) {
+      @for (cat of visibleCategories(); track cat.id) {
         @let look = visualOf(cat);
         <button type="button" class="cat-tile" appSpotlight role="radio" [attr.aria-checked]="selectedCategoryId === cat.id"
           [class.on]="selectedCategoryId === cat.id" (click)="onCategorySelect(cat.id)"
@@ -153,6 +157,7 @@
         </button>
       }
     </div>
+    }
   </section>
   }
 

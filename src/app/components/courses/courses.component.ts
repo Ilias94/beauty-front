@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, Signal, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, OnInit, Signal, computed, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { GetAutocompleteTitleAction, GetDistinctCitiesAction, GetPageCoursesAction } from '../state/course.actions';
@@ -11,8 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { GetCategoriesAction } from '../state/category.actions';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
-import { debounceTime, Subject } from 'rxjs';
-import { CategoryDtoResponse, PageCourseDtoResponse } from '../../../api/models';
+import { catchError, debounceTime, of, Subject } from 'rxjs';
+import { CategoryDtoResponse, CourseDtoResponse, PageCourseDtoResponse } from '../../../api/models';
+import { CourseControllerService } from '../../../api/services';
 import { DownloadFileCsvAction, DownloadFileExcelAction } from '../state/file.actions';
 import { SecurityState } from '../state/security.state';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -22,6 +23,9 @@ import { SpotlightDirective } from '../../shared/spotlight.directive';
 import { PluralPipe } from '../../shared/plural.pipe';
 
 type CourseType = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
+
+/** Up to this many personal courses (two rows of cards) show without search and sorting. */
+const PERSONAL_LIST_FITS = 6;
 
 /**
  * Course grid used in three places: the public catalog, the learner's "my courses"
@@ -62,6 +66,21 @@ export class CoursesComponent implements OnInit {
 
   mode = computed<'catalog' | 'student' | 'creator'>(() =>
     this.isCurrentCreator() ? 'creator' : this.isCurrentStudent() ? 'student' : 'catalog');
+
+  private coursesApi = inject(CourseControllerService);
+  /** All of the user's own courses (enrolled or taught), unfiltered: what the personal views can filter by. */
+  private ownCourses = signal<CourseDtoResponse[] | null>(null);
+
+  /** The catalogue offers every category; a personal list only those its courses are in. */
+  visibleCategories = computed(() => {
+    if (this.mode() === 'catalog') return this.categories();
+    const ids = new Set((this.ownCourses() ?? []).map(course => course.category?.id));
+    return this.categories().filter(category => ids.has(category.id));
+  });
+  /** Choosing between categories only helps when there are at least two. */
+  showCategories = computed(() => this.mode() === 'catalog' || this.visibleCategories().length > 1);
+  /** A personal list of a few courses fits on screen: searching and sorting it would be noise. */
+  showSearch = computed(() => this.mode() === 'catalog' || (this.ownCourses()?.length ?? 0) > PERSONAL_LIST_FITS);
 
   page = 0;
   readonly pageSizeOptions = [12, 24, 48];
@@ -110,6 +129,11 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch([new GetCategoriesAction(), new GetDistinctCitiesAction()]);
     this.refresh();
+    if (this.mode() !== 'catalog') {
+      this.coursesApi.getCourses({ isCurrentCreator: this.isCurrentCreator(), isCurrentStudent: this.isCurrentStudent(), hidePast: false, size: 200 })
+        .pipe(catchError(() => of(null)), takeUntilDestroyed(this.destroyRef))
+        .subscribe(page => this.ownCourses.set(page?.content ?? []));
+    }
     // Search as you type: suggestions and the list follow the box once typing pauses.
     // A single letter would match almost everything, so the list waits for two (or an empty box).
     this.searchInput.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe(text => {
