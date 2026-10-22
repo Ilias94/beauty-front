@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-**Angular 17 SSR app** with NGXS state management, talking to a Spring Boot backend at `http://localhost:8080`.
+**Angular 22 SSR app** with NGXS state management, talking to a Spring Boot backend at `http://localhost:8080`.
 
 ### API Client (`src/api/`)
 
