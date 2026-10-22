@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostListener, ViewChild, computed, effect, inject, input, output, signal } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Component, ElementRef, HostListener, ViewChild, computed, effect, inject, input, output, signal, DOCUMENT } from '@angular/core';
+
 import { MatIconModule } from '@angular/material/icon';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CategoryVisual } from '../category-visual';

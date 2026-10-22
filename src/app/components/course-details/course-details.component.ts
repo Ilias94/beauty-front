@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, OnInit, Signal, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnInit, Signal, ViewChild, computed, effect, inject, signal, DOCUMENT } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
@@ -13,7 +13,7 @@ import { CommentsComponent } from '../comments/comments.component';
 import { GetCurrentUserRatingByCourseIdAction, GetRatingSummaryAction, SaveRatingAction } from '../state/rating.actions';
 import { CommentDtoResponse, CourseDtoResponse, CourseImageDto, RatingDto, UserDtoResponse } from '../../../api/models';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { DOCUMENT, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CourseOnlineComponent } from '../course-online/course-online.component';
 import { AddVideoAction } from '../state/video.actions';
