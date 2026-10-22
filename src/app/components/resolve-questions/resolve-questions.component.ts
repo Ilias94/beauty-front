@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FindQuestionByCourseIdAction } from '../state/question.actions';
@@ -12,7 +12,7 @@ type Phase = 'quiz' | 'results';
 
 @Component({
     selector: 'app-resolve-questions',
-    imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, TranslocoModule],
+    imports: [RouterModule, MatButtonModule, MatIconModule, TranslocoModule],
     templateUrl: './resolve-questions.component.html',
     styleUrl: './resolve-questions.component.sass'
 })

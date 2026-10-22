@@ -2,7 +2,7 @@ import { Component, DestroyRef, OnInit, Signal, computed, inject, input } from '
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { GetAutocompleteTitleAction, GetDistinctCitiesAction, GetPageCoursesAction } from '../state/course.actions';
-import { CommonModule } from '@angular/common';
+
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -30,19 +30,18 @@ type CourseType = 'IN_PERSON' | 'ONLINE' | 'HYBRID';
 @Component({
     selector: 'app-courses',
     imports: [
-        CommonModule,
-        MatPaginatorModule,
-        MatButtonModule,
-        RouterModule,
-        MatSelectModule,
-        FormsModule,
-        MatAutocompleteModule,
-        MatIconModule,
-        TranslocoModule,
-        CourseCardComponent,
-        SpotlightDirective,
-        PluralPipe,
-    ],
+    MatPaginatorModule,
+    MatButtonModule,
+    RouterModule,
+    MatSelectModule,
+    FormsModule,
+    MatAutocompleteModule,
+    MatIconModule,
+    TranslocoModule,
+    CourseCardComponent,
+    SpotlightDirective,
+    PluralPipe
+],
     templateUrl: './courses.component.html',
     styleUrl: './courses.component.sass'
 })

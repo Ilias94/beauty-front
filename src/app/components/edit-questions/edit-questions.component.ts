@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -25,10 +25,15 @@ type AnswerForm = FormGroup<{
 @Component({
     selector: 'app-edit-questions',
     imports: [
-        CommonModule, ReactiveFormsModule, RouterModule,
-        MatFormFieldModule, MatInputModule, MatButtonModule,
-        MatIconModule, MatTooltipModule, TranslocoModule,
-    ],
+    ReactiveFormsModule,
+    RouterModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslocoModule
+],
     templateUrl: './edit-questions.component.html',
     styleUrl: './edit-questions.component.sass'
 })
