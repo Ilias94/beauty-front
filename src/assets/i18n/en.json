@@ -235,6 +235,18 @@
     "aboutCourse": "About the course",
     "location": "Location",
     "directions": "Get directions",
+    "newCourse": "New course",
+    "share": "Share",
+    "linkCopied": "Course link copied",
+    "priceNote": "for the whole course",
+    "daily": "daily",
+    "startsToday": "Starts today",
+    "showOnMap": "Show on map",
+    "addToCalendar": "Add to calendar",
+    "startsInDays": {
+      "one": "Starts tomorrow",
+      "other": "Starts in {{count}} days"
+    },
     "ratings": "Ratings",
     "averageRating": "Average rating",
     "review": "review",

@@ -29,11 +29,15 @@
           <h1 class="title">{{ c.title }}</h1>
           <div class="head-meta">
             @if (rating().count) {
-              <a class="meta-item rating" href="#reviews">
+              <!-- A button, not href="#reviews": with <base href="/"> that link led to the home page. -->
+              <button type="button" class="meta-item rating" (click)="scrollToSection('reviews')">
                 <app-star-rating [value]="rating().average" size="sm" />
                 <strong>{{ rating().average | number: '1.1-1' }}</strong>
                 <span class="muted">({{ rating().count | plural: 'rating.count' | transloco: { count: rating().count } }})</span>
-              </a>
+              </button>
+            } @else if (status() === 'upcoming') {
+              <!-- "No ratings" reads as a warning on a course nobody could rate yet. -->
+              <span class="meta-item new"><mat-icon>auto_awesome</mat-icon>{{ 'courseDetails.newCourse' | transloco }}</span>
             } @else {
               <span class="meta-item muted"><mat-icon>star_outline</mat-icon>{{ 'rating.none' | transloco }}</span>
             }
@@ -47,6 +51,9 @@
             @if (status() !== 'upcoming') {
               <span class="tag" [class.tag-success]="status() === 'ongoing'">{{ ('status.' + status()) | transloco }}</span>
             }
+            <button type="button" class="meta-item share" (click)="share()" [attr.aria-label]="'courseDetails.share' | transloco">
+              <mat-icon>ios_share</mat-icon><span class="share-text">{{ 'courseDetails.share' | transloco }}</span>
+            </button>
           </div>
         </header>
 
@@ -98,7 +105,7 @@
 
         <!-- Location -->
         @if (c.address && c.courseType !== 'ONLINE') {
-          <section class="section">
+          <section class="section" id="location">
             <h2>{{ 'courseDetails.location' | transloco }}</h2>
             <div class="place">
               <mat-icon>location_on</mat-icon>
@@ -245,7 +252,7 @@
       <!-- ── Booking card ──────────────────────────────── -->
       <aside class="side">
         <div class="booking">
-          <div class="price">{{ c.price | price }}</div>
+          <div class="price">{{ c.price | price }}<span class="price-note">{{ 'courseDetails.priceNote' | transloco }}</span></div>
 
           <ul class="booking-facts">
             <li>
@@ -253,20 +260,40 @@
               <div>
                 <span class="fact-label">{{ 'courseDetails.dates' | transloco }}</span>
                 <span>{{ c.startDate | dateRange: c.endDate }}</span>
-                <span class="muted small">{{ 'courseDetails.startsAt' | transloco }} {{ c.startDate | dateRange: null : true }}</span>
+                @if (schedule(); as s) {
+                  <span class="muted small">
+                    {{ s.length.count | plural: s.length.key | transloco: { count: s.length.count } }} ·
+                    @if (s.to) { {{ s.from }}–{{ s.to }}@if (s.days > 1) { {{ 'courseDetails.daily' | transloco }}} } @else { {{ 'courseDetails.startsAt' | transloco }} {{ s.from }} }
+                  </span>
+                }
+                @if (startsIn(); as d) {
+                  <span class="countdown"><mat-icon>schedule</mat-icon>{{ d | plural: 'courseDetails.startsInDays' | transloco: { count: d } }}</span>
+                } @else if (startsIn() === 0) {
+                  <span class="countdown"><mat-icon>schedule</mat-icon>{{ 'courseDetails.startsToday' | transloco }}</span>
+                }
               </div>
             </li>
             <li>
               <mat-icon>{{ c.courseType === 'ONLINE' ? 'videocam' : 'location_on' }}</mat-icon>
               <div>
                 <span class="fact-label">{{ 'courseDetails.where' | transloco }}</span>
-                <span>
-                  @switch (c.courseType) {
-                    @case ('ONLINE') { {{ 'courseDetails.onlineWhere' | transloco }} }
-                    @case ('HYBRID') { {{ 'courses.hybrid' | transloco }}@if (c.address?.city) {, {{ c.address?.city }}} }
-                    @default { {{ c.address?.city }} }
+                @if (street(); as st) {
+                  <span>{{ st }}</span>
+                  <span class="muted small">
+                    @if (c.courseType === 'HYBRID') { {{ 'courses.hybrid' | transloco }} · }{{ c.address?.city }}@if (c.address?.district) { · {{ c.address?.district }}}
+                  </span>
+                  @if (position()) {
+                    <button type="button" class="fact-link" (click)="scrollToSection('location')">{{ 'courseDetails.showOnMap' | transloco }}</button>
                   }
-                </span>
+                } @else {
+                  <span>
+                    @switch (c.courseType) {
+                      @case ('ONLINE') { {{ 'courseDetails.onlineWhere' | transloco }} }
+                      @case ('HYBRID') { {{ 'courses.hybrid' | transloco }}@if (c.address?.city) {, {{ c.address?.city }}} }
+                      @default { {{ c.address?.city }} }
+                    }
+                  </span>
+                }
               </div>
             </li>
           </ul>
@@ -280,7 +307,10 @@
                   {{ 'courseDetails.seatsLeft' | transloco: { left: spotsLeft(), max: c.maxParticipants } }}
                 }
               </div>
-              <div class="bar"><span [style.width.%]="fillPercent()"></span></div>
+              <!-- An empty bar reads as broken; it appears with the first booking. -->
+              @if (fillPercent() > 0) {
+                <div class="bar"><span [style.width.%]="fillPercent()"></span></div>
+              }
             </div>
           }
 
@@ -321,6 +351,9 @@
                 </button>
               }
               <a mat-stroked-button class="cta" [routerLink]="['/questions', courseId]"><mat-icon>quiz</mat-icon>{{ 'courseDetails.goToQuiz' | transloco }}</a>
+              @if (status() === 'upcoming' && calendarUrl(); as url) {
+                <a mat-stroked-button class="cta" [href]="url" target="_blank" rel="noopener"><mat-icon>event</mat-icon>{{ 'courseDetails.addToCalendar' | transloco }}</a>
+              }
             </div>
           } @else if (status() === 'past') {
             <p class="notice"><mat-icon>event_busy</mat-icon>{{ 'courseDetails.courseEnded' | transloco }}</p>

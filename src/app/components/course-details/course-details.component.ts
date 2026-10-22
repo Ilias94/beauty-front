@@ -32,6 +32,25 @@ import { CourseGalleryComponent } from '../../shared/course-gallery/course-galle
 import { GalleryEditDialogComponent } from '../../shared/gallery-editor/gallery-edit-dialog.component';
 import { CourseImagesApiService } from '../../services/course-images-api.service';
 import { GoogleMapsLoader } from '../../core/maps/google-maps-loader.service';
+import { NotificationService } from '../../core/notification/notification.service';
+
+function startOfDay(date: Date): number {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
+function minutesOfDay(date: Date): number {
+  return date.getHours() * 60 + date.getMinutes();
+}
+
+function hhmm(date: Date): string {
+  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+}
+
+/** Google Calendar's local date-time format: 20270615T090000. */
+function calendarStamp(date: Date): string {
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}${p(date.getMonth() + 1)}${p(date.getDate())}T${p(date.getHours())}${p(date.getMinutes())}00`;
+}
 
 /** The map marker's content: a round wine pin with the category icon (styled by .map-pin in styles.sass). */
 function mapPin(icon: string): HTMLElement {
@@ -64,6 +83,8 @@ export class CourseDetailsComponent implements OnInit {
   private transloco = inject(TranslocoService);
   private destroyRef = inject(DestroyRef);
   private chatApi = inject(ChatApiService);
+  private notifications = inject(NotificationService);
+  private document = inject(DOCUMENT);
 
   /** Owner only: this course's participants (from the messaging contacts), each with a "Write" button. */
   participants = signal<ChatContact[] | null>(null);
@@ -169,6 +190,82 @@ export class CourseDetailsComponent implements OnInit {
     });
   });
   canReview = computed(() => !!this.currentUser() && this.isEnrolled() && !this.isOwner());
+
+  /** How long the course runs and its daily hours ("3 days · 09:00–17:00"), from its start and end. */
+  schedule = computed(() => {
+    const c = this.course();
+    if (!c?.startDate) return null;
+    const start = new Date(c.startDate);
+    const end = c.endDate ? new Date(c.endDate) : null;
+    const days = end ? Math.round((startOfDay(end) - startOfDay(start)) / 86_400_000) + 1 : 1;
+    // Daily hours only describe a short in-person course: an online course or one running for weeks
+    // isn't held every day from its start time to its end time.
+    const daily = c.courseType !== 'ONLINE' && days <= 7 && !!end && minutesOfDay(end) > minutesOfDay(start);
+    // From two weeks on, weeks: the same rounding as the catalog cards.
+    const length = days < 14
+      ? { count: days, key: 'courses.durationDays' }
+      : { count: Math.round(days / 7), key: 'courses.durationWeeks' };
+    return { start, end, days, length, from: hhmm(start), to: daily ? hhmm(end!) : null };
+  });
+  /** "Starts in 5 days" for a course starting within a month; further off the date says enough. */
+  startsIn = computed(() => {
+    const s = this.schedule();
+    if (!s || this.status() !== 'upcoming') return null;
+    const days = Math.round((startOfDay(s.start) - startOfDay(new Date())) / 86_400_000);
+    return days <= 30 ? days : null;
+  });
+  /** The street address under "Where" in the booking card, for in-person and hybrid courses. */
+  street = computed(() => {
+    const a = this.course()?.address;
+    if (this.course()?.courseType === 'ONLINE' || !a?.street) return null;
+    return `${a.street} ${a.streetNumber ?? ''}`.trim() + (a.apartmentNumber ? `/${a.apartmentNumber}` : '');
+  });
+
+  /**
+   * Adds the course to Google Calendar: a short in-person course as its daily hours on each of its days,
+   * anything else as one all-day event over its dates.
+   */
+  calendarUrl = computed(() => {
+    const c = this.course();
+    const s = this.schedule();
+    if (!c || !s) return null;
+    let dates: string;
+    if (s.to) {
+      const firstDayEnd = new Date(s.start.getFullYear(), s.start.getMonth(), s.start.getDate(), s.end!.getHours(), s.end!.getMinutes());
+      dates = `${calendarStamp(s.start)}/${calendarStamp(firstDayEnd)}`;
+    } else {
+      // All-day events end on the day after the last one.
+      const dayAfter = new Date(s.start.getFullYear(), s.start.getMonth(), s.start.getDate() + s.days);
+      dates = `${calendarStamp(s.start).slice(0, 8)}/${calendarStamp(dayAfter).slice(0, 8)}`;
+    }
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: c.title ?? '',
+      dates,
+      ctz: 'Europe/Warsaw',
+      details: this.document.location.href,
+    });
+    if (s.to && s.days > 1) params.set('recur', `RRULE:FREQ=DAILY;COUNT=${s.days}`);
+    const a = c.address;
+    if (c.courseType !== 'ONLINE' && a?.street) params.set('location', `${a.street} ${a.streetNumber ?? ''}, ${a.postalCode ?? ''} ${a.city ?? ''}`.replace(/\s+/g, ' ').trim());
+    return `https://calendar.google.com/calendar/render?${params}`;
+  });
+
+  scrollToSection(id: string): void {
+    this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /** The system share sheet on phones; elsewhere the link is copied. */
+  async share(): Promise<void> {
+    const url = location.href;
+    const title = this.course()?.title ?? '';
+    if (navigator.share) {
+      try { await navigator.share({ title, url }); } catch { /* closed without sharing */ }
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    this.notifications.show(this.transloco.translate('courseDetails.linkCopied'));
+  }
   showMobileBar = computed(() => this.loaded() && !this.isOwner() && !this.isEnrolled() && this.status() !== 'past' && !this.isFull());
 
   /** Course language is stored as a code ("pl"); show its name in the UI language. */

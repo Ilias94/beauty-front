@@ -59,6 +59,9 @@
   // The rating is the first thing people look for, so it gets a warm pill that links to the reviews.
   &.rating
     padding: 4px 12px 4px 8px
+    border: 0
+    font: inherit
+    cursor: pointer
     border-radius: 999px
     background: var(--warning-soft)
     color: var(--ink-2)
@@ -67,6 +70,42 @@
 
     &:hover
       background: #F6E3C4
+
+  // A course nobody could rate yet is new, not unrated.
+  &.new
+    padding: 4px 12px 4px 8px
+    border-radius: 999px
+    background: var(--accent-soft)
+    color: var(--accent)
+
+    .mat-icon
+      color: var(--accent)
+
+  &.share
+    margin-left: auto
+    padding: 6px 12px
+    border: 1px solid var(--line-strong)
+    border-radius: 999px
+    background: var(--surface)
+    color: var(--ink-2)
+    font: inherit
+    font-size: 14px
+    cursor: pointer
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+    &:hover, &:focus-visible
+      border-color: var(--accent)
+      color: var(--accent)
+
+      .mat-icon
+        color: var(--accent)
+
+    // Phones: just the icon, so it stays on the line with the rating and the place.
+    @media (max-width: 480px)
+      padding: 6px
+
+      .share-text
+        display: none
 
     strong
       font-size: 15px
@@ -79,6 +118,8 @@
 .section
   padding: 36px 0
   border-bottom: 1px solid var(--line)
+  // Jumps to #location and #reviews land below the sticky header.
+  scroll-margin-top: calc(var(--header-h) + 8px)
 
   &:last-child
     border-bottom: 0
@@ -387,6 +428,41 @@
   font-weight: 500
   line-height: 1.1
 
+// "For the whole course", so nobody reads the price as per day.
+.price-note
+  margin-left: 8px
+  font-family: var(--font-ui)
+  font-size: 14px
+  font-weight: 500
+  color: var(--ink-3)
+
+.countdown
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  margin-top: 6px
+  font-size: 13px
+  font-weight: 700
+  color: var(--accent)
+
+  .mat-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+
+.fact-link
+  align-self: flex-start
+  margin-top: 4px
+  padding: 0
+  border: 0
+  background: none
+  cursor: pointer
+  text-decoration: underline
+  text-underline-offset: 3px
+  font-size: 13px
+  font-weight: 600
+  color: var(--accent)
+
 .booking-facts
   list-style: none
   padding: 0
@@ -598,7 +674,10 @@
   .media
     order: -3
     margin-top: 0
-    aspect-ratio: 16 / 9
+
+    // Photos fill a 16:9 frame; the low band shown without photos keeps its own height.
+    &:not(:has(.compact))
+      aspect-ratio: 16 / 9
 
   .section
     order: 1
