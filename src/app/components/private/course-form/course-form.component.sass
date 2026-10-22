@@ -167,10 +167,6 @@
 .full
   width: 100%
 
-// A hint or error fills the line under a field, where the next row's floating label pokes up.
-.step mat-form-field
-  margin-bottom: 10px
-
 .grid-2, .grid-3
   display: grid
   gap: 0 14px
@@ -337,6 +333,70 @@
 
 .address
   animation: rise 320ms var(--ease) backwards
+
+// ── Step 4: schedule ───────────────────────────────────────
+// Fields here use dynamic subscripts, so the gaps alone space the rows evenly;
+// a hint or error pushes the rows below instead of colliding with their labels.
+.sched-block
+  display: grid
+  gap: 16px
+  --mat-datepicker-toggle-icon-color: var(--ink-3)
+  --mat-form-field-trailing-icon-color: var(--ink-3)
+
+  .grid-2, .grid-3
+    gap: 16px 14px
+
+  mat-form-field
+    width: 100%
+
+  mat-hint
+    color: var(--ink-3)
+
+  & + .sched-block, & + .note
+    margin-top: 28px
+
+  & + .sched-block
+    padding-top: 24px
+    border-top: 1px solid var(--line)
+
+.block-title
+  display: flex
+  align-items: center
+  gap: 8px
+  margin: 0
+  font: 700 15px/1.3 var(--font-ui)
+  color: var(--ink)
+
+  .mat-icon
+    color: var(--accent)
+    font-size: 20px
+    width: 20px
+    height: 20px
+
+.sched-summary
+  justify-self: start
+  display: inline-flex
+  align-items: center
+  flex-wrap: wrap
+  gap: 6px
+  margin: 0
+  padding: 8px 14px
+  border-radius: var(--radius-pill)
+  background: var(--accent-soft)
+  color: var(--accent)
+  font-size: 14px
+  font-weight: 600
+  animation: rise 320ms var(--ease) backwards
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+
+.optional
+  margin-left: 4px
+  font-weight: 400
+  color: var(--ink-3)
 
 // ── Step 4 ─────────────────────────────────────────────────
 .seats .field-label

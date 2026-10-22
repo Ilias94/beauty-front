@@ -24,6 +24,7 @@ import { CourseDtoResponse } from '../../../../api/models';
 import { CourseCardComponent } from '../../courses/course-card/course-card.component';
 import { categoryKey, categoryVisual } from '../../../shared/category-visual';
 import { DateRangePipe, PricePipe } from '../../../shared/format.pipes';
+import { PluralPipe } from '../../../shared/plural.pipe';
 import { NotificationService } from '../../../core/notification/notification.service';
 import { provideDayFirstDateAdapter } from '../../../shared/day-first-date-adapter';
 import { SpotlightDirective } from '../../../shared/spotlight.directive';
@@ -60,6 +61,10 @@ function draftTime(value: string | null | undefined): Date | null {
   return hhmm ? atTime(+hhmm[1], +hhmm[2]) : new Date(value);
 }
 
+function isValidTime(time: Date | null): time is Date {
+  return !!time && !isNaN(time.getTime());
+}
+
 /** "2027-06-10T09:00:00" in local time, the format the backend expects. */
 function toLocalIso(date: Date, time?: Date | null): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(time?.getHours() ?? 0)}:${pad(time?.getMinutes() ?? 0)}:00`;
@@ -76,7 +81,7 @@ function toLocalIso(date: Date, time?: Date | null): string {
     imports: [SpotlightDirective, 
         ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
         MatSelectModule, MatDatepickerModule, MatTimepickerModule, MatChipsModule, MatSlideToggleModule, MatProgressSpinnerModule,
-        TranslocoModule, CourseCardComponent, DatePipe, DateRangePipe, PricePipe, GalleryEditorComponent,
+        TranslocoModule, CourseCardComponent, DatePipe, DateRangePipe, PricePipe, PluralPipe, GalleryEditorComponent,
     ],
     templateUrl: './course-form.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -156,6 +161,19 @@ export class CourseFormComponent {
 
   stepKey = computed(() => this.steps[this.step()]);
   isOnline = computed(() => this.value().basics.courseType === 'ONLINE');
+
+  /** Days and daily hours for the summary under the schedule, once dates and a valid time range are set. */
+  scheduleSummary = computed(() => {
+    const { startDate, endDate, startTime, endTime } = this.value().schedule;
+    if (!startDate || !endDate || !isValidTime(startTime) || !isValidTime(endTime)) return null;
+    const minutes = endTime.getHours() * 60 + endTime.getMinutes() - (startTime.getHours() * 60 + startTime.getMinutes());
+    if (minutes <= 0) return null;
+    const hours = Math.floor(minutes / 60), rest = minutes % 60;
+    return {
+      days: Math.round((endDate.getTime() - startDate.getTime()) / 86_400_000) + 1,
+      perDay: [hours && `${hours} h`, rest && `${rest} min`].filter(Boolean).join(' '),
+    };
+  });
 
   /** What the catalog card will look like, updated as the instructor types. */
   previewCourse = computed<CourseDtoResponse>(() => {

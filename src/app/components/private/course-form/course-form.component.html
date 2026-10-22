@@ -158,72 +158,83 @@
             <h2>{{ 'courseWizard.scheduleTitle' | transloco }}</h2>
             <p class="step-lead">{{ 'courseWizard.scheduleLead' | transloco }}</p>
 
-            <mat-form-field appearance="outline" class="full">
-              <mat-label>{{ 'courseWizard.datesLabel' | transloco }}</mat-label>
-              <mat-date-range-input [rangePicker]="picker" [min]="today">
-                <input matStartDate formControlName="startDate" [placeholder]="'courseWizard.from' | transloco">
-                <input matEndDate formControlName="endDate" [placeholder]="'courseWizard.to' | transloco">
-              </mat-date-range-input>
-              <mat-datepicker-toggle matIconSuffix [for]="picker" />
-              <mat-date-range-picker #picker />
-              <mat-hint>{{ 'courseWizard.datesHint' | transloco }}</mat-hint>
-              <mat-error>{{ 'courseWizard.datesError' | transloco }}</mat-error>
-            </mat-form-field>
+            <div class="sched-block">
+              <h3 class="block-title"><mat-icon>event</mat-icon>{{ 'courseWizard.whenTitle' | transloco }}</h3>
 
-            <div class="grid-2">
-              <mat-form-field appearance="outline">
-                <mat-label>{{ 'courseWizard.startTime' | transloco }}</mat-label>
-                <input matInput [matTimepicker]="startPicker" formControlName="startTime">
-                <mat-timepicker-toggle matIconSuffix [for]="startPicker" />
-                <mat-timepicker #startPicker interval="15min" />
-                <mat-error>{{ 'courseWizard.timeError' | transloco }}</mat-error>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>{{ 'courseWizard.datesLabel' | transloco }}</mat-label>
+                <mat-date-range-input [rangePicker]="picker" [min]="today">
+                  <input matStartDate formControlName="startDate" [placeholder]="'courseWizard.from' | transloco">
+                  <input matEndDate formControlName="endDate" [placeholder]="'courseWizard.to' | transloco">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker" />
+                <mat-date-range-picker #picker />
+                <mat-hint>{{ 'courseWizard.datesHint' | transloco }}</mat-hint>
+                <mat-error>{{ 'courseWizard.datesError' | transloco }}</mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>{{ 'courseWizard.endTime' | transloco }}</mat-label>
-                <input matInput [matTimepicker]="endPicker" [matTimepickerMin]="form.controls.schedule.controls.startTime.value" formControlName="endTime">
-                <mat-timepicker-toggle matIconSuffix [for]="endPicker" />
-                <mat-timepicker #endPicker interval="15min" />
-                <mat-error>{{ 'courseWizard.endTimeError' | transloco }}</mat-error>
-              </mat-form-field>
+
+              <div class="grid-2">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>{{ 'courseWizard.startTime' | transloco }}</mat-label>
+                  <input matInput [matTimepicker]="startPicker" formControlName="startTime">
+                  <mat-timepicker-toggle matIconSuffix [for]="startPicker" />
+                  <mat-timepicker #startPicker interval="15min" />
+                  <mat-error>{{ 'courseWizard.timeError' | transloco }}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>{{ 'courseWizard.endTime' | transloco }}</mat-label>
+                  <input matInput [matTimepicker]="endPicker" [matTimepickerMin]="form.controls.schedule.controls.startTime.value" formControlName="endTime">
+                  <mat-timepicker-toggle matIconSuffix [for]="endPicker" />
+                  <mat-timepicker #endPicker interval="15min" />
+                  <mat-error>{{ 'courseWizard.endTimeError' | transloco }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              @if (scheduleSummary(); as s) {
+                <p class="sched-summary">
+                  <mat-icon>schedule</mat-icon>
+                  {{ s.days | plural: 'courses.durationDays' | transloco: { count: s.days } }}
+                  · {{ v.schedule.startTime | date: 'HH:mm' }}–{{ v.schedule.endTime | date: 'HH:mm' }}
+                  · {{ s.perDay }} {{ 'courseWizard.perDay' | transloco }}
+                </p>
+              }
             </div>
 
             @if (isOnline()) {
               <div class="note"><mat-icon>videocam</mat-icon>{{ 'courseWizard.onlineNote' | transloco }}</div>
             } @else {
-              <div formGroupName="address" class="address">
-                <p class="field-label">{{ 'courseWizard.addressLabel' | transloco }}</p>
+              <div formGroupName="address" class="sched-block address">
+                <h3 class="block-title"><mat-icon>place</mat-icon>{{ 'courseWizard.addressLabel' | transloco }}</h3>
                 <div class="grid-3">
-                  <mat-form-field appearance="outline" class="span-2">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="span-2">
                     <mat-label>{{ 'courseForm.street' | transloco }}</mat-label>
                     <input matInput formControlName="street" autocomplete="address-line1">
                     <mat-error>{{ 'auth.required' | transloco }}</mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label>{{ 'courseForm.streetNo' | transloco }}</mat-label>
                     <input matInput formControlName="streetNumber">
                     <mat-error>{{ 'auth.required' | transloco }}</mat-error>
                   </mat-form-field>
-                </div>
-                <div class="grid-3">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
                     <mat-label>{{ 'courseForm.postalCode' | transloco }}</mat-label>
                     <input matInput formControlName="postalCode" placeholder="00-000" autocomplete="postal-code">
                     <mat-error>{{ 'courseWizard.postalCodeError' | transloco }}</mat-error>
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="span-2">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="span-2">
                     <mat-label>{{ 'courseForm.city' | transloco }}</mat-label>
                     <input matInput formControlName="city" autocomplete="address-level2">
                     <mat-error>{{ 'auth.required' | transloco }}</mat-error>
                   </mat-form-field>
                 </div>
                 <div class="grid-2">
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'courseForm.district' | transloco }}</mat-label>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.district' | transloco }} <span class="optional">{{ 'courseWizard.optional' | transloco }}</span></mat-label>
                     <input matInput formControlName="district" [placeholder]="'courseForm.districtPlaceholder' | transloco">
                   </mat-form-field>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'courseForm.apartmentNo' | transloco }}</mat-label>
-                    <input matInput formControlName="apartmentNumber" [placeholder]="'courseForm.apartmentPlaceholder' | transloco">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.apartmentNo' | transloco }} <span class="optional">{{ 'courseWizard.optional' | transloco }}</span></mat-label>
+                    <input matInput formControlName="apartmentNumber" [placeholder]="'courseForm.apartmentPlaceholder' | transloco" autocomplete="address-line2">
                   </mat-form-field>
                 </div>
               </div>
