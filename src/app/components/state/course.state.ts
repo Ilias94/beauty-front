@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
-import { FilterCoursesByDateAction, GetAutocompleteTitleAction, GetCourseByIdAction, GetDistinctCitiesAction, GetPageCoursesAction, SaveCourseAction} from './course.actions';
+import { FilterCoursesByDateAction, GetAutocompleteTitleAction, GetCourseByIdAction, GetDistinctCitiesAction, GetPageCoursesAction, SaveCourseAction, UpdateCourseAction} from './course.actions';
 import { CourseControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
 import { Navigate } from '@ngxs/router-plugin';
@@ -46,6 +46,11 @@ export class CourseState {
     return this.courseControllerService.getDistinctCities().pipe(tap(cities => {
       patchState({ distinctCities: cities })
     }))
+  }
+
+  @Action(UpdateCourseAction)
+  updateCourse({ patchState }: StateContext<CourseStateModel>, { id, course }: UpdateCourseAction) {
+    return this.courseControllerService.updateCourse({ id, body: course }).pipe(tap(updated => patchState({ course: updated })));
   }
 
   @Action(SaveCourseAction)

@@ -15,6 +15,11 @@ export class GetDistinctCitiesAction {
   static readonly type = '[Course] GetDistinctCitiesAction';
 }
 
+export class UpdateCourseAction {
+  static readonly type = '[Course] UpdateCourseAction';
+  constructor(public id: number, public course: CourseDtoRequest) { }
+}
+
 export class SaveCourseAction {
   static readonly type = '[Course] SaveCourseAction';
   constructor(public course: CourseDtoRequest) { }

@@ -2,7 +2,7 @@ import { Component, DestroyRef, ElementRef, PLATFORM_ID, computed, inject, signa
 import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { catchError, debounceTime, last, map, of, pairwise, startWith, switchMap } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { DateAdapter, ErrorStateMatcher } from '@angular/material/core';
@@ -18,7 +18,7 @@ import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { GetDistinctCitiesAction, SaveCourseAction } from '../../state/course.actions';
+import { GetDistinctCitiesAction, SaveCourseAction, UpdateCourseAction } from '../../state/course.actions';
 import { GetAiPromptAction } from '../../state/ai.actions';
 import { SecurityState } from '../../state/security.state';
 import { AddressDtoResponse, CourseDtoResponse } from '../../../../api/models';
@@ -30,6 +30,7 @@ import { PluralPipe } from '../../../shared/plural.pipe';
 import { NotificationService } from '../../../core/notification/notification.service';
 import { provideDayFirstDateAdapter } from '../../../shared/day-first-date-adapter';
 import { SpotlightDirective } from '../../../shared/spotlight.directive';
+import { S3_BASE } from '../../../app.const';
 import { GalleryEditorComponent } from '../../../shared/gallery-editor/gallery-editor.component';
 import { CourseImagesApiService } from '../../../services/course-images-api.service';
 
@@ -119,7 +120,12 @@ export class CourseFormComponent {
   private host = inject(ElementRef<HTMLElement>);
   private browser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  readonly steps: StepKey[] = ['basics', 'details', 'photos', 'schedule', 'pricing', 'review'];
+  /** The course being edited (route course/:id/edit), or null when creating one. */
+  readonly editId: number | null = Number(inject(ActivatedRoute).snapshot.paramMap.get('id')) || null;
+  // Photos of an existing course are managed on its page (they upload as soon as they're added).
+  readonly steps: StepKey[] = this.editId
+    ? ['basics', 'details', 'schedule', 'pricing', 'review']
+    : ['basics', 'details', 'photos', 'schedule', 'pricing', 'review'];
   readonly categories = CATEGORIES.map(label => ({ label, key: categoryKey(label), visual: categoryVisual(label) }));
   readonly courseTypes: { value: CourseType; icon: string }[] = [
     { value: 'IN_PERSON', icon: 'storefront' },
@@ -128,6 +134,8 @@ export class CourseFormComponent {
   ];
   readonly levels: Level[] = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
   readonly today = new Date();
+  /** A course already under way keeps its past start date when edited. */
+  readonly minDate: Date | null = this.editId ? null : this.today;
   readonly categoryKeyOf = categoryKey;
 
   form = new FormGroup({
@@ -176,6 +184,9 @@ export class CourseFormComponent {
   /** Photos prepared in the browser; they go up once the course exists. The first is the cover. */
   photos = signal<Blob[]>([]);
   coverPreview = signal<string | null>(null);
+  /** Edit mode: the course as saved, until its form is filled; its status decides the save buttons. */
+  original = signal<CourseDtoResponse | null>(null);
+  loadError = signal(false);
 
   private value = toSignal(this.form.valueChanges.pipe(startWith(null), map(() => this.form.getRawValue())), { requireSync: true });
   private currentUser = toSignal(this.store.select(SecurityState.getCurrentUser));
@@ -266,9 +277,60 @@ export class CourseFormComponent {
       this.coursesApi.getCourses({ isCurrentCreator: true, hidePast: false, size: 50, sortBy: 'startDate', sortDirection: 'DESC' })
         .pipe(catchError(() => of(null)), takeUntilDestroyed())
         .subscribe(page => this.recentAddresses.set(recentAddressesOf(page?.content ?? [])));
-      this.checkDraft();
-      this.form.valueChanges.pipe(debounceTime(600), takeUntilDestroyed()).subscribe(() => this.saveDraftLocally());
+      if (this.editId) {
+        this.loadCourse(this.editId);
+      } else {
+        this.checkDraft();
+        this.form.valueChanges.pipe(debounceTime(600), takeUntilDestroyed()).subscribe(() => this.saveDraftLocally());
+      }
     }
+  }
+
+  // ── Edit mode ──────────────────────────────────────────────
+
+  private loadCourse(id: number): void {
+    this.coursesApi.getCourseById({ id }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: course => {
+        this.fillForm(course);
+        this.original.set(course);
+        // Every step of a saved course is filled in, so any can be opened directly.
+        this.maxReached.set(this.steps.length - 1);
+      },
+      error: () => this.loadError.set(true),
+    });
+  }
+
+  private fillForm(c: CourseDtoResponse): void {
+    const start = c.startDate ? new Date(c.startDate) : null;
+    const end = c.endDate ? new Date(c.endDate) : null;
+    const a = c.address;
+    this.form.patchValue({
+      basics: { courseType: c.courseType ?? 'IN_PERSON', title: c.title ?? '', category: c.category?.label ?? '' },
+      details: {
+        description: c.description ?? '',
+        outcomes: (c.learningOutcomes ?? '').split(/\r?\n|;/).map(s => s.trim()).filter(Boolean),
+        prerequisites: c.prerequisites ?? '',
+      },
+      schedule: {
+        startDate: start ? new Date(start.getFullYear(), start.getMonth(), start.getDate()) : null,
+        endDate: end ? new Date(end.getFullYear(), end.getMonth(), end.getDate()) : null,
+        startTime: start ? atTime(start.getHours(), start.getMinutes()) : null,
+        endTime: end ? atTime(end.getHours(), end.getMinutes()) : null,
+        address: {
+          city: a?.city ?? '', postalCode: a?.postalCode ?? '', street: a?.street ?? '',
+          streetNumber: a?.streetNumber ?? '', apartmentNumber: a?.apartmentNumber ?? '', district: a?.district ?? '',
+        },
+      },
+      pricing: {
+        price: c.price ?? null, maxParticipants: c.maxParticipants ?? 10,
+        courseLevel: (c.courseLevel as Level) ?? 'BEGINNER', language: c.language ?? 'pl', certificate: !!c.certificate,
+      },
+    });
+    // People already enrolled keep their seats: the group can't shrink below them.
+    const enrolled = c.participantCount ?? 0;
+    this.form.controls.pricing.controls.maxParticipants.addValidators(Validators.min(Math.max(1, enrolled)));
+    this.minSeats.set(Math.max(1, enrolled));
+    if (c.imageUrl) this.coverPreview.set(c.imageUrl.startsWith('http') ? c.imageUrl : S3_BASE + c.imageUrl);
   }
 
   // ── Navigation ─────────────────────────────────────────────
@@ -346,9 +408,12 @@ export class CourseFormComponent {
     this.form.controls.pricing.controls.courseLevel.setValue(level);
   }
 
+  /** The fewest seats allowed: 1, or in edit mode the people already enrolled. */
+  minSeats = signal(1);
+
   changeSeats(delta: number): void {
     const control = this.form.controls.pricing.controls.maxParticipants;
-    control.setValue(Math.min(500, Math.max(1, (control.value || 0) + delta)));
+    control.setValue(Math.min(500, Math.max(this.minSeats(), (control.value || 0) + delta)));
   }
 
   // ── Step 2: outcomes & AI description ──────────────────────
@@ -482,6 +547,10 @@ export class CourseFormComponent {
       return;
     }
     this.submitting.set(status);
+    if (this.editId) {
+      this.saveChanges(this.editId, status);
+      return;
+    }
     this.store.dispatch(new SaveCourseAction(this.buildPayload(status))).pipe(
       // The course exists now: send its photos. A failed upload doesn't undo the course;
       // the photos can be added again from the course page.
@@ -496,6 +565,18 @@ export class CourseFormComponent {
         this.submitting.set(null);
         if (!photosSaved) this.notifications.show(this.transloco.translate('courseWizard.photosFailed'));
         this.router.navigate(['/creator-courses']);
+      },
+      error: () => this.submitting.set(null),
+    });
+  }
+
+  private saveChanges(id: number, status: 'DRAFT' | 'PUBLISHED'): void {
+    this.store.dispatch(new UpdateCourseAction(id, this.buildPayload(status))).subscribe({
+      next: () => {
+        this.submitting.set(null);
+        this.form.markAsPristine();
+        this.notifications.show(this.transloco.translate('courseWizard.changesSaved'));
+        this.router.navigate(['/course', id]);
       },
       error: () => this.submitting.set(null),
     });

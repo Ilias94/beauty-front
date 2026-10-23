@@ -118,6 +118,9 @@
           <mat-icon>more_horiz</mat-icon>
         </button>
         <mat-menu #toolsMenu xPosition="before" class="card-tools-menu">
+          <a mat-menu-item [routerLink]="['/course', course().id, 'edit']">
+            <mat-icon>edit</mat-icon>{{ 'courses.toolEdit' | transloco }}
+          </a>
           <a mat-menu-item [routerLink]="['/questions', course().id]">
             <mat-icon>quiz</mat-icon>{{ 'courses.toolQuiz' | transloco }}
           </a>

@@ -350,6 +350,11 @@
               <p class="owner-note"><mat-icon>verified</mat-icon>{{ 'courseDetails.ownerNote' | transloco }}</p>
               <input hidden #fileInput (change)="onFileSelected($event)" multiple type="file" accept="video/*">
               <div class="tools">
+                <a class="tool" [routerLink]="['/course', courseId, 'edit']">
+                  <span class="tool-icon"><mat-icon>edit</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.editCourse' | transloco }}</strong>{{ 'courseDetails.editCourseHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </a>
                 <button type="button" class="tool" (click)="onUpload()">
                   <span class="tool-icon"><mat-icon>upload</mat-icon></span>
                   <span class="tool-text"><strong>{{ 'courseDetails.addVideos' | transloco }}</strong>{{ 'courseDetails.addVideosHint' | transloco }}</span>

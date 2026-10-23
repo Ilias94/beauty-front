@@ -3,8 +3,13 @@
 
   <!-- ── Header ─────────────────────────────────────────── -->
   <header class="wz-head">
-    <a routerLink="/creator-courses" class="back"><mat-icon>arrow_back</mat-icon>{{ 'menu.myTeaching' | transloco }}</a>
-    <h1 class="page-title">{{ 'courseWizard.title' | transloco }}</h1>
+    @if (editId) {
+      <a [routerLink]="['/course', editId]" class="back"><mat-icon>arrow_back</mat-icon>{{ 'courseWizard.backToCourse' | transloco }}</a>
+      <h1 class="page-title">{{ 'courseWizard.editTitle' | transloco }}</h1>
+    } @else {
+      <a routerLink="/creator-courses" class="back"><mat-icon>arrow_back</mat-icon>{{ 'menu.myTeaching' | transloco }}</a>
+      <h1 class="page-title">{{ 'courseWizard.title' | transloco }}</h1>
+    }
   </header>
 
   @if (draftFound(); as draft) {
@@ -16,6 +21,14 @@
     </div>
   }
 
+  @if (editId && !original()) {
+    <!-- Edit mode: the form appears once the saved course has loaded. -->
+    @if (loadError()) {
+      <p class="error">{{ 'courseWizard.loadError' | transloco }}</p>
+    } @else {
+      <div class="skeleton" style="height: 420px; border-radius: var(--radius-lg)"></div>
+    }
+  } @else {
   <!-- ── Progress ───────────────────────────────────────── -->
   <nav class="wz-progress" [attr.aria-label]="'courseWizard.progressLabel' | transloco">
     <ol>
@@ -163,7 +176,7 @@
 
               <mat-form-field appearance="outline" subscriptSizing="dynamic">
                 <mat-label>{{ 'courseWizard.datesLabel' | transloco }}</mat-label>
-                <mat-date-range-input [rangePicker]="picker" [min]="today" (click)="picker.open()">
+                <mat-date-range-input [rangePicker]="picker" [min]="minDate" (click)="picker.open()">
                   <input matStartDate formControlName="startDate" [placeholder]="'courseWizard.from' | transloco">
                   <input matEndDate formControlName="endDate" [placeholder]="'courseWizard.to' | transloco">
                 </mat-date-range-input>
@@ -282,9 +295,9 @@
               <div class="seats">
                 <p class="field-label">{{ 'courseWizard.seatsLabel' | transloco }}</p>
                 <div class="stepper">
-                  <button mat-icon-button type="button" (click)="changeSeats(-1)" [disabled]="v.pricing.maxParticipants <= 1"
+                  <button mat-icon-button type="button" (click)="changeSeats(-1)" [disabled]="v.pricing.maxParticipants <= minSeats()"
                     [attr.aria-label]="'courseWizard.fewer' | transloco"><mat-icon>remove</mat-icon></button>
-                  <input type="number" formControlName="maxParticipants" min="1" max="500" [attr.aria-label]="'courseWizard.seatsLabel' | transloco">
+                  <input type="number" formControlName="maxParticipants" [min]="minSeats()" max="500" [attr.aria-label]="'courseWizard.seatsLabel' | transloco">
                   <button mat-icon-button type="button" (click)="changeSeats(1)" [disabled]="v.pricing.maxParticipants >= 500"
                     [attr.aria-label]="'courseWizard.more' | transloco"><mat-icon>add</mat-icon></button>
                 </div>
@@ -367,6 +380,24 @@
           <button mat-button type="button" class="back-link" (click)="back()"><mat-icon>arrow_back</mat-icon>{{ 'courseWizard.back' | transloco }}</button>
         }
         <span class="spacer"></span>
+        @if (editId) {
+          <!-- Editing: changes can be saved from any step; a published course stays published. -->
+          @if (stepKey() !== 'review') {
+            <button mat-stroked-button type="submit">
+              {{ 'courseWizard.next' | transloco }}<mat-icon iconPositionEnd>arrow_forward</mat-icon>
+            </button>
+          }
+          @if (original()?.status === 'DRAFT') {
+            <button mat-stroked-button type="button" class="draft-btn" (click)="save('DRAFT')" [disabled]="!!submitting()">
+              @if (submitting() === 'DRAFT') { <mat-spinner diameter="16" /> }
+              {{ 'courseForm.saveDraft' | transloco }}
+            </button>
+          }
+          <button mat-flat-button color="primary" type="button" (click)="save('PUBLISHED')" [disabled]="!!submitting()">
+            @if (submitting() === 'PUBLISHED') { <mat-spinner diameter="16" /> }
+            {{ (original()?.status === 'DRAFT' ? 'courseForm.publishCourse' : 'courseWizard.saveChanges') | transloco }}
+          </button>
+        } @else {
         <button mat-stroked-button type="button" class="draft-btn" (click)="save('DRAFT')" [disabled]="!!submitting() || !v.basics.title.trim()">
           @if (submitting() === 'DRAFT') { <mat-spinner diameter="16" /> }
           {{ 'courseForm.saveDraft' | transloco }}
@@ -380,6 +411,7 @@
           <button mat-flat-button color="primary" type="submit">
             {{ 'courseWizard.next' | transloco }}<mat-icon iconPositionEnd>arrow_forward</mat-icon>
           </button>
+        }
         }
       </div>
     </form>
@@ -398,4 +430,5 @@
     <mat-icon>{{ previewOpen() ? 'close' : 'visibility' }}</mat-icon>
     {{ (previewOpen() ? 'courseWizard.closePreview' : 'courseWizard.showPreview') | transloco }}
   </button>
+  }
 </div>

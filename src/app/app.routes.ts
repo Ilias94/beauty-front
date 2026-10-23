@@ -33,6 +33,12 @@ export const routes: Routes = [
     { path: 'courses', component: CoursesComponent },
     { path: 'course/:id', component: CourseDetailsComponent },
     {
+        path: 'course/:id/edit',
+        component: CourseFormComponent,
+        canActivate: [authGuard],
+        data: { roles: ['TEACHER'] }
+    },
+    {
         path: 'course',
         component: CourseFormComponent,
         canActivate: [authGuard],
