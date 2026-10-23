@@ -33,7 +33,6 @@ export class CourseCardComponent {
   ownerTag = input(true);
 
   downloadExcel = output<number>();
-  downloadCsv = output<number>();
 
   visual = computed(() => categoryVisual(this.course().category?.label));
   categoryKey = computed(() => categoryKey(this.course().category?.label));
@@ -98,13 +97,8 @@ export class CourseCardComponent {
     return 'ongoing';
   });
 
-  onTool(event: Event, action: 'excel' | 'csv') {
+  downloadParticipants(event: Event) {
     event.stopPropagation();
-    const id = this.course().id!;
-    if (action === 'excel') {
-      this.downloadExcel.emit(id);
-    } else {
-      this.downloadCsv.emit(id);
-    }
+    this.downloadExcel.emit(this.course().id!);
   }
 }

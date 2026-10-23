@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CourseDtoResponse } from '../../../api/models';
 import { CourseControllerService } from '../../../api/services';
-import { DownloadFileCsvAction } from '../state/file.actions';
+import { DownloadFileExcelAction } from '../state/file.actions';
 import { SecurityState } from '../state/security.state';
 import { CourseOnlineComponent } from '../course-online/course-online.component';
 import { DateRangePipe } from '../../shared/format.pipes';
@@ -313,7 +313,7 @@ export class CalendarComponent {
   }
 
   downloadParticipants(course: CourseDtoResponse): void {
-    this.store.dispatch(new DownloadFileCsvAction(course.id!));
+    this.store.dispatch(new DownloadFileExcelAction(course.id!));
   }
 
   // ── Helpers ─────────────────────────────────────────────────────────────

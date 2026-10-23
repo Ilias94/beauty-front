@@ -128,8 +128,7 @@
     "yourCourse": "Twój kurs",
     "courseTools": "Narzędzia kursu",
     "toolQuiz": "Pytania testu",
-    "toolExcel": "Uczestnicy (Excel)",
-    "toolCsv": "Uczestnicy (CSV)",
+    "toolExcel": "Lista uczestników",
     "enrolled": "Zapisano",
     "full": "Brak miejsc",
     "spotsLeft": "{{count}} / {{max}} miejsc",
@@ -579,7 +578,6 @@
     "clearLocationFilter": "Wyczyść filtr lokalizacji",
     "quiz": "Quiz",
     "excelReport": "Raport Excel",
-    "csvReport": "Raport CSV",
     "clearAll": "Wyczyść wszystkie"
   },
   "chat": {

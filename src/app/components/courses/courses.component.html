@@ -194,7 +194,7 @@
     <div class="grid" [class.is-loading]="loading">
       @for (course of pageCourses()?.content; track course.id) {
         <app-course-card class="rise" [style.--i]="$index" [course]="course" [relation]="relationOf(course.id)" [ownerTag]="!isCurrentCreator()"
-          (downloadExcel)="downloadExcelFile($event)" (downloadCsv)="downloadCsvFile($event)" />
+          (downloadExcel)="downloadExcelFile($event)" />
       }
     </div>
   } @else {

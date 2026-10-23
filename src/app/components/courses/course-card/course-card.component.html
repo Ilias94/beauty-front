@@ -121,11 +121,8 @@
           <a mat-menu-item [routerLink]="['/questions', course().id]">
             <mat-icon>quiz</mat-icon>{{ 'courses.toolQuiz' | transloco }}
           </a>
-          <button mat-menu-item type="button" (click)="onTool($event, 'excel')">
+          <button mat-menu-item type="button" (click)="downloadParticipants($event)">
             <mat-icon>table_view</mat-icon>{{ 'courses.toolExcel' | transloco }}
-          </button>
-          <button mat-menu-item type="button" (click)="onTool($event, 'csv')">
-            <mat-icon>download</mat-icon>{{ 'courses.toolCsv' | transloco }}
           </button>
         </mat-menu>
       </div>

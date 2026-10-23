@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { catchError, debounceTime, of, Subject } from 'rxjs';
 import { CategoryDtoResponse, CourseDtoResponse, PageCourseDtoResponse } from '../../../api/models';
 import { CourseControllerService } from '../../../api/services';
-import { DownloadFileCsvAction, DownloadFileExcelAction } from '../state/file.actions';
+import { DownloadFileExcelAction } from '../state/file.actions';
 import { SecurityState } from '../state/security.state';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { CourseCardComponent, CourseRelation } from './course-card/course-card.component';
@@ -276,10 +276,6 @@ export class CoursesComponent implements OnInit {
 
   downloadExcelFile(courseId: number): void {
     this.store.dispatch(new DownloadFileExcelAction(courseId));
-  }
-
-  downloadCsvFile(courseId: number): void {
-    this.store.dispatch(new DownloadFileCsvAction(courseId));
   }
 
   private computeHidePast(): boolean {
