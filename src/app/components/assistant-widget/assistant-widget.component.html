@@ -1,0 +1,46 @@
+@if (currentUser() && panels.assistantOpen()) {
+  <section class="float-panel" role="dialog" [attr.aria-label]="'assistant.title' | transloco">
+    <header class="float-panel-head">
+      <span class="head-icon assistant"><mat-icon>auto_awesome</mat-icon></span>
+      <div class="head-text">
+        <strong>{{ 'assistant.title' | transloco }}</strong>
+        <small>
+          @if (remainingToday() !== null) { {{ 'assistant.remaining' | transloco: { count: remainingToday() } }} }
+          @else { {{ 'assistant.subtitle' | transloco }} }
+        </small>
+      </div>
+      <button mat-icon-button class="head-btn" (click)="panels.closeAll()" [attr.aria-label]="'common.close' | transloco">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <div class="messages-area" role="log" aria-live="polite">
+      @if (messages().length === 0) {
+        <div class="intro">
+          <span class="intro-icon"><mat-icon>auto_awesome</mat-icon></span>
+          <p>{{ 'assistant.intro' | transloco }}</p>
+          <div class="examples">
+            @for (key of examples; track key) {
+              <button type="button" class="example" (click)="askExample(key)">{{ key | transloco }}</button>
+            }
+          </div>
+        </div>
+      }
+      @for (msg of messages(); track $index) {
+        <div class="msg-row" [class.msg-mine]="msg.role === 'user'">
+          <div class="bubble" [class.bubble-error]="msg.error">{{ msg.error ? (msg.content | transloco) : msg.content }}</div>
+        </div>
+      }
+      @if (sending()) {
+        <div class="msg-row">
+          <div class="bubble typing" [attr.aria-label]="'assistant.thinking' | transloco"><span></span><span></span><span></span></div>
+        </div>
+      }
+      <div #messagesEnd></div>
+    </div>
+
+    <app-message-composer [(value)]="newMessage" (send)="send($event)" [disabled]="sending()"
+                          [maxLength]="1000" [placeholder]="'assistant.placeholder' | transloco" />
+    <p class="disclaimer">{{ 'assistant.disclaimer' | transloco }}</p>
+  </section>
+}

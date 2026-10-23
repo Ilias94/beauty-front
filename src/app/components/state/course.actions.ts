@@ -6,7 +6,18 @@ export class GetPageCoursesAction {
   constructor(public page: number, public size: number, public categoryId?: number,
     public title?: string, public sortBy?: string,
     public sortDirection?: 'ASC' | 'DESC', public isCurrentCreator?: boolean,
-    public isCurrentStudent?: boolean) { }
+    public isCurrentStudent?: boolean, public hidePast?: boolean,
+    public city?: string,
+    public courseType?: 'IN_PERSON' | 'ONLINE' | 'HYBRID') { }
+}
+
+export class GetDistinctCitiesAction {
+  static readonly type = '[Course] GetDistinctCitiesAction';
+}
+
+export class UpdateCourseAction {
+  static readonly type = '[Course] UpdateCourseAction';
+  constructor(public id: number, public course: CourseDtoRequest) { }
 }
 
 export class SaveCourseAction {

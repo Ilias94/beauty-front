@@ -1,0 +1,195 @@
+// Panel shape and header come from .float-panel / .float-panel-head in styles.sass.
+
+// ── Conversation and contact rows ────────────────────────────
+.list
+  flex: 1
+  min-height: 0
+  overflow-y: auto
+  padding: 6px
+
+.row
+  width: 100%
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 10px
+  border: 0
+  border-radius: 14px
+  background: transparent
+  font-family: var(--font-ui)
+  text-align: left
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease)
+
+  &:hover
+    background: var(--bg)
+
+    .chev
+      color: var(--accent)
+      transform: translateX(2px)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: -2px
+
+  &.unread
+    .row-body strong
+      color: var(--ink)
+
+    .row-sub
+      color: var(--ink)
+      font-weight: 600
+
+.avatar
+  width: 42px
+  height: 42px
+  flex-shrink: 0
+  border-radius: 50%
+  display: grid
+  place-items: center
+  object-fit: cover
+  background: var(--accent-soft)
+  color: var(--accent)
+  font: 700 14px var(--font-ui)
+
+.row-body
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: 1px
+
+  strong
+    font-size: 14.5px
+    color: var(--ink)
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.row-sub
+  font-size: 13px
+  color: var(--ink-3)
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+  .role
+    font-weight: 700
+    color: var(--accent)
+
+  .more
+    margin-left: 2px
+    font-weight: 700
+
+.unread-badge
+  min-width: 22px
+  height: 22px
+  padding: 0 7px
+  border-radius: var(--radius-pill)
+  display: grid
+  place-items: center
+  background: var(--accent)
+  color: #fff
+  font: 800 11.5px var(--font-ui)
+
+.chev
+  color: var(--line-strong)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
+
+.list-empty
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 10px
+  padding: 40px 20px
+  text-align: center
+  font: 500 13.5px/1.45 var(--font-ui)
+  color: var(--ink-3)
+
+  .empty-icon
+    width: 52px
+    height: 52px
+    border-radius: 50%
+    display: grid
+    place-items: center
+    background: var(--surface-2)
+
+  p
+    max-width: 30ch
+
+  .text-link
+    font-weight: 700
+
+.row-sk
+  height: 56px
+  margin: 6px 4px
+  border-radius: 14px
+
+.hint, .no-match
+  padding: 12px 12px 4px
+  font: 500 12.5px/1.45 var(--font-ui)
+  color: var(--ink-3)
+
+.no-match
+  text-align: center
+
+// ── Contact picker ───────────────────────────────────────────
+.contacts
+  flex: 1
+  min-height: 0
+  display: flex
+  flex-direction: column
+
+.search
+  display: flex
+  align-items: center
+  gap: 8px
+  margin: 12px 12px 2px
+  padding: 0 12px
+  height: 42px
+  border: 1.5px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--bg)
+  color: var(--ink-3)
+  transition: border-color var(--dur) var(--ease)
+
+  &:focus-within
+    border-color: var(--accent)
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+
+  input
+    flex: 1
+    min-width: 0
+    border: 0
+    outline: 0
+    background: transparent
+    font: 500 14px var(--font-ui)
+    color: var(--ink)
+
+// ── Conversation extras ──────────────────────────────────────
+.context-bar, .send-error
+  display: flex
+  align-items: center
+  gap: 6px
+  margin: 0
+  padding: 8px 14px
+  font: 600 12.5px var(--font-ui)
+  flex-shrink: 0
+
+  .mat-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+
+.context-bar
+  border-top: 1px solid var(--line)
+  background: var(--accent-soft)
+  color: var(--accent)
+
+.send-error
+  background: var(--danger-soft)
+  color: var(--danger)

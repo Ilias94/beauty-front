@@ -12,8 +12,9 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { createPayment } from '../fn/payment-controller/create-payment';
 import { CreatePayment$Params } from '../fn/payment-controller/create-payment';
 import { CreatePaymentDtoResponse } from '../models/create-payment-dto-response';
-import { notify } from '../fn/payment-controller/notify';
-import { Notify$Params } from '../fn/payment-controller/notify';
+import { getPaymentStatus } from '../fn/payment-controller/get-payment-status';
+import { GetPaymentStatus$Params } from '../fn/payment-controller/get-payment-status';
+import { PaymentStatusDtoResponse } from '../models/payment-status-dto-response';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentControllerService extends BaseService {
@@ -46,32 +47,28 @@ export class PaymentControllerService extends BaseService {
     );
   }
 
-  /** Path part for operation `notify()` */
-  static readonly NotifyPath = '/api/v1/payment/notify';
+  /** Path part for operation `getPaymentStatus()` */
+  static readonly GetPaymentStatusPath = '/api/v1/payment/{orderId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `notify()` instead.
+   * To access only the response body, use `getPaymentStatus()` instead.
    *
    * This method doesn't expect any request body.
    */
-  notify$Response(params: Notify$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
-    return notify(this.http, this.rootUrl, params, context);
+  getPaymentStatus$Response(params: GetPaymentStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<PaymentStatusDtoResponse>> {
+    return getPaymentStatus(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `notify$Response()` instead.
+   * To access the full response (for headers, for example), `getPaymentStatus$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  notify(params: Notify$Params, context?: HttpContext): Observable<{
-}> {
-    return this.notify$Response(params, context).pipe(
-      map((r: StrictHttpResponse<{
-}>): {
-} => r.body)
+  getPaymentStatus(params: GetPaymentStatus$Params, context?: HttpContext): Observable<PaymentStatusDtoResponse> {
+    return this.getPaymentStatus$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PaymentStatusDtoResponse>): PaymentStatusDtoResponse => r.body)
     );
   }
 

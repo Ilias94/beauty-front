@@ -1,48 +1,55 @@
-<div class="user-dashboard">
-  <div class="profile-avatar">
-  @if (currentUser().fileName) {
-    <img class="profile-photo"
-         [src]="'https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/' + currentUser().fileName"
-         alt="Profile photo">
-  } @else {
-    <div class="avatar-fallback">
-      {{ currentUser().firstName.charAt(0) + currentUser().lastName.charAt(0) }}
-    </div>
-  }
-</div>
+@if (currentUser(); as user) {
+  <div class="page">
+    <header class="profile">
+      <div class="avatar">
+        @if (avatarUrl(); as url) {
+          <img [src]="url" alt="">
+        } @else {
+          <span>{{ initials() }}</span>
+        }
+      </div>
+      <div class="profile-body">
+        <p class="eyebrow">{{ (user.teacher ? 'account.teacher' : 'account.student') | transloco }}</p>
+        <h1 class="name">{{ user.firstName }} {{ user.lastName }}</h1>
+        <p class="email">{{ user.email }}</p>
+      </div>
+      <a mat-stroked-button routerLink="/account" class="edit">
+        <mat-icon>edit</mat-icon>{{ 'account.editProfile' | transloco }}
+      </a>
+    </header>
 
+    <dl class="stats">
+      <div>
+        <dt>{{ 'account.statEnrolled' | transloco }}</dt>
+        <dd>{{ enrolledCount() }}</dd>
+      </div>
+      @if (user.teacher) {
+        <div>
+          <dt>{{ 'account.statTeaching' | transloco }}</dt>
+          <dd>{{ ownedCount() }}</dd>
+        </div>
+        @if (user.instructorRating) {
+          <div>
+            <dt>{{ 'account.statRating' | transloco }}</dt>
+            <dd>{{ user.instructorRating.toFixed(1) }}<span>/5</span></dd>
+          </div>
+        }
+      }
+    </dl>
 
-  <div class="cards-grid">
-    <mat-card class="dashboard-card">
-      <mat-card-title>Change account data</mat-card-title>
-      <mat-card-content>You can change account data</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/account">Account</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="dashboard-card">
-      <mat-card-title>My courses</mat-card-title>
-      <mat-card-content>You can browse your courses here</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/student-courses">Enter</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="dashboard-card">
-      <mat-card-title>Manage your courses</mat-card-title>
-      <mat-card-content>You can manage your courses here</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/creator-courses">Enter</button>
-      </mat-card-actions>
-    </mat-card>
-
-    <mat-card class="dashboard-card">
-      <mat-card-title>Your comments</mat-card-title>
-      <mat-card-content>You can see your comments here</mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button color="primary" routerLink="/my-comments">Enter</button>
-      </mat-card-actions>
-    </mat-card>
+    <nav class="shortcuts" [attr.aria-label]="'account.shortcuts' | transloco">
+      @for (s of shortcuts; track s.route) {
+        @if (!s.teacherOnly || user.teacher) {
+          <a [routerLink]="s.route" class="shortcut rise" appSpotlight [style.--i]="$index">
+            <span class="icon"><mat-icon>{{ s.icon }}</mat-icon></span>
+            <span class="text">
+              <strong>{{ s.titleKey | transloco }}</strong>
+              <span>{{ s.descKey | transloco }}</span>
+            </span>
+            <mat-icon class="arrow">arrow_forward</mat-icon>
+          </a>
+        }
+      }
+    </nav>
   </div>
-</div>
+}

@@ -20,7 +20,8 @@ export class RegisterAction {
 
 export class LogoutAction {
   static readonly type = '[Security] LogoutAction'
-  constructor() { }
+  /** redirectToLogin: false when the session simply expired, so public pages stay where they are. */
+  constructor(public redirectToLogin = true) { }
 }
 
 export class GetCurrentUserAction {

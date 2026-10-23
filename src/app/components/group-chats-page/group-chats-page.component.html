@@ -1,0 +1,57 @@
+<div class="gcp-page">
+
+  <header class="gcp-header">
+    <p class="eyebrow">{{ 'groupChats.eyebrow' | transloco }}</p>
+    <h1 class="page-title">{{ 'groupChats.title' | transloco }}</h1>
+  </header>
+
+  <div class="gcp-layout">
+
+    <!-- Course list -->
+    <div class="gcp-list">
+      @if (myChatCourses().length === 0) {
+        <div class="gcp-no-courses">
+          <mat-icon>forum</mat-icon>
+          <p>{{ 'groupChats.noCourses' | transloco }}</p>
+        </div>
+      }
+      @for (course of myChatCourses(); track course.id) {
+        <button class="gcp-course-item"
+          [class.active]="selectedCourse()?.id === course.id"
+          (click)="selectCourse(course)">
+          <div class="gcp-course-avatar">{{ course.title[0] }}</div>
+          <span class="gcp-course-name">{{ course.title }}</span>
+          @if (selectedCourse()?.id === course.id) {
+            <mat-icon class="gcp-course-check">chevron_right</mat-icon>
+          }
+        </button>
+      }
+    </div>
+
+    <!-- Chat panel -->
+    <div class="gcp-chat">
+      @if (!selectedCourse()) {
+        <div class="gcp-placeholder">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          <p>{{ 'groupChats.selectCourse' | transloco }}</p>
+        </div>
+      } @else {
+
+        <!-- Header -->
+        <div class="gcp-chat-header">
+          <mat-icon>groups</mat-icon>
+          <div class="gcp-chat-header-text">
+            <span class="gcp-chat-title">{{ selectedCourse()!.title }}</span>
+            <span class="gcp-chat-sub">{{ 'groupChat.title' | transloco }}</span>
+          </div>
+        </div>
+
+        <app-message-thread [messages]="threadMessages()" [showAuthors]="true"
+                            emptyIcon="forum" [emptyText]="'groupChat.empty' | transloco" />
+        <app-message-composer [(value)]="newMessage" (send)="send($event)" [placeholder]="'groupChat.placeholder' | transloco" />
+
+      }
+    </div>
+
+  </div>
+</div>

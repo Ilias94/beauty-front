@@ -1,85 +1,113 @@
-.user-dashboard
+.profile
+  display: flex
+  align-items: center
+  gap: 24px
+  flex-wrap: wrap
+  padding-bottom: 32px
+  border-bottom: 1px solid var(--line)
+
+.avatar
+  width: 96px
+  height: 96px
+  flex-shrink: 0
+  border-radius: 50%
+  overflow: hidden
+  display: grid
+  place-items: center
+  background: var(--accent-soft)
+  color: var(--accent)
+  font: 600 32px var(--font-display)
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.profile-body
+  flex: 1
+  min-width: 200px
+
+.name
+  font-size: clamp(30px, 4vw, 40px)
+  margin-top: 6px
+
+.email
+  color: var(--ink-2)
+  margin-top: 4px
+
+.edit .mat-icon
+  margin-right: 6px
+
+.stats
+  display: flex
+  gap: 48px
+  flex-wrap: wrap
+  margin: 28px 0 36px
+
+  dt
+    font-size: 12px
+    font-weight: 700
+    letter-spacing: 0.08em
+    text-transform: uppercase
+    color: var(--ink-3)
+
+  dd
+    margin: 4px 0 0
+    font: 500 34px/1 var(--font-display)
+
+    span
+      font-size: 18px
+      color: var(--ink-3)
+
+.shortcuts
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+  gap: 14px
+
+.shortcut
+  display: flex
+  align-items: center
+  gap: 16px
+  padding: 18px 20px
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  color: var(--ink)
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease)
+
+  &:hover
+    color: var(--ink)
+    border-color: var(--line-strong)
+    box-shadow: var(--shadow-2)
+    transform: translateY(-2px)
+
+    .arrow
+      color: var(--accent)
+      transform: translateX(3px)
+
+.icon
+  width: 44px
+  height: 44px
+  flex-shrink: 0
+  border-radius: 12px
+  display: grid
+  place-items: center
+  background: var(--surface-2)
+  color: var(--ink-2)
+
+.text
+  flex: 1
   display: flex
   flex-direction: column
-  align-items: center
-  padding: 32px
+  min-width: 0
 
-.profile-photo
-  width: 120px
-  height: 120px
-  border-radius: 50%
-  object-fit: cover
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2)
-  margin-bottom: 32px
-  transition: transform 0.3s ease
+  strong
+    font-size: 15.5px
 
-  &:hover
-    transform: scale(1.05)
+  span
+    font-size: 13.5px
+    color: var(--ink-3)
 
-.cards-grid
-  display: grid
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))
-  gap: 24px
-  width: 100%
-  max-width: 1000px
-
-@keyframes fadeInUp
-  from
-    opacity: 0
-    transform: translateY(10px)
-  to
-    opacity: 1
-    transform: translateY(0)
-
-.dashboard-card
-  padding: 16px
-  animation: fadeInUp 0.4s ease
-  transition: transform 0.3s ease, box-shadow 0.3s ease
-  border-radius: 12px
-
-  &:hover
-    transform: translateY(-4px)
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15)
-
-  mat-card-title
-    font-size: 1.2rem
-    font-weight: 600
-    margin-bottom: 8px
-
-  mat-card-content
-    font-size: 0.95rem
-    color: #555
-
-  mat-card-actions
-    margin-top: 12px
-
-    button
-      transition: background-color 0.3s ease, transform 0.2s ease
-
-      &:hover
-        transform: scale(1.05)
-.profile-avatar
-  margin-bottom: 32px
-
-.profile-photo,
-.avatar-fallback
-  width: 120px
-  height: 120px
-  border-radius: 50%
-  object-fit: cover
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2)
-  transition: transform 0.3s ease
-  display: flex
-  align-items: center
-  justify-content: center
-
-  &:hover
-    transform: scale(1.05)
-
-.avatar-fallback
-  background-color: #3f51b5
-  color: white
-  font-size: 2rem
-  font-weight: 600
-  text-transform: uppercase
-
+.arrow
+  color: var(--ink-3)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)

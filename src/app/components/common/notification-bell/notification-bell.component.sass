@@ -1,0 +1,73 @@
+.notif-wrapper
+  min-width: 320px
+  max-width: 400px
+  max-height: 440px
+  overflow-y: auto
+
+.notif-header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  min-height: 44px
+  padding: 2px 4px 6px 10px
+
+  strong
+    font: 700 15px var(--font-ui)
+    color: var(--ink)
+
+.notif-empty
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
+  padding: 24px 16px 20px
+  margin: 0
+  text-align: center
+  font-size: 13.5px
+  color: var(--ink-3)
+
+  .empty-icon
+    width: 44px
+    height: 44px
+    border-radius: 50%
+    display: grid
+    place-items: center
+    background: var(--surface-2)
+    color: var(--ink-3)
+
+.notif-item
+  display: flex
+  gap: 10px
+  padding: 10px
+  border-radius: 10px
+  cursor: default
+  transition: background-color var(--dur) var(--ease)
+
+  &:hover
+    background: var(--bg)
+
+.notif-dot
+  width: 8px
+  height: 8px
+  margin-top: 7px
+  flex-shrink: 0
+  border-radius: 50%
+  background: var(--accent)
+
+.notif-title
+  font-weight: 700
+  font-size: 14px
+  color: var(--ink)
+  margin-bottom: 2px
+
+.notif-msg
+  font-size: 13.5px
+  color: var(--ink-2)
+  white-space: normal
+  word-wrap: break-word
+
+.notif-time
+  font-size: 12px
+  font-weight: 600
+  color: var(--ink-3)
+  margin-top: 4px

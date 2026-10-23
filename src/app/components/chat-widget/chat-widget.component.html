@@ -1,0 +1,132 @@
+@if (currentUser() && open()) {
+  <section class="float-panel" role="dialog" [attr.aria-label]="'chat.title' | transloco">
+
+    <!-- Header: list, contact picker or one conversation -->
+    <header class="float-panel-head">
+      @if (activeId()) {
+        <button mat-icon-button class="head-btn" (click)="backToList()" [attr.aria-label]="'chat.back' | transloco">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        @if (activePartner(); as partner) {
+          @if (avatarUrl(partner.partnerFileName); as url) {
+            <img class="head-avatar" [src]="url" alt="">
+          } @else {
+            <span class="head-avatar" aria-hidden="true">{{ initials(partner.partnerFirstName, partner.partnerLastName) }}</span>
+          }
+          <div class="head-text">
+            <strong>{{ partner.partnerFirstName }} {{ partner.partnerLastName }}</strong>
+            <small>{{ 'chat.privateConversation' | transloco }}</small>
+          </div>
+        }
+      } @else if (picking()) {
+        <button mat-icon-button class="head-btn" (click)="picking.set(false)" [attr.aria-label]="'chat.back' | transloco">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="head-text"><strong>{{ 'chat.newMessage' | transloco }}</strong></div>
+      } @else {
+        <span class="head-icon"><mat-icon>chat</mat-icon></span>
+        <div class="head-text">
+          <strong>{{ 'chat.title' | transloco }}</strong>
+          <small>{{ 'chat.subtitle' | transloco }}</small>
+        </div>
+        <button mat-icon-button class="head-btn" (click)="startNew()"
+                [matTooltip]="'chat.newMessage' | transloco" [attr.aria-label]="'chat.newMessage' | transloco">
+          <mat-icon>edit_square</mat-icon>
+        </button>
+      }
+      <button mat-icon-button class="head-btn" (click)="close()" [attr.aria-label]="'common.close' | transloco">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <!-- New message: pick a contact -->
+    @if (!activeId() && picking()) {
+      <div class="contacts">
+        <label class="search">
+          <mat-icon>search</mat-icon>
+          <input type="search" [ngModel]="contactQuery()" (ngModelChange)="contactQuery.set($event)"
+                 [placeholder]="'chat.searchContacts' | transloco">
+        </label>
+        <div class="list">
+          @if (contacts() === null) {
+            @for (i of [0, 1, 2]; track i) { <div class="skeleton row-sk"></div> }
+          } @else if (!contacts()!.length) {
+            <div class="list-empty">
+              <span class="empty-icon"><mat-icon>group_add</mat-icon></span>
+              <p>{{ 'chat.noContacts' | transloco }}</p>
+              <a class="text-link" routerLink="/courses" (click)="close()">{{ 'chat.browseCourses' | transloco }}</a>
+            </div>
+          } @else if (!filteredContacts().length) {
+            <p class="no-match">{{ 'chat.noMatches' | transloco }}</p>
+          }
+          @for (contact of filteredContacts(); track contact.id) {
+            @let sub = contactSubtitle(contact);
+            <button type="button" class="row" (click)="pick(contact)">
+              @if (avatarUrl(contact.fileName); as url) {
+                <img class="avatar" [src]="url" alt="">
+              } @else {
+                <span class="avatar" aria-hidden="true">{{ initials(contact.firstName, contact.lastName) }}</span>
+              }
+              <span class="row-body">
+                <strong>{{ contact.firstName }} {{ contact.lastName }}</strong>
+                <span class="row-sub"><span class="role">{{ ('chat.role.' + sub.role) | transloco }}</span> {{ sub.title }}@if (sub.more > 0) { <span class="more">+{{ sub.more }}</span> }</span>
+              </span>
+              <mat-icon class="chev">chevron_right</mat-icon>
+            </button>
+          }
+          @if (contacts()?.length) {
+            <p class="hint">{{ 'chat.contactsHint' | transloco }}</p>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Conversation list -->
+    @if (!activeId() && !picking()) {
+      <div class="list">
+        @if (!conversations().length) {
+          <div class="list-empty">
+            <span class="empty-icon"><mat-icon>chat_bubble_outline</mat-icon></span>
+            <p>{{ 'chat.noConversations' | transloco }}</p>
+            <button mat-flat-button color="primary" type="button" class="btn-sm" (click)="startNew()">
+              <mat-icon>edit_square</mat-icon>{{ 'chat.newMessage' | transloco }}
+            </button>
+          </div>
+        }
+        @for (conv of conversations(); track conv.partnerId) {
+          <button type="button" class="row" [class.unread]="conv.unreadCount > 0" (click)="openConversation(conv.partnerId)">
+            @if (avatarUrl(conv.partnerFileName); as url) {
+              <img class="avatar" [src]="url" alt="">
+            } @else {
+              <span class="avatar" aria-hidden="true">{{ initials(conv.partnerFirstName, conv.partnerLastName) }}</span>
+            }
+            <span class="row-body">
+              <strong>{{ conv.partnerFirstName }} {{ conv.partnerLastName }}</strong>
+              <span class="row-sub">{{ conv.lastMessage }}</span>
+            </span>
+            @if (conv.unreadCount > 0) {
+              <span class="unread-badge">{{ conv.unreadCount }}</span>
+            }
+          </button>
+        }
+      </div>
+    }
+
+    <!-- One conversation -->
+    @if (activeId()) {
+      <app-message-thread [messages]="threadMessages()" [showReadStatus]="true"
+                          emptyIcon="waving_hand" [emptyText]="'chat.firstMessageHint' | transloco" />
+
+      @if (courseContext(); as course) {
+        <div class="context-bar">
+          <mat-icon>school</mat-icon>
+          <span>{{ 'chat.aboutCourse' | transloco: { title: course.title } }}</span>
+        </div>
+      }
+      @if (sendError(); as error) {
+        <p class="send-error" role="alert"><mat-icon>error_outline</mat-icon>{{ error | transloco }}</p>
+      }
+      <app-message-composer [(value)]="newMessage" (send)="send($event)" [placeholder]="'chat.placeholder' | transloco" />
+    }
+  </section>
+}

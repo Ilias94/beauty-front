@@ -51,8 +51,8 @@ export class SecurityState {
       }
 
 
+      // LoginComponent navigates afterwards (to the page the user came from).
       dispatch(new GetCurrentUserAction())
-      dispatch(new Navigate(['/my-account']))
     }))
   }
 
@@ -63,51 +63,65 @@ export class SecurityState {
       return;
     }
 
-    const currentDate = localStorage.getItem('currentDate');
-
-    if (!currentDate || moment().subtract(1, 'days').isAfter(moment(currentDate))) {
-      dispatch(new LogoutAction());
+    // OAuth2 (Google) sets token as a cookie — check it first, no localStorage date required
+    const cookieToken = this.coockieService.get('token');
+    if (cookieToken) {
+      patchState({ token: cookieToken });
+      this.webSocketService.connect();
+      dispatch(new GetCurrentUserAction());
       return;
     }
 
-    const cookieToken = this.coockieService.get('token');
-
-    if (cookieToken) {
-      patchState({ token: cookieToken });
-    } else {
-      const storageToken = localStorage.getItem('token');
-      if (!storageToken) {
-        return;
-      }
-      patchState({ token: storageToken });
+    // Regular email/password login — token and date are in localStorage
+    const currentDate = localStorage.getItem('currentDate');
+    if (!currentDate) {
+      // Never signed in on this device: a guest browsing the public catalog.
+      return;
+    }
+    if (moment().subtract(1, 'days').isAfter(moment(currentDate))) {
+      // Expired session: clear it, but let the visitor stay on the page they opened.
+      dispatch(new LogoutAction(false));
+      return;
     }
 
+    const storageToken = localStorage.getItem('token');
+    if (!storageToken) {
+      return;
+    }
+
+    patchState({ token: storageToken });
     this.webSocketService.connect();
     dispatch(new GetCurrentUserAction());
   }
 
 
   @Action(RegisterAction)
-  register({ }: StateContext<SecurityStateModel>, { user, file }: RegisterAction) {
-    // return this.userControllerService.saveUser({ body: {user, file: null} })
-    const formdata = new FormData()
-    formdata.append("user", JSON.stringify(user))
-    formdata.append("file", file)
-    return this.httpClient.post(`${environment.apiUrl}/api/v1/users`, formdata)
+  register({ dispatch }: StateContext<SecurityStateModel>, { user, file }: RegisterAction) {
+    const formdata = new FormData();
+    // Spring @RequestPart requires application/json content-type to deserialize with Jackson
+    formdata.append('user', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+    if (file) {
+      formdata.append('file', file);
+    }
+    return this.httpClient.post(`${environment.apiUrl}/api/v1/users`, formdata).pipe(
+      tap(() => dispatch(new Navigate(['/login'])))
+    );
   }
 
   @Action(LogoutAction)
-logout({ patchState, dispatch }: StateContext<SecurityStateModel>) {
-
-  if (isPlatformBrowser(this.platformId)) {
-    this.webSocketService.disconnect();
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentDate');
+  logout({ patchState, dispatch }: StateContext<SecurityStateModel>, { redirectToLogin }: LogoutAction) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.webSocketService.disconnect();
+      localStorage.removeItem('token');
+      localStorage.removeItem('currentDate');
+      this.coockieService.delete('token');
+      this.coockieService.delete('token', '/');
+    }
+    patchState({ token: null, currentUser: null });
+    if (redirectToLogin) {
+      dispatch(new Navigate(['/login']));
+    }
   }
-
-  patchState({ token: null });
-  dispatch(new Navigate(['/login']));
-}
 
 
   @Action(GetCurrentUserAction)

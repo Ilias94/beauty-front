@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
-import { FilterCoursesByDateAction, GetAutocompleteTitleAction, GetCourseByIdAction, GetPageCoursesAction, SaveCourseAction} from './course.actions';
+import { FilterCoursesByDateAction, GetAutocompleteTitleAction, GetCourseByIdAction, GetDistinctCitiesAction, GetPageCoursesAction, SaveCourseAction, UpdateCourseAction} from './course.actions';
 import { CourseControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
 import { Navigate } from '@ngxs/router-plugin';
@@ -10,15 +10,19 @@ import { CourseDtoResponse, PageCourseDtoResponse } from '../../../api/models';
 export class CourseStateModel {
   public pageCourses: PageCourseDtoResponse;
   public course: CourseDtoResponse;
-  public titleAutocomplete: string[]
-  public coursesByDate: CourseDtoResponse[]
+  public titleAutocomplete: string[];
+  public coursesByDate: CourseDtoResponse[];
+  public distinctCities: string[];
+  public loadingByDate: boolean;
 }
 
 const defaults = {
   pageCourses: {},
   course: {},
   titleAutocomplete: [],
-  coursesByDate: []
+  coursesByDate: [],
+  distinctCities: [],
+  loadingByDate: false,
 };
 
 @State<CourseStateModel>({
@@ -29,16 +33,30 @@ const defaults = {
 export class CourseState {
   constructor(private courseControllerService: CourseControllerService) { }
 
-  @Action(GetPageCoursesAction)
-  getCourses({ patchState }: StateContext<CourseStateModel>, { page, size, categoryId, title, sortBy, sortDirection, isCurrentCreator, isCurrentStudent }: GetPageCoursesAction) {
-    return this.courseControllerService.getCourses({ page, size, categoryId, title, sortBy, sortDirection, isCurrentCreator, isCurrentStudent }).pipe(tap(response => {
+  // The catalog searches as you type: a newer query cancels the one still in flight.
+  @Action(GetPageCoursesAction, { cancelUncompleted: true })
+  getCourses({ patchState }: StateContext<CourseStateModel>, { page, size, categoryId, title, sortBy, sortDirection, isCurrentCreator, isCurrentStudent, hidePast, city, courseType }: GetPageCoursesAction) {
+    return this.courseControllerService.getCourses({ page, size, categoryId, title, city, courseType, sortBy, sortDirection, isCurrentCreator, isCurrentStudent, hidePast }).pipe(tap(response => {
       patchState({ pageCourses: response })
     }))
   }
 
+  @Action(GetDistinctCitiesAction)
+  getDistinctCities({ patchState }: StateContext<CourseStateModel>) {
+    return this.courseControllerService.getDistinctCities().pipe(tap(cities => {
+      patchState({ distinctCities: cities })
+    }))
+  }
+
+  @Action(UpdateCourseAction)
+  updateCourse({ patchState }: StateContext<CourseStateModel>, { id, course }: UpdateCourseAction) {
+    return this.courseControllerService.updateCourse({ id, body: course }).pipe(tap(updated => patchState({ course: updated })));
+  }
+
   @Action(SaveCourseAction)
-  saveCourse({ }: StateContext<CourseStateModel>, { course }: SaveCourseAction) {
-    return this.courseControllerService.createCourse({ body: course })
+  saveCourse({ patchState }: StateContext<CourseStateModel>, { course }: SaveCourseAction) {
+    // Kept as the current course, so the wizard knows the new id (it uploads the photos next).
+    return this.courseControllerService.createCourse({ body: course }).pipe(tap(created => patchState({ course: created })));
   }
 
   @Action(GetCourseByIdAction)
@@ -56,9 +74,10 @@ export class CourseState {
 
   @Action(FilterCoursesByDateAction)
   filterCourseByDate({ patchState }: StateContext<CourseStateModel>, { from, to }: FilterCoursesByDateAction) {
+    patchState({ loadingByDate: true });
     return this.courseControllerService.filterCoursesByDate({ from, to }).pipe(tap(response => {
-      patchState({ coursesByDate: response })
-    }))
+      patchState({ coursesByDate: response, loadingByDate: false });
+    }));
   }
 
 }

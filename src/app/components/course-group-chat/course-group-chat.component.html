@@ -1,0 +1,18 @@
+@if (panels.groupChatOpen()) {
+  <section class="float-panel" role="dialog" [attr.aria-label]="'groupChat.title' | transloco">
+    <header class="float-panel-head">
+      <span class="head-icon group"><mat-icon>groups</mat-icon></span>
+      <div class="head-text">
+        <strong>{{ 'groupChat.title' | transloco }}</strong>
+        <small>{{ courseTitle }}</small>
+      </div>
+      <button mat-icon-button class="head-btn" (click)="panels.closeAll()" [attr.aria-label]="'common.close' | transloco">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+
+    <app-message-thread [messages]="threadMessages()" [showAuthors]="true"
+                        emptyIcon="forum" [emptyText]="'groupChat.empty' | transloco" />
+    <app-message-composer [(value)]="newMessage" (send)="send($event)" [placeholder]="'groupChat.placeholder' | transloco" />
+  </section>
+}

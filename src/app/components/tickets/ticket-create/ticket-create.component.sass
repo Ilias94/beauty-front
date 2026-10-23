@@ -1,0 +1,109 @@
+.create-wrapper
+  max-width: 720px
+  margin: 0 auto
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
+.back-link
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  margin-bottom: 12px
+  font-weight: 600
+  font-size: 14px
+  color: var(--ink-2)
+
+  &:hover
+    color: var(--ink)
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+
+.ticket-form
+  display: flex
+  flex-direction: column
+  gap: 8px
+  margin-top: 24px
+  padding: clamp(20px, 3vw, 32px)
+  border-radius: var(--radius-lg)
+
+  mat-form-field
+    width: 100%
+
+// ── Ticket type tiles ──────────────────────────────────────
+.types
+  border: 0
+  padding: 0
+  margin: 0 0 16px
+
+  legend
+    float: none
+    width: auto
+    margin-bottom: 10px
+    font: 700 14px var(--font-ui)
+
+.type-grid
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 10px
+
+.type
+  display: flex
+  align-items: center
+  gap: 10px
+  padding: 12px
+  border: 1.5px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  font: 600 14px var(--font-ui)
+  color: var(--ink)
+  text-align: left
+  cursor: pointer
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease), transform 120ms var(--ease)
+
+  &:hover
+    border-color: var(--line-strong)
+
+  &:active
+    transform: scale(0.98)
+
+  &.on
+    border-color: var(--accent)
+    background: var(--accent-soft)
+
+    .type-icon
+      background: var(--accent)
+      color: #fff
+
+.type-icon
+  width: 34px
+  height: 34px
+  flex-shrink: 0
+  border-radius: 10px
+  display: grid
+  place-items: center
+  background: var(--surface-2)
+  color: var(--ink-2)
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+
+.error
+  margin-top: 8px
+  color: var(--danger)
+  font-size: 13px
+  font-weight: 600
+
+.actions
+  display: flex
+  justify-content: flex-end
+  gap: 8px
+  margin-top: 8px
+
+@media (max-width: 640px)
+  .type-grid
+    grid-template-columns: 1fr 1fr

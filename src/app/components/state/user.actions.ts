@@ -2,7 +2,7 @@ import { ChangePasswordDtoRequest, UserDtoRequest } from "../../../api/models";
 
 export class ChangeUserDataAction {
   static readonly type = '[User] ChangeUserDataAction';
-  public constructor(public user: UserDtoRequest) {
+  public constructor(public user: UserDtoRequest, public userId: number) {
   }
 }
 

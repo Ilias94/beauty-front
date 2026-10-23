@@ -1,58 +1,427 @@
-<mat-card class="example-card">
-  <mat-card-header>
-    <mat-card-title>{{course().title}}</mat-card-title>
-    <mat-card-subtitle class="price-highlight">
-      💰 {{ course().price }} zł
-    </mat-card-subtitle>
+<div class="page">
 
-  </mat-card-header>
+  <nav class="crumbs" [attr.aria-label]="'courseDetails.breadcrumb' | transloco">
+    <a routerLink="/courses">{{ 'menu.browseCourses' | transloco }}</a>
+    @if (loaded() && course()?.category?.label) {
+      <mat-icon>chevron_right</mat-icon>
+      <span>{{ categoryKey() | transloco }}</span>
+    }
+  </nav>
 
-  @if (course()?.creator?.fileName) {
-  <img mat-card-image
-    src="https://picturesbeautyapplication.s3.eu-central-1.amazonaws.com/{{course().creator.fileName}}">
+  @if (!loaded()) {
+    <!-- Loading placeholder -->
+    <div class="layout" aria-hidden="true">
+      <div class="main">
+        <div class="skeleton" style="height: 18px; width: 140px"></div>
+        <div class="skeleton" style="height: 46px; width: 80%; margin-top: 16px"></div>
+        <div class="skeleton" style="aspect-ratio: 16/8; margin-top: 28px; border-radius: var(--radius-lg)"></div>
+      </div>
+      <aside class="side"><div class="skeleton" style="height: 360px; border-radius: var(--radius-lg)"></div></aside>
+    </div>
+  } @else {
+    @let c = course()!;
+
+    <div class="layout">
+      <!-- ── Main column ───────────────────────────────── -->
+      <div class="main">
+        <header class="head">
+          <p class="eyebrow">{{ categoryKey() | transloco }}</p>
+          <h1 class="title">{{ c.title }}</h1>
+          <div class="head-meta">
+            @if (rating().count) {
+              <!-- A button, not href="#reviews": with <base href="/"> that link led to the home page. -->
+              <button type="button" class="meta-item rating" (click)="scrollToSection('reviews')">
+                <app-star-rating [value]="rating().average" size="sm" />
+                <strong>{{ rating().average | number: '1.1-1' }}</strong>
+                <span class="muted">({{ rating().count | plural: 'rating.count' | transloco: { count: rating().count } }})</span>
+              </button>
+            } @else if (status() === 'upcoming') {
+              <!-- "No ratings" reads as a warning on a course nobody could rate yet. -->
+              <span class="meta-item new"><mat-icon>auto_awesome</mat-icon>{{ 'courseDetails.newCourse' | transloco }}</span>
+            } @else {
+              <span class="meta-item muted"><mat-icon>star_outline</mat-icon>{{ 'rating.none' | transloco }}</span>
+            }
+            <span class="meta-item">
+              @switch (c.courseType) {
+                @case ('ONLINE') { <mat-icon>videocam</mat-icon>{{ 'courses.online' | transloco }} }
+                @case ('HYBRID') { <mat-icon>devices</mat-icon>{{ 'courses.hybrid' | transloco }}@if (c.address?.city) { · {{ c.address?.city }} } }
+                @default { <mat-icon>location_on</mat-icon>{{ c.address?.city || ('courses.inPerson' | transloco) }} }
+              }
+            </span>
+            @if (status() !== 'upcoming') {
+              <span class="tag" [class.tag-success]="status() === 'ongoing'">{{ ('status.' + status()) | transloco }}</span>
+            }
+            <button type="button" class="meta-item share" (click)="share()" [attr.aria-label]="'courseDetails.share' | transloco">
+              <mat-icon>ios_share</mat-icon><span class="share-text">{{ 'courseDetails.share' | transloco }}</span>
+            </button>
+          </div>
+        </header>
+
+        <app-course-gallery class="media" [photos]="photos()" [title]="c.title ?? ''" [visual]="visual()"
+          [canEdit]="isOwner()" (edit)="editPhotos()" />
+
+        <!-- About -->
+        <section class="section">
+          <h2>{{ 'courseDetails.aboutCourse' | transloco }}</h2>
+          <div class="prose-wrap" [class.folded]="longDescription() && !descriptionOpen()">
+            <p class="prose" id="course-description">{{ c.description }}</p>
+          </div>
+          @if (longDescription()) {
+            <button type="button" class="more" (click)="descriptionOpen.set(!descriptionOpen())"
+                    [attr.aria-expanded]="descriptionOpen()" aria-controls="course-description">
+              {{ (descriptionOpen() ? 'courseDetails.showLess' : 'courseDetails.showMore') | transloco }}
+              <mat-icon>{{ descriptionOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+          }
+          <!-- Key facts as tiles, each in its own colour; they rise in one after another. -->
+          <dl class="facts">
+            @if (c.courseLevel) {
+              <div class="fact fact-level rise" style="--i: 0" appSpotlight>
+                <span class="fact-icon" aria-hidden="true">
+                  <span class="level-bars" [attr.data-level]="c.courseLevel"><i></i><i></i><i></i></span>
+                </span>
+                <div class="fact-text">
+                  <dt>{{ 'courseDetails.level' | transloco }}</dt>
+                  <dd>
+                    <span class="long">{{ ('courseDetails.levels.' + c.courseLevel) | transloco }}</span>
+                    <span class="short">{{ ('courses.levelShort.' + c.courseLevel) | transloco }}</span>
+                  </dd>
+                </div>
+              </div>
+            }
+            @if (c.language) {
+              <div class="fact fact-language rise" style="--i: 1" appSpotlight>
+                <span class="fact-icon" aria-hidden="true"><mat-icon>translate</mat-icon></span>
+                <div class="fact-text">
+                  <dt>{{ 'courseDetails.language' | transloco }}</dt>
+                  <dd>{{ languageName(c.language) }}</dd>
+                </div>
+              </div>
+            }
+            <div class="fact fact-certificate rise" style="--i: 2" appSpotlight [class.off]="!c.certificate">
+              <span class="fact-icon" aria-hidden="true"><mat-icon>{{ c.certificate ? 'workspace_premium' : 'do_not_disturb_on' }}</mat-icon></span>
+              <div class="fact-text">
+                <dt>{{ 'courseDetails.certificate' | transloco }}</dt>
+                <dd>{{ (c.certificate ? 'courseDetails.certificateYes' : 'courseDetails.certificateNo') | transloco }}</dd>
+              </div>
+            </div>
+            <div class="fact fact-group rise" style="--i: 3" appSpotlight>
+              <span class="fact-icon" aria-hidden="true"><mat-icon>groups</mat-icon></span>
+              <div class="fact-text">
+                <dt>{{ 'courseDetails.groupSize' | transloco }}</dt>
+                <dd>{{ 'courseDetails.groupSizeValue' | transloco: { max: c.maxParticipants } }}</dd>
+              </div>
+            </div>
+          </dl>
+        </section>
+
+        @if (outcomes().length) {
+          <section class="section">
+            <h2>{{ 'courseDetails.outcomes' | transloco }}</h2>
+            <ul class="checklist">
+              @for (item of outcomes(); track $index) {
+                <li><mat-icon>check</mat-icon><span>{{ item }}</span></li>
+              }
+            </ul>
+          </section>
+        }
+
+        @if (c.prerequisites) {
+          <section class="section">
+            <h2>{{ 'courseDetails.prerequisites' | transloco }}</h2>
+            <p class="prose">{{ c.prerequisites }}</p>
+          </section>
+        }
+
+        <!-- Location -->
+        @if (c.address && c.courseType !== 'ONLINE') {
+          <section class="section" id="location">
+            <h2>{{ 'courseDetails.location' | transloco }}</h2>
+            <div class="place">
+              <mat-icon>location_on</mat-icon>
+              <div>
+                <p class="place-line">
+                  {{ c.address.street }} {{ c.address.streetNumber }}@if (c.address.apartmentNumber) {/{{ c.address.apartmentNumber }}}
+                </p>
+                <p class="muted">{{ c.address.postalCode }} {{ c.address.city }}@if (c.address.district) { · {{ c.address.district }} }</p>
+              </div>
+              @if (directionsUrl(); as url) {
+                <a mat-stroked-button class="directions" [href]="url" target="_blank" rel="noopener">
+                  <mat-icon>directions</mat-icon>{{ 'courseDetails.directions' | transloco }}
+                </a>
+              }
+            </div>
+            @if (position(); as pos) {
+              <div class="map">
+                @if (mapReady()) {
+                  <google-map height="300px" width="100%" [zoom]="zoom" [center]="pos" [options]="mapOptions">
+                    <map-advanced-marker [position]="pos" [content]="pin()" />
+                  </google-map>
+                }
+              </div>
+            }
+          </section>
+        }
+
+        <!-- Instructor -->
+        @if (c.creator && instructorName()) {
+          <section class="section">
+            <h2>{{ 'courseDetails.instructor' | transloco }}</h2>
+            <div class="instructor">
+              @if (creatorAvatar(); as avatar) {
+                <img [src]="avatar" alt="" class="instructor-avatar">
+              } @else {
+                <span class="instructor-avatar initials">{{ c.creator.firstName?.[0] }}{{ c.creator.lastName?.[0] }}</span>
+              }
+              <div class="instructor-body">
+                <p class="instructor-name">{{ instructorName() }}</p>
+                @if (c.creator.instructorRating) {
+                  <p class="instructor-rating">
+                    <app-star-rating [value]="c.creator.instructorRating" size="sm" />
+                    {{ c.creator.instructorRating | number: '1.1-1' }} · {{ 'courseDetails.instructorRatingLabel' | transloco }}
+                  </p>
+                }
+              </div>
+              @if (currentUser() && !isOwner()) {
+                <button mat-stroked-button type="button" (click)="messageInstructor()">
+                  <mat-icon>chat</mat-icon>{{ 'chat.messageInstructor' | transloco }}
+                </button>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- Participants (owner only) -->
+        @if (isOwner()) {
+          <section class="section">
+            <div class="section-head">
+              <h2>{{ 'courseDetails.participantsTitle' | transloco }}</h2>
+              @if (participants(); as list) {
+                <span class="score"><strong>{{ list.length }}</strong> / {{ c.maxParticipants }}</span>
+              }
+            </div>
+            @if (participants() === null) {
+              <div class="skeleton" style="height: 56px; border-radius: var(--radius)"></div>
+            } @else if (!participants()!.length) {
+              <p class="muted">{{ 'courseDetails.noParticipants' | transloco }}</p>
+            } @else {
+              <ul class="people">
+                @for (p of participants(); track p.id) {
+                  <li>
+                    <span class="person-avatar">{{ p.firstName?.[0] }}{{ p.lastName?.[0] }}</span>
+                    <span class="person-name">{{ p.firstName }} {{ p.lastName }}</span>
+                    <button mat-stroked-button type="button" class="btn-sm" (click)="messageParticipant(p)">
+                      <mat-icon>chat</mat-icon>{{ 'courseDetails.writeTo' | transloco }}
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </section>
+        }
+
+        <!-- Reviews -->
+        <section class="section" id="reviews">
+          <div class="section-head">
+            <h2>{{ 'courseDetails.reviewsTitle' | transloco }}</h2>
+          </div>
+
+          @if (rating().count) {
+            <div class="rating-summary">
+              <div class="rating-score">
+                <strong>{{ rating().average | number: '1.1-1' }}</strong>
+                <app-star-rating [value]="rating().average" size="md" />
+                <span>{{ rating().count | plural: 'rating.count' | transloco: { count: rating().count } }}</span>
+              </div>
+              @if (rating().counts.length) {
+                <ul class="rating-bars" [attr.aria-label]="'rating.breakdown' | transloco">
+                  @for (bar of ratingBars(); track bar.stars) {
+                    <li [attr.aria-label]="'rating.barLabel' | transloco: { stars: bar.stars, count: bar.n }">
+                      <span class="bar-label" aria-hidden="true">{{ bar.stars }}<mat-icon>star</mat-icon></span>
+                      <span class="bar" aria-hidden="true"><span [style.width.%]="bar.percent"></span></span>
+                      <span class="bar-count" aria-hidden="true">{{ bar.n }}</span>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+
+          @if (canReview()) {
+            <div class="review-box">
+              <div class="rate-row">
+                <div>
+                  <p class="rate-label">{{ 'courseDetails.yourRating' | transloco }}</p>
+                  <app-star-rating [readonly]="false" [value]="$safeNavigationMigration(currentUserRating()?.value)" size="lg"
+                    [label]="'courseDetails.yourRating' | transloco" (rate)="handleRating($event)" />
+                </div>
+                <div>
+                  <p class="rate-label">{{ 'courseDetails.yourInstructorRating' | transloco }}</p>
+                  <app-star-rating [readonly]="false" [value]="instructorRatingPreview()" size="lg"
+                    [label]="'courseDetails.yourInstructorRating' | transloco" (rate)="handleInstructorRating($event)" />
+                </div>
+              </div>
+              <p class="hint">{{ 'courseDetails.rateHint' | transloco }}</p>
+              <mat-form-field appearance="outline" class="review-field" subscriptSizing="dynamic">
+                <mat-label>{{ 'courseDetails.leaveReview' | transloco }}</mat-label>
+                <textarea matInput rows="4" [formControl]="reviewControl"
+                  [placeholder]="'courseDetails.commentPlaceholder' | transloco"></textarea>
+              </mat-form-field>
+              <div class="review-actions">
+                <button mat-flat-button color="primary" type="button" [disabled]="reviewControl.invalid" (click)="saveComment()">
+                  {{ 'courseDetails.postComment' | transloco }}
+                </button>
+              </div>
+            </div>
+          }
+
+          <app-comments [comments]="comments()" />
+        </section>
+      </div>
+
+      <!-- ── Booking card ──────────────────────────────── -->
+      <aside class="side">
+        <div class="booking">
+          <div class="price">{{ c.price | price }}<span class="price-note">{{ 'courseDetails.priceNote' | transloco }}</span></div>
+
+          <ul class="booking-facts">
+            <li>
+              <mat-icon>calendar_month</mat-icon>
+              <div>
+                <span class="fact-label">{{ 'courseDetails.dates' | transloco }}</span>
+                <span>{{ c.startDate | dateRange: c.endDate }}</span>
+                @if (schedule(); as s) {
+                  <span class="muted small">
+                    {{ s.length.count | plural: s.length.key | transloco: { count: s.length.count } }} ·
+                    @if (s.to) { {{ s.from }}–{{ s.to }}@if (s.days > 1) { {{ 'courseDetails.daily' | transloco }}} } @else { {{ 'courseDetails.startsAt' | transloco }} {{ s.from }} }
+                  </span>
+                }
+                @if (startsIn(); as d) {
+                  <span class="countdown"><mat-icon>schedule</mat-icon>{{ d | plural: 'courseDetails.startsInDays' | transloco: { count: d } }}</span>
+                } @else if (startsIn() === 0) {
+                  <span class="countdown"><mat-icon>schedule</mat-icon>{{ 'courseDetails.startsToday' | transloco }}</span>
+                }
+              </div>
+            </li>
+            <li>
+              <mat-icon>{{ c.courseType === 'ONLINE' ? 'videocam' : 'location_on' }}</mat-icon>
+              <div>
+                <span class="fact-label">{{ 'courseDetails.where' | transloco }}</span>
+                @if (street(); as st) {
+                  <span>{{ st }}</span>
+                  <span class="muted small">
+                    @if (c.courseType === 'HYBRID') { {{ 'courses.hybrid' | transloco }} · }{{ c.address?.city }}@if (c.address?.district) { · {{ c.address?.district }}}
+                  </span>
+                  @if (position()) {
+                    <button type="button" class="fact-link" (click)="scrollToSection('location')">{{ 'courseDetails.showOnMap' | transloco }}</button>
+                  }
+                } @else {
+                  <span>
+                    @switch (c.courseType) {
+                      @case ('ONLINE') { {{ 'courseDetails.onlineWhere' | transloco }} }
+                      @case ('HYBRID') { {{ 'courses.hybrid' | transloco }}@if (c.address?.city) {, {{ c.address?.city }}} }
+                      @default { {{ c.address?.city }} }
+                    }
+                  </span>
+                }
+              </div>
+            </li>
+          </ul>
+
+          @if (status() !== 'past' && !isOwner()) {
+            <div class="seats" [class.low]="spotsLeft() > 0 && spotsLeft() <= 3" [class.full]="isFull()">
+              <div class="seats-text">
+                @if (isFull()) {
+                  {{ 'courses.full' | transloco }}
+                } @else {
+                  {{ 'courseDetails.seatsLeft' | transloco: { left: spotsLeft(), max: c.maxParticipants } }}
+                }
+              </div>
+              <!-- An empty bar reads as broken; it appears with the first booking. -->
+              @if (fillPercent() > 0) {
+                <div class="bar"><span [style.width.%]="fillPercent()"></span></div>
+              }
+            </div>
+          }
+
+          <!-- Primary action -->
+          @if (isOwner()) {
+            <div class="owner-tools">
+              <p class="owner-note"><mat-icon>verified</mat-icon>{{ 'courseDetails.ownerNote' | transloco }}</p>
+              <input hidden #fileInput (change)="onFileSelected($event)" multiple type="file" accept="video/*">
+              <div class="tools">
+                <a class="tool" [routerLink]="['/course', courseId, 'edit']">
+                  <span class="tool-icon"><mat-icon>edit</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.editCourse' | transloco }}</strong>{{ 'courseDetails.editCourseHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </a>
+                <button type="button" class="tool" (click)="onUpload()">
+                  <span class="tool-icon"><mat-icon>upload</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.addVideos' | transloco }}</strong>{{ 'courseDetails.addVideosHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </button>
+                <button type="button" class="tool" (click)="editPhotos()">
+                  <span class="tool-icon"><mat-icon>photo_library</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.photos' | transloco }}</strong>{{ 'courseDetails.photosHint' | transloco: { count: photos().length } }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </button>
+                <button type="button" class="tool" (click)="openVideos()">
+                  <span class="tool-icon"><mat-icon>play_circle</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.manageVideos' | transloco }}</strong>{{ 'courseDetails.manageVideosHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </button>
+                <a class="tool" [routerLink]="['/questions', courseId]">
+                  <span class="tool-icon"><mat-icon>quiz</mat-icon></span>
+                  <span class="tool-text"><strong>{{ 'courseDetails.quiz' | transloco }}</strong>{{ 'courseDetails.quizHint' | transloco }}</span>
+                  <mat-icon class="chev">chevron_right</mat-icon>
+                </a>
+              </div>
+            </div>
+          } @else if (isEnrolled()) {
+            <div class="enrolled">
+              <p class="enrolled-note"><mat-icon>check_circle</mat-icon>{{ 'courseDetails.youreEnrolled' | transloco }}</p>
+              @if (c.courseType !== 'IN_PERSON') {
+                <button mat-flat-button color="primary" type="button" class="cta" (click)="openVideos()">
+                  <mat-icon>play_circle</mat-icon>{{ 'courseDetails.watchMaterials' | transloco }}
+                </button>
+              }
+              <a mat-stroked-button class="cta" [routerLink]="['/questions', courseId]"><mat-icon>quiz</mat-icon>{{ 'courseDetails.goToQuiz' | transloco }}</a>
+              @if (status() === 'upcoming' && calendarUrl(); as url) {
+                <a mat-stroked-button class="cta" [href]="url" target="_blank" rel="noopener"><mat-icon>event</mat-icon>{{ 'courseDetails.addToCalendar' | transloco }}</a>
+              }
+            </div>
+          } @else if (status() === 'past') {
+            <p class="notice"><mat-icon>event_busy</mat-icon>{{ 'courseDetails.courseEnded' | transloco }}</p>
+          } @else if (isFull()) {
+            <p class="notice"><mat-icon>group_off</mat-icon>{{ 'courseDetails.courseFull' | transloco }}</p>
+          } @else if (!currentUser()) {
+            <a mat-flat-button color="primary" class="cta" routerLink="/login">{{ 'courseDetails.loginToEnroll' | transloco }}</a>
+            <p class="fine-print">{{ 'courseDetails.noAccount' | transloco }} <a routerLink="/registry">{{ 'menu.register' | transloco }}</a></p>
+          } @else {
+            <button mat-flat-button color="primary" type="button" class="cta" (click)="enroll()">{{ 'courseDetails.enrollNow' | transloco }}</button>
+            <p class="fine-print"><mat-icon>lock</mat-icon>{{ 'courseDetails.securePayment' | transloco }}</p>
+          }
+        </div>
+      </aside>
+    </div>
+
+    <!-- Mobile booking bar -->
+    @if (showMobileBar()) {
+      <div class="mobile-bar">
+        <div>
+          <div class="mobile-price">{{ c.price | price }}</div>
+          <div class="muted small">{{ c.startDate | dateRange: c.endDate }}</div>
+        </div>
+        @if (currentUser()) {
+          <button mat-flat-button color="primary" type="button" (click)="enroll()">{{ 'courseDetails.enrollShort' | transloco }}</button>
+        } @else {
+          <a mat-flat-button color="primary" routerLink="/login">{{ 'courseDetails.enrollShort' | transloco }}</a>
+        }
+      </div>
+    }
+
+    @if (isOwner() || isEnrolled()) {
+      <app-course-group-chat [courseId]="courseId" [courseTitle]="c.title" />
+    }
   }
-  <mat-card-content>
-    <p>{{course().description}}</p>
-    <p>{{course().category?.label}}</p>
-    <p>{{course().startDate}}</p>
-    <p>{{course().endDate}}</p>
-    <p>{{course().address?.city}}</p>
-    <p>{{course().address?.district}}</p>
-    <p>{{course().address?.street}}</p>
-    <p>{{course().address?.streetNumber}}</p>
-
-  </mat-card-content>
-  <mat-card-actions>
-    
-    <input hidden #fileInput (change)="onFileSelected($event)" multiple type="file">
-    <button mat-button (click)="onUpload()">Add videos</button>
-    <button matButton="elevated" (click)="openDialog()">Videos</button>
-  </mat-card-actions>
-</mat-card>
-<div class="rating-section">
-  <div class="rating-block">
-    <label>Average Rating</label>
-    <ngx-stars #currentRating [wholeStars]="false" [maxStars]="5" [readonly]="true"
-      (ratingOutput)="handleRating($event)">
-    </ngx-stars>
-  </div>
-
-  <div class="rating-block">
-    <label>Your Rating</label>
-    <ngx-stars #courseRating [wholeStars]="false" [maxStars]="5" [readonly]="false"
-      (ratingOutput)="handleRating($event)">
-    </ngx-stars>
-  </div>
 </div>
-
-<form [formGroup]="form">
-  <formly-form [form]="form" [fields]="fields"></formly-form>
-  <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="saveComment()">Save comment</button>
-</form>
-<app-comments [comments]="comments()"></app-comments>
-@if (course().address) {
-<google-map height="400px" width="100%" [zoom]="zoom" [options]="mapOptions">
-  <map-advanced-marker [position]="position" #markerElem="mapAdvancedMarker">
-  </map-advanced-marker>
-</google-map>
-}

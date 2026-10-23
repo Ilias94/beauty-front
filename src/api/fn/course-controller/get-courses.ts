@@ -13,10 +13,13 @@ export interface GetCourses$Params {
   size?: number;
   categoryId?: number;
   title?: string;
+  city?: string;
+  courseType?: 'IN_PERSON' | 'ONLINE' | 'HYBRID';
   sortBy?: string;
   sortDirection?: 'ASC' | 'DESC';
   isCurrentCreator?: boolean;
   isCurrentStudent?: boolean;
+  hidePast?: boolean;
 }
 
 export function getCourses(http: HttpClient, rootUrl: string, params?: GetCourses$Params, context?: HttpContext): Observable<StrictHttpResponse<PageCourseDtoResponse>> {
@@ -26,10 +29,13 @@ export function getCourses(http: HttpClient, rootUrl: string, params?: GetCourse
     rb.query('size', params.size, {});
     rb.query('categoryId', params.categoryId, {});
     rb.query('title', params.title, {});
+    rb.query('city', params.city, {});
+    rb.query('courseType', params.courseType, {});
     rb.query('sortBy', params.sortBy, {});
     rb.query('sortDirection', params.sortDirection, {});
     rb.query('isCurrentCreator', params.isCurrentCreator, {});
     rb.query('isCurrentStudent', params.isCurrentStudent, {});
+    rb.query('hidePast', params.hidePast, {});
   }
 
   return http.request(

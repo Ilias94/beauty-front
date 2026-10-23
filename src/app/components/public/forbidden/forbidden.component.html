@@ -1,16 +1,9 @@
-<div>You are not permitted to see this page</div>
-<div class="grid">
-    <div>
-        <button mat-fab extended color="primary" routerLink="/">
-            <mat-icon>home</mat-icon>
-            Home
-        </button>
-    </div>
-
-    <div>
-        <button mat-fab extended color="primary" routerLink="/login">
-            <mat-icon>login</mat-icon>
-            Login
-        </button>
-    </div>
+<div class="empty-state state-page">
+  <div class="empty-icon"><mat-icon>lock</mat-icon></div>
+  <h1>{{ 'forbidden.title' | transloco }}</h1>
+  <p>{{ 'forbidden.notPermitted' | transloco }}</p>
+  <div class="actions">
+    <a mat-flat-button color="primary" routerLink="/courses">{{ 'forbidden.home' | transloco }}</a>
+    <a mat-stroked-button routerLink="/login">{{ 'forbidden.login' | transloco }}</a>
+  </div>
 </div>

@@ -1,4 +1,232 @@
-.custom-register-btn
-  width: auto // or specify a width like 150px
-  padding-left: 20px // adjust as needed
-  padding-right: 20px // adjust as needed
+// Layout and the shared controls mirror login.component.sass.
+.auth
+  display: grid
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr)
+  min-height: calc(100vh - var(--header-h))
+
+.auth-main
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 48px var(--gutter)
+
+.auth-form
+  width: 100%
+  max-width: 460px
+
+.auth-title
+  font-size: clamp(32px, 4vw, 42px)
+  margin-top: 10px
+
+.auth-lead
+  color: var(--ink-2)
+  margin: 10px 0 28px
+
+.google-btn
+  width: 100%
+  height: 50px
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 10px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  font: 700 15px var(--font-ui)
+  color: var(--ink)
+  cursor: pointer
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease)
+
+  &:hover
+    border-color: var(--ink-3)
+    background: var(--surface-2)
+
+.divider
+  display: flex
+  align-items: center
+  gap: 12px
+  margin: 24px 0
+  color: var(--ink-3)
+  font-size: 13px
+  font-weight: 600
+
+  &::before, &::after
+    content: ''
+    flex: 1
+    height: 1px
+    background: var(--line)
+
+// ── Account type ───────────────────────────────────────────
+.types
+  border: 0
+  padding: 0
+  margin: 0 0 20px
+
+  legend
+    float: none
+    width: auto
+    font: 700 14px var(--font-ui)
+    margin-bottom: 10px
+
+.types-grid
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 10px
+
+
+.type
+  position: relative
+  display: flex
+  align-items: flex-start
+  gap: 10px
+  padding: 14px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius)
+  background: var(--surface)
+  cursor: pointer
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease)
+
+  input
+    position: absolute
+    opacity: 0
+    pointer-events: none
+
+  .mat-icon
+    color: var(--ink-3)
+    flex-shrink: 0
+
+  &:hover
+    border-color: var(--ink-3)
+
+  &.on
+    border-color: var(--accent)
+    box-shadow: 0 0 0 1px var(--accent)
+
+    .mat-icon
+      color: var(--accent)
+
+  &:has(input:focus-visible)
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+.type-text
+  display: flex
+  flex-direction: column
+  gap: 2px
+  font-size: 13px
+  color: var(--ink-2)
+  line-height: 1.4
+
+  strong
+    font-size: 14.5px
+    color: var(--ink)
+
+// ── Fields ─────────────────────────────────────────────────
+.two-col
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 10px
+
+  mat-form-field
+    width: 100%
+
+.field
+  width: 100%
+
+.rules
+  list-style: none
+  padding: 0
+  margin: -8px 0 16px
+  display: flex
+  flex-wrap: wrap
+  gap: 6px 14px
+
+  li
+    display: inline-flex
+    align-items: center
+    gap: 4px
+    font-size: 12.5px
+    font-weight: 600
+    color: var(--ink-3)
+
+    .mat-icon
+      font-size: 16px
+      width: 16px
+      height: 16px
+
+    &.ok
+      color: var(--success)
+
+// ── Photo ──────────────────────────────────────────────────
+.photo
+  display: flex
+  align-items: center
+  gap: 14px
+  margin: 4px 0 22px
+
+.photo-btn
+  width: 56px
+  height: 56px
+  flex-shrink: 0
+  border-radius: 50%
+  border: 1px dashed var(--line-strong)
+  background: var(--surface-2)
+  color: var(--ink-3)
+  display: grid
+  place-items: center
+  cursor: pointer
+  overflow: hidden
+  padding: 0
+
+  &:hover
+    border-color: var(--ink-3)
+    color: var(--ink)
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.photo-text
+  display: flex
+  flex-direction: column
+  font-size: 13px
+  color: var(--ink-3)
+
+  strong
+    font-size: 14px
+    color: var(--ink)
+
+.link-btn
+  margin-left: auto
+  border: 0
+  background: transparent
+  font: 700 13px var(--font-ui)
+  color: var(--danger)
+  cursor: pointer
+
+.submit
+  width: 100%
+  --mat-button-filled-container-height: 52px
+  font-size: 16px !important
+
+  mat-spinner
+    margin: 0 auto
+    --mat-progress-spinner-active-indicator-color: #fff
+
+.switch
+  margin-top: 24px
+  text-align: center
+  color: var(--ink-2)
+
+  a
+    font-weight: 700
+
+@media (max-width: 900px)
+  .auth
+    grid-template-columns: 1fr
+    min-height: auto
+
+@media (max-width: 480px)
+  .types-grid, .two-col
+    grid-template-columns: 1fr

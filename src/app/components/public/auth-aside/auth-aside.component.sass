@@ -1,0 +1,72 @@
+:host
+  display: block
+  position: sticky
+  top: var(--header-h)
+  align-self: start
+  height: calc(100vh - var(--header-h))
+
+.aside
+  height: calc(100% - 32px)
+  min-height: 480px
+  margin: 16px 16px 16px 0
+  border-radius: var(--radius-lg)
+  background: var(--accent)
+  color: #fff
+  display: flex
+  align-items: flex-end
+  padding: clamp(32px, 5vw, 64px)
+  position: relative
+  overflow: hidden
+
+  // A single large serif letter as a quiet brand mark, not a gradient.
+  &::before
+    content: 'B'
+    position: absolute
+    top: -0.18em
+    right: -0.06em
+    font: italic 500 min(46vw, 560px)/1 var(--font-display)
+    color: rgba(255, 255, 255, 0.06)
+    pointer-events: none
+
+.aside-inner
+  position: relative
+  max-width: 440px
+
+.wordmark
+  font-family: var(--font-display)
+  font-size: 22px
+  opacity: 0.9
+
+.statement
+  font-family: var(--font-display)
+  font-size: clamp(28px, 3vw, 38px)
+  line-height: 1.15
+  margin: 18px 0 28px
+
+.points
+  list-style: none
+  padding: 0
+  margin: 0
+  display: flex
+  flex-direction: column
+  gap: 14px
+
+  li
+    display: flex
+    align-items: center
+    gap: 12px
+    font-weight: 600
+    color: rgba(255, 255, 255, 0.9)
+
+  .mat-icon
+    width: 36px
+    height: 36px
+    font-size: 20px
+    display: grid
+    place-items: center
+    border-radius: 50%
+    background: rgba(255, 255, 255, 0.12)
+
+@media (max-width: 900px)
+  :host
+    display: none

@@ -1,0 +1,150 @@
+<article class="course-card" appSpotlight [class.is-past]="status() === 'past'">
+
+  <!-- Media -->
+  <div class="media" [style.background]="visual().tint" [style.color]="visual().ink">
+    @if (imageSrc(); as src) {
+      <img [src]="src" [alt]="course().title" loading="lazy">
+    } @else {
+      <mat-icon class="media-icon">{{ visual().icon }}</mat-icon>
+    }
+
+    <div class="media-tags">
+      @switch (course().courseType) {
+        @case ('ONLINE') { <span class="tag tag-on-media"><mat-icon>videocam</mat-icon>{{ 'courses.online' | transloco }}</span> }
+        @case ('HYBRID') { <span class="tag tag-on-media"><mat-icon>devices</mat-icon>{{ 'courses.hybrid' | transloco }}</span> }
+        @default {
+          @if (course().address?.city) {
+            <span class="tag tag-on-media tag-place"><mat-icon>location_on</mat-icon><span>{{ course().address?.city }}@if (course().address?.district) { · {{ course().address?.district }}}</span></span>
+          }
+        }
+      }
+    </div>
+
+    @if (course().rating && course().ratingCount) {
+      <span class="rating-badge" role="img"
+        [attr.aria-label]="'courses.ratingLabel' | transloco: { rating: (course().rating | number: '1.1-1'), count: course().ratingCount }">
+        <mat-icon>star</mat-icon>
+        <strong>{{ course().rating | number: '1.1-1' }}</strong>
+        <span>({{ course().ratingCount }})</span>
+      </span>
+    }
+
+    <!-- A tear-off calendar page: the start date is the first thing people compare between cards. -->
+    @if (dateTile(); as d) {
+      <span class="date-tile" [attr.aria-label]="(course().startDate | dateRange: course().endDate) + (d.time ? ', ' + d.time : '')">
+        <span class="date-month" aria-hidden="true">{{ d.month }}@if (d.year) { ’{{ d.year }}}</span>
+        <span class="date-day" aria-hidden="true">{{ d.day }}</span>
+        @if (d.time) { <span class="date-time" aria-hidden="true">{{ d.time }}</span> }
+      </span>
+    }
+
+    <!-- In the catalog an instructor spots their own course; in their own panel every card is theirs, so it shows its status. -->
+    @if (relation() === 'owner' && ownerTag() && !preview()) {
+      <span class="tag tag-relation"><mat-icon>person</mat-icon>{{ 'courses.yourCourse' | transloco }}</span>
+    } @else if (relation() === 'enrolled') {
+      <span class="tag tag-relation tag-enrolled"><mat-icon>check</mat-icon>{{ 'courses.enrolled' | transloco }}</span>
+    } @else if (status() !== 'upcoming' && !preview()) {
+      <span class="tag tag-relation">{{ ('status.' + status()) | transloco }}</span>
+    }
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+    <div class="eyebrow-row">
+      @if (course().category?.label) {
+        <span class="category" [style.color]="visual().ink">{{ categoryKey() | transloco }}</span>
+      }
+      @if (course().certificate) {
+        <span class="certificate"><mat-icon>workspace_premium</mat-icon>{{ 'courses.certificateShort' | transloco }}</span>
+      }
+    </div>
+
+    <h3 class="title">
+      @if (preview()) {
+        {{ course().title }}
+      } @else {
+        <a class="card-link" [routerLink]="['/course', course().id]">{{ course().title }}</a>
+      }
+    </h3>
+
+    <!-- What decides a booking besides the date, each value under its own small heading. -->
+    <dl class="specs">
+      @if (duration(); as dur) {
+        <div>
+          <dt>{{ 'courses.specDuration' | transloco }}</dt>
+          <dd>{{ dur.count | plural: dur.key | transloco: { count: dur.count } }}</dd>
+        </div>
+      }
+      @if (course().courseLevel) {
+        <div>
+          <dt>{{ 'courses.specLevel' | transloco }}</dt>
+          <dd class="level">
+            <span class="level-bars" [attr.data-level]="course().courseLevel" aria-hidden="true"><i></i><i></i><i></i></span>
+            {{ ('courses.levelShort.' + course().courseLevel) | transloco }}
+          </dd>
+        </div>
+      }
+    </dl>
+
+    @if (course().creator?.firstName) {
+      <div class="creator">
+        @if (creatorAvatar(); as avatar) {
+          <img [src]="avatar" alt="" class="avatar">
+        } @else {
+          <span class="avatar avatar-initials">{{ course().creator?.firstName?.[0] }}{{ course().creator?.lastName?.[0] }}</span>
+        }
+        <span class="creator-name">{{ course().creator?.firstName }} {{ course().creator?.lastName }}</span>
+        @if (course().creator?.instructorRating; as stars) {
+          <span class="creator-rating" [attr.aria-label]="'courses.instructorRatingLabel' | transloco: { rating: (stars | number: '1.1-1') }">
+            <mat-icon>star</mat-icon>{{ stars | number: '1.1-1' }}
+          </span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="price">{{ course().price | price }}</div>
+
+    @if (relation() === 'owner') {
+      <span class="enrolled-count" [matTooltip]="'courses.enrolledTooltip' | transloco">
+        <mat-icon>group</mat-icon>{{ course().participantCount ?? 0 }}/{{ course().maxParticipants ?? 0 }}
+      </span>
+      <!-- One labelled menu instead of three bare icons, which phones show without their tooltips. -->
+      <div class="tools">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="toolsMenu" (click)="$event.stopPropagation()"
+          [attr.aria-label]="'courses.courseTools' | transloco" [matTooltip]="'courses.courseTools' | transloco">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #toolsMenu xPosition="before" class="card-tools-menu">
+          <a mat-menu-item [routerLink]="['/course', course().id, 'edit']">
+            <mat-icon>edit</mat-icon>{{ 'courses.toolEdit' | transloco }}
+          </a>
+          <a mat-menu-item [routerLink]="['/questions', course().id]">
+            <mat-icon>quiz</mat-icon>{{ 'courses.toolQuiz' | transloco }}
+          </a>
+          <button mat-menu-item type="button" (click)="downloadParticipants($event)">
+            <mat-icon>table_view</mat-icon>{{ 'courses.toolExcel' | transloco }}
+          </button>
+        </mat-menu>
+      </div>
+    } @else {
+      @if (status() !== 'past') {
+        <div class="spots" [class.spots-low]="spotsLeft() > 0 && spotsLeft() <= 3" [class.spots-full]="spotsLeft() === 0">
+          <span class="spots-text">
+            @if (spotsLeft() === 0) {
+              {{ 'courses.full' | transloco }}
+            } @else if (spotsLeft() <= 3) {
+              <span class="pulse" aria-hidden="true"></span>{{ spotsLeft() | plural: 'courses.spotsLeftFew' | transloco: { count: spotsLeft() } }}
+            } @else {
+              {{ 'courses.spotsLeftShort' | transloco: { count: spotsLeft() } }}
+            }
+          </span>
+          <span class="bar"><span [style.width.%]="fillPercent()"></span></span>
+        </div>
+      }
+      <span class="go" aria-hidden="true"><mat-icon>arrow_forward</mat-icon></span>
+    }
+  </div>
+</article>

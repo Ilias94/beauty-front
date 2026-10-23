@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext } from '@ngxs/store';
-import { DownloadFileCsvAction, DownloadFileExcelAction } from './file.actions';
+import { DownloadFileExcelAction } from './file.actions';
 import { ReportControllerService } from '../../../api/services';
 import { tap } from 'rxjs';
 
@@ -24,16 +24,7 @@ export class FileState {
   downloadExcelFile({ }: StateContext<FileStateModel>, { courseId }: DownloadFileExcelAction) {
     return this.reportService.generateReportExcel({ courseId }).pipe(
       tap((response) => {
-        this.saveFile(response, `course${courseId}.xls`)
-      })
-    )
-  }
-
-  @Action(DownloadFileCsvAction)
-  downloadCsvFile({ }: StateContext<FileStateModel>, { courseId }: DownloadFileCsvAction) {
-    return this.reportService.generateReportCsv({ courseId }).pipe(
-      tap((response) => {
-        this.saveFile(response, `course${courseId}.csv`)
+        this.saveFile(response, `uczestnicy-kurs-${courseId}.xls`)
       })
     )
   }

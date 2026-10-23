@@ -22,7 +22,11 @@ import { getCourseById } from '../fn/course-controller/get-course-by-id';
 import { GetCourseById$Params } from '../fn/course-controller/get-course-by-id';
 import { getCourses } from '../fn/course-controller/get-courses';
 import { GetCourses$Params } from '../fn/course-controller/get-courses';
+import { getDistinctCities } from '../fn/course-controller/get-distinct-cities';
+import { GetDistinctCities$Params } from '../fn/course-controller/get-distinct-cities';
 import { PageCourseDtoResponse } from '../models/page-course-dto-response';
+import { republishCourse } from '../fn/course-controller/republish-course';
+import { RepublishCourse$Params } from '../fn/course-controller/republish-course';
 import { updateCourse } from '../fn/course-controller/update-course';
 import { UpdateCourse$Params } from '../fn/course-controller/update-course';
 
@@ -157,6 +161,31 @@ export class CourseControllerService extends BaseService {
     );
   }
 
+  /** Path part for operation `republishCourse()` */
+  static readonly RepublishCoursePath = '/api/v1/courses/{id}/republish';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `republishCourse()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  republishCourse$Response(params: RepublishCourse$Params, context?: HttpContext): Observable<StrictHttpResponse<CourseDtoResponse>> {
+    return republishCourse(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `republishCourse$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  republishCourse(params: RepublishCourse$Params, context?: HttpContext): Observable<CourseDtoResponse> {
+    return this.republishCourse$Response(params, context).pipe(
+      map((r: StrictHttpResponse<CourseDtoResponse>): CourseDtoResponse => r.body)
+    );
+  }
+
   /** Path part for operation `filterCoursesByDate()` */
   static readonly FilterCoursesByDatePath = '/api/v1/courses/dates-filter';
 
@@ -179,6 +208,31 @@ export class CourseControllerService extends BaseService {
   filterCoursesByDate(params: FilterCoursesByDate$Params, context?: HttpContext): Observable<Array<CourseDtoResponse>> {
     return this.filterCoursesByDate$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<CourseDtoResponse>>): Array<CourseDtoResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `getDistinctCities()` */
+  static readonly GetDistinctCitiesPath = '/api/v1/courses/cities';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getDistinctCities()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getDistinctCities$Response(params?: GetDistinctCities$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
+    return getDistinctCities(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getDistinctCities$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getDistinctCities(params?: GetDistinctCities$Params, context?: HttpContext): Observable<Array<string>> {
+    return this.getDistinctCities$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<string>>): Array<string> => r.body)
     );
   }
 

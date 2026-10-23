@@ -1,0 +1,57 @@
+:host
+  display: inline-flex
+
+.stars
+  position: relative
+  display: inline-flex
+  line-height: 0
+
+.star-row
+  display: inline-flex
+  white-space: nowrap
+
+  // The gold row is cut to the rating's width; its stars must keep their size and be clipped,
+  // not squeezed to fit, or they drift off the grey ones underneath.
+  .mat-icon
+    flex-shrink: 0
+
+.fill
+  position: absolute
+  inset: 0 auto 0 0
+  overflow: hidden
+
+.mat-icon
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24
+
+.base .mat-icon, button .mat-icon
+  color: var(--line-strong)
+
+.fill .mat-icon, button.on .mat-icon
+  color: #C48A2C
+
+.size-sm .mat-icon
+  font-size: 16px
+  width: 16px
+  height: 16px
+
+.size-md .mat-icon
+  font-size: 22px
+  width: 22px
+  height: 22px
+
+.size-lg .mat-icon
+  font-size: 30px
+  width: 30px
+  height: 30px
+
+button
+  border: 0
+  background: transparent
+  padding: 2px
+  cursor: pointer
+  border-radius: 6px
+  line-height: 0
+  transition: transform var(--dur) var(--ease)
+
+  &:hover
+    transform: scale(1.12)

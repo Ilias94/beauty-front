@@ -1,0 +1,70 @@
+@if (photos().length === 0) {
+  <!-- Visitors get a low band in the category's colours; the owner keeps room for the "add photos" prompt. -->
+  <div class="empty" [class.compact]="!canEdit()" [style.background]="visual().tint" [style.color]="visual().ink">
+    <mat-icon class="empty-icon">{{ visual().icon }}</mat-icon>
+    @if (canEdit()) {
+      <button type="button" class="add-btn" (click)="edit.emit()">
+        <mat-icon>add_photo_alternate</mat-icon>{{ 'gallery.addCourse' | transloco }}
+      </button>
+      <span class="add-hint">{{ 'gallery.addCourseHint' | transloco }}</span>
+    }
+  </div>
+} @else {
+  <div class="mosaic" [attr.data-count]="mosaic().length">
+    @for (src of mosaic(); track src; let i = $index) {
+      <button type="button" class="shot" [class.main]="i === 0" (click)="show(i)"
+        [attr.aria-label]="'gallery.openPhoto' | transloco: { n: i + 1, total: photos().length }">
+        <img [src]="src" [alt]="i === 0 ? title() : ''" [attr.loading]="i === 0 ? null : 'lazy'">
+        @if (i === mosaic().length - 1 && extra() > 0) {
+          <span class="more">+{{ extra() }}</span>
+        }
+      </button>
+    }
+
+    <div class="mosaic-actions">
+      @if (canEdit()) {
+        <button type="button" class="pill-btn" (click)="edit.emit()"><mat-icon>photo_library</mat-icon>{{ 'gallery.edit' | transloco }}</button>
+      }
+      @if (photos().length > 1) {
+        <button type="button" class="pill-btn" (click)="show(0)"><mat-icon>grid_view</mat-icon>{{ 'gallery.showAll' | transloco: { count: photos().length } }}</button>
+      }
+    </div>
+  </div>
+}
+
+<!-- Full-screen viewer -->
+@if (open() !== null) {
+  @let i = open()!;
+  <div class="viewer" role="dialog" aria-modal="true" [attr.aria-label]="'gallery.viewerLabel' | transloco: { title: title() }"
+    (pointerdown)="onPointerDown($event)" (pointerup)="onPointerUp($event)">
+    <div class="viewer-top">
+      <span class="counter">{{ i + 1 }} / {{ photos().length }}</span>
+      <button #closeButton type="button" class="v-btn" (click)="close()" [attr.aria-label]="'common.close' | transloco">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="stage" (click)="$event.target === $event.currentTarget && close()">
+      @if (photos().length > 1) {
+        <button type="button" class="v-btn nav prev" (click)="step(-1)" [attr.aria-label]="'gallery.previous' | transloco"><mat-icon>chevron_left</mat-icon></button>
+      }
+      @for (src of [photos()[i]]; track src) {
+        <img class="stage-img" [src]="src" [alt]="title() + ' (' + (i + 1) + '/' + photos().length + ')'" draggable="false">
+      }
+      @if (photos().length > 1) {
+        <button type="button" class="v-btn nav next" (click)="step(1)" [attr.aria-label]="'gallery.next' | transloco"><mat-icon>chevron_right</mat-icon></button>
+      }
+    </div>
+
+    @if (photos().length > 1) {
+      <div class="strip">
+        @for (src of photos(); track src; let j = $index) {
+          <button type="button" class="thumb" [class.on]="j === i" (click)="show(j)"
+            [attr.aria-label]="'gallery.openPhoto' | transloco: { n: j + 1, total: photos().length }" [attr.aria-current]="j === i ? 'true' : null">
+            <img [src]="src" alt="" loading="lazy">
+          </button>
+        }
+      </div>
+    }
+  </div>
+}

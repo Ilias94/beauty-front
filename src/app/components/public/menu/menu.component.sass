@@ -1,25 +1,516 @@
-.sidenav-container
-  height: 100%
-
-.sidenav
-  width: 250px
-  box-shadow: 1px 0 4px rgba(0, 0, 0, .24)
-
-.mat-toolbar
-  background-color: #673AB7
-  color: white
+:host
   display: flex
-  justify-content: space-between
-  .toolbar-title
-    flex-grow: 1
-    text-align: center
+  flex-direction: column
+  min-height: 100vh
 
-.mat-nav-list
-  .mat-list-item
-    color: rgba(0, 0, 0, 0.87)
+.skip-link
+  position: absolute
+  left: 12px
+  top: -48px
+  z-index: 2000
+  padding: 10px 16px
+  border-radius: var(--radius-sm)
+  background: var(--ink)
+  color: #fff
+  font-weight: 700
+
+  &:focus
+    top: 12px
+    color: #fff
+
+// ── Top bar ────────────────────────────────────────────────
+.site-header
+  position: sticky
+  top: 0
+  z-index: 900
+  // Keeps the header still while the page below cross-fades on navigation.
+  view-transition-name: site-header
+  height: var(--header-h)
+  // White frosted glass over the warm page background, so the bar reads as its own layer.
+  background: rgba(255, 255, 255, 0.74)
+  backdrop-filter: saturate(180%) blur(16px)
+  -webkit-backdrop-filter: saturate(180%) blur(16px)
+  border-bottom: 1px solid var(--line)
+  transition: background var(--dur) var(--ease), box-shadow 240ms var(--ease)
+
+  // Thin brand stripe along the top edge.
+  &::before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 3px
+    background: linear-gradient(90deg, var(--accent), #C9708A 45%, #C48A2C)
+
+  &.scrolled
+    background: rgba(255, 255, 255, 0.88)
+    box-shadow: 0 10px 30px -18px rgba(31, 26, 23, 0.35)
+
+.header-inner
+  height: 100%
+  max-width: var(--content-max)
+  margin: 0 auto
+  padding: 0 var(--gutter)
+  display: flex
+  align-items: center
+  gap: 28px
+
+.brand
+  display: flex
+  align-items: center
+  gap: 8px
+  color: var(--ink)
+  flex-shrink: 0
+
+  &:hover
+    color: var(--ink)
+
+// The arched-mirror mark brings its own shape; don't round or clip it.
+.brand-mark
+  display: block
+
+.wordmark
+  font-family: var(--font-display)
+  font-size: 23px
+  font-weight: 500
+  letter-spacing: -0.02em
+  font-variation-settings: 'opsz' 96, 'SOFT' 100
+
+// Links sit in a warm capsule with a hairline edge, so it holds its shape on the white header;
+// the active one is an ink pill (as the chosen filter in the catalogue) that slides between them.
+// Wine stays for the instructor's studio link beside it.
+.main-nav
+  position: relative
+  display: flex
+  align-items: center
+  gap: 2px
+  min-width: 0
+  padding: 4px
+  border-radius: var(--radius-pill)
+  background: var(--surface-2)
+  box-shadow: inset 0 0 0 1px var(--line), inset 0 1px 2px rgba(31, 26, 23, 0.05)
+
+  a
+    position: relative
+    z-index: 1
+    display: inline-flex
+    align-items: center
+    gap: 6px
+    padding: 7px 14px 7px 11px
+    border-radius: var(--radius-pill)
+    color: var(--ink-2)
+    font-weight: 600
+    font-size: 14px
+    white-space: nowrap
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease)
+
+    .mat-icon
+      font-size: 18px
+      width: 18px
+      height: 18px
+      color: var(--ink-3)
+      transition: color var(--dur) var(--ease), transform 260ms var(--ease)
+
     &:hover
-      background-color: rgba(0, 0, 0, 0.04)
+      color: var(--ink)
+      background: rgba(255, 255, 255, 0.8)
 
-@media (max-width: 768px)
-  .sidenav
+      .mat-icon
+        color: var(--accent)
+        transform: translateY(-1px)
+
+    &.active
+      color: #fff
+      background: var(--ink)
+
+      .mat-icon
+        color: var(--gold-bright)
+
+    &:focus-visible
+      outline: 2px solid var(--accent)
+      outline-offset: 2px
+
+  // Once the indicator is measured it takes over the active look and animates between links.
+  &.ready a.active
+    background: transparent
+
+.nav-indicator
+  position: absolute
+  top: 4px
+  bottom: 4px
+  border-radius: var(--radius-pill)
+  background: var(--ink)
+  box-shadow: 0 6px 14px -8px rgba(31, 26, 23, 0.55)
+  opacity: 0
+  transition: left 340ms var(--ease), width 340ms var(--ease), opacity 200ms var(--ease)
+
+  .ready > &
+    opacity: 1
+
+// Instructors' studio: their own courses, set apart from the shared links in the brand's wine.
+// Quiet tint at rest, filled wine on its pages, with the number of courses they run.
+.studio-link
+  flex-shrink: 0
+  display: inline-flex
+  align-items: center
+  gap: 7px
+  height: 42px
+  margin-right: -14px
+  padding: 0 14px 0 12px
+  border-radius: var(--radius-pill)
+  background: var(--accent-soft)
+  box-shadow: inset 0 0 0 1px var(--accent-soft-2)
+  color: var(--accent)
+  font: 700 14px var(--font-ui)
+  white-space: nowrap
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform 120ms var(--ease)
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+
+  &:hover
+    color: var(--accent-hover)
+    background: var(--accent-soft-2)
+
+  &:active
+    transform: scale(0.98)
+
+  &.active
+    background: var(--accent)
+    box-shadow: 0 6px 16px -8px rgba(140, 47, 75, 0.6)
+    color: var(--on-accent)
+
+    .studio-count
+      background: rgba(255, 255, 255, 0.22)
+      color: var(--on-accent)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+.studio-count
+  min-width: 20px
+  height: 20px
+  padding: 0 6px
+  display: inline-grid
+  place-items: center
+  border-radius: var(--radius-pill)
+  background: var(--accent)
+  color: var(--on-accent)
+  font-size: 11.5px
+  font-weight: 800
+  font-variant-numeric: tabular-nums
+
+.header-actions
+  margin-left: auto
+  display: flex
+  align-items: center
+  gap: 10px
+
+.lang-toggle
+  display: inline-flex
+  padding: 3px
+  border-radius: var(--radius-pill)
+  background: var(--surface-2)
+
+  button
+    border: 0
+    background: transparent
+    font: 700 12px var(--font-ui)
+    letter-spacing: 0.04em
+    color: var(--ink-3)
+    padding: 5px 10px
+    border-radius: var(--radius-pill)
+    cursor: pointer
+    transition: all var(--dur) var(--ease)
+
+    &.on
+      background: var(--surface)
+      color: var(--ink)
+      box-shadow: var(--shadow-1)
+
+.create-btn mat-icon
+  margin-right: 4px
+
+.login-link
+  color: var(--ink)
+  font-weight: 700
+  font-size: 14.5px
+  padding: 8px 12px
+
+  &:hover
+    color: var(--accent)
+
+.avatar-btn
+  width: 40px
+  height: 40px
+  padding: 0
+  border-radius: 50%
+  border: 1px solid var(--line-strong)
+  background: var(--accent-soft)
+  color: var(--accent)
+  font: 700 13px var(--font-ui)
+  cursor: pointer
+  display: grid
+  place-items: center
+  overflow: hidden
+  transition: box-shadow var(--dur) var(--ease)
+
+  &:hover
+    box-shadow: 0 0 0 4px var(--accent-soft)
+
+  img
     width: 100%
+    height: 100%
+    object-fit: cover
+
+.icon-btn
+  width: 40px
+  height: 40px
+  display: none
+  place-items: center
+  border: 0
+  border-radius: 50%
+  background: transparent
+  color: var(--ink)
+  cursor: pointer
+
+  &:hover
+    background: var(--surface-2)
+
+// ── Account menu (rendered in an overlay, so styled via ::ng-deep) ──
+::ng-deep .account-menu
+  min-width: 250px !important
+
+  .account-head
+    padding: 14px 16px 12px
+
+  .account-name
+    font-weight: 700
+    color: var(--ink)
+
+  .account-email
+    font-size: 13px
+    color: var(--ink-3)
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .mat-mdc-menu-item
+    font-family: var(--font-ui)
+    font-weight: 600
+    min-height: 44px
+
+    .mat-icon
+      color: var(--ink-2)
+
+  // "Enrolled courses" for instructors, with how many there are.
+  .menu-with-count .mat-mdc-menu-item-text
+    display: flex
+    align-items: center
+    gap: 8px
+    width: 100%
+
+  .menu-count
+    margin-left: auto
+    min-width: 22px
+    height: 22px
+    padding: 0 7px
+    display: inline-grid
+    place-items: center
+    border-radius: var(--radius-pill)
+    background: var(--surface-2)
+    font-size: 12px
+    font-weight: 700
+    color: var(--ink-2)
+
+// ── Mobile drawer ──────────────────────────────────────────
+.drawer-backdrop
+  position: fixed
+  inset: var(--header-h) 0 0 0
+  background: rgba(31, 26, 23, 0.32)
+  z-index: 880
+  animation: fade 160ms var(--ease)
+
+.drawer
+  position: fixed
+  top: var(--header-h)
+  left: 0
+  bottom: 0
+  width: min(320px, 86vw)
+  background: var(--bg)
+  border-right: 1px solid var(--line)
+  z-index: 890
+  overflow-y: auto
+  padding: 16px 12px 32px
+  animation: slideIn 200ms var(--ease)
+
+.drawer-nav
+  display: flex
+  flex-direction: column
+  gap: 2px
+
+  a, .drawer-logout
+    display: flex
+    align-items: center
+    gap: 14px
+    padding: 12px 14px
+    border-radius: var(--radius-sm)
+    color: var(--ink)
+    font: 600 15px var(--font-ui)
+    border: 0
+    background: transparent
+    text-align: left
+    cursor: pointer
+
+    .mat-icon
+      color: var(--ink-3)
+
+    &:hover
+      background: var(--surface-2)
+
+    &.active
+      background: var(--accent-soft)
+      color: var(--accent)
+
+      .mat-icon
+        color: var(--accent)
+
+  .drawer-logout
+    margin-top: 12px
+    color: var(--danger)
+
+    .mat-icon
+      color: var(--danger)
+
+// The studio link in the drawer carries the same wine tint as in the header.
+.drawer-nav .drawer-studio
+  background: var(--accent-soft)
+  color: var(--accent)
+
+  .mat-icon
+    color: var(--accent)
+
+  .studio-count
+    margin-left: auto
+
+  &.active
+    background: var(--accent)
+    color: var(--on-accent)
+
+    .mat-icon
+      color: var(--on-accent)
+
+    .studio-count
+      background: rgba(255, 255, 255, 0.22)
+
+.drawer-label
+  margin: 18px 14px 6px
+  font-size: 11px
+  font-weight: 700
+  letter-spacing: 0.12em
+  text-transform: uppercase
+  color: var(--ink-3)
+
+@keyframes fade
+  from
+    opacity: 0
+
+@keyframes slideIn
+  from
+    transform: translateX(-16px)
+    opacity: 0
+
+// ── Page & footer ──────────────────────────────────────────
+.site-main
+  flex: 1
+  min-width: 0
+
+.site-footer
+  border-top: 1px solid var(--line)
+  margin-top: 48px
+
+.footer-inner
+  max-width: var(--content-max)
+  margin: 0 auto
+  padding: 32px var(--gutter) 40px
+  display: grid
+  grid-template-columns: 1fr auto
+  gap: 16px 32px
+  align-items: start
+
+.footer-brand
+  .wordmark
+    font-size: 20px
+
+  p
+    color: var(--ink-3)
+    font-size: 14px
+    margin-top: 4px
+
+.footer-links
+  display: flex
+  gap: 20px
+  flex-wrap: wrap
+
+  a
+    color: var(--ink-2)
+    font-weight: 600
+    font-size: 14px
+
+    &:hover
+      color: var(--ink)
+
+.footer-copy
+  grid-column: 1 / -1
+  color: var(--ink-3)
+  font-size: 13px
+
+// ── Responsive ─────────────────────────────────────────────
+// Mid-size screens: the shared links drop their icons and the header tightens its gaps first,
+// so the instructor's studio keeps its full name.
+@media (max-width: 1200px)
+  .header-inner
+    gap: 18px
+
+  .main-nav a
+    padding: 7px 12px
+
+    .mat-icon
+      display: none
+
+// Narrower: the studio keeps its icon and count (its name stays in aria-label and title).
+@media (max-width: 1090px)
+  .studio-link > span:not(.studio-count)
+    display: none
+
+@media (max-width: 1060px)
+  .main-nav a:nth-child(n+4)
+    display: none
+
+  // Links hidden above are still one tap away in the drawer.
+  .icon-btn
+    display: grid
+
+
+@media (max-width: 900px)
+  .main-nav, .create-btn, .studio-link
+    display: none
+
+  .icon-btn
+    display: grid
+
+  .header-inner
+    gap: 8px
+
+@media (max-width: 520px)
+  .lang-toggle, .signup-btn
+    display: none
+
+  .wordmark
+    font-size: 21px
+
+  .footer-inner
+    grid-template-columns: 1fr

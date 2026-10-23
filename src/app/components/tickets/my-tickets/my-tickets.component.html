@@ -1,0 +1,37 @@
+<div class="page-narrow">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">{{ 'tickets.eyebrow' | transloco }}</p>
+      <h1 class="page-title">{{ 'tickets.myTickets' | transloco }}</h1>
+      <p class="page-subtitle">{{ 'tickets.myTicketsSubtitle' | transloco }}</p>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/my-tickets/new">
+      <mat-icon>add</mat-icon>{{ 'tickets.newTicket' | transloco }}
+    </a>
+  </header>
+
+  @if (tickets()?.length) {
+    <ul class="list">
+      @for (t of tickets(); track t.id) {
+        <li class="rise" [style.--i]="$index">
+          <a class="item" [routerLink]="['/my-tickets', t.id]">
+            <div class="item-main">
+              <span class="item-title">{{ t.title }}</span>
+              <span class="item-meta">
+                #{{ t.id }} · {{ ('tickets.types.' + t.type) | transloco }} · {{ t.createdAt | dateRange }}
+              </span>
+            </div>
+            <span class="tag" [class]="statusTag(t.status)">{{ ('tickets.statuses.' + t.status) | transloco }}</span>
+            <mat-icon class="chevron">chevron_right</mat-icon>
+          </a>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="empty-state">
+      <div class="empty-icon"><mat-icon>support_agent</mat-icon></div>
+      <h3>{{ 'tickets.emptyTitle' | transloco }}</h3>
+      <p>{{ 'tickets.noTickets' | transloco }}</p>
+    </div>
+  }
+</div>

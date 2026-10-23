@@ -1,41 +1,38 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { State, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
+import { filter, map, of, take, timeout } from 'rxjs';
 import { SecurityState } from './components/state/security.state';
-import { delay, filter, map, of, switchMap, take } from 'rxjs';
-import { LoginFromLocalStorageAction } from './components/state/security.actions';
 
+/**
+ * Lets logged-in users through, optionally only with one of `data.roles`.
+ * Right after login or a page reload the token is known before the current user is fetched,
+ * so the guard waits for the user instead of bouncing to /forbidden.
+ */
+export const authGuard: CanActivateFn = (route, state) => {
+  const store = inject(Store);
+  const router = inject(Router);
+  const roles: string[] | undefined = route.data['roles'];
+  const toLogin = () => router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
 
-
-
-export const authGuard: CanActivateFn = async (route, state) => {
-  const roles = route.data["roles"]
-  
-  const router = inject(Router)
-  // return inject(Store).select(SecurityState.getCurrentUser).pipe(filter(user => !!user),
-  //   map(user => {
-  //     console.log(user)
-  //     if ((!roles && user) || user?.roles?.some(userRole => roles?.some(role => userRole === role))) {
-  //       return true;
-  //     }
-  //     router.navigate(["/forbidden"])
-  //     return false;
-  //   }
-  //   ))
-  // #todo have to finish race condition issue 
-  const store = inject(Store)
-  // store.dispatch(new LoginFromLocalStorageAction())
-
-  function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  if (!store.selectSnapshot(s => s.security.token)) {
+    return toLogin();
   }
-  await delay(1000)
 
-  const currentUser = store.selectSnapshot(state => state.security.currentUser)
-  console.log("before return")
-  if ((!roles && currentUser) || currentUser?.roles?.some(userRole => roles?.some(role => userRole === role))) {
-    return true
-  }
-  router.navigate(["/forbidden"])
-  return false;
+  return store.select(SecurityState.getCurrentUser).pipe(
+    filter(user => !!user),
+    take(1),
+    timeout({ first: 10000, with: () => of(null) }),
+    map(user => {
+      if (!user) return toLogin();
+      if (roles && !user.roles?.some(r => roles.includes(r))) return router.createUrlTree(['/forbidden']);
+      return true;
+    })
+  );
+};
+
+/** Login and sign-up are pointless once signed in: send the user to the catalog instead. */
+export const guestGuard: CanActivateFn = () => {
+  const store = inject(Store);
+  return store.selectSnapshot(s => s.security.token) ? inject(Router).createUrlTree(['/courses']) : true;
 };

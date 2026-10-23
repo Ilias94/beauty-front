@@ -1,2 +1,868 @@
-/* You can add global styles to this file, and also import other style files */
+/* ── Bellademy design tokens ─────────────────────────────────
+   One warm neutral base, one accent. Components use these variables
+   instead of hard-coded colours, so the brand can change in one place. */
 
+:root
+  // Surfaces
+  --bg: #FAF7F3
+  --surface: #FFFFFF
+  --surface-2: #F4EEE7
+  --surface-3: #EDE5DB
+  --line: #E8DFD4
+  --line-strong: #D6CABB
+
+  // Text
+  --ink: #1F1A17
+  --ink-2: #5E554E
+  --ink-3: #8F857D
+
+  // Accent (deep rose / wine)
+  --accent: #8C2F4B
+  --accent-hover: #74263E
+  --accent-soft: #F6E8EC
+  --accent-soft-2: #EDD3DA
+  --on-accent: #FFFFFF
+
+  // Gold: rating stars and the logo's sparkle only (gold-bright where it sits on wine)
+  --gold: #C48A2C
+  --gold-bright: #E2B15F
+
+  // Status
+  --success: #3E7B57
+  --success-soft: #E5F1E9
+  --warning: #A86A16
+  --warning-soft: #FBF0DE
+  --danger: #B3261E
+  --danger-soft: #FBE7E5
+  --info: #3D5A80
+  --info-soft: #E6EDF5
+
+  // Type
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif
+  --font-ui: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif
+
+  // Shape & depth
+  --radius-xs: 6px
+  --radius-sm: 10px
+  --radius: 14px
+  --radius-lg: 20px
+  --radius-pill: 999px
+  --shadow-1: 0 1px 2px rgba(31, 26, 23, 0.05), 0 1px 3px rgba(31, 26, 23, 0.04)
+  --shadow-2: 0 2px 4px rgba(31, 26, 23, 0.04), 0 10px 28px -12px rgba(31, 26, 23, 0.20)
+  --shadow-3: 0 18px 50px -18px rgba(31, 26, 23, 0.30)
+
+  // Layout
+  --header-h: 68px
+  --content-max: 1240px
+  --gutter: clamp(16px, 4vw, 40px)
+
+  // Motion
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1)
+  --dur: 180ms
+
+/* ── Base ───────────────────────────────────────────────────── */
+*, *::before, *::after
+  box-sizing: border-box
+
+html, body
+  height: 100%
+  margin: 0
+  padding: 0
+
+body
+  font-family: var(--font-ui)
+  font-size: 15px
+  line-height: 1.55
+  background-color: var(--bg)
+  color: var(--ink)
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  text-rendering: optimizeLegibility
+
+/* Ambient background: soft brand-coloured light drifting slowly behind the page, and a fine
+   paper grain on top of it. Both are fixed layers under the content and ignore the pointer. */
+body::before
+  content: ''
+  position: fixed
+  inset: -15vmax
+  z-index: -1
+  pointer-events: none
+  background: radial-gradient(38vmax 38vmax at 12% 10%, rgba(140, 47, 75, 0.11), transparent 62%), radial-gradient(34vmax 34vmax at 90% 14%, rgba(196, 138, 44, 0.10), transparent 62%), radial-gradient(42vmax 42vmax at 72% 92%, rgba(61, 90, 128, 0.07), transparent 62%), radial-gradient(30vmax 30vmax at 18% 88%, rgba(201, 112, 138, 0.07), transparent 62%)
+  animation: ambient-drift 48s ease-in-out infinite alternate
+
+body::after
+  content: ''
+  position: fixed
+  inset: 0
+  z-index: -1
+  pointer-events: none
+  opacity: 0.35
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")
+
+@keyframes ambient-drift
+  0%
+    transform: translate3d(0, 0, 0) scale(1)
+  50%
+    transform: translate3d(3vmax, -2vmax, 0) scale(1.06)
+  100%
+    transform: translate3d(-2vmax, 3vmax, 0) scale(1.02)
+
+h1, h2, h3, h4
+  font-family: var(--font-display)
+  font-weight: 500
+  letter-spacing: -0.01em
+  line-height: 1.15
+  color: var(--ink)
+  margin: 0
+  font-variation-settings: 'opsz' 72, 'SOFT' 50
+
+h5, h6
+  font-family: var(--font-ui)
+  font-weight: 700
+  margin: 0
+
+p
+  margin: 0
+
+a
+  color: var(--accent)
+  text-decoration: none
+  transition: color var(--dur) var(--ease)
+
+  &:hover
+    color: var(--accent-hover)
+
+::selection
+  background: var(--accent-soft-2)
+  color: var(--ink)
+
+:focus-visible
+  outline: 2px solid var(--accent)
+  outline-offset: 2px
+
+img
+  max-width: 100%
+
+@media (prefers-reduced-motion: reduce)
+  *, *::before, *::after
+    animation-duration: 0.01ms !important
+    transition-duration: 0.01ms !important
+
+/* ── Layout helpers ─────────────────────────────────────────── */
+.page
+  width: 100%
+  max-width: var(--content-max)
+  margin: 0 auto
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
+.page-narrow
+  width: 100%
+  max-width: 880px
+  margin: 0 auto
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
+.page-header
+  display: flex
+  align-items: flex-end
+  justify-content: space-between
+  gap: 16px
+  flex-wrap: wrap
+  margin-bottom: 28px
+
+.eyebrow
+  font-family: var(--font-ui)
+  font-size: 12px
+  font-weight: 700
+  letter-spacing: 0.12em
+  text-transform: uppercase
+  color: var(--accent)
+
+.page-title
+  font-size: clamp(30px, 4vw, 44px)
+
+.page-subtitle
+  color: var(--ink-2)
+  font-size: 16px
+  margin-top: 8px
+  max-width: 60ch
+
+.muted
+  color: var(--ink-2)
+
+.surface
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+
+/* Pill / tag used for status, category, type */
+.tag
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  height: 24px
+  padding: 0 10px
+  border-radius: var(--radius-pill)
+  font-size: 12px
+  font-weight: 600
+  background: var(--surface-2)
+  color: var(--ink-2)
+  white-space: nowrap
+
+  .mat-icon
+    font-size: 15px
+    width: 15px
+    height: 15px
+
+  &.tag-accent
+    background: var(--accent-soft)
+    color: var(--accent)
+
+  &.tag-success
+    background: var(--success-soft)
+    color: var(--success)
+
+  &.tag-warning
+    background: var(--warning-soft)
+    color: var(--warning)
+
+  &.tag-danger
+    background: var(--danger-soft)
+    color: var(--danger)
+
+  &.tag-info
+    background: var(--info-soft)
+    color: var(--info)
+
+/* Empty state used across lists */
+.empty-state
+  display: flex
+  flex-direction: column
+  align-items: center
+  text-align: center
+  gap: 10px
+  padding: 56px 24px
+  color: var(--ink-2)
+
+  .empty-icon
+    width: 56px
+    height: 56px
+    border-radius: 50%
+    display: grid
+    place-items: center
+    background: var(--surface-2)
+    color: var(--ink-3)
+    margin-bottom: 6px
+
+  h3
+    font-size: 22px
+
+  p
+    max-width: 42ch
+
+/* Skeleton shimmer for loading placeholders */
+.skeleton
+  position: relative
+  overflow: hidden
+  background: var(--surface-2)
+  border-radius: var(--radius-sm)
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    transform: translateX(-100%)
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)
+    animation: shimmer 1.4s infinite
+
+@keyframes shimmer
+  100%
+    transform: translateX(100%)
+
+/* Pages with a fixed bottom action bar on phones lift the floating widgets above it. */
+@media (max-width: 640px)
+  body.has-bottom-bar app-fab-dock .dock
+    transform: translateY(-76px)
+
+/* ── Floating chat panels: messages, AI assistant, course group chat ─────
+   One shape for all three, opened from the corner button (FabDockComponent);
+   full screen on phones. */
+.float-panel
+  position: fixed
+  right: 24px
+  bottom: 96px
+  z-index: 1001
+  width: 380px
+  height: min(620px, calc(100dvh - var(--header-h) - 120px))
+  display: flex
+  flex-direction: column
+  overflow: hidden
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: 22px
+  box-shadow: var(--shadow-3)
+  transform-origin: bottom right
+  animation: float-panel-in 260ms var(--ease)
+
+.float-panel-head
+  display: flex
+  align-items: center
+  gap: 10px
+  min-height: 62px
+  padding: 10px 8px 10px 14px
+  border-bottom: 1px solid var(--line)
+  background: var(--surface)
+  flex-shrink: 0
+
+  .head-icon, .head-avatar
+    width: 38px
+    height: 38px
+    flex-shrink: 0
+    border-radius: 50%
+    display: grid
+    place-items: center
+    object-fit: cover
+    background: var(--accent-soft)
+    color: var(--accent)
+    font: 700 13px var(--font-ui)
+
+    .mat-icon
+      font-size: 20px
+      width: 20px
+      height: 20px
+
+    &.assistant
+      background: var(--ink)
+      color: #F2C77D
+
+    &.group
+      background: var(--info-soft)
+      color: var(--info)
+
+  .head-text
+    flex: 1
+    min-width: 0
+    display: flex
+    flex-direction: column
+
+    strong
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+      font: 700 15px var(--font-ui)
+      color: var(--ink)
+
+    small
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+      font: 600 12px var(--font-ui)
+      color: var(--ink-3)
+
+  .head-btn
+    color: var(--ink-2)
+
+@keyframes float-panel-in
+  from
+    opacity: 0
+    transform: translateY(12px) scale(0.97)
+
+@keyframes float-panel-up
+  from
+    transform: translateY(32px)
+    opacity: 0
+
+@media (max-width: 640px)
+  .float-panel
+    inset: 0
+    width: 100%
+    height: 100dvh
+    border: 0
+    border-radius: 0
+    z-index: 1150
+    animation-name: float-panel-up
+
+/* ── Icons: Material Symbols Rounded, set as the default font set in AppComponent ── */
+.material-symbols-rounded
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+
+/* ── Page transitions (Router withViewTransitions) ──────────── */
+::view-transition-old(root)
+  animation: 140ms var(--ease) both page-out
+
+::view-transition-new(root)
+  animation: 220ms var(--ease) both page-in
+
+@keyframes page-out
+  to
+    opacity: 0
+
+@keyframes page-in
+  from
+    opacity: 0
+    transform: translateY(6px)
+
+@media (prefers-reduced-motion: reduce)
+  ::view-transition-old(root), ::view-transition-new(root)
+    animation: none
+
+/* Lists fade up one item after another; set --i on each item (index). */
+.rise
+  // "backwards", not "both": a lingering fill would block hover transforms afterwards.
+  animation: rise 420ms var(--ease) backwards
+  animation-delay: calc(min(var(--i, 0), 8) * 45ms)
+
+@keyframes rise
+  from
+    opacity: 0
+    transform: translateY(10px)
+
+/* ── Buttons ────────────────────────────────────────────────
+   One system for every Material button: pill shape, 44px, bold label,
+   18px icons, a clear hover, a small press and a visible focus ring. */
+.mat-mdc-button, .mat-mdc-unelevated-button, .mat-mdc-outlined-button, .mat-mdc-raised-button
+  --mat-button-text-container-shape: var(--radius-pill)
+  --mat-button-filled-container-shape: var(--radius-pill)
+  --mat-button-outlined-container-shape: var(--radius-pill)
+  --mat-button-protected-container-shape: var(--radius-pill)
+  --mat-button-text-container-height: 40px
+  --mat-button-filled-container-height: 44px
+  --mat-button-outlined-container-height: 44px
+  --mat-button-protected-container-height: 44px
+  --mat-button-outlined-outline-color: var(--line-strong)
+  --mat-button-protected-container-elevation-shadow: none
+  --mat-button-protected-hover-container-elevation-shadow: none
+  --mat-button-protected-pressed-container-elevation-shadow: none
+  --mat-button-protected-focus-container-elevation-shadow: none
+  --mat-text-button-horizontal-padding: 14px
+  --mat-filled-button-horizontal-padding: 22px
+  --mat-outlined-button-horizontal-padding: 20px
+  --mat-protected-button-horizontal-padding: 22px
+  --mat-filled-button-icon-spacing: 8px
+  --mat-outlined-button-icon-spacing: 8px
+  --mat-text-button-icon-spacing: 6px
+  --mat-filled-button-icon-offset: -4px
+  --mat-outlined-button-icon-offset: -4px
+  font-family: var(--font-ui) !important
+  font-size: 14.5px !important
+  font-weight: 700 !important
+  letter-spacing: 0 !important
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), transform 120ms var(--ease), box-shadow var(--dur) var(--ease) !important
+
+  .mat-icon
+    font-size: 19px !important
+    width: 19px !important
+    height: 19px !important
+
+  &:active:not([disabled])
+    transform: scale(0.98)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+// Primary: darker on hover instead of Material's light overlay.
+.mat-mdc-unelevated-button.mat-primary:not([disabled]), .mat-mdc-raised-button.mat-primary:not([disabled])
+  --mat-filled-button-state-layer-color: transparent
+  --mat-protected-button-state-layer-color: transparent
+
+  &:hover
+    background-color: var(--accent-hover) !important
+    box-shadow: 0 6px 16px -8px rgba(140, 47, 75, 0.6)
+
+// Secondary (outlined): warm fill on hover.
+.mat-mdc-outlined-button:not([disabled])
+  --mat-outlined-button-state-layer-color: transparent
+  color: var(--ink) !important
+
+  &:hover
+    background-color: var(--surface-2)
+    border-color: var(--ink-3) !important
+
+.mat-mdc-button:not([disabled]):not(.mat-primary)
+  color: var(--ink-2)
+
+  &:hover
+    color: var(--ink)
+
+.mat-mdc-unelevated-button[disabled], .mat-mdc-outlined-button[disabled], .mat-mdc-raised-button[disabled]
+  opacity: 0.55
+
+// Icon buttons: round, quiet hover.
+.mat-mdc-icon-button
+  --mat-icon-button-state-layer-size: 40px
+  --mat-icon-button-state-layer-color: var(--ink)
+  --mat-icon-button-hover-state-layer-opacity: 0.06
+  transition: transform 120ms var(--ease)
+
+  &:active
+    transform: scale(0.94)
+
+// Shared "small" variant for dense toolbars and table rows.
+.btn-sm.mat-mdc-unelevated-button, .btn-sm.mat-mdc-outlined-button
+  --mat-button-filled-container-height: 36px
+  --mat-button-outlined-container-height: 36px
+  --mat-filled-button-horizontal-padding: 16px
+  --mat-outlined-button-horizontal-padding: 14px
+  font-size: 13.5px !important
+
+.mat-mdc-card
+  --mat-card-elevated-container-shape: var(--radius)
+  --mat-card-outlined-container-shape: var(--radius)
+  border: 1px solid var(--line)
+  box-shadow: var(--shadow-1) !important
+  background: var(--surface) !important
+
+.mat-mdc-form-field
+  --mat-form-field-outlined-container-shape: var(--radius-sm)
+  --mat-form-field-outlined-outline-color: var(--line-strong)
+  --mat-form-field-outlined-hover-outline-color: var(--ink-3)
+  --mat-form-field-outlined-focus-outline-color: var(--accent)
+  --mat-form-field-outlined-focus-outline-width: 1.5px
+  --mat-form-field-outlined-label-text-color: var(--ink-3)
+  --mat-form-field-outlined-focus-label-text-color: var(--accent)
+  --mat-form-field-outlined-input-text-color: var(--ink)
+  --mat-form-field-outlined-caret-color: var(--accent)
+  --mat-form-field-filled-container-color: var(--surface-2)
+  --mat-form-field-container-text-font: var(--font-ui)
+  --mat-form-field-outlined-label-text-font: var(--font-ui)
+  font-family: var(--font-ui)
+
+  .mat-mdc-text-field-wrapper
+    background: var(--surface)
+    border-radius: var(--radius-sm)
+
+.mat-mdc-select-panel, .mat-mdc-autocomplete-panel, .mat-timepicker-panel
+  border-radius: var(--radius-sm) !important
+  padding: 6px !important
+  box-shadow: var(--shadow-3) !important
+  border: 1px solid var(--line)
+
+  .mat-mdc-option
+    border-radius: 8px
+    min-height: 42px
+    font-family: var(--font-ui)
+    font-weight: 500
+
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled)
+      background: var(--accent-soft) !important
+
+      .mdc-list-item__primary-text
+        color: var(--accent) !important
+
+      .mat-pseudo-checkbox
+        --mat-pseudo-checkbox-minimal-selected-checkmark-color: var(--accent)
+
+// Selects opened from the catalog's search panel: at least as wide as a segment, a step below it.
+.console-panel
+  min-width: 220px
+  margin-top: 14px
+
+// Checkbox: softly rounded box, accent when checked.
+.mat-mdc-checkbox
+  --mat-checkbox-selected-icon-color: var(--accent)
+  --mat-checkbox-selected-focus-icon-color: var(--accent)
+  --mat-checkbox-selected-hover-icon-color: var(--accent)
+  --mat-checkbox-selected-checkmark-color: #fff
+  --mat-checkbox-unselected-icon-color: var(--line-strong)
+  --mat-checkbox-unselected-hover-icon-color: var(--ink-3)
+  --mat-checkbox-unselected-focus-icon-color: var(--ink-3)
+  --mat-checkbox-label-text-font: var(--font-ui)
+  --mat-checkbox-label-text-weight: 600
+  --mat-checkbox-label-text-color: var(--ink-2)
+
+  .mdc-checkbox__background
+    border-radius: 6px
+    border-width: 1.5px
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease), transform 160ms var(--ease) !important
+
+  .mdc-checkbox:active .mdc-checkbox__background
+    transform: scale(0.9)
+
+.mat-mdc-radio-button
+  --mat-radio-selected-icon-color: var(--accent)
+  --mat-radio-selected-focus-icon-color: var(--accent)
+  --mat-radio-selected-hover-icon-color: var(--accent)
+  --mat-radio-selected-pressed-icon-color: var(--accent)
+  --mat-radio-checked-ripple-color: var(--accent)
+  --mat-radio-unselected-icon-color: var(--line-strong)
+  --mat-radio-label-text-font: var(--font-ui)
+
+// Switch: accent track and handle instead of the theme's sand accent.
+.mat-mdc-slide-toggle
+  --mat-slide-toggle-selected-handle-color: var(--accent)
+  --mat-slide-toggle-selected-hover-handle-color: var(--accent-hover)
+  --mat-slide-toggle-selected-focus-handle-color: var(--accent-hover)
+  --mat-slide-toggle-selected-pressed-handle-color: var(--accent-hover)
+  --mat-slide-toggle-selected-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-hover-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-focus-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-pressed-track-color: var(--accent-soft-2)
+  --mat-slide-toggle-selected-icon-color: #fff
+  --mat-slide-toggle-unselected-track-color: var(--surface-3)
+  --mat-slide-toggle-unselected-hover-track-color: var(--surface-3)
+  --mat-slide-toggle-unselected-focus-track-color: var(--surface-3)
+  --mat-slide-toggle-unselected-handle-color: var(--ink-3)
+  --mat-slide-toggle-unselected-hover-handle-color: var(--ink-2)
+  --mat-switch-label-text-font: var(--font-ui)
+  --mat-switch-label-text-weight: 600
+
+.mat-mdc-chip
+  --mat-chip-container-shape-radius: var(--radius-pill)
+  font-family: var(--font-ui) !important
+
+// Menus: inset, rounded rows with a warm hover.
+.mat-mdc-menu-panel
+  border-radius: var(--radius) !important
+  border: 1px solid var(--line)
+  box-shadow: var(--shadow-3) !important
+
+  .mat-mdc-menu-content
+    padding: 6px !important
+
+  .mat-mdc-menu-item
+    min-height: 42px
+    border-radius: 8px
+    font-family: var(--font-ui)
+    font-weight: 600
+    color: var(--ink-2)
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+    .mat-icon
+      color: var(--ink-3)
+      transition: color var(--dur) var(--ease), transform var(--dur) var(--ease)
+
+    &:hover:not([disabled])
+      background: var(--surface-2)
+      color: var(--ink)
+
+      .mat-icon
+        color: var(--accent)
+        transform: translateX(1px)
+
+// Notification list is wider than Material's 280px menu limit.
+.mat-mdc-menu-panel.notification-panel
+  max-width: min(400px, calc(100vw - 24px))
+
+  .notif-wrapper
+    min-width: 0
+    width: min(360px, calc(100vw - 40px))
+
+.mat-mdc-dialog-container
+  --mat-dialog-container-shape: var(--radius-lg)
+  --mat-dialog-subhead-font: var(--font-display)
+  --mat-dialog-supporting-text-font: var(--font-ui)
+  --mat-dialog-supporting-text-color: var(--ink-2)
+
+.cdk-overlay-dark-backdrop
+  background: rgba(31, 26, 23, 0.4)
+  backdrop-filter: blur(3px)
+
+.mat-mdc-tooltip
+  --mat-tooltip-container-color: var(--ink)
+  --mat-tooltip-container-shape: 8px
+  --mat-tooltip-supporting-text-font: var(--font-ui)
+  --mat-tooltip-supporting-text-size: 12.5px
+  --mat-tooltip-supporting-text-weight: 600
+
+// Tabs: bold labels, a short rounded accent indicator.
+.mat-mdc-tab-group, .mat-mdc-tab-nav-bar
+  --mat-tab-active-indicator-color: var(--accent)
+  --mat-tab-active-indicator-height: 3px
+  --mat-tab-active-indicator-shape: 3px 3px 0 0
+  --mat-tab-header-active-label-text-color: var(--ink)
+  --mat-tab-header-active-focus-label-text-color: var(--ink)
+  --mat-tab-header-active-hover-label-text-color: var(--ink)
+  --mat-tab-header-inactive-label-text-color: var(--ink-3)
+  --mat-tab-header-active-ripple-color: var(--accent)
+  --mat-tab-header-inactive-ripple-color: var(--ink)
+  --mat-tab-header-label-text-font: var(--font-ui)
+  --mat-tab-header-label-text-weight: 700
+  --mat-tab-header-label-text-tracking: 0
+  --mat-tab-header-divider-color: var(--line)
+  font-family: var(--font-ui) !important
+
+// Tables: quiet uppercase header, row hover.
+.mat-mdc-table
+  --mat-table-background-color: var(--surface)
+  --mat-table-header-headline-font: var(--font-ui)
+  --mat-table-header-headline-size: 11.5px
+  --mat-table-header-headline-weight: 700
+  --mat-table-header-headline-color: var(--ink-3)
+  --mat-table-header-headline-tracking: 0.08em
+  --mat-table-row-item-label-text-font: var(--font-ui)
+  --mat-table-row-item-label-text-color: var(--ink)
+  --mat-table-row-item-outline-color: var(--line)
+
+  .mat-mdc-header-cell
+    text-transform: uppercase
+
+  .mat-mdc-row
+    transition: background-color var(--dur) var(--ease)
+
+    &:hover
+      background: var(--bg)
+
+// Paginator: round page buttons, readable labels.
+.mat-mdc-paginator
+  --mat-paginator-container-text-font: var(--font-ui)
+  --mat-paginator-container-text-color: var(--ink-2)
+  --mat-paginator-container-text-weight: 600
+  --mat-paginator-enabled-icon-color: var(--ink)
+  --mat-paginator-disabled-icon-color: var(--line-strong)
+
+  .mat-mdc-icon-button:not([disabled])
+    border: 1px solid var(--line-strong)
+    margin: 0 3px
+    transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease), transform 120ms var(--ease)
+
+    &:hover
+      border-color: var(--ink-3)
+      background: var(--surface)
+
+// Course map pin: built in code and placed by Google Maps outside the component, so styled here.
+// The marker is anchored at the bottom of .map-pin, where the tail ends.
+.map-pin
+  position: relative
+  padding-bottom: 9px
+
+  &::after
+    content: ''
+    position: absolute
+    bottom: 0
+    left: 50%
+    transform: translateX(-50%)
+    border: 7px solid transparent
+    border-bottom: 0
+    border-top: 10px solid var(--surface)
+    filter: drop-shadow(0 2px 2px rgba(31, 26, 23, 0.2))
+
+.map-pin-head
+  display: grid
+  place-items: center
+  width: 44px
+  height: 44px
+  border: 3px solid var(--surface)
+  border-radius: 50%
+  background: var(--accent)
+  color: var(--on-accent)
+  font-size: 22px
+  box-shadow: 0 8px 18px -6px rgba(31, 26, 23, 0.45)
+
+// Date picker popup (every datepicker and date range picker in the app).
+.mat-datepicker-content
+  --mat-datepicker-calendar-container-shape: var(--radius)
+  --mat-datepicker-calendar-container-elevation-shadow: var(--shadow-3)
+  --mat-datepicker-calendar-text-font: var(--font-ui)
+  --mat-datepicker-calendar-header-text-weight: 700
+  --mat-datepicker-calendar-header-text-color: var(--ink-3)
+  --mat-datepicker-calendar-date-selected-state-background-color: var(--accent)
+  --mat-datepicker-calendar-date-today-outline-color: var(--accent)
+  --mat-datepicker-calendar-date-hover-state-background-color: var(--accent-soft)
+  --mat-datepicker-calendar-date-in-range-state-background-color: var(--accent-soft)
+  --mat-datepicker-calendar-period-button-text-weight: 700
+  border: 1px solid var(--line)
+
+.mat-calendar-body-cell-content
+  font-weight: 600
+
+// Default snackbar (NotificationService): dark, rounded, bold.
+.mat-mdc-snack-bar-container
+  --mat-snack-bar-container-color: var(--ink)
+  --mat-snack-bar-container-shape: var(--radius-sm)
+  --mat-snack-bar-supporting-text-font: var(--font-ui)
+  --mat-snack-bar-supporting-text-weight: 600
+  --mat-snack-bar-button-color: rgba(255, 255, 255, 0.8)
+
+/* ── Hover effects ──────────────────────────────────────────── */
+
+// Spotlight (SpotlightDirective): a thin light that runs along the border under the mouse.
+// The gradient is masked down to a 2px ring, so the content itself stays untinted.
+.spotlight
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 3
+    padding: 2px
+    border-radius: inherit
+    pointer-events: none
+    background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), rgba(140, 47, 75, 0.75), rgba(196, 138, 44, 0.35) 45%, transparent 75%)
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)
+    -webkit-mask-composite: xor
+    mask-composite: exclude
+    opacity: 0
+    transition: opacity 320ms var(--ease)
+
+  &:hover::before
+    opacity: 1
+
+@media (hover: none)
+  .spotlight::before
+    display: none
+
+// Primary buttons: a light sheen sweeps across on hover.
+.mat-mdc-unelevated-button.mat-primary:not([disabled])
+  overflow: hidden
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    pointer-events: none
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%)
+    transform: translateX(-110%)
+
+  &:hover::after
+    transform: translateX(110%)
+    transition: transform 700ms var(--ease)
+
+// Buttons with a trailing icon ("Next →"): the icon nudges forward on hover.
+.mat-mdc-button-base .mat-icon[iconPositionEnd]
+  transition: transform var(--dur) var(--ease) !important
+
+.mat-mdc-button-base:hover:not([disabled]) .mat-icon[iconPositionEnd]
+  transform: translateX(3px)
+
+// Quiet "back" links (← Previous page): the arrow nudges back.
+a.back .mat-icon, .back-link .mat-icon
+  transition: transform var(--dur) var(--ease)
+
+a.back:hover .mat-icon, .back-link:hover .mat-icon
+  transform: translateX(-3px)
+
+/* ── Snackbar variants ──────────────────────────────────────── */
+.snack-success .mat-mdc-snackbar-surface
+  background: var(--ink) !important
+  color: #fff !important
+  border-left: 4px solid #7FC59B
+  border-radius: var(--radius-sm) !important
+  font-weight: 600
+
+.snack-error .mat-mdc-snackbar-surface
+  background: var(--ink) !important
+  color: #fff !important
+  border-left: 4px solid #F08A80
+  border-radius: var(--radius-sm) !important
+  font-weight: 600
+
+.snack-success .mat-mdc-button.mat-mdc-snack-bar-action,
+.snack-error .mat-mdc-button.mat-mdc-snack-bar-action
+  color: rgba(255, 255, 255, 0.85) !important
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar
+  width: 10px
+  height: 10px
+
+::-webkit-scrollbar-track
+  background: transparent
+
+::-webkit-scrollbar-thumb
+  background: var(--line-strong)
+  border-radius: 10px
+  border: 3px solid var(--bg)
+
+  &:hover
+    background: var(--ink-3)

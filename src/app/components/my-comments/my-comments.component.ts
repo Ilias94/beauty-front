@@ -1,16 +1,17 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { GetCurrentUserCommentsAction } from '../state/comment.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommentsComponent } from '../comments/comments.component';
 import { CommentDtoResponse } from '../../../api/models';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-my-comments',
-  standalone: true,
-  imports: [CommentsComponent],
-  templateUrl: './my-comments.component.html',
-  styleUrl: './my-comments.component.sass'
+    selector: 'app-my-comments',
+    imports: [CommentsComponent, TranslocoModule],
+    templateUrl: './my-comments.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './my-comments.component.sass'
 })
 export class MyCommentsComponent implements OnInit {
   store = inject(Store)

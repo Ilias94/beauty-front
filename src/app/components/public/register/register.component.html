@@ -1,7 +1,129 @@
-<form [formGroup]="form">
-    <formly-form [form]="form" [fields]="fields"></formly-form>
-    <input type="file" (change)="onFileChange($event)">
-    <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="register()">Register</button>
-  </form>
+<div class="auth">
+  <section class="auth-main">
+    <div class="auth-form">
+      <p class="eyebrow">{{ 'auth.registerEyebrow' | transloco }}</p>
+      <h1 class="auth-title">{{ 'auth.registerTitle' | transloco }}</h1>
+      <p class="auth-lead">{{ 'auth.registerLead' | transloco }}</p>
 
-  
+      <button class="google-btn" type="button" (click)="loginWithGoogle()">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        {{ 'auth.continueWithGoogle' | transloco }}
+      </button>
+
+      <div class="divider"><span>{{ 'auth.orEmail' | transloco }}</span></div>
+
+      <form [formGroup]="form" (ngSubmit)="register()" novalidate>
+        <!-- Account type -->
+        <fieldset class="types">
+          <legend>{{ 'auth.iWantToBe' | transloco }}</legend>
+          <div class="types-grid">
+          <label class="type" appSpotlight [class.on]="!isTeacher()">
+            <input type="radio" name="accountType" [checked]="!isTeacher()" (change)="isTeacher.set(false)">
+            <mat-icon>school</mat-icon>
+            <span class="type-text">
+              <strong>{{ 'auth.studentName' | transloco }}</strong>
+              <span>{{ 'auth.studentDesc' | transloco }}</span>
+            </span>
+          </label>
+          <label class="type" appSpotlight [class.on]="isTeacher()">
+            <input type="radio" name="accountType" [checked]="isTeacher()" (change)="isTeacher.set(true)">
+            <mat-icon>co_present</mat-icon>
+            <span class="type-text">
+              <strong>{{ 'auth.teacherName' | transloco }}</strong>
+              <span>{{ 'auth.teacherDesc' | transloco }}</span>
+            </span>
+          </label>
+          </div>
+        </fieldset>
+
+        <div class="two-col">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'auth.firstNameLabel' | transloco }}</mat-label>
+            <input matInput formControlName="firstName" autocomplete="given-name">
+            <mat-error>{{ 'auth.required' | transloco }}</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'auth.lastNameLabel' | transloco }}</mat-label>
+            <input matInput formControlName="lastName" autocomplete="family-name">
+            <mat-error>{{ 'auth.required' | transloco }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>{{ 'auth.emailLabel' | transloco }}</mat-label>
+          <input matInput type="email" formControlName="email" autocomplete="email" inputmode="email">
+          @if (form.controls.email.hasError('email')) {
+            <mat-error>{{ 'auth.emailInvalid' | transloco }}</mat-error>
+          } @else {
+            <mat-error>{{ 'auth.required' | transloco }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>{{ 'auth.passwordLabel' | transloco }}</mat-label>
+          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="new-password">
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword.set(!hidePassword())"
+            [attr.aria-label]="(hidePassword() ? 'auth.showPassword' : 'auth.hidePassword') | transloco">
+            <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          <mat-error>{{ 'password.patternError' | transloco }}</mat-error>
+        </mat-form-field>
+
+        <ul class="rules" [attr.aria-label]="'auth.passwordRules' | transloco">
+          @for (rule of checks(); track rule.key) {
+            <li [class.ok]="rule.ok"><mat-icon>{{ rule.ok ? 'check' : 'remove' }}</mat-icon>{{ rule.key | transloco }}</li>
+          }
+        </ul>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>{{ 'auth.confirmPasswordLabel' | transloco }}</mat-label>
+          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="confirmPassword" autocomplete="new-password">
+          @if (form.controls.confirmPassword.hasError('mismatch')) {
+            <mat-error>{{ 'auth.passwordMismatch' | transloco }}</mat-error>
+          } @else {
+            <mat-error>{{ 'auth.required' | transloco }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Optional photo -->
+        <div class="photo">
+          <button type="button" class="photo-btn" (click)="fileInput.click()" [attr.aria-label]="'auth.addPhoto' | transloco">
+            @if (avatarPreview(); as preview) {
+              <img [src]="preview" alt="">
+            } @else {
+              <mat-icon>add_a_photo</mat-icon>
+            }
+          </button>
+          <div class="photo-text">
+            <strong>{{ 'auth.photoTitle' | transloco }}</strong>
+            <span>{{ 'auth.photoHint' | transloco }}</span>
+          </div>
+          @if (avatarPreview()) {
+            <button type="button" class="link-btn" (click)="removeAvatar()">{{ 'auth.remove' | transloco }}</button>
+          }
+          <input #fileInput type="file" accept=".jpg,.jpeg,.png,.avif,.webp" (change)="onFileChange($event)" hidden>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" class="submit" [disabled]="submitting()">
+          @if (submitting()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            {{ 'auth.createAccount' | transloco }}
+          }
+        </button>
+      </form>
+
+      <p class="switch">
+        {{ 'auth.alreadyHaveAccount' | transloco }}
+        <a routerLink="/login">{{ 'auth.signInLink' | transloco }}</a>
+      </p>
+    </div>
+  </section>
+
+  <app-auth-aside />
+</div>

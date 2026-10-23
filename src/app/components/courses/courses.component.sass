@@ -1,84 +1,803 @@
-.filters
+// ── Header ─────────────────────────────────────────────────
+.catalog-head
+  display: flex
+  align-items: flex-end
+  justify-content: space-between
+  gap: 20px
+  flex-wrap: wrap
+  margin-bottom: 28px
+
+  .eyebrow
+    margin-bottom: 10px
+
+// Catalogue header: copy on the left, the mirror wall on the right standing behind the search panel.
+.catalog-head.hero
+  position: relative
+  min-height: 250px
+  align-items: flex-end
+  // Room between the figures and the search panel; the mirror wall below reaches down through it.
+  margin-bottom: 48px
+
+  .head-copy
+    position: relative
+    z-index: 1
+    max-width: 580px
+
+.hero-title
+  text-wrap: balance
+
+// "dla siebie": the display face's italic in wine, underlined by a gold stroke drawn on arrival.
+.hero-accent
+  position: relative
+  display: inline-block
+  font-style: italic
+  color: var(--accent)
+  font-variation-settings: 'opsz' 96, 'SOFT' 100
+
+.swash
+  position: absolute
+  left: 2%
+  right: 0
+  bottom: -0.1em
+  width: 98%
+  height: 0.3em
+  overflow: visible
+
+  path
+    fill: none
+    stroke: var(--gold)
+    stroke-width: 3.5
+    stroke-linecap: round
+    stroke-dasharray: 200
+    stroke-dashoffset: 200
+    vector-effect: non-scaling-stroke
+    animation: swash-draw 900ms 350ms var(--ease) forwards
+
+@keyframes swash-draw
+  to
+    stroke-dashoffset: 0
+
+.hero-stats
   display: flex
   flex-wrap: wrap
-  gap: 16px
-  margin-bottom: 24px
+  gap: 12px 28px
+  margin: 26px 0 0
 
-.search-title
-  flex: 1
-  min-width: 240px
+  > div
+    display: flex
+    align-items: baseline
+    gap: 8px
 
-.courses-grid
-  display: grid
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))
-  gap: 24px
-  margin-bottom: 32px
+    & + div
+      padding-left: 28px
+      border-left: 1px solid var(--line-strong)
 
-@keyframes fadeIn
+  dt
+    font-family: var(--font-display)
+    font-size: 30px
+    font-weight: 500
+    line-height: 1
+    color: var(--ink)
+    font-variant-numeric: tabular-nums
+
+  dd
+    margin: 0
+    font-size: 14px
+    font-weight: 600
+    color: var(--ink-2)
+
+// The mirror wall, as on the design system's cover: wine (tallest, with the mark's inner frames),
+// gold, blush and ink arches of unequal heights; the last one runs off the right edge.
+// Its foot reaches under the search panel (.filters sits above it), so the mirrors stand behind it.
+.hero-art
+  position: absolute
+  right: 0
+  // Header margin (48px) plus 12px, so the mirrors' feet stay hidden behind the search panel.
+  bottom: -60px
+  width: 470px
+  height: 320px
+  overflow: hidden
+  pointer-events: none
+
+.arch
+  position: absolute
+  bottom: 0
+  border-radius: 999px 999px 0 0
+  animation: arch-rise 900ms var(--ease) backwards
+
+  &.arch-wine
+    left: 0
+    width: 150px
+    height: 270px
+    background: var(--accent)
+
+  &.arch-gold
+    left: 166px
+    width: 84px
+    height: 172px
+    background: var(--gold)
+    animation-delay: 90ms
+
+  &.arch-blush
+    left: 266px
+    width: 120px
+    height: 226px
+    background: var(--accent-soft-2)
+    animation-delay: 180ms
+
+  &.arch-ink
+    left: 402px
+    width: 84px
+    height: 140px
+    background: var(--ink)
+    animation-delay: 270ms
+
+@keyframes arch-rise
+  from
+    transform: translateY(70px)
+    opacity: 0
+
+.arch-frame
+  position: absolute
+  inset: 12px 12px -2px
+  border: 1.2px solid rgba(237, 211, 218, 0.55)
+  border-bottom: 0
+  border-radius: 999px 999px 0 0
+
+  & + .arch-frame
+    inset: 24px 24px -2px
+
+    & + .arch-frame
+      inset: 36px 36px -2px
+
+// The mark's gold sparkle, twinkling now and then at the wine mirror's shoulder.
+.spark
+  position: absolute
+  top: 30px
+  right: 22px
+  width: 18px
+  height: 18px
+  background: var(--gold-bright)
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%)
+  animation: spark-twinkle 4.5s 1.2s var(--ease) infinite
+
+@keyframes spark-twinkle
+  0%, 70%, 100%
+    transform: scale(1) rotate(0)
+    opacity: 1
+  80%
+    transform: scale(0.5) rotate(45deg)
+    opacity: 0.6
+  90%
+    transform: scale(1.25) rotate(90deg)
+    opacity: 1
+
+// Real facts floating over the mirrors: where the courses are, and that some are online.
+.float-tag
+  position: absolute
+  z-index: 1
+  display: inline-flex
+  align-items: center
+  gap: 5px
+  height: 32px
+  padding: 0 12px 0 9px
+  border-radius: var(--radius-pill)
+  background: rgba(255, 255, 255, 0.94)
+  backdrop-filter: blur(6px)
+  box-shadow: var(--shadow-2)
+  font-size: 13px
+  font-weight: 700
+  color: var(--ink)
+  white-space: nowrap
+  animation: tag-in 700ms var(--ease) backwards, tag-float 6s ease-in-out infinite
+
+  .mat-icon
+    font-size: 17px
+    width: 17px
+    height: 17px
+    color: var(--accent)
+
+  &.tag-cities
+    top: 64px
+    left: 96px
+    animation-delay: 500ms, 1.2s
+
+  &.tag-online
+    top: 150px
+    left: 300px
+    animation-delay: 650ms, 2.4s
+
+@keyframes tag-in
   from
     opacity: 0
-    transform: translateY(10px)
-  to
-    opacity: 1
-    transform: translateY(0)
+    transform: translateY(10px) scale(0.92)
 
-.course-card
+@keyframes tag-float
+  0%, 100%
+    translate: 0 0
+  50%
+    translate: 0 -6px
+
+// Narrower desktops: the wall shrinks from its bottom-right corner, so it stays clear of the copy.
+@media (max-width: 1279px)
+  .hero-art
+    transform-origin: bottom right
+    scale: 0.8
+
+// The copy needs the width below this; the wall only comes back where it has room.
+@media (max-width: 1080px)
+  .hero-art
+    display: none
+
+  .catalog-head.hero
+    min-height: 0
+    margin-bottom: 32px
+
+// ── Filters ────────────────────────────────────────────────
+.filters
+  position: relative
+  z-index: 1
   display: flex
   flex-direction: column
-  height: 100%
-  animation: fadeIn 0.4s ease-in-out
-  transition: transform 0.3s ease, box-shadow 0.3s ease
+  gap: 22px
+  margin-bottom: 28px
+
+// Search panel: one raised card split into segments by hairlines; each segment has a small
+// heading over its value and lights up on hover, the whole card rings when something has focus.
+.console
+  display: flex
+  align-items: stretch
+  min-height: 68px
+  padding: 6px
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  box-shadow: var(--shadow-2)
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease)
+
+  &:focus-within
+    border-color: var(--accent-soft-2)
+    box-shadow: var(--shadow-2), 0 0 0 4px var(--accent-soft)
+
+.seg
+  position: relative
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 0 14px 0 16px
+  border-radius: calc(var(--radius-lg) - 6px)
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease)
 
   &:hover
-    transform: translateY(-6px)
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15)
+    background: var(--surface-2)
 
-  .title
-    font-size: 1.4rem
-    font-weight: 700
+  // Hairline between segments, hidden next to a hovered one so the highlight reads as one shape.
+  & + .seg::before
+    content: ''
+    position: absolute
+    left: 0
+    top: 14px
+    bottom: 14px
+    width: 1px
+    background: var(--line)
+    transition: opacity var(--dur) var(--ease)
 
-  .date
-    font-size: 1rem
+  &:hover::before, &:hover + .seg::before
+    opacity: 0
+
+.seg-search
+  flex: 1 1 auto
+  min-width: 0
+  cursor: text
+
+.seg-pick
+  flex: 0 0 210px
+
+.seg-icon
+  flex-shrink: 0
+  width: 38px
+  height: 38px
+  display: grid
+  place-items: center
+  border-radius: 50%
+  background: var(--surface-2)
+  color: var(--ink-2)
+  font-size: 20px
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), transform 260ms var(--ease)
+
+.seg:hover .seg-icon, .seg:focus-within .seg-icon
+  background: var(--accent-soft)
+  color: var(--accent)
+
+.seg-search:focus-within .seg-icon
+  transform: scale(1.06)
+
+.seg-text
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: 2px
+
+.seg-label
+  font-size: 11.5px
+  font-weight: 700
+  letter-spacing: 0.08em
+  text-transform: uppercase
+  color: var(--ink-3)
+
+.seg-search input
+  width: 100%
+  min-width: 0
+  padding: 0
+  border: 0
+  outline: 0
+  background: transparent
+  font: 600 15.5px var(--font-ui)
+  color: var(--ink)
+
+  &::placeholder
     font-weight: 500
-    color: #3f51b5
+    color: var(--ink-3)
 
-  .participants
-    margin-top: 12px
-    font-size: 1rem
-    font-weight: 600
-    color: #2e7d32
+  &::-webkit-search-cancel-button
+    display: none
 
-  .description
-    margin-top: 12px
-    font-size: 0.95rem
-    line-height: 1.6
-    color: #444
-    white-space: pre-line
-    background-color: #f9f9f9
-    padding: 12px
-    border-left: 4px solid #3f51b5
-    border-radius: 4px
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05)
-    transition: all 0.3s ease
+// The select only shows its value; the segment draws the chevron and takes the clicks.
+.seg-pick ::ng-deep
+  .mat-mdc-select
+    font: 700 15px var(--font-ui)
+    color: var(--ink)
+
+  .mat-mdc-select-placeholder
+    color: var(--ink)
+
+  .mat-mdc-select-arrow-wrapper
+    display: none
+
+.seg-caret
+  flex-shrink: 0
+  color: var(--ink-3)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
+
+.seg-pick:hover .seg-caret
+  color: var(--ink)
+  transform: translateY(2px)
+
+.clear-btn
+  flex-shrink: 0
+  width: 34px
+  height: 34px
+  display: grid
+  place-items: center
+  border: 0
+  border-radius: 50%
+  background: var(--surface-3)
+  color: var(--ink-2)
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease), transform 120ms var(--ease)
+
+  &:hover
+    background: var(--line-strong)
+    color: var(--ink)
+
+  &:active
+    transform: scale(0.92)
+
+  .mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+
+.filter-row
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 12px
+  flex-wrap: wrap
+
+// Course form: equal columns in a warm capsule, a white indicator slides to the chosen one.
+.type-switch
+  position: relative
+  display: grid
+  grid-auto-flow: column
+  grid-auto-columns: 1fr
+  padding: 4px
+  border-radius: var(--radius-pill)
+  background: var(--surface-2)
+  box-shadow: inset 0 0 0 1px rgba(31, 26, 23, 0.04)
+
+  button
+    position: relative
+    z-index: 1
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: 7px
+    height: 40px
+    padding: 0 18px
+    border: 0
+    border-radius: var(--radius-pill)
+    background: transparent
+    font: 600 14px var(--font-ui)
+    color: var(--ink-2)
+    white-space: nowrap
+    cursor: pointer
+    transition: color var(--dur) var(--ease)
+
+    .mat-icon
+      font-size: 18px
+      width: 18px
+      height: 18px
+      color: var(--ink-3)
+      transition: color var(--dur) var(--ease), transform 260ms var(--ease)
 
     &:hover
-      background-color: #eef2ff
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15)
+      color: var(--ink)
 
-  mat-card-actions
+      .mat-icon
+        transform: translateY(-1px)
+
+    &.on
+      color: var(--ink)
+
+      .mat-icon
+        color: var(--accent)
+
+    &:focus-visible
+      outline: 2px solid var(--accent)
+      outline-offset: 2px
+
+.type-indicator
+  position: absolute
+  top: 4px
+  bottom: 4px
+  left: 4px
+  width: calc((100% - 8px) / var(--n))
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  box-shadow: var(--shadow-1), 0 4px 12px -6px rgba(31, 26, 23, 0.25)
+  transform: translateX(calc(var(--idx) * 100%))
+  transition: transform 380ms var(--ease)
+
+// "Show finished": a switch, since it turns a mode on rather than picking a value.
+.switch
+  display: inline-flex
+  align-items: center
+  gap: 10px
+  padding: 6px 4px
+  border: 0
+  background: transparent
+  font: 600 14px var(--font-ui)
+  color: var(--ink-2)
+  cursor: pointer
+
+  &:hover
+    color: var(--ink)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+    border-radius: var(--radius-xs)
+
+.switch-track
+  position: relative
+  width: 38px
+  height: 22px
+  border-radius: var(--radius-pill)
+  background: var(--line-strong)
+  transition: background-color 240ms var(--ease)
+
+.switch-knob
+  position: absolute
+  top: 3px
+  left: 3px
+  width: 16px
+  height: 16px
+  border-radius: 50%
+  background: var(--surface)
+  box-shadow: 0 1px 3px rgba(31, 26, 23, 0.3)
+  transition: transform 240ms var(--ease)
+
+.switch[aria-checked="true"]
+  color: var(--ink)
+
+  .switch-track
+    background: var(--accent)
+
+  .switch-knob
+    transform: translateX(16px)
+
+// Categories as tiles: the same tint and icon their course covers use. Twelve tiles (all + 11)
+// fill even rows: six columns on wide screens, four below (phones swipe, see the end).
+.cat-tiles
+  display: grid
+  grid-template-columns: repeat(4, minmax(0, 1fr))
+  gap: 12px
+
+  @media (min-width: 1280px)
+    grid-template-columns: repeat(6, minmax(0, 1fr))
+
+.cat-tile
+  display: flex
+  align-items: center
+  gap: 12px
+  min-height: 64px
+  padding: 11px 14px 11px 11px
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  font: 600 14px/1.25 var(--font-ui)
+  color: var(--ink-2)
+  text-align: left
+  cursor: pointer
+  transition: transform 260ms var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), background-color var(--dur) var(--ease)
+
+  &:hover
+    color: var(--ink)
+    border-color: var(--line-strong)
+    box-shadow: var(--shadow-2)
+    transform: translateY(-2px)
+
+    .cat-icon
+      transform: rotate(-6deg) scale(1.06)
+
+  &:active
+    transform: translateY(0) scale(0.98)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+  // Chosen: wine ring, the icon tile fills with the category's own colour, a check appears.
+  &.on
+    color: var(--ink)
+    border-color: var(--accent)
+    background: var(--accent-soft)
+    box-shadow: 0 0 0 1px var(--accent), var(--shadow-1)
+
+    .cat-icon
+      background: var(--cat-ink, var(--ink))
+      color: var(--surface)
+
+    .cat-check
+      opacity: 1
+      transform: scale(1)
+
+.cat-icon
+  flex-shrink: 0
+  width: 40px
+  height: 40px
+  display: grid
+  place-items: center
+  border-radius: var(--radius-sm)
+  background: var(--cat-tint, var(--surface-2))
+  color: var(--cat-ink, var(--ink-2))
+  transition: transform 300ms var(--ease), background-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+  .mat-icon
+    font-size: 21px
+    width: 21px
+    height: 21px
+
+.cat-name
+  flex: 1
+  min-width: 0
+
+.cat-check
+  flex-shrink: 0
+  font-size: 20px
+  width: 20px
+  height: 20px
+  color: var(--accent)
+  font-variation-settings: 'FILL' 1
+  opacity: 0
+  transform: scale(0.6)
+  transition: opacity var(--dur) var(--ease), transform 260ms var(--ease)
+
+// ── Results ────────────────────────────────────────────────
+.results-meta
+  display: flex
+  align-items: center
+  flex-wrap: wrap
+  gap: 8px 10px
+  min-height: 32px
+  margin-bottom: 20px
+
+  .count
+    font-weight: 700
+    color: var(--ink)
+    margin-right: 4px
+
+.active-chip
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  height: 30px
+  padding: 0 8px 0 12px
+  border: 0
+  border-radius: var(--radius-pill)
+  background: var(--accent-soft)
+  font: 600 13px var(--font-ui)
+  color: var(--accent)
+  cursor: pointer
+  animation: chip-in 260ms var(--ease) backwards
+  transition: background-color var(--dur) var(--ease)
+
+  .mat-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+    transition: transform var(--dur) var(--ease)
+
+  &:hover
+    background: var(--accent-soft-2)
+
+    .mat-icon
+      transform: rotate(90deg)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+@keyframes chip-in
+  from
+    opacity: 0
+    transform: scale(0.85)
+
+.reset-link
+  border: 0
+  background: transparent
+  padding: 0 4px
+  font: 700 13.5px var(--font-ui)
+  color: var(--ink-2)
+  cursor: pointer
+  text-decoration: underline
+  text-underline-offset: 3px
+
+  &:hover
+    color: var(--accent)
+
+.grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))
+  gap: 22px
+  transition: opacity var(--dur) var(--ease)
+
+  &.is-loading
+    opacity: 0.55
+
+.skeleton-card
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  overflow: hidden
+  padding-bottom: 18px
+  display: flex
+  flex-direction: column
+  gap: 10px
+
+  .media-sk
+    aspect-ratio: 16 / 10
+    border-radius: 0
+    margin-bottom: 6px
+
+  .line-sk
+    height: 14px
+    margin: 0 18px
+
+  .w40
+    width: 40%
+
+  .w60
+    width: 60%
+
+  .w90
+    width: 90%
+
+.paginator
+  margin-top: 32px
+  background: transparent
+  --mat-paginator-container-background-color: transparent
+  font-family: var(--font-ui)
+
+// Tablets: the search takes the first row, place and order share the second.
+@media (max-width: 900px)
+  .console
+    flex-wrap: wrap
+
+  .seg-search
+    flex-basis: 100%
+    min-height: 56px
+
+  .seg-pick
+    flex: 1 1 0
+    min-width: 0
+    min-height: 56px
+
+  // The second row starts at the left edge: its hairline runs along the top instead.
+  .seg-search + .seg::before
+    left: 14px
+    right: 14px
+    top: 0
+    bottom: auto
+    width: auto
+    height: 1px
+
+@media (max-width: 640px)
+  // Three columns, number over its label, so the figures never wrap mid-row.
+  .hero-stats
+    display: grid
+    grid-template-columns: repeat(3, auto)
+    justify-content: start
+    gap: 0 18px
+
+    > div
+      flex-direction: column
+      align-items: flex-start
+      gap: 4px
+
+      & + div
+        padding-left: 18px
+
+    dt
+      font-size: 26px
+
+    dd
+      font-size: 12.5px
+
+  .seg
+    gap: 10px
+    padding: 0 10px
+
+  .seg-icon
+    width: 34px
+    height: 34px
+
+  // Half-width segments: their heading says what they are, so the round icon makes room for the value.
+  .seg-caret, .seg-pick .seg-icon
+    display: none
+
+  .seg-pick
+    padding-left: 14px
+
+  // Columns size to their labels and the row scrolls; the chosen button carries its own white fill.
+  .type-switch
+    grid-auto-columns: max-content
+    max-width: 100%
+    overflow-x: auto
+    scrollbar-width: none
+
+    &::-webkit-scrollbar
+      display: none
+
+    button
+      padding: 0 14px
+
+      &.on
+        background: var(--surface)
+        box-shadow: var(--shadow-1)
+
+  .type-indicator
+    display: none
+
+  // One swipeable row of tiles running to the screen edge, so the cut-off tile reads as "more this way".
+  .cat-tiles
     display: flex
-    justify-content: space-between
-    margin-top: auto
-    padding-top: 16px
+    overflow-x: auto
+    margin: 0 calc(-1 * var(--gutter))
+    padding: 2px var(--gutter) 6px
+    scroll-snap-type: x proximity
+    scroll-padding-inline: var(--gutter)
+    scrollbar-width: none
 
-    button[mat-flat-button]
-      transition: background-color 0.3s ease, box-shadow 0.2s ease
+    &::-webkit-scrollbar
+      display: none
 
-      &:hover
-        background-color: #303f9f !important
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)
+  .cat-tile
+    flex: 0 0 168px
+    scroll-snap-align: start
 
-mat-chip
-  margin-bottom: 6px
-  font-size: 0.75rem
-  font-weight: 600
+  .grid
+    gap: 16px

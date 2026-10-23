@@ -1,12 +1,95 @@
-// Custom margin or padding if needed
-.form-container
-  padding: 20px
-  border-radius: 8px
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
-  background-color: #fff
+// Shared look of the auth screens (login and register use the same structure).
+.auth
+  display: grid
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr)
+  min-height: calc(100vh - var(--header-h))
 
-  .custom-login-btn
-  width: auto // or any specific width like 150px
-  padding-left: 20px // adjust as needed
-  padding-right: 20px // adjust as needed
+.auth-main
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 48px var(--gutter)
 
+.auth-form
+  width: 100%
+  max-width: 420px
+
+.auth-title
+  font-size: clamp(32px, 4vw, 42px)
+  margin-top: 10px
+
+.auth-lead
+  color: var(--ink-2)
+  margin: 10px 0 28px
+
+.google-btn
+  width: 100%
+  height: 50px
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 10px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  font: 700 15px var(--font-ui)
+  color: var(--ink)
+  cursor: pointer
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease)
+
+  &:hover
+    border-color: var(--ink-3)
+    background: var(--surface-2)
+
+.divider
+  display: flex
+  align-items: center
+  gap: 12px
+  margin: 24px 0
+  color: var(--ink-3)
+  font-size: 13px
+  font-weight: 600
+
+  &::before, &::after
+    content: ''
+    flex: 1
+    height: 1px
+    background: var(--line)
+
+.form-error
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 12px 14px
+  margin-bottom: 16px
+  border-radius: var(--radius-sm)
+  background: var(--danger-soft)
+  color: var(--danger)
+  font-weight: 600
+  font-size: 14px
+
+.field
+  width: 100%
+
+.submit
+  width: 100%
+  margin-top: 4px
+  --mat-button-filled-container-height: 52px
+  font-size: 16px !important
+
+  mat-spinner
+    margin: 0 auto
+    --mat-progress-spinner-active-indicator-color: #fff
+
+.switch
+  margin-top: 24px
+  text-align: center
+  color: var(--ink-2)
+
+  a
+    font-weight: 700
+
+@media (max-width: 900px)
+  .auth
+    grid-template-columns: 1fr
+    min-height: auto

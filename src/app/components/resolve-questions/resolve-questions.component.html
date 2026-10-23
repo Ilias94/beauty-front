@@ -1,1 +1,99 @@
-<p>resolve-questions works!</p>
+<div class="rq-page">
+
+  @if (total() > 0) {
+
+    <!-- ── QUIZ PHASE ─────────────────────────────────── -->
+    @if (phase() === 'quiz') {
+      <div class="rq-quiz-wrap">
+
+        <!-- Progress bar -->
+        <div class="rq-progress-track">
+          <div class="rq-progress-fill" [style.width.%]="progress()"></div>
+        </div>
+        <div class="rq-progress-label">
+          {{ 'quiz.questionOf' | transloco:{current: currentIndex() + 1, total: total()} }}
+        </div>
+
+        <!-- Question card -->
+        <div class="rq-question-card">
+          <div class="rq-question-number">Q{{ currentIndex() + 1 }}</div>
+          <p class="rq-question-text">{{ currentQuestion()?.questionDetail?.question }}</p>
+        </div>
+
+        <!-- Answers -->
+        <div class="rq-answers">
+          @for (answer of currentQuestion()?.questionDetail?.answers; track answer; let i = $index) {
+            <button class="rq-answer-btn"
+                [class.rq-correct]="answered() && answer.correct"
+                [class.rq-wrong]="answered() && selectedIndex() === i && !answer.correct"
+                [class.rq-selected]="selectedIndex() === i"
+                (click)="pick(i)"
+                [disabled]="answered()">
+              <span class="rq-label">{{ labels[i] }}</span>
+              <span class="rq-answer-text">{{ answer.content }}</span>
+              @if (answered() && answer.correct) {
+                <mat-icon class="rq-icon-result">check_circle</mat-icon>
+              }
+              @if (answered() && selectedIndex() === i && !answer.correct) {
+                <mat-icon class="rq-icon-result rq-icon-wrong">cancel</mat-icon>
+              }
+            </button>
+          }
+        </div>
+
+        <!-- Next / Finish -->
+        @if (answered()) {
+          <div class="rq-next-wrap">
+            <button mat-flat-button color="primary" class="rq-next-btn" (click)="next()">
+              @if (currentIndex() < total() - 1) {
+                <ng-container>{{ 'quiz.next' | transloco }} <mat-icon>arrow_forward</mat-icon></ng-container>
+              } @else {
+                <ng-container>{{ 'quiz.seeResults' | transloco }} <mat-icon>emoji_events</mat-icon></ng-container>
+              }
+            </button>
+          </div>
+        }
+
+      </div>
+    }
+
+    <!-- ── RESULTS PHASE ──────────────────────────────── -->
+    @if (phase() === 'results') {
+      <div class="rq-results-wrap">
+
+        <div class="rq-score-ring" [class.rq-score-high]="pct() >= 70" [class.rq-score-low]="pct() < 50">
+          <mat-icon class="rq-trophy-icon">{{ trophy() }}</mat-icon>
+          <div class="rq-score-main">
+            <span class="rq-score-num">{{ score() }}</span>
+            <span class="rq-score-denom">/ {{ total() }}</span>
+          </div>
+          <div class="rq-score-pct">{{ pct() }}%</div>
+        </div>
+
+        <h2 class="rq-result-title">{{ message() }}</h2>
+        <p class="rq-result-sub">{{ 'quiz.youAnswered' | transloco:{score: score(), total: total()} }}</p>
+
+        <div class="rq-result-actions">
+          <button mat-stroked-button (click)="retry()">
+            <mat-icon>refresh</mat-icon> {{ 'quiz.tryAgain' | transloco }}
+          </button>
+          <a mat-flat-button color="primary" [routerLink]="['/course', courseId]">
+            <mat-icon>arrow_back</mat-icon> {{ 'quiz.backToCourse' | transloco }}
+          </a>
+        </div>
+
+      </div>
+    }
+
+  } @else {
+    <div class="rq-empty">
+      <mat-icon>quiz</mat-icon>
+      <h3>{{ 'quiz.noQuestionsAvailable' | transloco }}</h3>
+      <p>{{ 'quiz.noQuestionsHint' | transloco }}</p>
+      <a mat-flat-button color="primary" [routerLink]="['/course', courseId]">
+        {{ 'quiz.backToCourse' | transloco }}
+      </a>
+    </div>
+  }
+
+</div>

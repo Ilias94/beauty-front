@@ -1,9 +1,24 @@
-<mat-card>
-  <h2>Payment Status</h2>
-  <div *ngIf="status; else loading">
-    <mat-chip [color]="statusColor()" selected>{{ status }}</mat-chip>
+@let v = view();
+<section class="status-card" [class]="'tone-' + v.tone" role="status">
+  <div class="status-icon"><mat-icon>{{ v.icon }}</mat-icon></div>
+  <h1>{{ ('payment.' + v.key + 'Title') | transloco }}</h1>
+  <p>{{ ('payment.' + v.key + 'Text') | transloco }}</p>
+  <div class="actions">
+    @switch (v.key) {
+      @case ('success') {
+        <a mat-flat-button color="primary" routerLink="/student-courses">{{ 'payment.goToMyCourses' | transloco }}</a>
+        <a mat-stroked-button routerLink="/calendar">{{ 'payment.openCalendar' | transloco }}</a>
+      }
+      @case ('failed') {
+        <a mat-flat-button color="primary" routerLink="/courses">{{ 'payment.backToCourses' | transloco }}</a>
+        <a mat-stroked-button routerLink="/my-tickets/new">{{ 'payment.contactSupport' | transloco }}</a>
+      }
+      @case ('cancelled') {
+        <a mat-flat-button color="primary" routerLink="/courses">{{ 'payment.backToCourses' | transloco }}</a>
+      }
+      @default {
+        <a mat-stroked-button routerLink="/student-courses">{{ 'payment.goToMyCourses' | transloco }}</a>
+      }
+    }
   </div>
-  <ng-template #loading>
-    <p>Loading payment status...</p>
-  </ng-template>
-</mat-card>
+</section>

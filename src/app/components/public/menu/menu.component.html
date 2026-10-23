@@ -1,28 +1,162 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
-      @if (!token()) {
-      <a mat-list-item routerLink="/login">Login</a>
-      <a mat-list-item routerLink="/registry">Register</a>
+<a class="skip-link" href="#main">{{ 'menu.skipToContent' | transloco }}</a>
+<app-progress-bar />
+
+<!-- ── Top bar ─────────────────────────────────────────── -->
+<header class="site-header" [class.scrolled]="scrolled()">
+  <div class="header-inner">
+
+    <button class="icon-btn menu-toggle" type="button" (click)="toggleDrawer()"
+      [attr.aria-expanded]="drawerOpen()" [attr.aria-label]="'menu.openMenu' | transloco">
+      <mat-icon>{{ drawerOpen() ? 'close' : 'menu' }}</mat-icon>
+    </button>
+
+    <a routerLink="/courses" class="brand" aria-label="Bellademy">
+      <img src="assets/bellademy-mark.svg" class="brand-mark" alt="" width="32" height="32">
+      <span class="wordmark">Bellademy</span>
+    </a>
+
+    <!-- Instructors: their own courses are their workplace, so the link stands apart in wine. -->
+    @if (token() && isTeacher()) {
+      <a routerLink="/creator-courses" routerLinkActive="active" class="studio-link"
+        [attr.title]="'menu.myTeaching' | transloco"
+        [attr.aria-label]="('menu.myTeaching' | transloco) + (ownedCount() ? ' (' + ownedCount() + ')' : '')">
+        <mat-icon>school</mat-icon>
+        <span>{{ 'menu.myTeaching' | transloco }}</span>
+        @if (ownedCount()) {
+          <span class="studio-count" aria-hidden="true">{{ ownedCount() }}</span>
+        }
+      </a>
+    }
+
+    <nav class="main-nav" #mainNav [class.ready]="indicator().width > 0" [attr.aria-label]="'menu.mainNavigation' | transloco">
+      <!-- Ink pill that slides to the active link (position measured in MenuComponent). -->
+      <span class="nav-indicator" aria-hidden="true" [style.left.px]="indicator().left" [style.width.px]="indicator().width"></span>
+      <a routerLink="/courses" routerLinkActive="active"><mat-icon>explore</mat-icon>{{ 'menu.browseCourses' | transloco }}</a>
+      @if (token()) {
+        <!-- Enrolled courses: the learner's main place; an instructor finds them in the account menu. -->
+        @if (!isTeacher()) {
+          <a routerLink="/student-courses" routerLinkActive="active"><mat-icon>auto_stories</mat-icon>{{ 'menu.myCourses' | transloco }}</a>
+        }
+        <a routerLink="/calendar" routerLinkActive="active"><mat-icon>calendar_month</mat-icon>{{ 'menu.calendar' | transloco }}</a>
+        <a routerLink="/group-chats" routerLinkActive="active"><mat-icon>forum</mat-icon>{{ 'menu.groupChats' | transloco }}</a>
       }
-      @else {
-      <a mat-list-item routerLink="/course">Course</a>
-      <a mat-list-item routerLink="/my-account">My-Account</a>
-      <a mat-list-item (click)="logout()">Logout</a>
-      <a mat-list-item routerLink="/calendar">Calendar</a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="lang-toggle" role="group" [attr.aria-label]="'menu.language' | transloco">
+        <button type="button" [class.on]="activeLang() === 'pl'" (click)="setLang('pl')" [attr.aria-pressed]="activeLang() === 'pl'">PL</button>
+        <button type="button" [class.on]="activeLang() === 'en'" (click)="setLang('en')" [attr.aria-pressed]="activeLang() === 'en'">EN</button>
+      </div>
+
+      @if (token()) {
+        @if (isTeacher()) {
+          <a mat-flat-button color="primary" routerLink="/course" class="create-btn">
+            <mat-icon>add</mat-icon>{{ 'menu.createCourse' | transloco }}
+          </a>
+        }
+        <app-notification-bell />
+        <button type="button" class="avatar-btn" [matMenuTriggerFor]="accountMenu"
+          [attr.aria-label]="'menu.accountMenu' | transloco">
+          @if (avatarUrl(); as url) {
+            <img [src]="url" alt="">
+          } @else {
+            <span>{{ initials() }}</span>
+          }
+        </button>
+      } @else {
+        <a routerLink="/login" class="login-link">{{ 'menu.login' | transloco }}</a>
+        <a mat-flat-button color="primary" routerLink="/registry" class="signup-btn">{{ 'menu.register' | transloco }}</a>
       }
-      <a mat-list-item routerLink="/courses">Courses</a>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <span>beauty-front</span>
-    </mat-toolbar>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    </div>
+  </div>
+</header>
+
+<!-- ── Account menu ────────────────────────────────────── -->
+<mat-menu #accountMenu="matMenu" xPosition="before" class="account-menu">
+  <div class="account-head">
+    <div class="account-name">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</div>
+    <div class="account-email">{{ currentUser()?.email }}</div>
+  </div>
+  <mat-divider />
+  @if (isTeacher()) {
+    <a mat-menu-item routerLink="/student-courses" class="menu-with-count">
+      <mat-icon>bookmark</mat-icon>
+      <span>{{ 'menu.enrolledCourses' | transloco }}</span>
+      @if (enrolledCount()) { <span class="menu-count">{{ enrolledCount() }}</span> }
+    </a>
+    <a mat-menu-item routerLink="/payouts"><mat-icon>account_balance</mat-icon>{{ 'menu.payouts' | transloco }}</a>
+  }
+  <a mat-menu-item routerLink="/my-account"><mat-icon>person</mat-icon>{{ 'menu.myAccount' | transloco }}</a>
+  <a mat-menu-item routerLink="/account"><mat-icon>tune</mat-icon>{{ 'menu.accountSettings' | transloco }}</a>
+  <a mat-menu-item routerLink="/my-tickets"><mat-icon>support_agent</mat-icon>{{ 'menu.myTickets' | transloco }}</a>
+  @if (isSupport()) {
+    <a mat-menu-item routerLink="/support/tickets"><mat-icon>headset_mic</mat-icon>{{ 'menu.supportPanel' | transloco }}</a>
+  }
+  <mat-divider />
+  <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>{{ 'menu.logout' | transloco }}</button>
+</mat-menu>
+
+<!-- ── Mobile drawer ───────────────────────────────────── -->
+@if (drawerOpen()) {
+  <div class="drawer-backdrop" (click)="drawerOpen.set(false)"></div>
+  <aside class="drawer" [attr.aria-label]="'menu.mainNavigation' | transloco">
+    <nav class="drawer-nav">
+      @if (token() && isTeacher()) {
+        <!-- Instructors: their studio comes first. -->
+        <p class="drawer-label">{{ 'menu.sectionTeaching' | transloco }}</p>
+        <a routerLink="/creator-courses" routerLinkActive="active" class="drawer-studio">
+          <mat-icon>school</mat-icon>{{ 'menu.myTeaching' | transloco }}
+          @if (ownedCount()) { <span class="studio-count">{{ ownedCount() }}</span> }
+        </a>
+        <a routerLink="/course" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"><mat-icon>add_circle</mat-icon>{{ 'menu.createCourse' | transloco }}</a>
+        <a routerLink="/payouts" routerLinkActive="active"><mat-icon>account_balance</mat-icon>{{ 'menu.payouts' | transloco }}</a>
+        <p class="drawer-label">{{ 'menu.sectionBrowse' | transloco }}</p>
+      }
+      <a routerLink="/courses" routerLinkActive="active"><mat-icon>explore</mat-icon>{{ 'menu.browseCourses' | transloco }}</a>
+      @if (token()) {
+        @if (!isTeacher()) {
+          <a routerLink="/student-courses" routerLinkActive="active"><mat-icon>auto_stories</mat-icon>{{ 'menu.myCourses' | transloco }}</a>
+        }
+        <a routerLink="/calendar" routerLinkActive="active"><mat-icon>calendar_month</mat-icon>{{ 'menu.calendar' | transloco }}</a>
+        <a routerLink="/group-chats" routerLinkActive="active"><mat-icon>forum</mat-icon>{{ 'menu.groupChats' | transloco }}</a>
+        <p class="drawer-label">{{ 'menu.sectionAccount' | transloco }}</p>
+        @if (isTeacher()) {
+          <a routerLink="/student-courses" routerLinkActive="active"><mat-icon>bookmark</mat-icon>{{ 'menu.enrolledCourses' | transloco }}</a>
+        }
+        <a routerLink="/my-account" routerLinkActive="active"><mat-icon>person</mat-icon>{{ 'menu.myAccount' | transloco }}</a>
+        <a routerLink="/account" routerLinkActive="active"><mat-icon>tune</mat-icon>{{ 'menu.accountSettings' | transloco }}</a>
+        <a routerLink="/my-tickets" routerLinkActive="active"><mat-icon>support_agent</mat-icon>{{ 'menu.myTickets' | transloco }}</a>
+        @if (isSupport()) {
+          <a routerLink="/support/tickets" routerLinkActive="active"><mat-icon>headset_mic</mat-icon>{{ 'menu.supportPanel' | transloco }}</a>
+        }
+        <button type="button" class="drawer-logout" (click)="logout()"><mat-icon>logout</mat-icon>{{ 'menu.logout' | transloco }}</button>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active"><mat-icon>login</mat-icon>{{ 'menu.login' | transloco }}</a>
+        <a routerLink="/registry" routerLinkActive="active"><mat-icon>person_add</mat-icon>{{ 'menu.register' | transloco }}</a>
+      }
+    </nav>
+  </aside>
+}
+
+<!-- ── Page ────────────────────────────────────────────── -->
+<main id="main" class="site-main">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="wordmark">Bellademy</span>
+      <p>{{ 'menu.footerTagline' | transloco }}</p>
+    </div>
+    <nav class="footer-links">
+      <a routerLink="/courses">{{ 'menu.browseCourses' | transloco }}</a>
+      @if (token()) {
+        <a routerLink="/my-tickets">{{ 'menu.myTickets' | transloco }}</a>
+      } @else {
+        <a routerLink="/registry">{{ 'menu.register' | transloco }}</a>
+      }
+    </nav>
+    <p class="footer-copy">© {{ year }} Bellademy</p>
+  </div>
+</footer>

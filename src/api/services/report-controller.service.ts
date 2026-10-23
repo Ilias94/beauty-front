@@ -9,8 +9,6 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { generateReportCsv } from '../fn/report-controller/generate-report-csv';
-import { GenerateReportCsv$Params } from '../fn/report-controller/generate-report-csv';
 import { generateReportExcel } from '../fn/report-controller/generate-report-excel';
 import { GenerateReportExcel$Params } from '../fn/report-controller/generate-report-excel';
 
@@ -41,31 +39,6 @@ export class ReportControllerService extends BaseService {
    */
   generateReportExcel(params: GenerateReportExcel$Params, context?: HttpContext): Observable<Blob> {
     return this.generateReportExcel$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Blob>): Blob => r.body)
-    );
-  }
-
-  /** Path part for operation `generateReportCsv()` */
-  static readonly GenerateReportCsvPath = '/api/v1/report/csv';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `generateReportCsv()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  generateReportCsv$Response(params: GenerateReportCsv$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
-    return generateReportCsv(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `generateReportCsv$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  generateReportCsv(params: GenerateReportCsv$Params, context?: HttpContext): Observable<Blob> {
-    return this.generateReportCsv$Response(params, context).pipe(
       map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }

@@ -1,0 +1,126 @@
+// ── Status filter tabs ─────────────────────────────────────
+.filters
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+  margin-bottom: 20px
+
+  button
+    display: inline-flex
+    align-items: center
+    gap: 8px
+    height: 38px
+    padding: 0 8px 0 16px
+    border: 1px solid var(--line-strong)
+    border-radius: var(--radius-pill)
+    background: transparent
+    font: 600 14px var(--font-ui)
+    color: var(--ink-2)
+    cursor: pointer
+    transition: all var(--dur) var(--ease)
+
+    &:hover
+      border-color: var(--ink-3)
+      color: var(--ink)
+
+    &.on
+      background: var(--ink)
+      border-color: var(--ink)
+      color: #fff
+
+      .count
+        background: rgba(255, 255, 255, 0.18)
+        color: #fff
+
+  .count
+    min-width: 24px
+    height: 24px
+    padding: 0 7px
+    border-radius: var(--radius-pill)
+    display: grid
+    place-items: center
+    background: var(--surface-2)
+    font-size: 12px
+    font-weight: 700
+    color: var(--ink-2)
+
+// ── Table ──────────────────────────────────────────────────
+.table-card
+  border-radius: var(--radius-lg)
+  overflow: hidden
+
+.ticket-table
+  width: 100%
+
+.mat-column-id
+  flex: 0 0 72px
+
+.mat-column-title
+  flex: 2 1 240px
+
+.mat-column-status
+  flex: 0 0 170px
+
+.mat-column-createdAt
+  flex: 0 0 150px
+
+.mat-column-actions
+  flex: 0 0 48px
+  justify-content: flex-end
+
+.ticket-row
+  cursor: pointer
+
+  &:hover .chev
+    color: var(--accent)
+    transform: translateX(3px)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: -2px
+
+.ticket-id
+  font-weight: 700
+  color: var(--ink-3)
+
+.title-cell
+  display: flex
+  flex-direction: column
+  padding: 10px 0
+  font-size: 12.5px
+  color: var(--ink-3)
+
+  strong
+    font-size: 14.5px
+    color: var(--ink)
+
+.muted
+  color: var(--ink-2)
+
+.chev
+  color: var(--line-strong)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
+
+// Status as a coloured pill that is also the status picker.
+.status-pill
+  height: 30px
+  padding: 0 4px 0 12px
+  cursor: pointer
+
+  mat-select
+    --mat-select-trigger-text-font: var(--font-ui)
+    --mat-select-trigger-text-size: 13px
+    --mat-select-trigger-text-weight: 700
+    --mat-select-enabled-trigger-text-color: currentColor
+    --mat-select-enabled-arrow-color: currentColor
+    width: 128px
+
+.empty-state
+  border-radius: var(--radius-lg)
+
+@media (max-width: 760px)
+  .mat-column-author, .mat-column-createdAt, .mat-column-id
+    display: none
+
+  .mat-column-status
+    flex-basis: 150px

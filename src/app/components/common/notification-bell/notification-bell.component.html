@@ -1,0 +1,37 @@
+<button mat-icon-button [matMenuTriggerFor]="notifMenu" (menuOpened)="onMenuOpen()"
+  [matBadge]="unreadCount() > 0 ? unreadCount() : null" matBadgeColor="warn" matBadgeSize="small"
+  [attr.aria-label]="'notifications.title' | transloco">
+  <mat-icon>notifications</mat-icon>
+</button>
+
+<mat-menu #notifMenu="matMenu" class="notification-panel">
+  <div class="notif-wrapper" (click)="$event.stopPropagation()">
+    <div class="notif-header">
+      <strong>{{ 'notifications.title' | transloco }}</strong>
+      @if (notifications().length > 0) {
+        <button mat-icon-button (click)="clear()" [matTooltip]="'tooltip.clearAll' | transloco">
+          <mat-icon>delete_sweep</mat-icon>
+        </button>
+      }
+    </div>
+    @if (notifications().length === 0) {
+      <div class="notif-empty">
+        <span class="empty-icon" aria-hidden="true"><mat-icon>notifications_none</mat-icon></span>
+        {{ 'notifications.empty' | transloco }}
+      </div>
+    } @else {
+      @for (n of notifications(); track $index) {
+        <div class="notif-item">
+          <span class="notif-dot" aria-hidden="true"></span>
+          <div>
+            @if (n.title) {
+              <div class="notif-title">{{ n.title }}</div>
+            }
+            <div class="notif-msg">{{ n.message }}</div>
+            <div class="notif-time">{{ n.timestamp | date:'HH:mm, d MMM' }}</div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</mat-menu>

@@ -1,0 +1,50 @@
+<div class="create-wrapper">
+  <a routerLink="/my-tickets" class="back-link"><mat-icon>arrow_back</mat-icon>{{ 'menu.myTickets' | transloco }}</a>
+  <p class="eyebrow">{{ 'tickets.eyebrow' | transloco }}</p>
+  <h1 class="page-title">{{ 'tickets.newTicketTitle' | transloco }}</h1>
+  <p class="page-subtitle">{{ 'tickets.newTicketSubtitle' | transloco }}</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="ticket-form surface">
+    @let type = form.controls.type;
+
+    <fieldset class="types">
+      <legend>{{ 'tickets.typeLabel' | transloco }}</legend>
+      <div class="type-grid" role="radiogroup">
+        @for (t of ticketTypes; track t.value) {
+          <button type="button" class="type" appSpotlight role="radio"
+                  [class.on]="type.value === t.value" [attr.aria-checked]="type.value === t.value"
+                  (click)="setType(t.value)">
+            <span class="type-icon"><mat-icon>{{ t.icon }}</mat-icon></span>
+            {{ ('tickets.types.' + t.value) | transloco }}
+          </button>
+        }
+      </div>
+      @if (type.touched && type.invalid) {
+        <p class="error">{{ 'tickets.typeRequired' | transloco }}</p>
+      }
+    </fieldset>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'tickets.titleLabel' | transloco }}</mat-label>
+      <input matInput formControlName="title" maxlength="255" [placeholder]="'tickets.titlePlaceholder' | transloco" />
+      @if (form.get('title')?.hasError('required')) {
+        <mat-error>{{ 'tickets.titleRequired' | transloco }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'tickets.descriptionLabel' | transloco }}</mat-label>
+      <textarea matInput formControlName="description" rows="6" [placeholder]="'tickets.descriptionPlaceholder' | transloco"></textarea>
+      @if (form.get('description')?.hasError('required')) {
+        <mat-error>{{ 'tickets.descriptionRequired' | transloco }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="actions">
+      <a mat-button routerLink="/my-tickets">{{ 'tickets.cancel' | transloco }}</a>
+      <button mat-flat-button color="primary" type="submit">
+        <mat-icon iconPositionEnd>send</mat-icon>{{ 'tickets.submit' | transloco }}
+      </button>
+    </div>
+  </form>
+</div>

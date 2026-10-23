@@ -1,0 +1,51 @@
+.page-header .mat-icon
+  margin-right: 4px
+
+.list
+  list-style: none
+  padding: 0
+  margin: 0
+  border: 1px solid var(--line)
+  border-radius: var(--radius)
+  background: var(--surface)
+  overflow: hidden
+
+  li + li
+    border-top: 1px solid var(--line)
+
+.item
+  display: flex
+  align-items: center
+  gap: 16px
+  padding: 16px 20px
+  color: var(--ink)
+  transition: background var(--dur) var(--ease)
+
+  &:hover
+    color: var(--ink)
+    background: var(--surface-2)
+
+    .chevron
+      color: var(--ink)
+      transform: translateX(2px)
+
+.item-main
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: 2px
+
+.item-title
+  font-weight: 700
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.item-meta
+  font-size: 13px
+  color: var(--ink-3)
+
+.chevron
+  color: var(--ink-3)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)

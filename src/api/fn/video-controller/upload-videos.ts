@@ -18,7 +18,7 @@ export function uploadVideos(http: HttpClient, rootUrl: string, params: UploadVi
   const rb = new RequestBuilder(rootUrl, uploadVideos.PATH, 'post');
   if (params) {
     rb.path('courseId', params.courseId, {});
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(

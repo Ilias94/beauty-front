@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { TranslocoTestingModule } from '@jsverse/transloco';
+import { Store } from '@ngxs/store';
+import { EMPTY } from 'rxjs';
 
 import { ResolveQuestionsComponent } from './resolve-questions.component';
 
@@ -8,7 +12,11 @@ describe('ResolveQuestionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResolveQuestionsComponent]
+      imports: [ResolveQuestionsComponent, TranslocoTestingModule.forRoot({ langs: {} })],
+      providers: [
+        provideRouter([]),
+        { provide: Store, useValue: { select: () => EMPTY, dispatch: () => EMPTY } }
+      ]
     })
     .compileComponents();
     

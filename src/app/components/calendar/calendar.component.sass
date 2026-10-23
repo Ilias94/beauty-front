@@ -1,0 +1,714 @@
+:host
+  display: block
+  max-width: var(--content-max)
+  margin: 0 auto
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
+  // ── FullCalendar CSS variable overrides ──────────────────────
+  --fc-border-color: var(--line)
+  --fc-today-bg-color: transparent
+  --fc-page-bg-color: var(--surface)
+  --fc-neutral-bg-color: var(--bg)
+  --fc-neutral-text-color: var(--ink)
+  --fc-now-indicator-color: var(--accent)
+  --fc-small-font-size: 12px
+
+  // Relation colours, shared by filters, plan rows and the details tag.
+  --rel-owner: var(--accent)
+  --rel-owner-soft: var(--accent-soft)
+  --rel-enrolled: var(--info)
+  --rel-enrolled-soft: var(--info-soft)
+  --rel-catalog: var(--ink-2)
+  --rel-catalog-soft: var(--surface-2)
+
+.rel-owner
+  --rel: var(--rel-owner)
+  --rel-soft: var(--rel-owner-soft)
+
+.rel-enrolled
+  --rel: var(--rel-enrolled)
+  --rel-soft: var(--rel-enrolled-soft)
+
+.rel-catalog
+  --rel: var(--rel-catalog)
+  --rel-soft: var(--rel-catalog-soft)
+
+// ── Layout ───────────────────────────────────────────────────
+.cal-layout
+  display: grid
+  grid-template-columns: 280px minmax(0, 1fr)
+  gap: 24px
+  align-items: start
+
+.side
+  position: sticky
+  top: calc(var(--header-h) + 20px)
+  display: flex
+  flex-direction: column
+  gap: 16px
+
+.filters, .mini, .main
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  box-shadow: var(--shadow-1)
+
+// ── Filters ──────────────────────────────────────────────────
+.filters
+  display: flex
+  flex-direction: column
+  gap: 6px
+  padding: 16px
+
+.side-label
+  margin-bottom: 4px
+  font-size: 12px
+  font-weight: 700
+  letter-spacing: 0.1em
+  text-transform: uppercase
+  color: var(--ink-3)
+
+.filter
+  display: flex
+  align-items: center
+  gap: 10px
+  width: 100%
+  padding: 9px 10px
+  border: 0
+  border-radius: var(--radius-sm)
+  background: transparent
+  font: 600 14px var(--font-ui)
+  color: var(--ink-2)
+  text-align: left
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+  &:hover
+    background: var(--bg)
+    color: var(--ink)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 1px
+
+  .check
+    width: 20px
+    height: 20px
+    flex-shrink: 0
+    border-radius: 6px
+    display: grid
+    place-items: center
+    border: 1.5px solid var(--rel)
+    color: transparent
+    transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease)
+
+    .mat-icon
+      font-size: 15px
+      width: 15px
+      height: 15px
+
+  .filter-label
+    flex: 1
+
+  .count
+    min-width: 26px
+    padding: 1px 8px
+    border-radius: var(--radius-pill)
+    background: var(--surface-2)
+    font-size: 12px
+    font-weight: 700
+    text-align: center
+    color: var(--ink-2)
+
+  &.on
+    color: var(--ink)
+
+    .check
+      background: var(--rel)
+      color: #fff
+
+    .count
+      background: var(--rel-soft)
+      color: var(--rel)
+
+.hint
+  margin-top: 6px
+  padding: 0 4px
+  font-size: 12.5px
+  line-height: 1.45
+  color: var(--ink-3)
+
+// ── Mini calendar ────────────────────────────────────────────
+.mini
+  padding: 4px 8px 8px
+  overflow: hidden
+
+  ::ng-deep
+    .mat-calendar
+      --mat-datepicker-calendar-date-selected-state-background-color: var(--ink)
+      --mat-datepicker-calendar-date-today-outline-color: var(--accent)
+      --mat-datepicker-calendar-date-hover-state-background-color: var(--surface-2)
+      font-family: var(--font-ui)
+
+    .mat-calendar-body-label
+      opacity: 0
+
+    // A small dot under days with a course.
+    .has-course .mat-calendar-body-cell-content::after
+      content: ''
+      position: absolute
+      bottom: 3px
+      left: 50%
+      width: 5px
+      height: 5px
+      margin-left: -2.5px
+      border-radius: 50%
+      background: var(--accent)
+
+    .has-course.mat-calendar-body-active .mat-calendar-body-selected::after
+      background: #fff
+
+// ── Main card & toolbar ──────────────────────────────────────
+.main
+  min-width: 0
+  padding: clamp(16px, 2.5vw, 24px)
+
+.toolbar
+  display: flex
+  align-items: center
+  gap: 12px
+  flex-wrap: wrap
+  margin-bottom: 20px
+
+.nav
+  display: flex
+  align-items: center
+  gap: 6px
+
+.round, .pill
+  height: 38px
+  border: 1px solid var(--line-strong)
+  border-radius: var(--radius-pill)
+  background: var(--surface)
+  font: 700 13.5px var(--font-ui)
+  color: var(--ink)
+  cursor: pointer
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), transform 120ms var(--ease)
+
+  &:hover
+    background: var(--surface-2)
+    border-color: var(--ink-3)
+
+  &:active
+    transform: scale(0.96)
+
+.round
+  width: 38px
+  display: grid
+  place-items: center
+  padding: 0
+
+.pill
+  padding: 0 16px
+
+.range-title
+  flex: 1
+  min-width: 160px
+  font-size: clamp(22px, 2.6vw, 28px)
+
+  // "październik 2026" -> "Październik 2026" without capitalising every word.
+  &::first-letter
+    text-transform: uppercase
+
+.views
+  display: inline-flex
+  padding: 4px
+  border-radius: var(--radius-pill)
+  background: var(--surface-2)
+
+  button
+    display: inline-flex
+    align-items: center
+    gap: 6px
+    height: 34px
+    padding: 0 14px
+    border: 0
+    border-radius: var(--radius-pill)
+    background: transparent
+    font: 700 13.5px var(--font-ui)
+    color: var(--ink-2)
+    cursor: pointer
+    transition: all var(--dur) var(--ease)
+
+    .mat-icon
+      font-size: 18px
+      width: 18px
+      height: 18px
+
+    &:hover
+      color: var(--ink)
+
+    &.on
+      background: var(--surface)
+      color: var(--ink)
+      box-shadow: var(--shadow-1)
+
+// ── My plan ──────────────────────────────────────────────────
+.plan
+  display: flex
+  flex-direction: column
+  gap: 22px
+
+.plan-sk
+  height: 74px
+  border-radius: var(--radius)
+
+.day
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+  &.past
+    margin-top: -8px
+
+.day-label
+  font: 700 13px var(--font-ui)
+  letter-spacing: 0.06em
+  text-transform: uppercase
+  color: var(--ink-3)
+
+  &::first-letter
+    text-transform: uppercase
+
+.plan-item
+  display: flex
+  align-items: center
+  gap: 16px
+  width: 100%
+  padding: 14px 14px 14px 16px
+  border: 1px solid var(--line)
+  border-left: 4px solid var(--rel)
+  border-radius: var(--radius)
+  background: var(--surface)
+  font-family: var(--font-ui)
+  text-align: left
+  color: var(--ink)
+  cursor: pointer
+  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease), border-color var(--dur) var(--ease)
+
+  &:hover
+    box-shadow: var(--shadow-2)
+    transform: translateY(-1px)
+
+    .chev
+      color: var(--rel)
+      transform: translateX(3px)
+
+  &:focus-visible
+    outline: 2px solid var(--accent)
+    outline-offset: 2px
+
+  &.is-past
+    opacity: 0.6
+
+.time
+  width: 92px
+  flex-shrink: 0
+  display: flex
+  flex-direction: column
+  gap: 2px
+
+  strong
+    font-size: 15px
+    color: var(--rel)
+
+  small
+    font-size: 12px
+    color: var(--ink-3)
+
+.info
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: 4px
+
+  .title
+    font-size: 15.5px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.meta
+  display: flex
+  align-items: center
+  flex-wrap: wrap
+  gap: 2px 4px
+  font-size: 13px
+  color: var(--ink-2)
+
+  .mat-icon
+    font-size: 16px
+    width: 16px
+    height: 16px
+    color: var(--ink-3)
+
+  .sep
+    color: var(--line-strong)
+
+  .rel-label
+    font-weight: 700
+    color: var(--rel)
+
+// "Ongoing" pill with a pulsing dot.
+.live
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  padding: 4px 10px
+  border-radius: var(--radius-pill)
+  background: var(--success-soft)
+  font-size: 12px
+  font-weight: 700
+  color: var(--success)
+  white-space: nowrap
+
+  &::before
+    content: ''
+    width: 7px
+    height: 7px
+    border-radius: 50%
+    background: var(--success)
+    animation: pulse 1.6s ease-in-out infinite
+
+@keyframes pulse
+  50%
+    box-shadow: 0 0 0 5px rgba(62, 123, 87, 0.2)
+
+.chev
+  color: var(--line-strong)
+  transition: transform var(--dur) var(--ease), color var(--dur) var(--ease)
+
+.nothing-ahead
+  display: flex
+  align-items: center
+  gap: 8px
+  color: var(--ink-2)
+
+.past-toggle
+  align-self: flex-start
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  padding: 8px 4px
+  border: 0
+  background: transparent
+  font: 700 14px var(--font-ui)
+  color: var(--ink-2)
+  cursor: pointer
+
+  &:hover
+    color: var(--ink)
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+
+// ── Month / week grids ───────────────────────────────────────
+.grid-wrap
+  position: relative
+
+.range-empty
+  position: absolute
+  inset: 40px 0 0
+  z-index: 3
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 12px
+  padding: 24px
+  text-align: center
+  color: var(--ink-2)
+  background: rgba(255, 255, 255, 0.72)
+  backdrop-filter: blur(1.5px)
+  animation: rise 320ms var(--ease) backwards
+  pointer-events: none
+
+  > *
+    pointer-events: auto
+
+.empty-icon
+  width: 52px
+  height: 52px
+  border-radius: 50%
+  display: grid
+  place-items: center
+  background: var(--surface-2)
+  color: var(--ink-3)
+
+:host ::ng-deep
+  .fc-theme-standard .fc-scrollgrid
+    border: 0
+
+  .fc-theme-standard td, .fc-theme-standard th
+    border-color: var(--line)
+
+  .fc-theme-standard .fc-scrollgrid td:last-child, .fc-theme-standard .fc-scrollgrid th:last-child
+    border-right: 0
+
+  .fc-col-header-cell
+    border-width: 0 0 1px !important
+    padding: 0 0 10px
+    font: 700 11.5px var(--font-ui)
+    letter-spacing: 0.1em
+    text-transform: uppercase
+    color: var(--ink-3)
+    background: transparent
+
+    a
+      color: inherit
+
+  .fc-daygrid-day
+    transition: background-color var(--dur) var(--ease)
+
+    &:hover
+      background: var(--bg)
+
+  .fc-daygrid-day-frame
+    min-height: 104px
+
+  .fc-daygrid-day-top
+    flex-direction: row
+
+  .fc-daygrid-day-number
+    display: grid
+    place-items: center
+    min-width: 28px
+    height: 28px
+    margin: 6px
+    padding: 0 6px
+    border-radius: var(--radius-pill)
+    font: 600 13px var(--font-ui)
+    color: var(--ink-2)
+
+  .fc-day-other .fc-daygrid-day-number
+    color: var(--line-strong)
+
+  .fc-day-today .fc-daygrid-day-number
+    background: var(--accent)
+    color: #fff
+    box-shadow: 0 4px 10px -4px rgba(140, 47, 75, 0.7)
+
+  // Events: soft tint, strong text, coloured left edge; status on top.
+  .fc-event
+    cursor: pointer
+    margin: 1px 6px 3px !important
+    padding: 3px 8px
+    border-width: 0 0 0 3px !important
+    border-style: solid !important
+    border-radius: 7px
+    font: 600 12px var(--font-ui)
+    transition: transform 140ms var(--ease), box-shadow 140ms var(--ease)
+
+    .fc-event-main
+      color: inherit
+
+    &:hover
+      transform: translateY(-1px)
+      box-shadow: 0 6px 14px -8px rgba(31, 26, 23, 0.35)
+
+  .fc-event.is-past
+    opacity: 0.5
+
+  .fc-event.is-ongoing .fc-event-title::before
+    content: ''
+    display: inline-block
+    width: 6px
+    height: 6px
+    margin-right: 5px
+    vertical-align: 1px
+    border-radius: 50%
+    background: var(--success)
+    animation: pulse 1.6s ease-in-out infinite
+
+  .fc-daygrid-more-link
+    margin-left: 8px
+    font: 700 12px var(--font-ui)
+    color: var(--accent)
+
+  .fc-popover
+    border: 1px solid var(--line)
+    border-radius: var(--radius)
+    box-shadow: var(--shadow-3)
+    overflow: hidden
+
+    .fc-popover-header
+      background: var(--surface-2)
+      font: 700 13px var(--font-ui)
+
+  // Week view (time grid)
+  .fc-timegrid-slot
+    height: 2.4em
+
+  .fc-timegrid-slot-label, .fc-timegrid-axis
+    font: 600 12px var(--font-ui)
+    color: var(--ink-3)
+
+  .fc-timegrid-event
+    margin: 1px 2px !important
+    border-radius: 8px
+    box-shadow: none
+
+  .fc-timegrid-col.fc-day-today
+    background: rgba(140, 47, 75, 0.03)
+
+// ── Details panel ────────────────────────────────────────────
+.backdrop
+  position: fixed
+  inset: 0
+  z-index: 1100
+  background: rgba(31, 26, 23, 0.32)
+  backdrop-filter: blur(2px)
+  animation: fade-in 200ms var(--ease)
+
+.details
+  position: fixed
+  top: 12px
+  right: 12px
+  bottom: 12px
+  z-index: 1101
+  width: min(420px, calc(100vw - 24px))
+  display: flex
+  flex-direction: column
+  gap: 10px
+  padding: 20px 24px 24px
+  overflow-y: auto
+  background: var(--surface)
+  border-radius: var(--radius-lg)
+  box-shadow: var(--shadow-3)
+  animation: slide-in 320ms var(--ease)
+
+  h2
+    font-size: 26px
+
+.details-head
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 4px
+
+.rel-tag
+  background: var(--rel-soft)
+  color: var(--rel)
+
+.status-tag
+  align-self: flex-start
+
+.facts
+  list-style: none
+  margin: 8px 0 4px
+  padding: 14px 16px
+  display: flex
+  flex-direction: column
+  gap: 10px
+  border-radius: var(--radius)
+  background: var(--bg)
+
+  li
+    display: flex
+    align-items: flex-start
+    gap: 10px
+    font-size: 14.5px
+
+  .mat-icon
+    font-size: 19px
+    width: 19px
+    height: 19px
+    color: var(--ink-3)
+
+.details-actions
+  display: flex
+  flex-direction: column
+  gap: 8px
+  margin-top: 8px
+
+  > *
+    width: 100%
+    justify-content: center
+
+@keyframes fade-in
+  from
+    opacity: 0
+
+@keyframes slide-in
+  from
+    opacity: 0
+    transform: translateX(24px)
+
+// ── Responsive ───────────────────────────────────────────────
+@media (max-width: 980px)
+  .cal-layout
+    grid-template-columns: 1fr
+
+  .side
+    position: static
+
+  .mini
+    display: none
+
+  // Filters become one swipeable row of chips.
+  .filters
+    flex-direction: row
+    flex-wrap: wrap
+    padding: 0
+    background: transparent
+    border: 0
+    box-shadow: none
+
+    .side-label, .hint
+      display: none
+
+  .filter
+    width: auto
+    border: 1px solid var(--line-strong)
+    border-radius: var(--radius-pill)
+    background: var(--surface)
+
+@media (max-width: 640px)
+  .views button span
+    display: none
+
+  .time
+    width: 64px
+
+  .plan-item
+    gap: 12px
+    padding: 12px
+
+  .live
+    display: none
+
+  .details
+    top: auto
+    left: 0
+    right: 0
+    bottom: 0
+    width: 100%
+    max-height: 88vh
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0
+    animation-name: slide-up
+
+  :host ::ng-deep .fc-daygrid-day-frame
+    min-height: 64px
+
+  :host ::ng-deep .fc-event
+    margin: 1px 2px 2px !important
+    padding: 1px 4px
+    font-size: 10.5px
+
+@keyframes slide-up
+  from
+    transform: translateY(40px)
+    opacity: 0

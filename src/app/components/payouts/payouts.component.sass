@@ -1,0 +1,93 @@
+:host
+  display: grid
+  place-items: center
+  min-height: calc(100vh - var(--header-h) - 180px)
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
+.payouts-card
+  width: 100%
+  max-width: 560px
+  padding: 40px 36px 32px
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  box-shadow: var(--shadow-2)
+  animation: rise 420ms var(--ease) backwards
+
+  header
+    text-align: center
+
+  h1
+    font-size: clamp(26px, 4vw, 32px)
+    margin-top: 16px
+
+  .lead
+    color: var(--ink-2)
+    margin: 8px auto 0
+    max-width: 44ch
+
+  mat-spinner
+    margin: 32px auto 8px
+
+.payouts-icon
+  width: 64px
+  height: 64px
+  margin: 0 auto
+  border-radius: 50%
+  display: grid
+  place-items: center
+  background: var(--surface-2)
+  color: var(--ink)
+
+.state
+  display: flex
+  gap: 12px
+  align-items: flex-start
+  margin-top: 28px
+  padding: 16px
+  border-radius: var(--radius)
+  border: 1px solid var(--line)
+
+  .mat-icon
+    flex: none
+
+  strong
+    display: block
+
+  p
+    margin: 4px 0 0
+    color: var(--ink-2)
+
+.state-success
+  background: var(--success-soft)
+  border-color: transparent
+  .mat-icon
+    color: var(--success)
+
+.state-pending
+  background: var(--warning-soft)
+  border-color: transparent
+  .mat-icon
+    color: var(--warning)
+
+.state-danger
+  background: var(--danger-soft)
+  border-color: transparent
+  .mat-icon
+    color: var(--danger)
+
+.actions
+  display: flex
+  gap: 10px
+  justify-content: center
+  flex-wrap: wrap
+  margin-top: 24px
+
+  .mat-icon
+    margin-right: 6px
+
+.fine-print
+  margin-top: 28px
+  font-size: 13px
+  color: var(--ink-3)
+  text-align: center

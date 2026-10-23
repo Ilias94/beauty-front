@@ -1,12 +1,23 @@
-@for(comment of comments(); track comment.id){
-    <mat-card class="example-card" appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>{{comment.authorName}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{comment.content}}</p>
-        </mat-card-content>
-      </mat-card>
-} @empty {
-    <div>There is no comments for course</div>
+@if (comments()?.length) {
+  <ul class="reviews">
+    @for (comment of comments(); track comment.id) {
+      <li class="review">
+        <span class="avatar" aria-hidden="true">{{ initials(comment.authorName) }}</span>
+        <div class="review-body">
+          <div class="review-head">
+            <span class="author">{{ comment.authorName }}</span>
+            @if (comment.createdDate) {
+              <time class="date" [attr.datetime]="comment.createdDate">{{ comment.createdDate | dateRange }}</time>
+            }
+          </div>
+          <p class="content">{{ comment.content }}</p>
+        </div>
+      </li>
+    }
+  </ul>
+} @else {
+  <div class="empty">
+    <span class="empty-icon" aria-hidden="true"><mat-icon>rate_review</mat-icon></span>
+    <p>{{ emptyKey() | transloco }}</p>
+  </div>
 }

@@ -1,5 +1,434 @@
-<form [formGroup]="form">
-    <formly-form [form]="form" [fields]="fields"></formly-form>
-    <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="submit()">Save</button>
-  </form>
+@let v = form.getRawValue();
+<div class="wizard">
 
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="wz-head">
+    @if (editId) {
+      <a [routerLink]="['/course', editId]" class="back"><mat-icon>arrow_back</mat-icon>{{ 'courseWizard.backToCourse' | transloco }}</a>
+      <h1 class="page-title">{{ 'courseWizard.editTitle' | transloco }}</h1>
+    } @else {
+      <a routerLink="/creator-courses" class="back"><mat-icon>arrow_back</mat-icon>{{ 'menu.myTeaching' | transloco }}</a>
+      <h1 class="page-title">{{ 'courseWizard.title' | transloco }}</h1>
+    }
+  </header>
+
+  @if (draftFound(); as draft) {
+    <div class="draft-banner" role="status">
+      <mat-icon>history</mat-icon>
+      <span>{{ 'courseWizard.draftFound' | transloco: { date: (draft.savedAt | dateRange: null : true) } }}</span>
+      <button mat-flat-button color="primary" type="button" class="btn-sm" (click)="restoreDraft()">{{ 'courseWizard.draftRestore' | transloco }}</button>
+      <button mat-button type="button" class="btn-sm" (click)="discardDraft()">{{ 'courseWizard.draftDiscard' | transloco }}</button>
+    </div>
+  }
+
+  @if (editId && !original()) {
+    <!-- Edit mode: the form appears once the saved course has loaded. -->
+    @if (loadError()) {
+      <p class="error">{{ 'courseWizard.loadError' | transloco }}</p>
+    } @else {
+      <div class="skeleton" style="height: 420px; border-radius: var(--radius-lg)"></div>
+    }
+  } @else {
+  <!-- ── Progress ───────────────────────────────────────── -->
+  <nav class="wz-progress" [attr.aria-label]="'courseWizard.progressLabel' | transloco">
+    <ol>
+      @for (s of steps; track s; let i = $index) {
+        <li [class.current]="i === step()" [class.done]="i < step() || (i <= maxReached() && i !== step() && stepValid(i))">
+          <button type="button" (click)="goTo(i)" [disabled]="i > maxReached() + 1"
+            [attr.aria-current]="i === step() ? 'step' : null">
+            <span class="dot">
+              @if (i < step() || (i <= maxReached() && i !== step() && stepValid(i))) {
+                <mat-icon>check</mat-icon>
+              } @else {
+                {{ i + 1 }}
+              }
+            </span>
+            <span class="label">{{ ('courseWizard.steps.' + s) | transloco }}</span>
+          </button>
+        </li>
+      }
+    </ol>
+    <div class="bar"><span [style.width.%]="(step() / (steps.length - 1)) * 100"></span></div>
+  </nav>
+
+  <div class="layout">
+    <!-- ── Steps ────────────────────────────────────────── -->
+    <form class="steps" [formGroup]="form" (ngSubmit)="next()" novalidate>
+      @switch (stepKey()) {
+
+        <!-- 1. Basics -->
+        @case ('basics') {
+          <section class="step" [class.from-back]="direction() === 'back'" formGroupName="basics">
+            <h2>{{ 'courseWizard.basicsTitle' | transloco }}</h2>
+            <p class="step-lead">{{ 'courseWizard.basicsLead' | transloco }}</p>
+
+            <p class="field-label">{{ 'courseWizard.typeLabel' | transloco }}</p>
+            <div class="type-tiles" role="radiogroup">
+              @for (t of courseTypes; track t.value) {
+                <button type="button" class="tile" appSpotlight role="radio" [attr.aria-checked]="v.basics.courseType === t.value"
+                  [class.on]="v.basics.courseType === t.value" (click)="setType(t.value)">
+                  <mat-icon>{{ t.icon }}</mat-icon>
+                  <strong>{{ ('courseWizard.types.' + t.value) | transloco }}</strong>
+                  <span>{{ ('courseWizard.typesDesc.' + t.value) | transloco }}</span>
+                </button>
+              }
+            </div>
+
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>{{ 'courseWizard.titleLabel' | transloco }}</mat-label>
+              <input matInput formControlName="title" maxlength="120" [placeholder]="'courseWizard.titlePlaceholder' | transloco" cdkFocusInitial>
+              <mat-hint align="end">{{ v.basics.title.length }}/120</mat-hint>
+              <mat-error>{{ 'courseWizard.titleError' | transloco }}</mat-error>
+            </mat-form-field>
+
+            <p class="field-label">{{ 'courseWizard.categoryLabel' | transloco }}</p>
+            <div class="cat-tiles" role="radiogroup">
+              @for (c of categories; track c.label) {
+                <button type="button" class="cat" appSpotlight role="radio" [attr.aria-checked]="v.basics.category === c.label"
+                  [class.on]="v.basics.category === c.label" (click)="setCategory(c.label)"
+                  [style.--tint]="c.visual.tint" [style.--ink]="c.visual.ink">
+                  <span class="cat-icon"><mat-icon>{{ c.visual.icon }}</mat-icon></span>
+                  <span>{{ c.key | transloco }}</span>
+                </button>
+              }
+            </div>
+            @if (form.controls.basics.controls.category.touched && form.controls.basics.controls.category.invalid) {
+              <p class="error">{{ 'courseWizard.categoryError' | transloco }}</p>
+            }
+          </section>
+        }
+
+        <!-- 2. Details -->
+        @case ('details') {
+          <section class="step" [class.from-back]="direction() === 'back'" formGroupName="details">
+            <h2>{{ 'courseWizard.detailsTitle' | transloco }}</h2>
+            <p class="step-lead">{{ 'courseWizard.detailsLead' | transloco }}</p>
+
+            <div class="ai-row">
+              <button mat-stroked-button type="button" class="ai-btn" (click)="suggestDescription()"
+                [disabled]="aiLoading() || !v.basics.title.trim()">
+                @if (aiLoading()) {
+                  <mat-spinner diameter="16" />
+                } @else {
+                  <mat-icon>auto_awesome</mat-icon>
+                }
+                {{ (v.details.description ? 'courseWizard.aiReplace' : 'courseWizard.aiSuggest') | transloco }}
+              </button>
+              @if (previousDescription() !== null && !aiLoading()) {
+                <button mat-button type="button" class="btn-sm" (click)="undoSuggestion()">
+                  <mat-icon>undo</mat-icon>{{ 'courseWizard.aiUndo' | transloco }}
+                </button>
+              }
+              <span class="hint">{{ 'courseWizard.aiHint' | transloco }}</span>
+            </div>
+
+            <mat-form-field appearance="outline" class="full" [class.ai-writing]="aiLoading()">
+              <mat-label>{{ 'courseWizard.descriptionLabel' | transloco }}</mat-label>
+              <textarea matInput formControlName="description" rows="7" [placeholder]="'courseWizard.descriptionPlaceholder' | transloco"></textarea>
+              <mat-hint align="end">{{ v.details.description.length }}</mat-hint>
+              <mat-error>{{ 'courseWizard.descriptionError' | transloco }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>{{ 'courseWizard.outcomesLabel' | transloco }}</mat-label>
+              <mat-chip-grid #outcomeGrid>
+                @for (o of v.details.outcomes; track $index) {
+                  <mat-chip-row (removed)="removeOutcome($index)">
+                    {{ o }}
+                    <button matChipRemove [attr.aria-label]="'courseWizard.remove' | transloco"><mat-icon>close</mat-icon></button>
+                  </mat-chip-row>
+                }
+                <input [placeholder]="'courseWizard.outcomesPlaceholder' | transloco" [matChipInputFor]="outcomeGrid"
+                  (matChipInputTokenEnd)="addOutcome($event)" (keydown.enter)="$event.preventDefault()">
+              </mat-chip-grid>
+              <mat-hint>{{ 'courseWizard.outcomesHint' | transloco }}</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>{{ 'courseWizard.prerequisitesLabel' | transloco }}</mat-label>
+              <textarea matInput formControlName="prerequisites" rows="3" [placeholder]="'courseWizard.prerequisitesPlaceholder' | transloco"></textarea>
+            </mat-form-field>
+          </section>
+        }
+
+        <!-- 3. Photos: kept in the browser until the course is created, then uploaded. -->
+        @case ('photos') {
+          <section class="step" [class.from-back]="direction() === 'back'">
+            <h2>{{ 'courseWizard.photosTitle' | transloco }}</h2>
+            <p class="step-lead">{{ 'courseWizard.photosLead' | transloco }}</p>
+            <app-gallery-editor [initialPhotos]="photos()" (photosChange)="photos.set($event)" (coverChange)="coverPreview.set($event)" />
+            <ul class="photo-tips">
+              <li><mat-icon>photo_camera</mat-icon>{{ 'courseWizard.photoTip1' | transloco }}</li>
+              <li><mat-icon>wb_sunny</mat-icon>{{ 'courseWizard.photoTip2' | transloco }}</li>
+              <li><mat-icon>face</mat-icon>{{ 'courseWizard.photoTip3' | transloco }}</li>
+            </ul>
+          </section>
+        }
+
+        <!-- 4. Schedule & place -->
+        @case ('schedule') {
+          <section class="step" [class.from-back]="direction() === 'back'" formGroupName="schedule">
+            <h2>{{ 'courseWizard.scheduleTitle' | transloco }}</h2>
+            <p class="step-lead">{{ 'courseWizard.scheduleLead' | transloco }}</p>
+
+            <div class="sched-block">
+              <h3 class="block-title"><mat-icon>event</mat-icon>{{ 'courseWizard.whenTitle' | transloco }}</h3>
+
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>{{ 'courseWizard.datesLabel' | transloco }}</mat-label>
+                <mat-date-range-input [rangePicker]="picker" [min]="minDate" (click)="picker.open()">
+                  <input matStartDate formControlName="startDate" [placeholder]="'courseWizard.from' | transloco">
+                  <input matEndDate formControlName="endDate" [placeholder]="'courseWizard.to' | transloco">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker" />
+                <mat-date-range-picker #picker />
+                <mat-hint>{{ 'courseWizard.datesHint' | transloco }}</mat-hint>
+                <mat-error>{{ 'courseWizard.datesError' | transloco }}</mat-error>
+              </mat-form-field>
+
+              <div class="grid-2">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>{{ 'courseWizard.startTime' | transloco }}</mat-label>
+                  <input matInput [matTimepicker]="startPicker" formControlName="startTime">
+                  <mat-timepicker-toggle matIconSuffix [for]="startPicker" />
+                  <mat-timepicker #startPicker interval="15min" />
+                  <mat-error>{{ 'courseWizard.timeError' | transloco }}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>{{ 'courseWizard.endTime' | transloco }}</mat-label>
+                  <input matInput [matTimepicker]="endPicker" [matTimepickerMin]="form.controls.schedule.controls.startTime.value" formControlName="endTime">
+                  <mat-timepicker-toggle matIconSuffix [for]="endPicker" />
+                  <mat-timepicker #endPicker interval="15min" />
+                  <mat-error>{{ 'courseWizard.endTimeError' | transloco }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              @if (scheduleSummary(); as s) {
+                <p class="sched-summary">
+                  <mat-icon>schedule</mat-icon>
+                  <span>
+                    {{ previewCourse().startDate | dateRange: previewCourse().endDate }}
+                    · {{ s.days | plural: 'courses.durationDays' | transloco: { count: s.days } }}
+                    · {{ v.schedule.startTime | date: 'HH:mm' }}–{{ v.schedule.endTime | date: 'HH:mm' }}
+                    · {{ s.perDay }} {{ 'courseWizard.perDay' | transloco }}
+                  </span>
+                </p>
+              }
+            </div>
+
+            @if (isOnline()) {
+              <div class="note"><mat-icon>videocam</mat-icon>{{ 'courseWizard.onlineNote' | transloco }}</div>
+            } @else {
+              <div formGroupName="address" class="sched-block address">
+                <h3 class="block-title"><mat-icon>place</mat-icon>{{ 'courseWizard.addressLabel' | transloco }}</h3>
+                @if (addressSuggestions().length) {
+                  <div class="recent-addresses">
+                    <span class="recent-label">{{ 'courseWizard.recentAddresses' | transloco }}</span>
+                    @for (a of addressSuggestions(); track $index) {
+                      <button type="button" class="recent-address" (click)="useAddress(a)">
+                        <mat-icon>history</mat-icon>
+                        <span>{{ a.street }} {{ a.streetNumber }}@if (a.apartmentNumber) {/{{ a.apartmentNumber }}}, {{ a.city }}</span>
+                      </button>
+                    }
+                  </div>
+                }
+                <div class="addr-row wide-first">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.street' | transloco }}</mat-label>
+                    <input matInput formControlName="street" autocomplete="address-line1">
+                    <mat-error>{{ 'auth.required' | transloco }}</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.streetNo' | transloco }}</mat-label>
+                    <input matInput formControlName="streetNumber">
+                    <mat-error>{{ 'auth.required' | transloco }}</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="addr-row wide-first">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.city' | transloco }}</mat-label>
+                    <input matInput formControlName="city" autocomplete="address-level2" [matAutocomplete]="cityAuto">
+                    <mat-autocomplete #cityAuto>
+                      @for (city of citySuggestions(); track city) {
+                        <mat-option [value]="city">{{ city }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                    <mat-error>{{ 'auth.required' | transloco }}</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.apartmentNo' | transloco }}</mat-label>
+                    <input matInput formControlName="apartmentNumber" autocomplete="address-line2">
+                  </mat-form-field>
+                </div>
+                <div class="addr-row wide-last">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.postalCode' | transloco }}</mat-label>
+                    <input matInput formControlName="postalCode" placeholder="00-000" autocomplete="postal-code"
+                      inputmode="numeric" maxlength="6" (input)="formatPostalCode()">
+                    <mat-error>{{ 'courseWizard.postalCodeError' | transloco }}</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>{{ 'courseForm.district' | transloco }}</mat-label>
+                    <input matInput formControlName="district">
+                  </mat-form-field>
+                </div>
+              </div>
+            }
+          </section>
+        }
+
+        <!-- 5. Price & group -->
+        @case ('pricing') {
+          <section class="step" [class.from-back]="direction() === 'back'" formGroupName="pricing">
+            <h2>{{ 'courseWizard.pricingTitle' | transloco }}</h2>
+            <p class="step-lead">{{ 'courseWizard.pricingLead' | transloco }}</p>
+
+            <div class="grid-2">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'courseWizard.priceLabel' | transloco }}</mat-label>
+                <input matInput type="number" min="0" step="10" formControlName="price" inputmode="decimal">
+                <span matTextSuffix>zł</span>
+                <mat-hint>{{ 'courseWizard.priceHint' | transloco }}</mat-hint>
+                <mat-error>{{ 'courseWizard.priceError' | transloco }}</mat-error>
+              </mat-form-field>
+
+              <div class="seats">
+                <p class="field-label">{{ 'courseWizard.seatsLabel' | transloco }}</p>
+                <div class="stepper">
+                  <button mat-icon-button type="button" (click)="changeSeats(-1)" [disabled]="v.pricing.maxParticipants <= minSeats()"
+                    [attr.aria-label]="'courseWizard.fewer' | transloco"><mat-icon>remove</mat-icon></button>
+                  <input type="number" formControlName="maxParticipants" [min]="minSeats()" max="500" [attr.aria-label]="'courseWizard.seatsLabel' | transloco">
+                  <button mat-icon-button type="button" (click)="changeSeats(1)" [disabled]="v.pricing.maxParticipants >= 500"
+                    [attr.aria-label]="'courseWizard.more' | transloco"><mat-icon>add</mat-icon></button>
+                </div>
+              </div>
+            </div>
+
+            <p class="field-label">{{ 'courseWizard.levelLabel' | transloco }}</p>
+            <div class="segmented" role="radiogroup">
+              @for (l of levels; track l) {
+                <button type="button" role="radio" [attr.aria-checked]="v.pricing.courseLevel === l"
+                  [class.on]="v.pricing.courseLevel === l" (click)="setLevel(l)">{{ ('courseDetails.levels.' + l) | transloco }}</button>
+              }
+            </div>
+
+            <div class="grid-2 top-gap">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'courseForm.courseLanguage' | transloco }}</mat-label>
+                <mat-select formControlName="language">
+                  <mat-option value="pl">{{ 'courseForm.languagePl' | transloco }}</mat-option>
+                  <mat-option value="en">{{ 'courseForm.languageEn' | transloco }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="toggle-box">
+                <mat-slide-toggle formControlName="certificate">{{ 'courseWizard.certificate' | transloco }}</mat-slide-toggle>
+                <span>{{ 'courseWizard.certificateHint' | transloco }}</span>
+              </div>
+            </div>
+          </section>
+        }
+
+        <!-- 6. Review -->
+        @case ('review') {
+          <section class="step" [class.from-back]="direction() === 'back'">
+            <h2>{{ 'courseWizard.reviewTitle' | transloco }}</h2>
+            <p class="step-lead">{{ 'courseWizard.reviewLead' | transloco }}</p>
+
+            <div class="summary">
+              <div class="sum-block">
+                <div class="sum-head"><h3>{{ 'courseWizard.steps.basics' | transloco }}</h3><button mat-button type="button" class="btn-sm" (click)="goTo(0)">{{ 'courseWizard.edit' | transloco }}</button></div>
+                <dl>
+                  <div><dt>{{ 'courseWizard.titleLabel' | transloco }}</dt><dd>{{ v.basics.title }}</dd></div>
+                  <div><dt>{{ 'courseWizard.typeLabel' | transloco }}</dt><dd>{{ ('courseWizard.types.' + v.basics.courseType) | transloco }}</dd></div>
+                  <div><dt>{{ 'courseWizard.categoryLabel' | transloco }}</dt><dd>{{ categoryKeyOf(v.basics.category) | transloco }}</dd></div>
+                </dl>
+              </div>
+              <div class="sum-block">
+                <div class="sum-head"><h3>{{ 'courseWizard.steps.details' | transloco }}</h3><button mat-button type="button" class="btn-sm" (click)="goTo(1)">{{ 'courseWizard.edit' | transloco }}</button></div>
+                <p class="sum-text">{{ v.details.description }}</p>
+                @if (v.details.outcomes.length) {
+                  <ul class="sum-list">@for (o of v.details.outcomes; track $index) {<li><mat-icon>check</mat-icon>{{ o }}</li>}</ul>
+                }
+              </div>
+              <div class="sum-block">
+                <div class="sum-head"><h3>{{ 'courseWizard.steps.schedule' | transloco }}</h3><button mat-button type="button" class="btn-sm" (click)="goTo(2)">{{ 'courseWizard.edit' | transloco }}</button></div>
+                <dl>
+                  <div><dt>{{ 'courseWizard.datesLabel' | transloco }}</dt><dd>{{ previewCourse().startDate | dateRange: previewCourse().endDate }}, {{ v.schedule.startTime | date: 'HH:mm' }}@if (v.schedule.endTime) {–{{ v.schedule.endTime | date: 'HH:mm' }}}</dd></div>
+                  <div><dt>{{ 'courseDetails.where' | transloco }}</dt><dd>
+                    @if (isOnline()) { {{ 'courseDetails.onlineWhere' | transloco }} }
+                    @else { {{ v.schedule.address.street }} {{ v.schedule.address.streetNumber }}@if (v.schedule.address.apartmentNumber) {/{{ v.schedule.address.apartmentNumber }}}, @if (v.schedule.address.postalCode) {{{ v.schedule.address.postalCode }} }{{ v.schedule.address.city }} }
+                  </dd></div>
+                </dl>
+              </div>
+              <div class="sum-block">
+                <div class="sum-head"><h3>{{ 'courseWizard.steps.pricing' | transloco }}</h3><button mat-button type="button" class="btn-sm" (click)="goTo(3)">{{ 'courseWizard.edit' | transloco }}</button></div>
+                <dl>
+                  <div><dt>{{ 'courseWizard.priceLabel' | transloco }}</dt><dd>{{ v.pricing.price | price }}</dd></div>
+                  <div><dt>{{ 'courseWizard.seatsLabel' | transloco }}</dt><dd>{{ v.pricing.maxParticipants }}</dd></div>
+                  <div><dt>{{ 'courseWizard.levelLabel' | transloco }}</dt><dd>{{ ('courseDetails.levels.' + v.pricing.courseLevel) | transloco }}</dd></div>
+                  <div><dt>{{ 'courseWizard.certificate' | transloco }}</dt><dd>{{ (v.pricing.certificate ? 'common.yes' : 'common.no') | transloco }}</dd></div>
+                </dl>
+              </div>
+            </div>
+          </section>
+        }
+      }
+
+      <!-- ── Actions ────────────────────────────────────── -->
+      <div class="actions">
+        @if (step() > 0) {
+          <button mat-button type="button" class="back-link" (click)="back()"><mat-icon>arrow_back</mat-icon>{{ 'courseWizard.back' | transloco }}</button>
+        }
+        <span class="spacer"></span>
+        @if (editId) {
+          <!-- Editing: changes can be saved from any step; a published course stays published. -->
+          @if (stepKey() !== 'review') {
+            <button mat-stroked-button type="submit">
+              {{ 'courseWizard.next' | transloco }}<mat-icon iconPositionEnd>arrow_forward</mat-icon>
+            </button>
+          }
+          @if (original()?.status === 'DRAFT') {
+            <button mat-stroked-button type="button" class="draft-btn" (click)="save('DRAFT')" [disabled]="!!submitting()">
+              @if (submitting() === 'DRAFT') { <mat-spinner diameter="16" /> }
+              {{ 'courseForm.saveDraft' | transloco }}
+            </button>
+          }
+          <button mat-flat-button color="primary" type="button" (click)="save('PUBLISHED')" [disabled]="!!submitting()">
+            @if (submitting() === 'PUBLISHED') { <mat-spinner diameter="16" /> }
+            {{ (original()?.status === 'DRAFT' ? 'courseForm.publishCourse' : 'courseWizard.saveChanges') | transloco }}
+          </button>
+        } @else {
+        <button mat-stroked-button type="button" class="draft-btn" (click)="save('DRAFT')" [disabled]="!!submitting() || !v.basics.title.trim()">
+          @if (submitting() === 'DRAFT') { <mat-spinner diameter="16" /> }
+          {{ 'courseForm.saveDraft' | transloco }}
+        </button>
+        @if (stepKey() === 'review') {
+          <button mat-flat-button color="primary" type="button" (click)="save('PUBLISHED')" [disabled]="!!submitting()">
+            @if (submitting() === 'PUBLISHED') { <mat-spinner diameter="16" /> }
+            {{ 'courseForm.publishCourse' | transloco }}
+          </button>
+        } @else {
+          <button mat-flat-button color="primary" type="submit">
+            {{ 'courseWizard.next' | transloco }}<mat-icon iconPositionEnd>arrow_forward</mat-icon>
+          </button>
+        }
+        }
+      </div>
+    </form>
+
+    <!-- ── Live preview ─────────────────────────────────── -->
+    <aside class="preview" [class.open]="previewOpen()">
+      <div class="preview-inner">
+        <p class="eyebrow">{{ 'courseWizard.previewLabel' | transloco }}</p>
+        <app-course-card [course]="previewCourse()" [preview]="true" />
+        <p class="preview-hint">{{ 'courseWizard.previewHint' | transloco }}</p>
+      </div>
+    </aside>
+  </div>
+
+  <button type="button" class="preview-toggle" [class.open]="previewOpen()" (click)="previewOpen.set(!previewOpen())">
+    <mat-icon>{{ previewOpen() ? 'close' : 'visibility' }}</mat-icon>
+    {{ (previewOpen() ? 'courseWizard.closePreview' : 'courseWizard.showPreview') | transloco }}
+  </button>
+  }
+</div>

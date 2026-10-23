@@ -1,14 +1,19 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
+import { of } from 'rxjs';
 import { AiState } from './ai.state';
-import { AiAction } from './ai.actions';
+import { GetAiPromptAction } from './ai.actions';
+import { AiControllerService } from '../../../api/services';
 
 describe('Ai actions', () => {
   let store: Store;
 
-  beforeEach(waitForAsync () => {
+  beforeEach(waitForAsync(() => {
     void TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([AiState])]
+      imports: [NgxsModule.forRoot([AiState])],
+      providers: [
+        { provide: AiControllerService, useValue: { query: () => of({ prompt: 'answer' }) } }
+      ]
     }).compileComponents();
     store = TestBed.inject(Store);
   }));
@@ -17,11 +22,9 @@ describe('Ai actions', () => {
     expect(store).toBeTruthy();
   });
 
-  it('should create an action and add an item', () => {
-    store.dispatch(new AiAction('item-1'));
-    store.select(state => state.ai.items).subscribe((items: string[]) => {
-      expect(items).toEqual(jasmine.objectContaining([ 'item-1' ]));
-    });
+  it('should store the answer to a prompt', () => {
+    store.dispatch(new GetAiPromptAction({ prompt: 'question' }));
+    expect(store.selectSnapshot(state => state.ai.prompt)).toEqual('answer');
   });
 
 });

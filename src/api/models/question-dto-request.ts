@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-import { QuestionDetail } from '../models/question-detail';
+import { QuestionDetailDto } from '../models/question-detail-dto';
 export interface QuestionDtoRequest {
   courseId?: number;
-  questionDetail?: Array<QuestionDetail>;
+  questionDetail?: Array<QuestionDetailDto>;
 }

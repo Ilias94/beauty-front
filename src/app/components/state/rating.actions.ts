@@ -10,3 +10,8 @@ export class GetCurrentUserRatingByCourseIdAction {
   constructor(public courseId: number) { }
 }
 
+export class GetRatingSummaryAction {
+  static readonly type = '[Rating] GetRatingSummaryAction';
+  constructor(public courseId: number) { }
+}
+

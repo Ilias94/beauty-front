@@ -32,7 +32,7 @@ export class VideoControllerService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `uploadVideos()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
   uploadVideos$Response(params: UploadVideos$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
     return uploadVideos(this.http, this.rootUrl, params, context);
@@ -42,7 +42,7 @@ export class VideoControllerService extends BaseService {
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `uploadVideos$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
   uploadVideos(params: UploadVideos$Params, context?: HttpContext): Observable<void> {
     return this.uploadVideos$Response(params, context).pipe(

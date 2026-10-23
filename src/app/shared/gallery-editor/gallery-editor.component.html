@@ -1,0 +1,79 @@
+<div class="editor" (paste)="onPaste($event)">
+  <input #fileInput hidden type="file" accept="image/*" multiple (change)="onPicked($event)">
+
+  @if (photos().length === 0) {
+    <!-- Empty: one big target that explains what makes a good set of photos. -->
+    <button type="button" class="dropzone" [class.dragging]="dragging()"
+      (click)="openPicker()" (dragover)="onDragOver($event)" (dragleave)="dragging.set(false)" (drop)="onDrop($event)">
+      <span class="drop-art" aria-hidden="true">
+        <span class="frame f1"></span><span class="frame f2"></span>
+        <span class="frame f3"><mat-icon>add_photo_alternate</mat-icon></span>
+      </span>
+      <strong>{{ 'gallery.dropTitle' | transloco }}</strong>
+      <span class="drop-hint">{{ 'gallery.dropHint' | transloco: { max: max } }}</span>
+      <span class="drop-cta">{{ 'gallery.choose' | transloco }}</span>
+    </button>
+  } @else {
+    <div class="grid" cdkDropList cdkDropListOrientation="mixed" (cdkDropListDropped)="dropped($event)"
+      [class.dragging]="dragging()" (dragover)="onDragOver($event)" (dragleave)="dragging.set(false)" (drop)="onDrop($event)">
+      @for (photo of photos(); track photo.key; let i = $index; let first = $first; let last = $last) {
+        <figure class="tile" [class.cover]="first" cdkDrag [cdkDragDisabled]="photo.progress !== null || busy()">
+          <div class="tile-placeholder" *cdkDragPlaceholder></div>
+
+          @if (photo.src) {
+            <img [src]="photo.src" alt="" draggable="false">
+          }
+
+          @if (first && photo.progress === null) {
+            <span class="cover-badge"><mat-icon>star</mat-icon>{{ 'gallery.cover' | transloco }}</span>
+          }
+
+          @if (photo.progress !== null) {
+            <!-- Preparing (no value yet) or uploading (a ring filling to 100%). -->
+            <div class="progress" role="progressbar" [attr.aria-valuenow]="photo.progress < 0 ? null : photo.progress"
+              [attr.aria-label]="(photo.progress < 0 ? 'gallery.preparing' : 'gallery.uploading') | transloco">
+              <svg viewBox="0 0 36 36" [class.spin]="photo.progress < 0">
+                <circle class="track" cx="18" cy="18" r="15"/>
+                <circle class="fill" cx="18" cy="18" r="15" [style.stroke-dashoffset]="94.25 - (photo.progress < 0 ? 22 : photo.progress) * 0.9425"/>
+              </svg>
+            </div>
+          } @else {
+            <div class="actions">
+              @if (!first) {
+                <button type="button" class="act" (click)="makeCover(i)" [attr.aria-label]="'gallery.makeCover' | transloco" [title]="'gallery.makeCover' | transloco">
+                  <mat-icon>star</mat-icon>
+                </button>
+              }
+              <button type="button" class="act" (click)="nudge(i, -1)" [disabled]="first" [attr.aria-label]="'gallery.moveEarlier' | transloco">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <button type="button" class="act" (click)="nudge(i, 1)" [disabled]="last" [attr.aria-label]="'gallery.moveLater' | transloco">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+              <button type="button" class="act act-danger" (click)="remove(photo)" [attr.aria-label]="'gallery.remove' | transloco" [title]="'gallery.remove' | transloco">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <span class="grip" aria-hidden="true"><mat-icon>drag_indicator</mat-icon></span>
+          }
+        </figure>
+      }
+
+      @if (room() > 0) {
+        <button type="button" class="tile add-tile" (click)="openPicker()">
+          <mat-icon>add</mat-icon>
+          <span>{{ 'gallery.add' | transloco }}</span>
+        </button>
+      }
+    </div>
+
+    <p class="meta">
+      <span class="count">{{ 'gallery.count' | transloco: { count: photos().length, max: max } }}</span>
+      {{ 'gallery.orderHint' | transloco }}
+    </p>
+  }
+
+  @if (error(); as key) {
+    <p class="error" role="alert"><mat-icon>error</mat-icon>{{ key | transloco: { max: max } }}</p>
+  }
+</div>

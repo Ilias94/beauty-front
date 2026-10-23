@@ -9,6 +9,9 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { AiTicketResponseDto } from '../models/ai-ticket-response-dto';
+import { answerTicketQuestion } from '../fn/ai-controller/answer-ticket-question';
+import { AnswerTicketQuestion$Params } from '../fn/ai-controller/answer-ticket-question';
 import { PromptResponseDto } from '../models/prompt-response-dto';
 import { query } from '../fn/ai-controller/query';
 import { Query$Params } from '../fn/ai-controller/query';
@@ -17,6 +20,31 @@ import { Query$Params } from '../fn/ai-controller/query';
 export class AiControllerService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `answerTicketQuestion()` */
+  static readonly AnswerTicketQuestionPath = '/api/v1/ai';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `answerTicketQuestion()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  answerTicketQuestion$Response(params: AnswerTicketQuestion$Params, context?: HttpContext): Observable<StrictHttpResponse<AiTicketResponseDto>> {
+    return answerTicketQuestion(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `answerTicketQuestion$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  answerTicketQuestion(params: AnswerTicketQuestion$Params, context?: HttpContext): Observable<AiTicketResponseDto> {
+    return this.answerTicketQuestion$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AiTicketResponseDto>): AiTicketResponseDto => r.body)
+    );
   }
 
   /** Path part for operation `query()` */

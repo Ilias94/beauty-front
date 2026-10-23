@@ -1,0 +1,80 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">{{ 'tickets.supportEyebrow' | transloco }}</p>
+      <h1 class="page-title">{{ 'tickets.supportTickets' | transloco }}</h1>
+    </div>
+  </header>
+
+  <!-- Status filter with counts -->
+  <div class="filters" role="tablist" [attr.aria-label]="'tickets.filterByStatus' | transloco">
+    <button type="button" role="tab" [class.on]="filterStatus() === ''" [attr.aria-selected]="filterStatus() === ''" (click)="filterStatus.set('')">
+      {{ 'tickets.all' | transloco }} <span class="count">{{ allTickets().length }}</span>
+    </button>
+    @for (s of statuses; track s) {
+      <button type="button" role="tab" [class.on]="filterStatus() === s" [attr.aria-selected]="filterStatus() === s" (click)="filterStatus.set(s)">
+        {{ ('tickets.statuses.' + s) | transloco }} <span class="count">{{ counts()[s] ?? 0 }}</span>
+      </button>
+    }
+  </div>
+
+  @if (filtered().length) {
+    <div class="table-card surface">
+      <mat-table [dataSource]="filtered()" class="ticket-table">
+
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef>{{ 'tickets.id' | transloco }}</mat-header-cell>
+          <mat-cell *matCellDef="let t"><span class="ticket-id">#{{ t.id }}</span></mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <mat-header-cell *matHeaderCellDef>{{ 'tickets.title' | transloco }}</mat-header-cell>
+          <mat-cell *matCellDef="let t">
+            <div class="title-cell">
+              <strong>{{ t.title }}</strong>
+              <span>{{ ('tickets.types.' + t.type) | transloco }}</span>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="author">
+          <mat-header-cell *matHeaderCellDef>{{ 'tickets.author' | transloco }}</mat-header-cell>
+          <mat-cell *matCellDef="let t">{{ t.authorName }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef>{{ 'tickets.status' | transloco }}</mat-header-cell>
+          <mat-cell *matCellDef="let t" (click)="$event.stopPropagation()">
+            <span class="tag status-pill" [class]="statusTag(t.status)">
+              <mat-select [value]="t.status" (selectionChange)="changeStatus(t, $event.value)"
+                          [attr.aria-label]="'tickets.status' | transloco" panelWidth="">
+                @for (s of statuses; track s) {
+                  <mat-option [value]="s">{{ ('tickets.statuses.' + s) | transloco }}</mat-option>
+                }
+              </mat-select>
+            </span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <mat-header-cell *matHeaderCellDef>{{ 'tickets.created' | transloco }}</mat-header-cell>
+          <mat-cell *matCellDef="let t" class="muted">{{ t.createdAt | date:'dd.MM.yyyy, HH:mm' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let t"><mat-icon class="chev">chevron_right</mat-icon></mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="ticket-row" tabindex="0"
+                 (click)="open(row)" (keydown.enter)="open(row)"></mat-row>
+      </mat-table>
+    </div>
+  } @else {
+    <div class="empty-state surface">
+      <span class="empty-icon"><mat-icon>inbox</mat-icon></span>
+      <h3>{{ 'tickets.noTicketsFound' | transloco }}</h3>
+    </div>
+  }
+</div>

@@ -1,0 +1,64 @@
+:host
+  display: grid
+  place-items: center
+  min-height: calc(100vh - var(--header-h) - 180px)
+  padding: clamp(24px, 4vw, 48px) var(--gutter) 64px
+
+.status-card
+  width: 100%
+  max-width: 520px
+  text-align: center
+  padding: 48px 36px 40px
+  background: var(--surface)
+  border: 1px solid var(--line)
+  border-radius: var(--radius-lg)
+  box-shadow: var(--shadow-2)
+  animation: rise 420ms var(--ease) backwards
+
+  h1
+    font-size: clamp(28px, 4vw, 36px)
+    margin-top: 20px
+
+  p
+    color: var(--ink-2)
+    margin: 10px auto 0
+    max-width: 40ch
+
+.status-icon
+  width: 72px
+  height: 72px
+  margin: 0 auto
+  border-radius: 50%
+  display: grid
+  place-items: center
+  animation: pop 520ms var(--ease) 120ms backwards
+
+  .mat-icon
+    font-size: 36px
+    width: 36px
+    height: 36px
+    font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 48
+
+.tone-success .status-icon
+  background: var(--success-soft)
+  color: var(--success)
+
+.tone-danger .status-icon
+  background: var(--danger-soft)
+  color: var(--danger)
+
+.tone-pending .status-icon
+  background: var(--warning-soft)
+  color: var(--warning)
+
+.actions
+  display: flex
+  gap: 10px
+  justify-content: center
+  flex-wrap: wrap
+  margin-top: 28px
+
+@keyframes pop
+  from
+    transform: scale(0.6)
+    opacity: 0

@@ -1,2 +1,12 @@
-<app-comments [comments] = "comments()"></app-comments>
-
+<div class="narrow">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">{{ 'account.myComments' | transloco }}</p>
+      <h1 class="page-title">{{ 'myComments.title' | transloco }}</h1>
+      <p class="page-subtitle">{{ 'myComments.subtitle' | transloco }}</p>
+    </div>
+  </header>
+  <div class="surface reviews">
+    <app-comments [comments]="comments() ?? []" emptyKey="myComments.empty" />
+  </div>
+</div>
